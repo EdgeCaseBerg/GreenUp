@@ -10,15 +10,21 @@
 		//Check for numeric value of start and end
 		$start = intval($_GET['start']);
 		$end = intval($_GET['end']);
-
-
-
-
-	}else{
-		//Default
-
-
 	}
 
+	$dbh->prepare('SELECT `message` FROM `talk` ORDER BY timeSent DESC LIMIT :start,:end');
+	$dbh->execute(array(':start' => $start,':end' => $end));
+
+	$results = $dbh->fetchAll(PDO::FETCH_COLUMN, 0);
+
+	//Construct the JSON to send to the comm page
+	foreach ($results as $message) {
+		$result .= $message . ',';
+	}
+
+	//Remove the last ,
+	$output = substr($result, 0, -1) . ']';
+
+	echo $output;
 
 ?>
