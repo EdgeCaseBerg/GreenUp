@@ -10,11 +10,18 @@
 			//Remove any "s from the screen or things will break
 			str_replace('"', '', $message);
 
-			error_log($message);
+			$topic=0;
+			if(isset($_GET['topic'])){
+				$top = intval($_GET['topic']);
+				if($top == 0 || $top ==1 || $top==2){
+					//Acceptable value
+					$topic=$top;
+				}
+			}
 
-			$sql = "INSERT INTO `talk` (message) VALUES (:message);";
+			$sql = "INSERT INTO `talk` (message,fkType) VALUES (:message,:topic);";
 			$q = $dbh->prepare($sql);
-			$q->execute(array(':message' =>$message));
+			$q->execute(array(':message' =>$message,':topic'=>$topic));
 
 		}
 
@@ -32,7 +39,24 @@
 		$end = intval($_GET['end']);
 	}
 
-	$statement = $dbh->prepare('SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end);
+	$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end;
+	if(isset($_GET['where'])){
+		switch ($_GET['where']) {
+			case 'messages':
+				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=0';
+				break;
+			case 'help':
+				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=1';
+				break;
+			case 'trash':
+				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=2';
+				break;
+			default:
+				//No Change
+				break;
+		}
+	}
+	$statement = $dbh->prepare($SQL);
 	$statement->execute();
 
 	$results = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
@@ -44,7 +68,6 @@
 
 	//Remove the last ,
 	$output = '[' . substr($result, 0, -1) . ']';
-	error_log($start . '  to ' . $end);
 	echo $output;
 
 ?>
