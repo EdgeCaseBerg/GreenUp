@@ -1,6 +1,26 @@
 <?php
 	require_once('config.php');
 
+	if(isset($_GET['add'])){
+		if(isset($_GET['message'])){
+			//Add message
+			$dbh = new PDO('mysql:host='.HOST.';dbname='.DB_NAME.';', DB_USER, DB_PASS);
+
+			$message = $_GET['message'];
+			//Remove any "s from the screen or things will break
+			str_replace('"', '', $message);
+
+			error_log($message);
+
+			$sql = "INSERT INTO `talk` (message) VALUES (:message);";
+			$q = $dbh->prepare($sql);
+			$q->execute(array(':message' =>$message));
+
+		}
+
+		header('location:/client/commUI.php');
+	}
+
 	$start = 0;
 	$end = 40;
 	$dbh = new PDO('mysql:host='.HOST.';dbname='.DB_NAME.';', DB_USER, DB_PASS);
