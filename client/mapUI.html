@@ -45,6 +45,14 @@
     </script>
     <script type="text/javascript">
 var map, pointarray, heatmap, pickupMarker, markerFlag;
+var markerType = -1;
+var markerEvent;
+var HELP_TRASH = 1;
+var TRASH_DROP = 2;
+var COMMENT_LOC = 3;
+var MOUSEDOWN_TIME;
+var MOUSEUP_TIME;
+
             var heatmapData = [
                 {location: new google.maps.LatLng(37.782, -122.447), weight: 0.5}, 
                 {location: new google.maps.LatLng(37.782, -122.445), weight: 1},
@@ -80,7 +88,9 @@ function initialize() {
   });
 
   heatmap.setMap(map);
-  google.maps.event.addListener(map, 'mousedown', addLatLng);
+  
+  google.maps.event.addListener(map, 'mousedown', markerSelectDown);
+  google.maps.event.addListener(map, 'mouseup', markerSelectUp);
 } // end initialize
 
 function initIcons(){
@@ -107,12 +117,58 @@ function toggleIcons(){
     };
 }
 
-function addLatLng(event){
-     var marker = new google.maps.Marker({
-    position: event.latLng,
-    map: map
-  });
+// add an icon for a pickup
+function addPickupMarker(){
+    var marker = new google.maps.Marker({
+        position: markerEvent.latLng,
+        map: map,
+        icon: "img/icons/greenCircle.png"
+    });
+}
 
+// add an icon for a Comment location
+function addCommentMarker(){
+    var marker = new google.maps.Marker({
+        position: markerEvent.latLng,
+        map: map,
+        icon: "img/icons/blueCircle.png"
+    });
+}
+
+// add an icon to indicate where trash was found
+function addTrashMarker(){
+    var marker = new google.maps.Marker({
+        position: markerEvent.latLng,
+        map: map,
+        icon: "img/icons/redCircle.png"
+    });
+}
+
+function markerSelectUp(event){
+    markerEvent = event;
+    MOUSEUP_TIME = new Date().getTime() / 1000;
+    if((MOUSEUP_TIME - MOUSEDOWN_TIME) < 0.3){
+        // alert((MOUSEUP_TIME - MOUSEDOWN_TIME));
+        $('#markerTypeDialog').toggle();
+        MOUSEDOWN_TIME =0;
+        MOUSEDOWN_TIME =0;
+    }else{
+        MOUSEDOWN_TIME =0;
+        MOUSEDOWN_TIME =0;
+    }
+}
+
+function markerSelectDown(event){
+    markerEvent = event;
+    MOUSEDOWN_TIME = new Date().getTime() / 1000;
+    // if((MOUSEUP_TIME - MOUSEDOWN_TIME) < 2){
+    //     $('#markerTypeDialog').toggle();
+    //     MOUSEDOWN_TIME =0;
+    //     MOUSEDOWN_TIME =0;
+    // }else{
+    //     MOUSEDOWN_TIME =0;
+    //     MOUSEDOWN_TIME =0;
+    // }
 }
 
 
@@ -135,6 +191,29 @@ $(document).ready(function(){
     $('#toggleIcons').click(function(){
         toggleIcons();
     });
+
+    $('#selectPickup').click(function(){
+        $('#markerTypeDialog').toggle();
+        addPickupMarker();
+        // alert("hello");
+    })
+    $('#selectComment').click(function(){
+        $('#markerTypeDialog').toggle();
+        addCommentMarker();
+        // alert("hello");
+    })
+    $('#selectTrash').click(function(){
+        $('#markerTypeDialog').toggle();
+        addTrashMarker();
+        // alert("hello");
+    })
+
+    // $('#map-canvas').mousedown(function(){
+    //     MOUSEDOWN_TIME = new Date().getTime() / 1000;
+    // });
+    // $('#map-canvas').mouseup(function(){
+    //     MOUSEUP_TIME = new Date().getTime() / 1000;
+    // });
 });
 </script>
 
@@ -157,6 +236,16 @@ $(document).ready(function(){
         <div class="toggleContianer">
             <input type="button" id="toggleHeat" value="Toggle Heat" />
             <input type="button" id="toggleIcons" value="Toggle Icons" />
+        </div>
+
+        <div id="markerTypeDialog">
+            <div id="markerTypeDialogNest">
+                <input type="button" value="Pickup point" id="selectPickup" />
+                <input type="button" value="Comment point" id="selectComment" />
+                <input type="button" value="Trash point" id="selectTrash" />
+            </div>
+          <!--   <input type="button" value="Lots of Trash" onClick="addTrashMarker">
+            <input type="button" value="Comment point" onClick="addCommentMarker"> -->
         </div>
 
         <script src="js/vendor/zepto.min.js"></script>
