@@ -35,15 +35,9 @@
 
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/homepage.css"
+        <link rel="stylesheet" href="css/homepage.css">
+        <link rel="stylesheet" href="css/messages.css">
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
-        <style type="text/css">
-        	.message{
-        		margin: 4em;
-        		border-radius: 2em;
-        		border: solid thick #000000;
-        	}
-        </style>
     </head>
     <body>
 
@@ -57,7 +51,9 @@
 
             <!--Justins Posting Code goes here -->
 
-            <div id="messages">
+            <div >
+            	<h1>Recent Messages From the Green Up Community</h1>
+            	<ul id="messages" class="message"></ul>
             	<script type="text/javascript">
             		var beginLimit = 0;
             		var endLimit = 10;
@@ -69,10 +65,11 @@
 
             			if(typeof messages != "undefined"){
 	            			for (var i = messages.length - 1; i >= 0; i--) {
-	            				var message = document.createElement("div");
+	            				var message = document.createElement("li");
 	            				message.innerHTML = messages[i];
 	            				message.className = "message"
 	            				toAddTo.appendChild(message);
+	            				toAddTo.appendChild(document.createElement('hr'));
 	            			};
             			}
             			
@@ -103,7 +100,7 @@
             </div>
 
             <div id="moar">
-            	<a href="#moar" onclick=moar();>Load More</a>
+            	<a href="#moar" onclick=moar();><h2>Load More</h2></a>
             </div>
 
         </div>

@@ -1,0 +1,15 @@
+.message{
+	margin: 4em;
+	border-radius: 2em;
+	border: solid thick #000000;
+        }
+ul.message{
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	margin-top: 1em;
+}
+#moar{
+        margin: 1em;
+        padding: 1em;
+}
