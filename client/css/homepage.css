@@ -1,0 +1,11 @@
+body{
+	height:100%;
+	width:100%;
+	background-image: url('../img/backgrounds/dark_dotted2.png');
+}
+
+.mobileContainer{
+	height:90%;
+	width:95%;
+	background:#ddd;
+}
