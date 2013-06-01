@@ -1,11 +1,29 @@
 body{
 	height:100%;
 	width:100%;
+	text-align:center;
 	background-image: url('../img/backgrounds/dark_dotted2.png');
+	list-style-type: none;
 }
 
 .mobileContainer{
 	height:90%;
 	width:95%;
+	margin:auto;
 	background:#ddd;
+}
+
+.nav{
+	margin:0px;
+	width:100%;
+	padding:0px;
+	text-align:center;
+}
+
+.nav li{
+	margin:0px;
+	padding:0px;
+	display:inline-block;
+	width:32%;
+	border:solid 1px #000;
 }
