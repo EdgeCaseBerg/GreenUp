@@ -1,2 +1,3 @@
 #Ignore my apache error log -Ethan
 error.log
+config.php
