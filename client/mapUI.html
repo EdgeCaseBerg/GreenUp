@@ -35,8 +35,30 @@
 
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/homepage.css"
+        <link rel="stylesheet" href="css/homepage.css">
+        <link rel="stylesheet" href="css/mapUI.css">
+
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    <script type="text/javascript">
+        function initialize() {
+          var mapOptions = {
+            zoom: 8,
+            center: new google.maps.LatLng(44.473787, -73.218140),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          }
+          var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        }
+
+    function loadScript() {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyC_h93qFbYG766pDFqUowxnp7NTV0cdFwE&sensor=false&callback=initialize";
+      document.body.appendChild(script);
+    }
+
+window.onload = loadScript;
+</script>
+
     </head>
     <body>
 
@@ -47,6 +69,10 @@
                 <li><a href="mapUI.html">Maps</a></li>
                 <li><a href="commUI.html">Comments</a></li>
             </ul>
+        </div>
+
+        <div class="mapContainer">
+                <div id="map-canvas"></div>
         </div>
 
         <script src="js/vendor/zepto.min.js"></script>
