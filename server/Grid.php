@@ -17,7 +17,7 @@ class Grid{
 		$dbh->query($query);
 
 		$mapdata = array();
-		foreach($dbh->fetchAll as $pointData){
+		foreach($dbh->fetchAll() as $pointData){
 			array_push($mapData, "{location: new google.maps.LatLng(".$pointData['pkLat'].", ".$pointData['pkLong']."), weight: ".$pointData['secondsWorked']."}");
 
 		}
