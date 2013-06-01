@@ -37,6 +37,13 @@
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/homepage.css"
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <style type="text/css">
+        	.message{
+        		margin: 4em;
+        		border-radius: 2em;
+        		border: solid thick #000000;
+        	}
+        </style>
     </head>
     <body>
 
@@ -47,6 +54,58 @@
                 <li><a href="mapUI.html">Maps</a></li>
                 <li><a href="commUI.php">Communicate</a></li>
             </ul>
+
+            <!--Justins Posting Code goes here -->
+
+            <div id="messages">
+            	<script type="text/javascript">
+            		var beginLimit = 0;
+            		var endLimit = 10;
+
+            		function addMessages(xmlHttp){
+            			//Yes I'm using eval. Deal.
+            			var messages = eval(xmlHttp.responseText);
+            			var toAddTo = document.getElementById('messages');
+
+            			if(typeof messages != "undefined"){
+	            			for (var i = messages.length - 1; i >= 0; i--) {
+	            				var message = document.createElement("div");
+	            				message.innerHTML = messages[i];
+	            				message.className = "message"
+	            				toAddTo.appendChild(message);
+	            			};
+            			}
+            			
+
+            			
+
+            		}
+
+            		function moar(){
+            			beginLimit = beginLimit + 40;
+			    		endLimit = endLimit + 40;
+			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
+			    		console.log(beginLimit);
+            		}
+
+            		//Helper function to fetch URL contents
+					function httpGet(theUrl){
+						
+			    		var xmlHttp = null;
+			    		xmlHttp = new XMLHttpRequest();
+			    		xmlHttp.onreadystatechange = function(){addMessages(xmlHttp)};
+			    		xmlHttp.open( "GET", theUrl, true );
+			    		xmlHttp.send( null );
+					}
+
+					httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
+            	</script>
+            </div>
+
+            <div id="moar">
+            	<a href="#moar" onclick=moar();>Load More</a>
+            </div>
+
         </div>
 
         <script src="js/vendor/zepto.min.js"></script>
@@ -61,6 +120,6 @@
         </script>
 
 
-        stuff;
+
     </body>
 </html>
