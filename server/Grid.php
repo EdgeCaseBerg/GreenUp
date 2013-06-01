@@ -11,12 +11,12 @@ class Grid{
 		$lat_key = round($lat, 4);
 		$long_key = round($long, 4);
 		$query = "CALL incrementTime ($lat_key, $long_key, $time_spent)";
-		return $this->dbh->query($query);
+		return $this->dbh->exec($query);
 	}
 
 	public function getHeatmapPoints(){
 		$query = "SELECT * FROM grid";
-		$this->dbh->query($query);
+		$this->dbh->exec($query);
 
 		$mapdata = array();
 		foreach($this->dbh->fetchAll() as $pointData){
