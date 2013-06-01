@@ -58,6 +58,18 @@
             		var beginLimit = 0;
             		var endLimit = 10;
 
+            		//Get the parameters in the get url
+            		var prmstr = window.location.search.substr(1);
+					var prmarr = prmstr.split ("&");
+					var params = {};
+
+					for ( var i = 0; i < prmarr.length; i++) {
+    					var tmparr = prmarr[i].split("=");
+    					params[tmparr[0]] = tmparr[1];
+					}
+
+
+
             		function addMessages(xmlHttp){
             			//Yes I'm using eval. Deal.
             			var messages = eval(xmlHttp.responseText);
@@ -81,8 +93,7 @@
             		function moar(){
             			beginLimit = beginLimit + 40;
 			    		endLimit = endLimit + 40;
-			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
-			    		console.log(beginLimit);
+			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
             		}
 
             		//Helper function to fetch URL contents
@@ -95,7 +106,7 @@
 			    		xmlHttp.send( null );
 					}
 
-					httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
+					httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
             	</script>
             </div>
 
