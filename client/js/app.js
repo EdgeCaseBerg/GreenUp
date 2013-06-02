@@ -1,9 +1,26 @@
-db = Lawnchair({name : 'db'}, function(store) {
-	
-	setInterval(function() {runUpdate(store)},5000);//update user location every 5 seconds
-	setInterval(function() {upload(store)},30000);//upload locations to the server every 30 seconds
-	
-});
+var lawnDB = null;
+var logging = false;
+
+function initialize(){
+	db = Lawnchair({name : 'db'}, function(store) {
+		lawnDB = store;
+		
+		setInterval(function() {runUpdate(store)},5000);//update user location every 5 seconds
+		setInterval(function() {upload(store)},30000);//upload locations to the server every 30 seconds
+	});
+}
+
+function start(){
+	logging = true;
+	initialize();
+	console.log("starting...");
+}
+
+function stop(){
+	upload(lawnDB);
+	logging = false;
+	console.log("stopping...")
+}
 
 //Runs the update script:
 
@@ -17,32 +34,47 @@ function runUpdate(database){
 //Uploads all local database entries to the Server
 //Clears the local storage after upload
 function upload(database){
-	//server/addgriddata.php
+	if(logging){
+		//server/addgriddata.php
 	
-	database.all(function(data){
-    	$.ajax({
-    		type:'POST',
-    		url: '/server/addGridData.php',
-    		dataType:"json",
-            data: {data : data},
-    		failure: function(errMsg){alert(errMsg);}
-    	});//Ajax
+		database.all(function(data){
+			$.ajax({
+				type:'POST',
+				url: '/server/addGridData.php',
+				dataType:"json",
+				data: {data : data},
+				failure: function(errMsg){alert(errMsg);}
+			});//Ajax
 		
-		//Remove all uploaded database records
-    	for(var i=1;i<data.length;i++){
-    		database.remove(i);
-    	}
-    });
+			//Remove all uploaded database records
+			for(var i=1;i<data.length;i++){
+				database.remove(i);
+			}
+		});
+	}
 }
 
 //Updates the local couch DB with the current info
 function updateLocation(database, latitude, longitude){
-    var datetime = new Date().getTime();//generate timestamp
-	var location = {
-			"latitude" : latitude,
-			"longitude" : longitude,
-			"datetime" : datetime,
-	}
+	if(logging){
+    	var datetime = new Date().getTime();//generate timestamp
+    	var location = {
+    			"latitude" : latitude,
+    			"longitude" : longitude,
+    			"datetime" : datetime,
+    	}
 	
-	database.save({value:location});//Save the record
+    	database.save({value:location});//Save the record
+	}
 };
+
+function findME(){
+	var coords = new array();
+	lawnDB.all(function(obj){
+		coords.push(obj[obj.length - 1].value.latitude);
+		coords.push(obj[obj.length - 1].value.longitude);
+	});
+	
+	return coords;
+}
+
