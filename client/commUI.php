@@ -53,6 +53,12 @@
 
             <div >
             	<h1>Recent Messages From the Green Up Community</h1>
+                <ul class="nav">
+                    <li><a href="?where=4">Show All</a></li>
+                    <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
+                    <li><a href="?where=2">Show Needs</a></li>
+                    <li><a href="?where=3">Show Trash</a></li>
+                </ul>
             	<ul id="messages" class="message"></ul>
             	<script type="text/javascript">
             		var beginLimit = 0;
@@ -69,7 +75,6 @@
 					}
 
 
-
             		function addMessages(xmlHttp){
             			//Yes I'm using eval. Deal.
             			var messages = eval(xmlHttp.responseText);
@@ -84,10 +89,6 @@
 	            				toAddTo.appendChild(document.createElement('hr'));
 	            			};
             			}
-            			
-
-            			
-
             		}
 
             		function moar(){
