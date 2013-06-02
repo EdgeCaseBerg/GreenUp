@@ -13,3 +13,15 @@ ul.message{
         margin: 1em;
         padding: 1em;
 }
+form{
+        width: 100%;
+}
+form select{
+        margin: .5em;
+        margin-bottom: .25em; 
+}
+form textarea{
+        margin: 1em;
+        margin-top: .25em;
+        width: 90%;
+}
