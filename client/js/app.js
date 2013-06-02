@@ -1,9 +1,6 @@
 var lawnDB = null;
 var logging = false;
 
-start();
-
-
 function initialize(){
 	db = Lawnchair({name : 'db'}, function(store) {
 		lawnDB = store;
