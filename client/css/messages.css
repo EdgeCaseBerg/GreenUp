@@ -83,3 +83,8 @@ ul.filter{
         margin-top: 1em;
         text-align: center; 
 }
+ul.filter a{
+        display: block;
+        width: 100%;
+        height: 100%;
+}
