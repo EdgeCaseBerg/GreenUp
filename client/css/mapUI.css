@@ -1,21 +1,39 @@
-
+ul{
+	list-style-type: none;
+	margin:0px;
+	padding:0px;
+}
 
 #map-canvas{
 	/*float:left;*/
 	position:absolute;
-/*	top:30px;*/
+	/*top:30px;*/
 	z-index:10;
 	width:100%;
-	height:90%;
+	height:100%;
 	margin:auto;
+	margin-top:5px;
 	/*margin-top:10px;*/
 }
 
+.mapContainer{
+
+}
+
 .toggleContainer{
+	text-align:left;
+	padding:5px 7px 5px 5px;
+	background: url('../img/backgrounds/80_percent_white.png');
 	position:absolute;
-	z-index:10;
-	top:95%;
-	border:solid 1px red;
+	z-index:15;
+	top:85%;
+	/*border:solid 1px blue;*/
+	-webkit-box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+	box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+input[type="checkbox"]{
+	margin-right:3px;
 }
 
 #markerTypeDialog{
