@@ -25,7 +25,7 @@
 
 		}
 
-		header('location:/client/commUI.php');
+		header('location:/client/cardsUI.html');
 	}
 
 	$start = 0;
