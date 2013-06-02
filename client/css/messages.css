@@ -41,3 +41,45 @@ form textarea{
 form h3{
         color: #00ff00;
 }
+ul.filter li{
+        width: 22%;
+        height: 3em;
+        cursor:pointer;
+        
+        -moz-box-shadow:inset 0px 0px 14px -3px #f2fadc;
+        -webkit-box-shadow:inset 0px 0px 14px -3px #f2fadc;
+        box-shadow:inset 0px 0px 14px -3px #f2fadc;
+        
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #dbe6c4), color-stop(1, #9ba892));
+        background:-moz-linear-gradient(top, #dbe6c4 5%, #9ba892 100%);
+        background:-webkit-linear-gradient(top, #dbe6c4 5%, #9ba892 100%);
+        background:-o-linear-gradient(top, #dbe6c4 5%, #9ba892 100%);
+        background:-ms-linear-gradient(top, #dbe6c4 5%, #9ba892 100%);
+        background:linear-gradient(to bottom, #dbe6c4 5%, #9ba892 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dbe6c4', endColorstr='#9ba892',GradientType=0);
+        
+        background-color:#dbe6c4;
+        
+        -moz-border-radius:2px;
+        -webkit-border-radius:2px;
+        border-radius:2px;
+        
+        border:1px solid #b2b8ad;
+        
+        display:inline-block;
+        color:#444;
+        
+        font-size:15px;
+        font-weight:bold;
+        padding:6px 0px 6px 0px;
+        text-decoration:none;
+        
+        text-shadow:0px 1px 0px #ced9bf;
+}
+ul.filter{
+        width: 100%;
+        display: block;
+        margin: auto;
+        margin-top: 1em;
+        text-align: center; 
+}
