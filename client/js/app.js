@@ -1,7 +1,7 @@
 var lawnDB = null;
 var logging = false;
 
-function initialize(){
+function initializeGPS(){
 	db = Lawnchair({name : 'db'}, function(store) {
 		lawnDB = store;
 		
@@ -12,7 +12,7 @@ function initialize(){
 
 function start(){
 	logging = true;
-	initialize();
+	initializeGPS();
 	console.log("starting...");
 }
 
