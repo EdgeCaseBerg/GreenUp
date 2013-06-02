@@ -89,8 +89,8 @@ function initialize() {
     types: ['waste']
   };
   
-  //service = new google.maps.places.PlacesService(map);
-  //service.nearbySearch(request, callback);
+  service = new google.maps.places.PlacesService(map);
+  service.nearbySearch(request, callback);
   
  
   var pointArray = new google.maps.MVCArray(heatmapData);
@@ -212,8 +212,11 @@ function changeOpacity() {
 function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     for (var i = 0; i < results.length; i++) {
-      var place = results[i];
-      createMarker(results[i]);
+        var place = results[i];
+        var marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location
+        });
     }
   }
 }

@@ -35,6 +35,10 @@
 		/*letter-spacing: 1em;*/
  		/*word-spacing: 1em;	*/
 	}
+    
+    .checkboxlabel{
+        font-size: 15px;
+    }
 
 	.panel1Center{
 		/*left:0px;*/
