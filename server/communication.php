@@ -29,7 +29,7 @@
 	}
 
 	$start = 0;
-	$end = 20;
+	$end = 10;
 	$dbh = new PDO('mysql:host='.HOST.';dbname='.DB_NAME.';', DB_USER, DB_PASS);
 	$result = '';
 	//Use GET to set the limits of the query for pagination purposes

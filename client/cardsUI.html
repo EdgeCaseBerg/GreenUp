@@ -124,14 +124,14 @@
             </script>
 
                 <ul class="nav">
-                    <li><a href="#" onclick='showAll("messages"); return false'>Show Messages</a></li>
-                    <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
+                    
+                    <li><a href="#" onclick='showAll("messages"); return false;'>Show Messages</a></li>
                     <li><a href="#" onclick='showAll("help"); return false;'>Show Needs</a></li>
                     <li><a href="#" onclick='showAll("trash"); return false;'>Show Trash</a></li>
                 </ul>
-
-            <!--Justins Posting Code goes here -->
-           
+                <ul class="nav">
+                    <li><a href="#" onclick='showAll("All"); return false;'>Show All</a></li>
+                </ul>
 
                 <div>
                 <form action="/server/communication.php" method="GET">
@@ -195,8 +195,8 @@
             		}
 
             		function moar(){
-            			beginLimit = beginLimit + 40;
-			    		endLimit = endLimit + 40;
+            			beginLimit = beginLimit + 10;
+			    		endLimit = endLimit + 10;
 			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
             		}
 
@@ -211,7 +211,7 @@
 					}
 
                     
-                    //httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
+                    //httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
                     
             	</script>
             </div>
