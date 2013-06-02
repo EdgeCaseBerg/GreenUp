@@ -36,3 +36,23 @@ h1{
 	margin-bottom:10px;
 
 }
+
+#homeButton1{
+	text-align: center;
+	color:#ffffff;
+	font:Arial;
+	font-size: 30px;
+	line-height: 104px;
+	background-image:url('../img/backgrounds/button.png');
+	background-position:center;
+	height: 104px;
+	background-repeat: no-repeat;
+	padding:30px;
+	margin-left:30px;
+	margin-right:30px;
+	margin-top:10px;
+	margin-bottom:10px;
+
+}
+
+
