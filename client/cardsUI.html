@@ -2,16 +2,17 @@
 <html>
 <head>
 
-<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-
-
-<meta name="viewport" content="width=device-width" />
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> -->
+<!-- <meta name="viewport" content="target-densitydpi=device-dpi" />  -->
+<!-- <meta name="HandheldFriendly" content="true"/> -->
 <!-- <link rel="stylesheet" href="css/normalize.css"> -->
 <!-- <link rel="stylesheet" href="css/main.css"> -->
 <link rel="stylesheet" href="css/homepage.css">
 <link rel="stylesheet" href="css/mapUI.css">
 <link rel="stylesheet" href="css/homeUI.css">
 <link rel="stylesheet" href="css/cardsUI.css">
+<link rel="stylesheet" href="css/messages.css">
 
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
         <script type="text/javascript"
@@ -111,16 +112,46 @@
                 <li><a>Communicate</a></li>
             </ul>
 
-            <!--Justins Posting Code goes here -->
-
-            <div >
-            	<h1>Recent Messages From the Green Up Community</h1>
+            <h1>Recent Messages From the Green Up Community</h1>
                 <ul class="nav">
                     <li><a href="?where=4">Show All</a></li>
                     <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
                     <li><a href="?where=2">Show Needs</a></li>
                     <li><a href="?where=3">Show Trash</a></li>
                 </ul>
+
+            <!--Justins Posting Code goes here -->
+            <h1>Recent Messages From the Green Up Community</h1>
+
+                <div>
+                <form action="/server/communication.php" method="GET">
+                    <input type="hidden" name="add" value="true" />
+                       <div>
+                        
+
+                        <div>
+                            <h3>Post your message</h3>
+                        <select name="topic">
+                          <option value="0">Forum Message</option>
+                          <option value="1">Volunteers Needed</option>
+                          <option value="2">Trash Pickup</option>
+                        </select>
+                        </div>  
+
+                        <textarea name="message" id="message"></textarea>
+
+                        <div>
+                        <input type="submit" name="Submit" value="Submit" />
+                        <input type="reset" name="Submit2" value="Reset" />
+                        </div>
+
+                        </div>
+
+                </form>
+                </div>
+
+            <div >
+            	
             	<ul id="messages" class="message"></ul>
             	<script type="text/javascript">
             		var beginLimit = 0;
