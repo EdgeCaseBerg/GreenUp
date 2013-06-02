@@ -166,6 +166,14 @@ google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
 
 $(document).ready(function(){
+
+    $('#startButton').click(function(){
+        start();
+    });
+
+    $('#stopButton').click(function(){
+        stop();
+    });
     // loadScript();
     $('#toggleHeat').click(function(){
         toggleHeatmap();
