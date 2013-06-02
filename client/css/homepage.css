@@ -22,7 +22,7 @@ a, a:hover, a:visited{
 
 .nav{
 	position:relative;
-	z-index:60;
+	z-index:200;
 	margin:5px 0px 0px 0px;
 	width:100%;
 	padding:0px;
