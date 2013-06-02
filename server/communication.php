@@ -13,7 +13,7 @@
 			$topic=0;
 			if(isset($_GET['topic'])){
 				$top = intval($_GET['topic']);
-				if($top == 0 || $top ==1 || $top==2){
+				if($top == 1 || $top ==2 || $top==3){
 					//Acceptable value
 					$topic=$top;
 				}
@@ -41,15 +41,16 @@
 
 	$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end;
 	if(isset($_GET['where'])){
+		error_log($_GET['where']);
 		switch ($_GET['where']) {
 			case 'messages':
-				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=0';
+				$SQL = 'SELECT message FROM `talk` where fkType=1 ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end ;
 				break;
 			case 'help':
-				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=2';
+				$SQL = 'SELECT message FROM `talk` where fkType=2 ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end ;
 				break;
 			case 'trash':
-				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=3';
+				$SQL = 'SELECT message FROM `talk` where fkType=3 ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end ;
 				break;
 			default:
 				//No Change
@@ -58,9 +59,11 @@
 	}
 	
 	$statement = $dbh->prepare($SQL);
-	$statement->execute();
+	$derp = $statement->execute();
 
 	$results = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+
+
 
 	//Construct the JSON to send to the comm page
 	foreach ($results as $key => $message) {
