@@ -61,8 +61,22 @@
                     ?>
                 </form>
 
+                <script type="text/javascript">
+                    function showAll(){
+                        var toAddTo = document.getElementById('messages');
+                        toAddTo.innerHTML = '';
+                        beginLimit = 0;
+                        endLimit = 20;
+                        httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where=4');
+                    }
+
+                    function showNeeds(){
+
+                    }
+                </script>
+
                 <ul class="nav">
-                    <li><a href="?where=4">Show All</a></li>
+                    <li><a href="" onclick=showAll(); return false;>Show All</a></li>
                     <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
                     <li><a href="?where=2">Show Needs</a></li>
                     <li><a href="?where=3">Show Trash</a></li>

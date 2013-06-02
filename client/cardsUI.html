@@ -20,11 +20,18 @@
       src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false">
     </script>
     <script src="js/markerwithlabel.js"></script>
+<<<<<<< HEAD
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/mapsUI.js"></script>
+<script type="text/javascript" src="js/lawnchair-js.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+=======
     <script type="text/javascript" src="js/lawnchair-js.js"></script>
 	<script type="text/javascript" src="js/mapsUI.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 	<script type="text/javascript" src="js/interface.js"></script>
 
+>>>>>>> 8936b436f4f8ee767c0516d53306ee67a06858b5
 </head>
 
 <body>
@@ -59,16 +66,7 @@
 
             <div class="stop">
                 <a href="" id="stopButton">Stop Cleaning Up</a>
-            </div>
 
-            <script>
-            document.getElementById(startbutton).onclick = function {
-                //DO FANCY THINGS HERE.
-
-            }
-            </script>   
-
-iv>
 
 
 		</div>
@@ -82,7 +80,6 @@ iv>
                 		<li><a >Maps</a></li>
                			<li><a id="pr2">Comments</a></li>
             		</ul>
-        		<!-- </div> -->
 
         		<div class="mapContainer">
                		<div id="map-canvas"></div>
@@ -116,12 +113,26 @@ iv>
                 <li><a>Communicate</a></li>
             </ul>
 
-            
+            <script type="text/javascript">
+                function showAll(where){
+                        var toAddTo = document.getElementById('messages');
+                        console.log(toAddTo);
+                        toAddTo.innerHTML = '';
+                        console.log(document.getElementById('messages'));
+                        
+                        beginLimit = 0;
+                        endLimit = 20;
+                        httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+where);
+
+                        return false;
+                    }
+            </script>
+
                 <ul class="nav">
-                    <li><a href="?where=4&pane=3">Show All</a></li>
+                    <li><a href="" onclick='showAll(4); return false'>Show All</a></li>
                     <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
-                    <li><a href="?where=2&pane=3">Show Needs</a></li>
-                    <li><a href="?where=3&pane=3">Show Trash</a></li>
+                    <li><a href="" onclick='showAll(2); return false;'>Show Needs</a></li>
+                    <li><a href="" onclick='showAll(3); return false;'>Show Trash</a></li>
                 </ul>
 
             <!--Justins Posting Code goes here -->
