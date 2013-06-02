@@ -17,7 +17,8 @@ ul{
 }
 
 .mapContainer{
-
+	height:100%;
+	width:100%;
 }
 
 .toggleContainer{
@@ -27,6 +28,7 @@ ul{
 	position:absolute;
 	z-index:15;
 	top:85%;
+	width:180px;
 	/*border:solid 1px blue;*/
 	-webkit-box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 	box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, 0.2);

@@ -53,6 +53,14 @@
 
             <div >
             	<h1>Recent Messages From the Green Up Community</h1>
+
+                <form action="/server/communication.php" method="GET">
+                    <input type="hidden" name="add" value="true" />
+                    <?php
+                        include('create_message.php');
+                    ?>
+                </form>
+
                 <ul class="nav">
                     <li><a href="?where=4">Show All</a></li>
                     <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
@@ -62,7 +70,7 @@
             	<ul id="messages" class="message"></ul>
             	<script type="text/javascript">
             		var beginLimit = 0;
-            		var endLimit = 10;
+            		var endLimit = 20;
 
             		//Get the parameters in the get url
             		var prmstr = window.location.search.substr(1);
@@ -81,7 +89,7 @@
             			var toAddTo = document.getElementById('messages');
 
             			if(typeof messages != "undefined"){
-	            			for (var i = messages.length - 1; i >= 0; i--) {
+	            			for (var i = 0; i < messages.length; i++) {
 	            				var message = document.createElement("li");
 	            				message.innerHTML = messages[i];
 	            				message.className = "message"
@@ -92,8 +100,8 @@
             		}
 
             		function moar(){
-            			beginLimit = beginLimit + 40;
-			    		endLimit = endLimit + 40;
+            			beginLimit = beginLimit + 20;
+			    		endLimit = endLimit + 20;
 			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
             		}
 

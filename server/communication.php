@@ -29,7 +29,7 @@
 	}
 
 	$start = 0;
-	$end = 40;
+	$end = 20;
 	$dbh = new PDO('mysql:host='.HOST.';dbname='.DB_NAME.';', DB_USER, DB_PASS);
 	$result = '';
 	//Use GET to set the limits of the query for pagination purposes
@@ -56,6 +56,7 @@
 				break;
 		}
 	}
+	
 	$statement = $dbh->prepare($SQL);
 	$statement->execute();
 
@@ -66,8 +67,16 @@
 		$result .= '"' . $message . '",';
 	}
 
+	//Default No messages message:
+	
+	if(strcmp($result,'')==0){
+		//The random comma the end
+		$result = '"There no messages to load",'; 
+	}
+
 	//Remove the last ,
 	$output = '[' . substr($result, 0, -1) . ']';
+	
 	echo $output;
 
 ?>
