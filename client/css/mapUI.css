@@ -22,6 +22,8 @@ ul{
 }
 
 .toggleContainer{
+	/*letter-spacing: 1em;*/
+ 		/*word-spacing: 1em;	*/
 	text-align:left;
 	padding:5px 7px 5px 5px;
 	background: url('../img/backgrounds/80_percent_white.png');
@@ -29,6 +31,7 @@ ul{
 	z-index:15;
 	top:85%;
 	width:180px;
+	color:black;
 	/*border:solid 1px blue;*/
 	-webkit-box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 	box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, 0.2);
@@ -53,9 +56,9 @@ input[type="checkbox"]{
 #markerTypeDialogNest{
 	background:#eee;
 	width:90%;
-	height:200px;
+	/*height:200px;*/
 	margin:auto;
-	margin-top:20px;
+	margin-top:100px;
 }
 
 .labels{
