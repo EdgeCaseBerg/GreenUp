@@ -1,5 +1,5 @@
 
-var map, pointarray, heatmap, pickupMarker, markerFlag;
+var map, pointarray, heatmap, pickupMarkers, markerFlag;
 var markerType = -1;
 var markerEvent;
 var HELP_TRASH = 1;
@@ -26,9 +26,10 @@ var MOUSEUP_TIME;
             ];
             
 function initialize() {
+    var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
     var mapOptions = {
     zoom: 13,
-    center: new google.maps.LatLng(37.774546, -122.433523),
+    center: centerPoint,
     mapTypeId: google.maps.MapTypeId.SATELLITE
   };
 
@@ -50,12 +51,12 @@ function initialize() {
 
 function initIcons(){
 var pickupIcon = "img/icons/greenCircle.png";
-  pickupMarker = new google.maps.Marker({
+  pickupMarkers = [new google.maps.Marker({
       position: new google.maps.LatLng(37.785, -122.435),
       map: map,
       icon: pickupIcon
-  });
-  pickupMarker.setVisible(false);
+  })];
+  pickupMarkers[0].setVisible(false);
   markerFlag = false;
 }
 
@@ -64,13 +65,24 @@ function toggleHeatmap() {
 }
 
 function toggleIcons(){
+    //if(markerFlag){
+    //    pickupMarker.setVisible(false);
+    //    markerFlag = false;
+    //}else{
+    //    pickupMarker.setVisible(true);
+    //    markerFlag = true;
+    //};
+    var newState;
     if(markerFlag){
-        pickupMarker.setVisible(false);
+        newState = false;
         markerFlag = false;
     }else{
-        pickupMarker.setVisible(true);
+        newState = true;
         markerFlag = true;
-    };
+    }
+    for (var i = 0; i < pickupMarkers.length; i++){
+        pickupMarkers[i].setVisible(newState);
+    }
 }
 
 // add an icon for a pickup
@@ -80,6 +92,7 @@ function addPickupMarker(){
         map: map,
         icon: "img/icons/greenCircle.png"
     });
+    pickupMarkers.push(marker);
 }
 
 // add an icon for a Comment location
@@ -89,6 +102,7 @@ function addCommentMarker(){
         map: map,
         icon: "img/icons/blueCircle.png"
     });
+    pickupMarkers.push(marker);
 
     // var marker = new MarkerWithLabel({
     //    position: markerEvent.latLng,
@@ -109,6 +123,7 @@ function addTrashMarker(){
         map: map,
         icon: "img/icons/redCircle.png"
     });
+    pickupMarkers.push(marker);
 }
 
 function markerSelectUp(event){
