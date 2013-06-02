@@ -25,6 +25,7 @@ a, a:hover, a:visited{
 	z-index:200;
 	margin:5px 0px 0px 0px;
 	width:100%;
+    height:10%;
 	padding:0px;
 	text-align:center;
 }
@@ -39,8 +40,10 @@ a, a:hover, a:visited{
 */
 	.nav li{
 		display:inline;
+        height:100%;
 	}
     .nav a{
+        height:100%;
     	display:block;
     	width:32%;
         cursor:pointer;
