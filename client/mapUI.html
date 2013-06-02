@@ -41,8 +41,9 @@
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
         <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false">
-    </script>
+                src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyC_h93qFbYG766pDFqUowxnp7NTV0cdFwE&sensor=false">
+        </script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
     <script type="text/javascript">
 var map, pointarray, heatmap, pickupMarker, markerFlag;
             var heatmapData = [
@@ -63,14 +64,26 @@ var map, pointarray, heatmap, pickupMarker, markerFlag;
             ];
             
 function initialize() {
+    var mapCenter = new google.maps.LatLng(37.774546, -122.433523);
     var mapOptions = {
     zoom: 13,
-    center: new google.maps.LatLng(37.774546, -122.433523),
+    center: mapCenter,
     mapTypeId: google.maps.MapTypeId.SATELLITE
   };
 
   map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-
+  
+  //uses the Places API to plot all nearby waste disposal sites on the map
+  var request = {
+    location: mapCenter,
+    radius: '50',
+    types: ['waste']
+  };
+  
+  //service = new google.maps.places.PlacesService(map);
+  //service.nearbySearch(request, callback);
+  
+ 
   var pointArray = new google.maps.MVCArray(heatmapData);
 
   heatmap = new google.maps.visualization.HeatmapLayer({
@@ -107,6 +120,9 @@ function toggleIcons(){
     };
 }
 
+function toggleDropoff(){
+}
+
 function addLatLng(event){
      var marker = new google.maps.Marker({
     position: event.latLng,
@@ -124,6 +140,15 @@ function changeOpacity() {
   heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
 }
 
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    for (var i = 0; i < results.length; i++) {
+      var place = results[i];
+      createMarker(results[i]);
+    }
+  }
+}
+
 google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
 
@@ -136,6 +161,8 @@ $(document).ready(function(){
         toggleIcons();
     });
 });
+
+
 </script>
 
     </head>
@@ -155,8 +182,9 @@ $(document).ready(function(){
         </div>
 
         <div class="toggleContianer">
-            <input type="button" id="toggleHeat" value="Toggle Heat" />
-            <input type="button" id="toggleIcons" value="Toggle Icons" />
+            <input type="button" id="toggleHeat" value="Toggle Heat" onclick="toggleHeatmap()" />
+            <input type="button" id="toggleIcons" value="Toggle Icons" onclick="toggleIcons()" />
+            <input type="button" id="toggleDropoff" value="Toggle Dropoff Sites" />
         </div>
 
         <script src="js/vendor/zepto.min.js"></script>
