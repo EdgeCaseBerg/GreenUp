@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/homepage.css">
+<link rel="stylesheet" href="css/mapUI.css">
+<link rel="stylesheet" href="css/cardsUI.css">
+
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+        <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false">
+    </script>
+    <script src="js/markerwithlabel.js"></script>
+<script type"text/javascript" src="js/mapsUI.js"></script>
+</head>
+
+<body>
+	<!-- <div id="loading">
+		<img src="img/startup/ajax-loader.gif">
+	</div> -->
+
+	<div id="container">
+		<div class="panel" id="panel1">
+			<div class="contentContainer">
+			</div>
+			<input type="button" value="panel right" id="pr1">
+		</div>
+
+		<!-- map panel -->
+		<div class="panel" id="panel2">
+			<!-- <div id="mapContainer" class="contentContainer"> -->
+				<!-- <div class="mobileContainer"> -->
+            		<ul class="nav">
+                		<li><a id="pl2">Home</a></li>
+                		<li><a >Maps</a></li>
+               			<li><a id="pr2">Comments</a></li>
+            		</ul>
+        		<!-- </div> -->
+
+        		<div class="mapContainer">
+               		<div id="map-canvas"></div>
+                	<div class="toggleContainer">
+                    	<ul>
+                        	<li><input type="checkbox" id="toggleHeat" value="ToggleHeat">Heat Map</li>asfASFAfASFAsf
+                        	<li><input type="checkbox" id="toggleIcons" value="ToggleIcons">Points of Interest</li>
+                    	</ul>
+                	</div>
+        		</div>
+
+		        <div id="markerTypeDialog">
+		            <div id="markerTypeDialogNest">
+		                <input type="button" value="Pickup point" id="selectPickup" />
+		                <input type="button" value="Comment point" id="selectComment" />
+		                <input type="button" value="Trash point" id="selectTrash" />
+		            </div>
+		          <!--   <input type="button" value="Lots of Trash" onClick="addTrashMarker">
+		            <input type="button" value="Comment point" onClick="addCommentMarker"> -->
+		        <!-- </div> -->
+			</div>
+			<!-- <input type="button" value="panel left" id="pl2">
+			<input type="button" value="panel right" id="pr2"> -->
+		</div>
+
+		<div class="panel" id="panel3">
+			      
+            <ul class="nav">
+                <li><a id="pr3">Home</a></li>
+                <li><a id="pl3">Maps</a></li>
+                <li><a>Communicate</a></li>
+            </ul>
+
+            <!--Justins Posting Code goes here -->
+
+            <div >
+            	<h1>Recent Messages From the Green Up Community</h1>
+                <ul class="nav">
+                    <li><a href="?where=4">Show All</a></li>
+                    <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
+                    <li><a href="?where=2">Show Needs</a></li>
+                    <li><a href="?where=3">Show Trash</a></li>
+                </ul>
+            	<ul id="messages" class="message"></ul>
+            	<script type="text/javascript">
+            		var beginLimit = 0;
+            		var endLimit = 10;
+
+            		//Get the parameters in the get url
+            		var prmstr = window.location.search.substr(1);
+					var prmarr = prmstr.split ("&");
+					var params = {};
+
+					for ( var i = 0; i < prmarr.length; i++) {
+    					var tmparr = prmarr[i].split("=");
+    					params[tmparr[0]] = tmparr[1];
+					}
+
+
+            		function addMessages(xmlHttp){
+            			//Yes I'm using eval. Deal.
+            			var messages = eval(xmlHttp.responseText);
+            			var toAddTo = document.getElementById('messages');
+
+            			if(typeof messages != "undefined"){
+	            			for (var i = messages.length - 1; i >= 0; i--) {
+	            				var message = document.createElement("li");
+	            				message.innerHTML = messages[i];
+	            				message.className = "message"
+	            				toAddTo.appendChild(message);
+	            				toAddTo.appendChild(document.createElement('hr'));
+	            			};
+            			}
+            		}
+
+            		function moar(){
+            			beginLimit = beginLimit + 40;
+			    		endLimit = endLimit + 40;
+			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
+            		}
+
+            		//Helper function to fetch URL contents
+					function httpGet(theUrl){
+						
+			    		var xmlHttp = null;
+			    		xmlHttp = new XMLHttpRequest();
+			    		xmlHttp.onreadystatechange = function(){addMessages(xmlHttp)};
+			    		xmlHttp.open( "GET", theUrl, true );
+			    		xmlHttp.send( null );
+					}
+
+					httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
+            	</script>
+            </div>
+
+            <div id="moar">
+            	<a href="#moar" onclick=moar();><h2>Load More</h2></a>
+            </div>
+
+      
+		</div>
+	</div>
+</body>
+
+</html>
