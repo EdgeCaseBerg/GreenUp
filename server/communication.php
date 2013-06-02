@@ -70,8 +70,8 @@
 	//Default No messages message:
 	
 	if(strcmp($result,'')==0){
-		//The random comma the end
-		$result = '"There no messages to load",'; 
+		//The random comma the end is because we substr it below
+		$result = '"There are no messages to load",'; 
 	}
 
 	//Remove the last ,
