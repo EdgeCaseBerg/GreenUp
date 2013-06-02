@@ -46,10 +46,10 @@
 				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=0';
 				break;
 			case 'help':
-				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=1';
+				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=2';
 				break;
 			case 'trash':
-				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=2';
+				$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end . ' where talk.fkType=3';
 				break;
 			default:
 				//No Change
