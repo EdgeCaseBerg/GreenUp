@@ -41,6 +41,7 @@
 
             <!-- Main Page Content -->
             <h1> Green Up Vermont </h1>   
+            <h1> Green Up Vermont </h1>   
             <div id="bodyText"> 
                 <p> Help keep Vermont green. Track your clean up progress, see what areas need the 
                     most help, and find an area to drop off what you pick up.
@@ -48,28 +49,22 @@
                         <br />
                     To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
                 </p>
-
-                <div id="homeButton1">
-                    
-                    <div id="buttonText">
-                        <a href="" >Start Cleaning Up</a>    
-                    </div>
-                </div>
-
-                <script>
-                //Function to change button image on click, and begin the cleanup timer/start
-                //tracking user's movements.
-                document.getElementById(homeButton).onClick = function{ document.getElementById(buttonText).innerHTML="Stop Cleaning Up";
-                    document.getElementById(homeButton1).style.background = "url('img/backgrounds/button.png')";
-                }
-
-                </script>
-
-                <div id="homeButton">
-                    <div id="buttonText">Go To Maps</div>
-                </div>              
-
             </div>
+
+            <div class="start">
+                <a href="" id="startbutton">Start Cleaning Up</a>
+            </div>
+
+            <div class="stop">
+                <a href="" id="stopButton">Stop Cleaning Up</a>
+            </div>
+
+            <script>
+            document.getElementById(startbutton).onclick = function {
+            //DO FANCY THINGS HERE.
+
+            }
+            </script>           
 		</div>
 
 		<!-- map panel -->
