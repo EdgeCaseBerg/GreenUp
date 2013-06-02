@@ -42,7 +42,7 @@ function initialize() {
     radius: 5
   });
 
-  heatmap.setMap(map);
+  heatmap.setMap(null);
   
   google.maps.event.addListener(map, 'mousedown', markerSelectDown);
   google.maps.event.addListener(map, 'mouseup', markerSelectUp);
@@ -55,7 +55,8 @@ var pickupIcon = "img/icons/greenCircle.png";
       map: map,
       icon: pickupIcon
   });
-  markerFlag = true;
+  pickupMarker.setVisible(false);
+  markerFlag = false;
 }
 
 function toggleHeatmap() {
