@@ -67,6 +67,13 @@
 		$result .= '"' . $message . '",';
 	}
 
+	//Default No messages message:
+	
+	if(strcmp($result,'')==0){
+		//The random comma the end
+		$result = '"There no messages to load",'; 
+	}
+
 	//Remove the last ,
 	$output = '[' . substr($result, 0, -1) . ']';
 	
