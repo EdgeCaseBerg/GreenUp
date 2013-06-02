@@ -114,12 +114,26 @@
                 <li><a>Communicate</a></li>
             </ul>
 
-            
+            <script type="text/javascript">
+                function showAll(where){
+                        var toAddTo = document.getElementById('messages');
+                        console.log(toAddTo);
+                        toAddTo.innerHTML = '';
+                        console.log(document.getElementById('messages'));
+                        
+                        beginLimit = 0;
+                        endLimit = 20;
+                        httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+where);
+
+                        return false;
+                    }
+            </script>
+
                 <ul class="nav">
-                    <li><a href="?where=4&pane=3">Show All</a></li>
+                    <li><a href="" onclick='showAll(4); return false'>Show All</a></li>
                     <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
-                    <li><a href="?where=2&pane=3">Show Needs</a></li>
-                    <li><a href="?where=3&pane=3">Show Trash</a></li>
+                    <li><a href="" onclick='showAll(2); return false;'>Show Needs</a></li>
+                    <li><a href="" onclick='showAll(3); return false;'>Show Trash</a></li>
                 </ul>
 
             <!--Justins Posting Code goes here -->
