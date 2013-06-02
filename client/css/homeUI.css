@@ -24,11 +24,15 @@ h1{
 	padding-top:20px;
 	padding-bottom:20px;
 	margin-bottom:10px;
+    width: 60%;
+    margin:auto;
 }
 
 .start a{
+    text-align: center;
 	display:block;
-	width:60%;
+	width:100%;
+   
 
     -moz-box-shadow:inset 0px 0px 14px -3px #339900;
     -webkit-box-shadow:inset 0px 0px 14px -3px #339900;
@@ -85,11 +89,15 @@ h1{
 	padding-top:20px;
 	padding-bottom:20px;
 	margin-top:10px;
+    margin:auto;
+    width:60%;
 }
 
 .stop a{
+    text-align:center;
 	display:block;
-	width:60%;
+	width:100%;
+
 
     -moz-box-shadow:inset 0px 0px 14px -3px #508534;
     -webkit-box-shadow:inset 0px 0px 14px -3px #508534;
