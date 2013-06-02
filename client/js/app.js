@@ -19,18 +19,17 @@ function runUpdate(database){
 function upload(database){
 	//server/addgriddata.php
 	
-	database.all(function(obj){
+	database.all(function(data){
     	$.ajax({
     		type:'POST',
     		url: '/server/addGridData.php',
     		dataType:"json",
-            data: obj,
-            success: function(data){alert(obj);},   // Success Function
+            data: {data : data},
     		failure: function(errMsg){alert(errMsg);}
     	});//Ajax
 		
 		//Remove all uploaded database records
-    	for(var i=1;i<obj.length;i++){
+    	for(var i=1;i<data.length;i++){
     		database.remove(i);
     	}
     });
