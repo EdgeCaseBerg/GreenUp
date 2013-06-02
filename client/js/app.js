@@ -24,7 +24,7 @@ function upload(database){
     		type:'POST',
     		url: '/server/addGridData.php',
     		dataType:"json",
-            data: obj,
+            data: JSON.stringify('data' : obj),
             success: function(data){alert(obj);},   // Success Function
     		failure: function(errMsg){alert(errMsg);}
     	});//Ajax
