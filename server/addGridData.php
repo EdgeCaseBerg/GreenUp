@@ -6,9 +6,9 @@ $grid = new Grid();
 $previousPoint = $data[0];
 for($i=1; $i<sizeof($data); $i++)
 {	
-	if(round($data[$i]['lat'],4) !== round($previousPoint['lat'],4) || round($data[$i]['long'],4) !== round($previousPoint['long'],4) || $i = (sizeof($data)-1))
+	if(round($data[$i]['latitude'],4) !== round($previousPoint['latitude'],4) || round($data[$i]['longitude'],4) !== round($previousPoint['longitude'],4) || $i = (sizeof($data)-1))
 	{
-		$grid->incrementTime($previousPoint['lat'], $previousPoint['long'], ($data[$i]['seconds']- $previousPoint['seconds']));
+		$grid->incrementTime($previousPoint['latitude'], $previousPoint['longitude'], ($data[$i]['timestamp']- $previousPoint['timestamp']));
 		$previousPoint = $data[$i];
 	}
 	

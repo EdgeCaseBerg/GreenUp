@@ -20,20 +20,17 @@ function upload(database){
 	//server/addgriddata.php
 	
 	database.all(function(obj){
-    	/*$.ajax({
+    	$.ajax({
     		type:'POST',
-    		url: //TBD,
-    		contentType:"application/json; charset=utf-8",
+    		url: '/server/addGridData.php',
     		dataType:"json",
             data: obj,
-            success: function(data){
-                alert("SECOND POST JSON DATA");
-            }   // Success Function
-    	});//Ajax*/
+            success: function(data){alert(obj);},   // Success Function
+    		failure: function(errMsg){alert(errMsg);}
+    	});//Ajax
+		
+		//Remove all uploaded database records
     	for(var i=1;i<obj.length;i++){
-    		alert(obj[i].value.latitude);
-    		alert(obj[i].value.longitude);
-    		alert(obj[i].value.datetime);
     		database.remove(i);
     	}
     });
