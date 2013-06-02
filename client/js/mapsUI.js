@@ -163,24 +163,29 @@ $(document).ready(function(){
         addPickupMarker();
         // alert("hello");
     });
-    
+
     $('#selectComment').click(function(){
         $('#markerTypeDialog').toggle();
         addCommentMarker();
         // alert("hello");
     });
-    
+
     $('#selectTrash').click(function(){
         $('#markerTypeDialog').toggle();
         addTrashMarker();
         // alert("hello");
     });
-    
+
 
     $('#pr1').click(function(){
         $('#container').removeClass("panel1Center");
         $('#container').removeClass("panel3Center");
         $('#container').addClass("panel2Center");
+    });
+    $('#prr1').click(function(){
+        $('#container').removeClass("panel1Center");
+        $('#container').removeClass("panel2Center");
+        $('#container').addClass("panel3Center");
     });
 
     $('#pr2').click(function(){
@@ -200,6 +205,14 @@ $(document).ready(function(){
         $('#container').removeClass("panel1Center");
         $('#container').addClass("panel2Center");
     });
+
+    $('#pll3').click(function(){
+        $('#container').removeClass("panel3Center");
+        $('#container').removeClass("panel2Center");
+        $('#container').addClass("panel1Center");
+    });
+
+
 
     // $('#map-canvas').mousedown(function(){
     //     MOUSEDOWN_TIME = new Date().getTime() / 1000;

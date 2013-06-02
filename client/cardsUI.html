@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/homepage.css">
 <link rel="stylesheet" href="css/mapUI.css">
+<link rel="stylesheet" href="css/homeUI.css">
 <link rel="stylesheet" href="css/cardsUI.css">
 
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
@@ -24,9 +25,44 @@
 
 	<div id="container">
 		<div class="panel" id="panel1">
-			<div class="contentContainer">
-			</div>
-			<input type="button" value="panel right" id="pr1">
+			<ul class="nav">
+                <li><a>Home</a></li>
+                <li><a id="pr1">Maps</a></li>
+                <li><a id="prr1">Comments</a></li>
+            </ul>
+
+            <!-- Main Page Content -->
+            <h1> Green Up Vermont </h1>   
+            <div id="bodyText"> 
+                <p> Help keep Vermont green. Track your clean up progress, see what areas need the 
+                    most help, and find an area to drop off what you pick up.
+                        <br />
+                        <br />
+                    To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
+                </p>
+
+                <div id="homeButton1">
+                    
+                    <div id="buttonText">
+                        <a href="" >Start Cleaning Up</a>    
+                    </div>
+                </div>
+
+                <script>
+                //Function to change button image on click, and begin the cleanup timer/start
+                //tracking user's movements.
+                document.getElementById(homeButton).onClick = function{
+                    document.getElementById(buttonText).innerHTML="Stop Cleaning Up";
+                    document.getElementById(homeButton1).style.background = "url('../img/backgrounds/button.png')";
+                }
+
+                </script>
+
+                <div id="homeButton">
+                    <div id="buttonText">Go To Maps</div>
+                </div>              
+
+            </div>
 		</div>
 
 		<!-- map panel -->
@@ -44,8 +80,8 @@
                		<div id="map-canvas"></div>
                 	<div class="toggleContainer">
                     	<ul>
-                        	<li><input type="checkbox" id="toggleHeat" value="ToggleHeat">Heat Map</li>asfASFAfASFAsf
-                        	<li><input type="checkbox" id="toggleIcons" value="ToggleIcons">Points of Interest</li>
+                        	<li><input type="checkbox" id="toggleHeat" />Heat Map</li>
+                        	<li><input type="checkbox" id="toggleIcons" />Points of Interest</li>
                     	</ul>
                 	</div>
         		</div>
@@ -67,7 +103,7 @@
 		<div class="panel" id="panel3">
 			      
             <ul class="nav">
-                <li><a id="pr3">Home</a></li>
+                <li><a id="pll3">Home</a></li>
                 <li><a id="pl3">Maps</a></li>
                 <li><a>Communicate</a></li>
             </ul>
