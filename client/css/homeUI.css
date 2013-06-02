@@ -2,12 +2,14 @@
 
 h1{
 	color:#8bbd52;
+	padding-top:20px;
 
 }
 
 #bodyText{
 	color:#508534;
-	padding:15px;
+	padding:30px;
+
 
 }
 
@@ -22,8 +24,9 @@ h1{
 
 .start{
 	padding-top:20px;
-	padding-bottom:20px;
+	padding-bottom:30px;
 	margin-bottom:10px;
+	text-align: center;
 }
 
 .start a{
@@ -82,9 +85,10 @@ h1{
 
 
 .stop{
-	padding-top:20px;
+	padding-top:30px;
 	padding-bottom:20px;
 	margin-top:10px;
+	text-align: center;
 }
 
 .stop a{
@@ -138,4 +142,9 @@ h1{
 .stop a:active {
     position:relative;
     top:1px;
+}
+
+
+h1{
+	text-align: center;
 }
