@@ -36,7 +36,7 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/homepage.css">
-        <link rel="stylesheet" href="css/homeUI.css">
+        <link rel="stylesheet" href="css/messages.css">
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
@@ -46,44 +46,76 @@
             <ul class="nav">
                 <li><a href="homeUI.html">Home</a></li>
                 <li><a href="mapUI.html">Maps</a></li>
-                <li><a href="commUI.php">Comments</a></li>
+                <li><a href="commUI.php">Communicate</a></li>
             </ul>
 
-            <!-- Main Page Content -->
-            <h1> Green Up Vermont </h1>   
-            <div id="bodyText"> 
-                <p> Help keep Vermont green. Track your clean up progress, see what areas need the 
-                    most help, and find an area to drop off what you pick up.
-                        <br />
-                        <br />
-                    To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
-                </p>
+            <!--Justins Posting Code goes here -->
 
-                <div id="homeButton1">
-                    
-                    <div id="buttonText">
-                        <a href="" >Start Cleaning Up</a>    
-                    </div>
-                </div>
+            <div >
+            	<h1>Recent Messages From the Green Up Community</h1>
+                <ul class="nav">
+                    <li><a href="?where=4">Show All</a></li>
+                    <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
+                    <li><a href="?where=2">Show Needs</a></li>
+                    <li><a href="?where=3">Show Trash</a></li>
+                </ul>
+            	<ul id="messages" class="message"></ul>
+            	<script type="text/javascript">
+            		var beginLimit = 0;
+            		var endLimit = 10;
 
-                <script>
-                //Function to change button image on click, and begin the cleanup timer/start
-                //tracking user's movements.
-                document.getElementById(homeButton).onClick = function{
-                    document.getElementById(buttonText).innerHTML="Stop Cleaning Up";
-                    document.getElementById(homeButton1).style.background = "url('../img/backgrounds/button.png')";
-                }
+            		//Get the parameters in the get url
+            		var prmstr = window.location.search.substr(1);
+					var prmarr = prmstr.split ("&");
+					var params = {};
 
-                </script>
+					for ( var i = 0; i < prmarr.length; i++) {
+    					var tmparr = prmarr[i].split("=");
+    					params[tmparr[0]] = tmparr[1];
+					}
 
-                <div id="homeButton">
-                    <div id="buttonText">Go To Maps</div>
-                </div>              
 
+            		function addMessages(xmlHttp){
+            			//Yes I'm using eval. Deal.
+            			var messages = eval(xmlHttp.responseText);
+            			var toAddTo = document.getElementById('messages');
+
+            			if(typeof messages != "undefined"){
+	            			for (var i = messages.length - 1; i >= 0; i--) {
+	            				var message = document.createElement("li");
+	            				message.innerHTML = messages[i];
+	            				message.className = "message"
+	            				toAddTo.appendChild(message);
+	            				toAddTo.appendChild(document.createElement('hr'));
+	            			};
+            			}
+            		}
+
+            		function moar(){
+            			beginLimit = beginLimit + 40;
+			    		endLimit = endLimit + 40;
+			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
+            		}
+
+            		//Helper function to fetch URL contents
+					function httpGet(theUrl){
+						
+			    		var xmlHttp = null;
+			    		xmlHttp = new XMLHttpRequest();
+			    		xmlHttp.onreadystatechange = function(){addMessages(xmlHttp)};
+			    		xmlHttp.open( "GET", theUrl, true );
+			    		xmlHttp.send( null );
+					}
+
+					httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
+            	</script>
+            </div>
+
+            <div id="moar">
+            	<a href="#moar" onclick=moar();><h2>Load More</h2></a>
             </div>
 
         </div>
-
 
         <script src="js/vendor/zepto.min.js"></script>
         <script src="js/helper.js"></script>
@@ -95,5 +127,8 @@
             g.src=("https:"==location.protocol?"//ssl":"//www")+".google-analytics.com/ga.js";
             s.parentNode.insertBefore(g,s)}(document,"script"));
         </script>
+
+
+
     </body>
 </html>
