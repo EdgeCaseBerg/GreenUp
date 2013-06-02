@@ -53,10 +53,35 @@
 
             <div >
             	<h1>Recent Messages From the Green Up Community</h1>
+
+                <form action="/server/communication.php" method="GET">
+                    <input type="hidden" name="add" value="true" />
+                    <?php
+                        include('create_message.php');
+                    ?>
+                </form>
+
+                <ul class="nav">
+                    <li><a href="?where=4">Show All</a></li>
+                    <!-- <li><a href="?where=1">Show Just Messages</a></li>-->
+                    <li><a href="?where=2">Show Needs</a></li>
+                    <li><a href="?where=3">Show Trash</a></li>
+                </ul>
             	<ul id="messages" class="message"></ul>
             	<script type="text/javascript">
             		var beginLimit = 0;
-            		var endLimit = 10;
+            		var endLimit = 20;
+
+            		//Get the parameters in the get url
+            		var prmstr = window.location.search.substr(1);
+					var prmarr = prmstr.split ("&");
+					var params = {};
+
+					for ( var i = 0; i < prmarr.length; i++) {
+    					var tmparr = prmarr[i].split("=");
+    					params[tmparr[0]] = tmparr[1];
+					}
+
 
             		function addMessages(xmlHttp){
             			//Yes I'm using eval. Deal.
@@ -64,7 +89,7 @@
             			var toAddTo = document.getElementById('messages');
 
             			if(typeof messages != "undefined"){
-	            			for (var i = messages.length - 1; i >= 0; i--) {
+	            			for (var i = 0; i < messages.length; i++) {
 	            				var message = document.createElement("li");
 	            				message.innerHTML = messages[i];
 	            				message.className = "message"
@@ -72,17 +97,12 @@
 	            				toAddTo.appendChild(document.createElement('hr'));
 	            			};
             			}
-            			
-
-            			
-
             		}
 
             		function moar(){
-            			beginLimit = beginLimit + 40;
-			    		endLimit = endLimit + 40;
-			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
-			    		console.log(beginLimit);
+            			beginLimit = beginLimit + 20;
+			    		endLimit = endLimit + 20;
+			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
             		}
 
             		//Helper function to fetch URL contents
@@ -95,7 +115,7 @@
 			    		xmlHttp.send( null );
 					}
 
-					httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
+					httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
             	</script>
             </div>
 
