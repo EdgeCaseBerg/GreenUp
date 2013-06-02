@@ -1,15 +1,15 @@
-<table width="400" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC">
+<table>
 <tr>
-<form id="form1" name="form1" method="post" action="./add_topic.php">
+
 <td>
-<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFFFF">
+<table>
 <tr>
-<td colspan="3" bgcolor="#E6E6E6"><strong>Green Up Vermont</strong> </td>
+<td colspan="3" ><strong>Green Up Vermont</strong> </td>
 </tr>
 <tr>
-<td width="14%"><strong>Topic</strong></td>
-<td width="2%">:</td>
-<td width="84%">
+<td ><strong>Topic</strong></td>
+<td>:</td>
+<td>
 <select name="topic">
   <option value="0">Forum Message</option>
   <option value="1">Volunteers Needed</option>
@@ -17,22 +17,17 @@
 </select>
 </tr>
 <tr>
-<td valign="top"><strong>Location</strong></td>
-<td valign="top">:</td>
-<!-- Pull user location information here. -->
-</tr>	
-<tr>
-<td valign="top"><strong>Message</strong></td>
-<td valign="top">:</td>
-<td><textarea name="message" cols="50" rows="3" id="message"></textarea></td>
+<td><strong>Message</strong></td>
+<td>:</td>
+<td><textarea name="message" id="message"></textarea></td>
 </tr>
 <tr>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td></td>
+<td></td>
 <td><input type="submit" name="Submit" value="Submit" /> <input type="reset" name="Submit2" value="Reset" /></td>
 </tr>
 </table>
 </td>
-</form>
+
 </tr>
 </table>
