@@ -39,7 +39,7 @@
         <link rel="stylesheet" href="css/homeUI.css">
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
-    <body style="background-color:#FFFFFF;">
+    <body>
 
         <!-- Add your site or application content here -->
         <div class="mobileContainer">
@@ -51,9 +51,35 @@
 
             <!-- Main Page Content -->
             <h1> Green Up Vermont </h1>   
-            <div id="bodyText"> OH HAI. This is green up, an app we are developing. Its gonna be pretty
-                frickin' sweet. This is just some text I'm writing because screw Lorem
-                Ipsum. THIS IS 'MURICA.  
+            <div id="bodyText"> 
+                <p> Help keep Vermont green. Track your clean up progress, see what areas need the 
+                    most help, and find an area to drop off what you pick up.
+                        <br />
+                        <br />
+                    To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
+                </p>
+
+                <div id="homeButton1">
+                    
+                    <div id="buttonText">
+                        <a href="" >Start Cleaning Up</a>    
+                    </div>
+                </div>
+
+                <script>
+                //Function to change button image on click, and begin the cleanup timer/start
+                //tracking user's movements.
+                document.getElementById(homeButton).onClick = function{
+                    document.getElementById(buttonText).innerHTML="Stop Cleaning Up";
+                    document.getElementById(homeButton1).style.background = "url('../img/backgrounds/button.png')";
+                }
+
+                </script>
+
+                <div id="homeButton">
+                    <div id="buttonText">Go To Maps</div>
+                </div>              
+
             </div>
 
         </div>
