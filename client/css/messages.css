@@ -1,15 +1,43 @@
 .message{
-	margin: 4em;
-	border-radius: 2em;
-	border: solid thick #000000;
-        }
+	margin: 2em;
+	border-radius: .25em;
+	border: solid medium #00ff00;
+        padding: .5em;
+}
+li.message{
+        background-color: #ffffaf;
+}
+hr{
+        width: 80%;
+}
 ul.message{
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 	margin-top: 1em;
+        color: #000000;
+        border: none;
 }
+
 #moar{
         margin: 1em;
         padding: 1em;
+        text-align: center;
+        color: #ffffff;
+}
+form{
+        width: 100%;
+        text-align: center;
+}
+form select{
+        margin: .5em;
+        margin-bottom: .25em; 
+}
+form textarea{
+        margin: 1em;
+        margin-top: .25em;
+        width: 90%;
+}
+form h3{
+        color: #00ff00;
 }

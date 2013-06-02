@@ -1,5 +1,5 @@
 <?php
-include('config.php');
+include('Config.php');
 
 class Grid{
 
@@ -13,6 +13,7 @@ class Grid{
 		$long_key = round($long, 4);
 		$query = "CALL incrementTime ($lat_key, $long_key, $time_spent)";
 		error_log($this->dbh->exec($query));
+		error_log($query);
 	}
 
 	public function getHeatmapPoints(){

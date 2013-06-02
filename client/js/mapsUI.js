@@ -42,7 +42,7 @@ function initialize() {
     radius: 5
   });
 
-  heatmap.setMap(map);
+  heatmap.setMap(null);
   
   google.maps.event.addListener(map, 'mousedown', markerSelectDown);
   google.maps.event.addListener(map, 'mouseup', markerSelectUp);
@@ -55,7 +55,8 @@ var pickupIcon = "img/icons/greenCircle.png";
       map: map,
       icon: pickupIcon
   });
-  markerFlag = true;
+  pickupMarker.setVisible(false);
+  markerFlag = false;
 }
 
 function toggleHeatmap() {
@@ -212,6 +213,34 @@ $(document).ready(function(){
         $('#container').addClass("panel1Center");
     });
 
+
+    //Get the parameters in the get url and expose them
+    var prmstr = window.location.search.substr(1);
+    var prmarr = prmstr.split ("&");
+    var params = {};
+
+    for ( var i = 0; i < prmarr.length; i++) {
+        var tmparr = prmarr[i].split("=");
+        params[tmparr[0]] = tmparr[1];
+    }
+
+    //Check the param and look for pane
+    if(params.pane != "undefined"){
+        switch(params.pane){
+            case "2":
+                    $('#container').removeClass('panel1Center');
+                    $('#container').removeClass('panel2Center');
+                    $('#container').removeClass('panel2Center');
+                    $('#container').addClass('panel2Center');
+                break;
+            case "3":
+                    $('#container').removeClass('panel1Center');
+                    $('#container').removeClass('panel2Center');
+                    $('#container').removeClass('panel2Center');
+                    $('#container').addClass('panel3Center');
+                break;
+        }
+    }
 
 
     // $('#map-canvas').mousedown(function(){
