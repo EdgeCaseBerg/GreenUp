@@ -23,7 +23,7 @@
 		-webkit-transition: all 0.7s ease-in-out;
 		width:300%;
 		height:100%;
-		/*border:solid 1px red;*/
+		border:solid 1px red;
 		padding:0px;
 		font-size: 0px;
   		letter-spacing: 0px;
