@@ -1,5 +1,5 @@
 <?php
-
+include('config.php');
 
 class Grid{
 
