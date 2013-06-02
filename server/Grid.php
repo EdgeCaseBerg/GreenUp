@@ -5,13 +5,14 @@ class Grid{
 
 	public function __construct(){
 		$this->dbh = new PDO('mysql:host='.HOST, DB_USER, DB_PASS);
+		$this->dbh->exec("USE " . DB_NAME);
 	}
 
 	public function incrementTime($lat, $long, $time_spent){
 		$lat_key = round($lat, 4);
 		$long_key = round($long, 4);
 		$query = "CALL incrementTime ($lat_key, $long_key, $time_spent)";
-		return $this->dbh->exec($query);
+		error_log($this->dbh->exec($query));
 	}
 
 	public function getHeatmapPoints(){
@@ -20,7 +21,7 @@ class Grid{
 
 		$mapdata = array();
 		foreach($this->dbh->fetchAll() as $pointData){
-			array_push($mapData, "{location: new google.maps.LatLng(".$pointData['pkLat'].", ".$pointData['pkLong']."), weight: ".$pointData['secondsWorked']."}");
+			array_push($mapData, "{location: new google.maps.LatLng(".$pointData['pkLat'].", ".$pointData['pkLon']."), weight: ".$pointData['secondsWorked']."}");
 		}
 
 		return json_encode($mapData);
