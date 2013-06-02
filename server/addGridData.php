@@ -9,15 +9,15 @@ include('Grid.php');
 // error_log(json_encode(array($dataPoint, $dataPoint)));
 
 
-$data = json_decode($_POST['data']);
+$data = $_POST['data'];
 $grid = new Grid();
 $previousPoint = $data[0];
 
 for($i=1; $i<sizeof($data); $i++){
 
-	if(round($data[$i]->lat,4) !== round($previousPoint->lat,4) || round($data[$i]->long,4) !== round($previousPoint->long,4) || $i = (sizeof($data)-1))
+	if(round($data[$i]['value']['latitude'],4) !== round($previousPoint['value']['latitude'],4) || round($data[$i]['value']['longitude'],4) !== round($previousPoint['value']['longitude'],4) || $i = (sizeof($data)-1))
 	{
-		$grid->incrementTime($previousPoint->lat, $previousPoint->long, ($data[$i]->seconds - $previousPoint->seconds));
+		$grid->incrementTime($previousPoint['value']['latitude'], $previousPoint['value']['longitude'], ($data[$i]['value']['datetime'] - $previousPoint['value']['datetime']));
 		$previousPoint = $data[$i];
 	}
 }
