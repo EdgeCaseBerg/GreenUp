@@ -90,8 +90,8 @@ function addPickupMarker(){
     });
     pickupMarkers.push(marker);
 
-     var info = new google.maps.InfoWindow();
-    info.setContent('<form id="hook" class="infowindow pickup" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="3" /><input type="hidden" name="add" /><input type="submit"  />');
+    var info = new google.maps.InfoWindow();
+    info.setContent('<form id="hook" class="infowindow pickup" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="3" /><input type="hidden" name="add" /><input type="submit"  onmousedown="showToggleContainer" />');
     info.setPosition(marker.position);
     info.open(map);
 }
@@ -106,20 +106,9 @@ function addCommentMarker(){
     pickupMarkers.push(marker);
 
     var info = new google.maps.InfoWindow();
-    info.setContent('<form id="hook" class="infowindow comment" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="1" /><input type="hidden" name="add" /><input type="submit"  />');
+    info.setContent('<form id="hook" class="infowindow comment" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="1" /><input type="hidden" name="add" /><input type="submit"  onmousedown="showToggleContainer" />');
     info.setPosition(marker.position);
     info.open(map);
-
-    // var marker = new MarkerWithLabel({
-    //    position: markerEvent.latLng,
-    //    draggable: true,
-    //    raiseOnDrag: true,
-    //    map: map,
-    //    labelContent: "$425K",
-    //    labelAnchor: new google.maps.Point(22, 0),
-    //    labelClass: "labels", // the CSS class for the label
-    //    labelStyle: {opacity: 0.75}
-    //  });
 }
 
 // add an icon to indicate where trash was found
@@ -133,9 +122,13 @@ function addTrashMarker(){
 
     //corresponds to the help needed
     var info = new google.maps.InfoWindow();
-    info.setContent('<form id="hook" class="infowindow helpme" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="2" /><input type="hidden" name="add" /><input type="submit"  />');
+    info.setContent('<form id="hook" class="infowindow helpme" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="2" /><input type="hidden" name="add" /><input type="submit"  onmousedown="showToggleContainer" />');
     info.setPosition(marker.position);
     info.open(map);
+}
+
+function showToggleContainer(){
+    $('.toggleContainer').show();
 }
 
 function markerSelectUp(event){
@@ -203,16 +196,19 @@ $(document).ready(function(){
 
     $('#selectPickup').click(function(){
         $('#markerTypeDialog').toggle();
+        $('.toggleContainer').hide();
         addPickupMarker();
     });
 
     $('#selectComment').click(function(){
         $('#markerTypeDialog').toggle();
+        $('.toggleContainer').hide();
         addCommentMarker();
     });
 
     $('#selectTrash').click(function(){
         $('#markerTypeDialog').toggle();
+        $('.toggleContainer').hide();
         addTrashMarker();
     });
 
