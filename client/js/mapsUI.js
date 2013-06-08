@@ -21,7 +21,7 @@ function initialize() {
 
     centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
     var mapOptions = {
-    zoom: 12,
+    zoom: 14,
     center: centerPoint,
     mapTypeId: google.maps.MapTypeId.SATELLITE
   };
