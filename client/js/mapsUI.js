@@ -188,19 +188,16 @@ $(document).ready(function(){
     $('#selectPickup').click(function(){
         $('#markerTypeDialog').toggle();
         addPickupMarker();
-        // alert("hello");
     });
 
     $('#selectComment').click(function(){
         $('#markerTypeDialog').toggle();
         addCommentMarker();
-        // alert("hello");
     });
 
     $('#selectTrash').click(function(){
         $('#markerTypeDialog').toggle();
         addTrashMarker();
-        // alert("hello");
     });
 
 
