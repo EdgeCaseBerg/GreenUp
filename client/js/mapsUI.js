@@ -8,37 +8,20 @@ var COMMENT_LOC = 3;
 var MOUSEDOWN_TIME;
 var MOUSEUP_TIME;
 
-            var heatmapData = [
-                {location: new google.maps.LatLng(37.782, -122.447), weight: 0.5}, 
-                {location: new google.maps.LatLng(37.782, -122.445), weight: 1},
-                {location: new google.maps.LatLng(37.782, -122.443), weight: 2},
-                {location: new google.maps.LatLng(37.782, -122.441), weight: 3},
-                {location: new google.maps.LatLng(37.782, -122.439), weight: 2},
-                {location: new google.maps.LatLng(37.782, -122.437), weight: 1},
-                {location: new google.maps.LatLng(37.782, -122.435), weight: 0.5},
-                {location: new google.maps.LatLng(37.785, -122.447), weight: 3},
-                {location: new google.maps.LatLng(37.785, -122.445), weight: 2},
-                {location: new google.maps.LatLng(37.785, -122.443), weight: 1},
-                {location: new google.maps.LatLng(37.785, -122.441), weight: 0.5},
-                {location: new google.maps.LatLng(37.785, -122.439), weight: 1},
-                {location: new google.maps.LatLng(37.785, -122.437), weight: 2},
-                {location: new google.maps.LatLng(37.785, -122.435), weight: 3}
-            ];
+var heatmapData = [];
 
 
             
 function initialize() {
     var query = "http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/getHeatmapPoints.php";
     $.getJSON(query, function(data) {
-        console.log(data[0]);
-	var dataArr = data[0].split(",");
-	
+	   var dataArr = data[0].split(",");
         heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
     });
 
-    var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
+    centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
     var mapOptions = {
-    zoom: 13,
+    zoom: 17,
     center: centerPoint,
     mapTypeId: google.maps.MapTypeId.SATELLITE
   };
@@ -71,17 +54,15 @@ var pickupIcon = "img/icons/greenCircle.png";
 }
 
 function toggleHeatmap() {
-  heatmap.setMap(heatmap.getMap() ? null : map);
+    // var query = "http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/getHeatmapPoints.php";
+    // $.getJSON(query, function(data) {
+    //    var dataArr = data[0].split(",");
+    //     heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
+    // });
+    heatmap.setMap(heatmap.getMap() ? null : map);
 }
 
 function toggleIcons(){
-    //if(markerFlag){
-    //    pickupMarker.setVisible(false);
-    //    markerFlag = false;
-    //}else{
-    //    pickupMarker.setVisible(true);
-    //    markerFlag = true;
-    //};
     var newState;
     if(markerFlag){
         newState = false;

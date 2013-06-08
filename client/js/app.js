@@ -1,5 +1,6 @@
 var lawnDB = null;
 var logging = false;
+var centerPoint = null;
 
 function initializeGPS(){
 	db = Lawnchair({name : 'db'}, function(store) {
@@ -21,6 +22,7 @@ function start(){
 
 	navigator.geolocation.getCurrentPosition(function(p){
 		var newcenter = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+		centerPoint = newcenter;
 		map.panTo(newcenter);
 	});
 	
