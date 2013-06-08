@@ -24,8 +24,14 @@ var MOUSEUP_TIME;
                 {location: new google.maps.LatLng(37.785, -122.437), weight: 2},
                 {location: new google.maps.LatLng(37.785, -122.435), weight: 3}
             ];
+
+
             
 function initialize() {
+    var query = "http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/getHeatmapPoints.php";
+    $.getJSON(query, function(data1) {
+        console.log(data1);
+    });
     var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
     var mapOptions = {
     zoom: 13,
