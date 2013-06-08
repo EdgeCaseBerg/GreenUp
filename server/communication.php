@@ -2,8 +2,9 @@
 	require_once('config.php');
 
 	if(isset($_GET['add'])){
-		if(isset($_GET['message'])){
-			//Add message
+
+		if(isset($_GET['lat'])){
+			//We are recieving a message from the maps page of someone adding a comment
 			$dbh = new PDO('mysql:host='.HOST.';dbname='.DB_NAME.';', DB_USER, DB_PASS);
 
 			$message = $_GET['message'];
@@ -11,21 +12,56 @@
 			str_replace('"', '', $message);
 
 			$topic=0;
-			if(isset($_GET['topic'])){
-				$top = intval($_GET['topic']);
-				if($top == 1 || $top ==2 || $top==3){
-					//Acceptable value
-					$topic=$top;
-				}
-			}
+			$topic= $_GET['topic'];
 
 			$sql = "INSERT INTO `talk` (message,fkType) VALUES (:message,:topic);";
 			$q = $dbh->prepare($sql);
 			$q->execute(array(':message' =>$message,':topic'=>$topic));
 
-		}
+			$getId = "SELECT pkId from talk where message = '".$message."' and fkType = " . $topic; ;
+			$statment = $dbh->query($getId);
 
-		header('location:/client/index.html');
+			$returned = $statment->fetchAll();
+
+			error_log(print_r($returned,1));
+
+			$pinQ = "INSERT INTO `pins` (lon,lat,fkType,fkTalkId) VALUES (:lon,:lat,:fkType,:fkTalkId);";
+
+			//Put in the foreign link to the pins table for this comment
+			$p= $dbh->prepare($pinQ);
+			$p->execute(array(':lon' => $_GET['lon'], ':lat' => $_GET['lat'],':fkType' => $topic, ':fkTalkId' => $returned[0]['pkId'] ));
+
+			
+
+
+			header('location:/client/index.html?pane=2');
+		}else{
+			//Handling adding a message from the communication panel
+			if(isset($_GET['message'])){
+				//Add message
+				$dbh = new PDO('mysql:host='.HOST.';dbname='.DB_NAME.';', DB_USER, DB_PASS);
+
+				$message = $_GET['message'];
+				//Remove any "s from the screen or things will break
+				str_replace('"', '', $message);
+
+				$topic=0;
+				if(isset($_GET['topic'])){
+					$top = intval($_GET['topic']);
+					if($top == 1 || $top ==2 || $top==3){
+						//Acceptable value
+						$topic=$top;
+					}
+				}
+
+				$sql = "INSERT INTO `talk` (message,fkType) VALUES (:message,:topic);";
+				$q = $dbh->prepare($sql);
+				$q->execute(array(':message' =>$message,':topic'=>$topic));
+
+			}
+
+			header('location:/client/index.html');
+		}
 	}
 
 	$start = 0;
