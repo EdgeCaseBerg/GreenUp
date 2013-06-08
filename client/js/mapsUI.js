@@ -31,6 +31,7 @@ function initialize() {
     var query = "http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/getHeatmapPoints.php";
     $.getJSON(query, function(data1) {
         console.log(data1);
+        heatmapData = data1;
     });
     var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
     var mapOptions = {
