@@ -40,7 +40,7 @@ function upload(database){
 		database.all(function(data){
 			$.ajax({
 				type:'POST',
-				url: '/server/addGridData.php',
+				url: 'http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/addGridData.php',
 				dataType:"json",
 				data: {data : data},
 				failure: function(errMsg){alert(errMsg);}
