@@ -201,12 +201,19 @@ google.maps.event.addDomListener(window, 'load', initIcons);
 
 
 $(document).ready(function(){
+    $(document).bind("touchmove",function(e){
+        e.preventDefault();
+    });
+    
+    $('.scrollable').bind("touchmove",function(e){
+        e.stopPropagation();
+    });
 
-    $('#startButton').click(function(){
+    $('#startButton').mousedown(function(){
         start();
     });
 
-    $('#stopButton').click(function(){
+    $('#stopButton').mousedown(function(){
         stop();
     });
     // loadScript();
@@ -233,36 +240,36 @@ $(document).ready(function(){
     });
 
 
-    $('#pr1').click(function(){
+    $('#pr1').mousedown(function(){
         $('#container').removeClass("panel1Center");
         $('#container').removeClass("panel3Center");
         $('#container').addClass("panel2Center");
     });
-    $('#prr1').click(function(){
+    $('#prr1').mousedown(function(){
         $('#container').removeClass("panel1Center");
         $('#container').removeClass("panel2Center");
         $('#container').addClass("panel3Center");
     });
 
-    $('#pr2').click(function(){
+    $('#pr2').mousedown(function(){
         $('#container').removeClass("panel1Center");
         $('#container').removeClass("panel2Center");
         $('#container').addClass("panel3Center");
     });
 
-    $('#pl2').click(function(){
+    $('#pl2').mousedown(function(){
         $('#container').removeClass("panel3Center");
         $('#container').removeClass("panel2Center");
         $('#container').addClass("panel1Center");
     });
 
-    $('#pl3').click(function(){
+    $('#pl3').mousedown(function(){
         $('#container').removeClass("panel3Center");
         $('#container').removeClass("panel1Center");
         $('#container').addClass("panel2Center");
     });
 
-    $('#pll3').click(function(){
+    $('#pll3').mousedown(function(){
         $('#container').removeClass("panel3Center");
         $('#container').removeClass("panel2Center");
         $('#container').addClass("panel1Center");
