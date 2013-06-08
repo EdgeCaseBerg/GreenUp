@@ -178,6 +178,13 @@ google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
 
 $(document).ready(function(){
+    $(document).bind("touchmove",function(e){
+        e.preventDefault();
+    });
+    
+    $('.scrollable').bind("touchmove",function(e){
+        e.stopPropagation();
+    });
 
     $('#startButton').mousedown(function(){
         start();
