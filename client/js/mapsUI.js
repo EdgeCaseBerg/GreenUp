@@ -24,8 +24,11 @@ var MOUSEUP_TIME;
                 {location: new google.maps.LatLng(37.785, -122.437), weight: 2},
                 {location: new google.maps.LatLng(37.785, -122.435), weight: 3}
             ];
+
+
             
 function initialize() {
+
     var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
     var mapOptions = {
     zoom: 13,
