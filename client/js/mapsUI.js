@@ -18,6 +18,7 @@ function initialize() {
 	   var dataArr = data[0].split(",");
         heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
     });
+
     var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
     var mapOptions = {
     zoom: 8,
@@ -93,6 +94,11 @@ function addCommentMarker(){
         icon: "img/icons/blueCircle.png"
     });
     pickupMarkers.push(marker);
+
+    var info = new google.maps.InfoWindow();
+    info.setContent('<form method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><input name="message" type="text"/><input type="hidden" name="topic" value="1" /><input type="hidden" name="add" /><input type="submit"  />');
+    info.setPosition(marker.position);
+    info.open(map);
 
     // var marker = new MarkerWithLabel({
     //    position: markerEvent.latLng,
@@ -175,19 +181,16 @@ $(document).ready(function(){
     $('#selectPickup').click(function(){
         $('#markerTypeDialog').toggle();
         addPickupMarker();
-        // alert("hello");
     });
 
     $('#selectComment').click(function(){
         $('#markerTypeDialog').toggle();
         addCommentMarker();
-        // alert("hello");
     });
 
     $('#selectTrash').click(function(){
         $('#markerTypeDialog').toggle();
         addTrashMarker();
-        // alert("hello");
     });
 
 
