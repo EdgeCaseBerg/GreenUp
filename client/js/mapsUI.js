@@ -13,7 +13,7 @@ var heatmapData = [];
 
             
 function initialize() {
-    var query = "http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/getHeatmapPoints.php";
+    var query = "/server/getHeatmapPoints.php";
     $.getJSON(query, function(data) {
 	   var dataArr = data[0].split(",");
         heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
@@ -44,11 +44,16 @@ function initialize() {
 
 function initIcons(){
 var pickupIcon = "img/icons/greenCircle.png";
-  pickupMarkers = [new google.maps.Marker({
-      position: new google.maps.LatLng(37.785, -122.435),
-      map: map,
-      icon: pickupIcon
-  })];
+  pickupMarkers = [];
+
+  $.getJSON("/server/getPointsOfInterest.php", function(data) {
+       for (var i = data.length - 1; i >= 0; i--) {
+           var types = [null, "img/icons/blueCircle.png" ,"img/icons/redCircle.png" ,"img/icons/greenCircle.png" ];
+           pickupMarkers.push( new google.maps.Marker({position: new google.maps.LatLng(data[i].lat,data[i].lon), map: map, icon: types[data[i].fkType]}));
+       };
+    });
+
+
   pickupMarkers[0].setVisible(false);
   markerFlag = false;
 }
