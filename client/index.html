@@ -107,23 +107,6 @@
                 <li><a>Communicate</a></li>
             </ul>
 
-            <script type="text/javascript">
-                function showAll(where){
-                        var toAddTo = document.getElementById('messages');
-                        for (var i = 0;  i< toAddTo.childNodes.length; i++) {
-                            toAddTo.childNodes[i].parentNode.removeChild(toAddTo.childNodes[i]);
-                            //console.log(toAddTo.childNodes[i].innerHTML);
-                        };
-
-                        console.log(toAddTo.childNodes);    
-                        
-                        beginLimit = 0;
-                        endLimit = 20;
-                        httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+where);
-
-                        return false;
-                    }
-            </script>
 
 
                 <div>
@@ -154,11 +137,11 @@
                 </div>
 
 
-                <ul class=" filter">
-                    <li><a href="#" onclick='showAll("messages"); return false;'>Show Messages</a></li>
-                    <li><a href="#" onclick='showAll("help"); return false;'>Show Needs</a></li>
-                    <li><a href="#" onclick='showAll("trash"); return false;'>Show Trash</a></li>
-                    <li><a href="#" onclick='showAll("All"); return false;'>Show All</a></li>
+                <ul class="filter">
+                    <li><a onclick='showAll("messages"); return false;'>Show Messages</a></li>
+                    <li><a  onclick='showAll("help"); return false;'>Show Needs</a></li>
+                    <li><a  onclick='showAll("trash"); return false;'>Show Trash</a></li>
+                    <li><a  onclick='showAll("All"); return false;'>Show All</a></li>
                 </ul>
 
             <div >
@@ -177,6 +160,20 @@
     					var tmparr = prmarr[i].split("=");
     					params[tmparr[0]] = tmparr[1];
 					}
+
+                    function showAll(where){
+                        var toAddTo = document.getElementById('messages');
+                        
+                        toAddTo.innerHTML = '';
+
+                        console.log(toAddTo.childNodes);    
+                        
+                        beginLimit = 0;
+                        endLimit = 20;
+                        httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+where);
+
+                        return false;
+                    }
 
 
             		function addMessages(xmlHttp){
