@@ -8,7 +8,7 @@ var COMMENT_LOC = 3;
 var MOUSEDOWN_TIME;
 var MOUSEUP_TIME;
 
-            var heatmapData = [];
+var heatmapData = [];
 
 
             
@@ -18,8 +18,9 @@ function initialize() {
 	   var dataArr = data[0].split(",");
         heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
     });
-
-    var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
+    if(centerPoint == null){
+        var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
+    }
     var mapOptions = {
     zoom: 18,
     center: centerPoint,
