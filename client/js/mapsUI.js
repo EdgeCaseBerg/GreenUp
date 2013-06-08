@@ -10,6 +10,8 @@ var MOUSEUP_TIME;
 
 var heatmapData = [];
 
+pickupMarkers = [];
+
 
             
 function initialize() {
@@ -40,22 +42,41 @@ function initialize() {
   
   google.maps.event.addListener(map, 'mousedown', markerSelectDown);
   google.maps.event.addListener(map, 'mouseup', markerSelectUp);
+
 } // end initialize
 
 function initIcons(){
-var pickupIcon = "img/icons/greenCircle.png";
-  pickupMarkers = [];
+    var pickupIcon = "img/icons/greenCircle.png";
+    pickupMarkers = [];
 
   $.getJSON("/server/getPointsOfInterest.php", function(data) {
        for (var i = data.length - 1; i >= 0; i--) {
            var types = [null, "img/icons/blueCircle.png" ,"img/icons/redCircle.png" ,"img/icons/greenCircle.png" ];
-           pickupMarkers.push( new google.maps.Marker({position: new google.maps.LatLng(data[i].lat,data[i].lon), map: map, icon: types[data[i].fkType]}));
+           var marker =  new google.maps.Marker({position: new google.maps.LatLng(data[i].lat,data[i].lon), 
+                                                map: map, 
+                                                icon: types[data[i].fkType]
+                                            });
+
+           pickupMarkers.push(marker);
        };
+       for (var i = pickupMarkers.length - 1; i >= 0; i--) {
+            pickupMarkers[i].setVisible(false);
+            //Add a custom field to the markers so we can have the information that goes in the infobox
+            pickupMarkers[i].messageData = data[i].message;
+
+            google.maps.event.addListener(pickupMarkers[i], "click", function () {
+                var info = new google.maps.InfoWindow();
+                info.setContent(this.messageData);
+                info.setPosition(this.position);
+                info.open(map);
+                
+            });
+        }
     });
 
+    
 
-  pickupMarkers[0].setVisible(false);
-  markerFlag = false;
+    markerFlag = false;
 }
 
 function toggleHeatmap() {
@@ -169,6 +190,8 @@ function changeOpacity() {
 
 google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
+
+
 
 $(document).ready(function(){
     $(document).bind("touchmove",function(e){
