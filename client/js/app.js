@@ -17,6 +17,13 @@ function start(){
 	document.getElementById('startButton').style.display = 'none';
 	document.getElementById('stopButton').style.display = 'block';
 	//document.getElementById('panel1').style.backgroundImage = 'url(/client/img/icons/leaf.png)';
+
+
+	navigator.geolocation.getCurrentPosition(function(p){
+		var newcenter = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+		map.panTo(newcenter);
+	});
+	
 }
 
 function stop(){
