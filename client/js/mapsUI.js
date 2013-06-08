@@ -107,6 +107,11 @@ function addCommentMarker(){
     });
     pickupMarkers.push(marker);
 
+    var info = new google.maps.InfoWindow();
+    info.setContent('<form method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><input name="message" type="text"/><input type="hidden" name="topic" value="1" /><input type="hidden" name="add" /><input type="submit"  />');
+    info.setPosition(marker.position);
+    info.open(map);
+
     // var marker = new MarkerWithLabel({
     //    position: markerEvent.latLng,
     //    draggable: true,
