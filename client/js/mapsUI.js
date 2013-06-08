@@ -18,11 +18,10 @@ function initialize() {
 	   var dataArr = data[0].split(",");
         heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
     });
-    if(centerPoint == null){
-        var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
-    }
+
+    centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
     var mapOptions = {
-    zoom: 18,
+    zoom: 12,
     center: centerPoint,
     mapTypeId: google.maps.MapTypeId.SATELLITE
   };
