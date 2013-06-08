@@ -17,5 +17,5 @@
 	//Add the types to the database
 	echo $dbh->exec("INSERT INTO `types` (description) VALUES ('General Message');");
 	echo $dbh->exec("INSERT INTO `types` (description) VALUES ('Help Needed');");
-	echo $dbh->exec("INSERT INTO `types` (description) VALUES ('Trask Pickup');");
+	echo $dbh->exec("INSERT INTO `types` (description) VALUES ('Trash Pickup');");
 ?>

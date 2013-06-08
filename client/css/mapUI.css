@@ -72,7 +72,7 @@ input[type="checkbox"]{
 
 }
 
-#selectPickup{
+#selectPickup, .pickup{
 	background: #b4e391; /* Old browsers */
 	background: -moz-radial-gradient(center, ellipse cover, #b4e391 0%, #61c419 50%, #b4e391 100%); /* FF3.6+ */
 	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#b4e391), color-stop(50%,#61c419), color-stop(100%,#b4e391)); /* Chrome,Safari4+ */
@@ -83,18 +83,18 @@ input[type="checkbox"]{
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b4e391', endColorstr='#b4e391',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
-#selectComment{
+#selectComment, .comment{
 	background: #b3dced; /* Old browsers */
 	background: -moz-radial-gradient(center, ellipse cover, #b3dced 0%, #29b8e5 50%, #bce0ee 100%); /* FF3.6+ */
 	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#b3dced), color-stop(50%,#29b8e5), color-stop(100%,#bce0ee)); /* Chrome,Safari4+ */
 	background: -webkit-radial-gradient(center, ellipse cover, #b3dced 0%,#29b8e5 50%,#bce0ee 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-radial-gradient(center, ellipse cover, #b3dced 0%,#29b8e5 50%,#bce0ee 100%); /* Opera 12+ */
+	background: -o-radial-gradient(center, ellipse covserverer, #b3dced 0%,#29b8e5 50%,#bce0ee 100%); /* Opera 12+ */
 	background: -ms-radial-gradient(center, ellipse cover, #b3dced 0%,#29b8e5 50%,#bce0ee 100%); /* IE10+ */
 	background: radial-gradient(ellipse at center, #b3dced 0%,#29b8e5 50%,#bce0ee 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3dced', endColorstr='#bce0ee',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
-#selectTrash{
+#selectTrash,.helpme{
 	background: #ff1a00; /* Old browsers */
 	background: -moz-radial-gradient(center, ellipse cover, #ff1a00 0%, #ff1a00 100%); /* FF3.6+ */
 	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#ff1a00), color-stop(100%,#ff1a00)); /* Chrome,Safari4+ */
@@ -109,3 +109,19 @@ input[type="checkbox"]{
 	width:30px;
 	height:30px;
 }
+
+.infowindow{
+
+	padding: 0;
+}
+.infowindow textarea{
+	margin: 0;
+	padding: 0;
+	width: 90%;
+	height: 100px;
+}
+
+.infowindow input{
+	width: 100%;
+}
+

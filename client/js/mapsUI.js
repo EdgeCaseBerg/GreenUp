@@ -103,6 +103,11 @@ function addPickupMarker(){
         icon: "img/icons/greenCircle.png"
     });
     pickupMarkers.push(marker);
+
+     var info = new google.maps.InfoWindow();
+    info.setContent('<form id="hook" class="infowindow pickup" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="3" /><input type="hidden" name="add" /><input type="submit"  />');
+    info.setPosition(marker.position);
+    info.open(map);
 }
 
 // add an icon for a Comment location
@@ -115,7 +120,7 @@ function addCommentMarker(){
     pickupMarkers.push(marker);
 
     var info = new google.maps.InfoWindow();
-    info.setContent('<form method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><input name="message" type="text"/><input type="hidden" name="topic" value="1" /><input type="hidden" name="add" /><input type="submit"  />');
+    info.setContent('<form id="hook" class="infowindow comment" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="1" /><input type="hidden" name="add" /><input type="submit"  />');
     info.setPosition(marker.position);
     info.open(map);
 
@@ -139,6 +144,12 @@ function addTrashMarker(){
         icon: "img/icons/redCircle.png"
     });
     pickupMarkers.push(marker);
+
+    //corresponds to the help needed
+    var info = new google.maps.InfoWindow();
+    info.setContent('<form id="hook" class="infowindow helpme" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="2" /><input type="hidden" name="add" /><input type="submit"  />');
+    info.setPosition(marker.position);
+    info.open(map);
 }
 
 function markerSelectUp(event){
