@@ -172,6 +172,8 @@
                         endLimit = 20;
                         httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+where);
 
+                        params.where = where;
+
                         return false;
                     }
 
