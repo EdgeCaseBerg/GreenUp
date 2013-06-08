@@ -38,6 +38,7 @@ function upload(database){
 		//server/addgriddata.php
 	
 		database.all(function(data){
+			console.log(data);
 			$.ajax({
 				type:'POST',
 				url: 'http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/addGridData.php',
