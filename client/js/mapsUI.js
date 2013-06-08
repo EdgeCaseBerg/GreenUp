@@ -28,6 +28,13 @@ var MOUSEUP_TIME;
 
             
 function initialize() {
+    var query = "http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/getHeatmapPoints.php";
+    $.getJSON(query, function(data) {
+        console.log(data[0]);
+	var dataArr = data[0].split(",");
+	
+        heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
+    });
 
     var centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
     var mapOptions = {

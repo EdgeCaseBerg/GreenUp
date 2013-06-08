@@ -18,13 +18,15 @@ class Grid{
 
 	public function getHeatmapPoints(){
 		$query = "SELECT * FROM grid";
-		$this->dbh->exec($query);
-
-		$mapdata = array();
-		foreach($this->dbh->fetchAll() as $pointData){
-			array_push($mapData, "{location: new google.maps.LatLng(".$pointData['pkLat'].", ".$pointData['pkLon']."), weight: ".$pointData['secondsWorked']."}");
+		$statement = $this->dbh->query($query);
+		$mapData = array();
+		$returnArr = $statement->fetchAll();
+		$arrSize =  count($returnArr);
+		for($ii=0; $ii<$arrSize; $ii++){
+			$dataStr = $returnArr[$ii]['pkLat'].",".$returnArr[$ii]['pkLon'].",".$returnArr[$ii]['secondsWorked'];
+			array_push($mapData, $dataStr);
 		}
-
 		return json_encode($mapData);
 	}
 }
+
