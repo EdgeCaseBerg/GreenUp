@@ -44,15 +44,11 @@ function initialize() {
 
 function initIcons(){
 var pickupIcon = "img/icons/greenCircle.png";
-  pickupMarkers = [new google.maps.Marker({
-      position: new google.maps.LatLng(37.785, -122.435),
-      map: map,
-      icon: pickupIcon  
-  })];
+  pickupMarkers = [];
 
   $.getJSON("/server/getPointsOfInterest.php", function(data) {
        for (var i = data.length - 1; i >= 0; i--) {
-           var types = [null, "img/icons/blueCircle.png" ,"img/icons/redCircle.png" ,"img/icons/greenCircle.png" ]
+           var types = [null, "img/icons/blueCircle.png" ,"img/icons/redCircle.png" ,"img/icons/greenCircle.png" ];
            pickupMarkers.push( new google.maps.Marker({position: new google.maps.LatLng(data[i].lat,data[i].lon), map: map, icon: types[data[i].fkType]}));
        };
     });
