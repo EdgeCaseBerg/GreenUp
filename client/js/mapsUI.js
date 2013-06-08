@@ -23,7 +23,7 @@ function initialize() {
     var mapOptions = {
     zoom: 17,
     center: centerPoint,
-    mapTypeId: google.maps.MapTypeId.SATELLITE
+    mapTypeId: google.maps.MapTypeId.ROADMAP
   };
 
   map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);

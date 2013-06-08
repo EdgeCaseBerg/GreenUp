@@ -42,7 +42,7 @@ a, a:hover, a:visited{
 	}
     .nav a{
     	display:block;
-    	width:32%;
+    	width:31.5%;
         cursor:pointer;
         
         -moz-box-shadow:inset 0px 0px 14px -3px #f2fadc;
