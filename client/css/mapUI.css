@@ -10,7 +10,7 @@ ul{
 	/*top:30px;*/
 	z-index:10;
 	width:100%;
-	height:80%;
+	height:90%;
 	margin:auto;
 	margin-top:5px;
 	/*margin-top:10px;*/
@@ -29,8 +29,9 @@ ul{
 	background: url('../img/backgrounds/80_percent_white.png');
 	position:absolute;
 	z-index:15;
-	top:15%;
-	width:180px;
+	right:0%;
+	top:85%;
+	width:170px;
 	color:black;
 	/*border:solid 1px blue;*/
 	-webkit-box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, 0.2);
