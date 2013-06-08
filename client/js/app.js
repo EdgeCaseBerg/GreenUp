@@ -14,12 +14,18 @@ function start(){
 	logging = true;
 	initializeGPS();
 	console.log("starting...");
+	document.getElementById('startButton').style.display = 'none';
+	document.getElementById('stopButton').style.display = 'block';
+	//document.getElementById('panel1').style.backgroundImage = 'url(/client/img/icons/leaf.png)';
 }
 
 function stop(){
 	upload(lawnDB);
 	logging = false;
 	console.log("stopping...")
+	//document.getElementById('panel1').style.backgroundImage = '';
+	document.getElementById('startButton').style.display = 'block';
+	document.getElementById('stopButton').style.display= 'none';
 }
 
 //Runs the update script:

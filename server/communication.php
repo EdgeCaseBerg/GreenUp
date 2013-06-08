@@ -25,7 +25,7 @@
 
 		}
 
-		header('location:/client/cardsUI.html');
+		header('location:/client/index.html');
 	}
 
 	$start = 0;
@@ -41,7 +41,6 @@
 
 	$SQL = 'SELECT message FROM `talk` ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end;
 	if(isset($_GET['where'])){
-		error_log($_GET['where']);
 		switch ($_GET['where']) {
 			case 'messages':
 				$SQL = 'SELECT message FROM `talk` where fkType=1 ORDER BY timeSent DESC LIMIT ' . $start . ',' . $end ;
@@ -58,6 +57,8 @@
 		}
 	}
 	
+	//error_log($SQL);
+
 	$statement = $dbh->prepare($SQL);
 	$derp = $statement->execute();
 
