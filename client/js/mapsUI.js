@@ -188,18 +188,24 @@ function changeOpacity() {
   heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
 }
 
+
 google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
 
-
-
 $(document).ready(function(){
+    // takes care of the horizontal scrolling on swipe
     $(document).bind("touchmove",function(e){
         e.preventDefault();
     });
     
     $('.scrollable').bind("touchmove",function(e){
         e.stopPropagation();
+    });
+    
+    $('#mapInit').mousedown(function(){
+        $('.mapDecoyContainer').hide(function(){
+            $('.mapContainer').show();
+        });
     });
 
     $('#startButton').mousedown(function(){

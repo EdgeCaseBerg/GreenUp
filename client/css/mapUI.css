@@ -19,6 +19,13 @@ ul{
 .mapContainer{
 	height:90%;
 	width:100%;
+	display:none;
+}
+
+.mapDecoyContainer{
+	height:90%;
+	width:100%;
+	background: url('../img/startup/mapDecoy.jpg');
 }
 
 .toggleContainer{
