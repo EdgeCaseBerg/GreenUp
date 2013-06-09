@@ -8,30 +8,25 @@ var COMMENT_LOC = 3;
 var MOUSEDOWN_TIME;
 var MOUSEUP_TIME;
 
-var heatmapData = [];
 
 pickupMarkers = [];
 
 
-            
-function initialize() {
+// we should be supplying the 4 lat/lons to frame the map and only download what we need
+// gets heatmap data and formats it for initHeatMap() 
+function getHeatmapData(){
+    var heatmapData = [];
     var query = "/server/getHeatmapPoints.php";
     $.getJSON(query, function(data) {
-	   var dataArr = data[0].split(",");
+       var dataArr = data[0].split(",");
         heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
     });
+    return heatmapData;
+} // end getHeatmapData
 
-    centerPoint = new google.maps.LatLng(37.774546, -122.433523); 
-    var mapOptions = {
-    zoom: 17,
-    center: centerPoint,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-
-  map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-
-  var pointArray = new google.maps.MVCArray(heatmapData);
-
+// @argument heatData = array returned by getHeatMapData()
+function initHeatMap(heatData){
+  var pointArray = new google.maps.MVCArray(heatData);
   heatmap = new google.maps.visualization.HeatmapLayer({
     data: pointArray,
     dissipating: true, 
@@ -39,11 +34,23 @@ function initialize() {
   });
 
   heatmap.setMap(null);
-  
+}
+
+// fire up our google map
+function initMap(centerpointLat, centerpointLon, zoom){
+    // define the initial location of our map
+    centerPoint = new google.maps.LatLng(centerpointLat, centerpointLon); 
+    var mapOptions = {
+    zoom: zoom,
+    center: centerPoint,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+
+  map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
   google.maps.event.addListener(map, 'mousedown', markerSelectDown);
   google.maps.event.addListener(map, 'mouseup', markerSelectUp);
 
-} // end initialize
+}
 
 function initIcons(){
     var pickupIcon = "img/icons/greenCircle.png";
@@ -188,6 +195,12 @@ function changeOpacity() {
   heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
 }
 
+function initialize() {
+    var heatmapData = getHeatmapData();
+    // initMap(lat, lon, zoom)
+    initMap(37.774546, -122.433523, 17);
+    initHeatMap(heatmapData);
+} // end initialize
 
 google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
