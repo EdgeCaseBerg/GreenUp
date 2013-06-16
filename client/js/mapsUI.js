@@ -66,7 +66,7 @@ function upload(database){
             console.log(data);
             $.ajax({
                 type:'POST',
-                url: 'http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/addGridData.php',
+                url: '/server/addGridData.php',
                 dataType:"json",
                 data: {data : data},
                 failure: function(errMsg){alert(errMsg);}
@@ -113,19 +113,19 @@ function findME(){
 function getHeatmapData(){
     var heatmapData = [];
     var query = "/server/getHeatmapPoints.php";
-    // $.getJSON(query, function(data) {
-    //    var dataArr = data[0].split(",");
-    //     heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
-    // });
-    Lib.ajax.getJSON({
-        url:"/server/getHeatmapPoints.php",
-        type: "json"
-        }, function(data){
-            console.log(data);
-            var dataArr = data[0].split(",");
-            heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
-        }
-    );
+    $.getJSON(query, function(data) {
+       var dataArr = data[0].split(",");
+        heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
+    });
+    // Lib.ajax.getJSON({
+    //     url:"/server/getHeatmapPoints.php",
+    //     type: "json"
+    //     }, function(data){
+    //         console.log(data);
+    //         var dataArr = data[0].split(",");
+    //         heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
+    //     }
+    // );
     return heatmapData;
 } // end getHeatmapData
 
