@@ -176,7 +176,8 @@ function addTrashMarker(){
 }
 
 function showToggleContainer(){
-    $('.toggleContainer').show();
+    // $('.toggleContainer').show();
+    document.getElementById("toggleContainer").className = "showBlock";
 }
 
 function markerSelectUp(event){
@@ -268,30 +269,6 @@ document.addEventListener('DOMContentLoaded',function(){
 
     window.Lib = Lib;
 
-
-    // takes care of the horizontal scrolling on swipe
-    // $(document).bind("touchmove",function(e){
-    //     e.preventDefault();
-    // });
-    
-    // $('.scrollable').bind("touchmove",function(e){
-    //     e.stopPropagation();
-    // });
-    
-    // $('#mapInit').mousedown(function(){
-    //     $('.mapDecoyContainer').hide(function(){
-    //         $('.mapContainer').show();
-    //     });
-    // });
-
-    // $('#startButton').mousedown(function(){
-    //     start();
-    // });
-
-    // $('#stopButton').mousedown(function(){
-    //     stop();
-    // });
-    // loadScript();
     document.addEventListener("touchmove", function(e){
         e.preventDefault();
     }, false);
@@ -307,10 +284,6 @@ document.addEventListener('DOMContentLoaded',function(){
     var startButton = document.getElementById('startButton');
     var stopButton = document.getElementById('stopButton');
 
-    // scrollable.addEventListener("touchmove", function(e){
-    //     e.stopPropagation();
-    // }, false);
-
     
     toggleHeat.addEventListener('click', function() {
         toggleHeatmap();
@@ -322,19 +295,23 @@ document.addEventListener('DOMContentLoaded',function(){
 
     selectPickup.addEventListener('click', function() {
         $('#markerTypeDialog').toggle();
-        $('.toggleContainer').hide();
+        // $('.toggleContainer').hide();
+        document.getElementById("toggleContainer").className = "hidden";
+
         addPickupMarker();
     }, false);
 
     selectComment.addEventListener('click', function() {
         $('#markerTypeDialog').toggle();
-        $('.toggleContainer').hide();
+        // $('.toggleContainer').hide();
+        document.getElementById("toggleContainer").className = "hidden";
         addCommentMarker();
     }, false);
 
     selectTrash.addEventListener('click', function() {
         $('#markerTypeDialog').toggle();
-        $('.toggleContainer').hide();
+        // $('.toggleContainer').hide();
+        document.getElementById("toggleContainer").className = "hidden";
         addTrashMarker();
     }, false);
 
@@ -352,68 +329,42 @@ document.addEventListener('DOMContentLoaded',function(){
         stop();
     }, false);
 
-    // $('#toggleHeat').click(function(){
-    //     toggleHeatmap();
-    // });
 
-    // $('#toggleIcons').click(function(){
-    //     toggleIcons();
-    // });
+    var pr1 = document.getElementById("pr1");
+    pr1.addEventListener('mousedown', function() {
+        document.getElementById("container").className = "";
+        document.getElementById("container").className = "panel2Center";
+    }, false);
 
-    // $('#selectPickup').click(function(){
-    //     $('#markerTypeDialog').toggle();
-    //     $('.toggleContainer').hide();
-    //     addPickupMarker();
-    // });
+    var prr1 = document.getElementById("prr1");
+    prr1.addEventListener('mousedown', function() {
+        document.getElementById("container").className = "";
+        document.getElementById("container").className = "panel3Center";
+    }, false);
 
-    // $('#selectComment').click(function(){
-    //     $('#markerTypeDialog').toggle();
-    //     $('.toggleContainer').hide();
-    //     addCommentMarker();
-    // });
+    var pr2 = document.getElementById("pr2");
+    pr2.addEventListener('mousedown', function() {
+        document.getElementById("container").className = "";
+        document.getElementById("container").className = "panel3Center";
+    }, false);
 
-    // $('#selectTrash').click(function(){
-    //     $('#markerTypeDialog').toggle();
-    //     $('.toggleContainer').hide();
-    //     addTrashMarker();
-    // });
+    var pl2 = document.getElementById("pl2");
+    pl2.addEventListener('mousedown', function() {
+        document.getElementById("container").className = "";
+        document.getElementById("container").className = "panel1Center";
+    }, false);
 
+    var pl3 = document.getElementById("pl3");
+    pl3.addEventListener('mousedown', function() {
+        document.getElementById("container").className = "";
+        document.getElementById("container").className = "panel2Center";
+    }, false);
 
-    $('#pr1').mousedown(function(){
-        $('#container').removeClass("panel1Center");
-        $('#container').removeClass("panel3Center");
-        $('#container').addClass("panel2Center");
-    });
-    $('#prr1').mousedown(function(){
-        $('#container').removeClass("panel1Center");
-        $('#container').removeClass("panel2Center");
-        $('#container').addClass("panel3Center");
-    });
-
-    $('#pr2').mousedown(function(){
-        $('#container').removeClass("panel1Center");
-        $('#container').removeClass("panel2Center");
-        $('#container').addClass("panel3Center");
-    });
-
-    $('#pl2').mousedown(function(){
-        $('#container').removeClass("panel3Center");
-        $('#container').removeClass("panel2Center");
-        $('#container').addClass("panel1Center");
-    });
-
-    $('#pl3').mousedown(function(){
-        $('#container').removeClass("panel3Center");
-        $('#container').removeClass("panel1Center");
-        $('#container').addClass("panel2Center");
-    });
-
-    $('#pll3').mousedown(function(){
-        $('#container').removeClass("panel3Center");
-        $('#container').removeClass("panel2Center");
-        $('#container').addClass("panel1Center");
-    });
-
+    var pll3 = document.getElementById("pll3");
+    pll3.addEventListener('mousedown', function() {
+        document.getElementById("container").className = "";
+        document.getElementById("container").className = "panel1Center";
+    }, false);
 
     //Get the parameters in the get url and expose them
     var prmstr = window.location.search.substr(1);
@@ -429,16 +380,12 @@ document.addEventListener('DOMContentLoaded',function(){
     if(params.pane != "undefined"){
         switch(params.pane){
             case "2":
-                    $('#container').removeClass('panel1Center');
-                    $('#container').removeClass('panel2Center');
-                    $('#container').removeClass('panel2Center');
-                    $('#container').addClass('panel2Center');
+                document.getElementById("container").className = "";
+                document.getElementById("container").className = "panel2Center";
                 break;
             case "3":
-                    $('#container').removeClass('panel1Center');
-                    $('#container').removeClass('panel2Center');
-                    $('#container').removeClass('panel2Center');
-                    $('#container').addClass('panel3Center');
+                document.getElementById("container").className = "";
+                document.getElementById("container").className = "panel3Center";
                 break;
         }
     }

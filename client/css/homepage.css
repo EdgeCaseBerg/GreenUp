@@ -6,6 +6,22 @@ body{
 	list-style-type: none;
 }
 
+.showInline{
+    display:inline;
+}
+
+.showBlock{
+    display:block;
+}
+
+.showInlineBlock{
+    display:inline-block;
+}
+
+.hidden{
+    display:none;
+}
+
 a, a:hover, a:visited{
 	text-decoration:none;
 	color:inherit;
