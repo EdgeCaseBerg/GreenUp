@@ -168,11 +168,11 @@ function initIcons(){
     var pickupIcon = "img/icons/greenCircle.png";
     pickupMarkers = [];
 
-  // $.getJSON("/server/getPointsOfInterest.php", function(data) {
-    Lib.ajax.getJSON({
-        url:"/server/getPointsOfInterest.php",
-        type: "json"
-        }, function(data){
+  $.getJSON("/server/getPointsOfInterest.php", function(data) {
+    // Lib.ajax.getJSON({
+        // url:"/server/getPointsOfInterest.php",
+        // type: "json"
+        // }, function(data){
        for (var i = data.length - 1; i >= 0; i--) {
            var types = [null, "img/icons/blueCircle.png" ,"img/icons/redCircle.png" ,"img/icons/greenCircle.png" ];
            var marker =  new google.maps.Marker({position: new google.maps.LatLng(data[i].lat,data[i].lon), 
