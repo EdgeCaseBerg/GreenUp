@@ -115,7 +115,7 @@ function getHeatmapData(){
     var query = "/server/getHeatmapPoints.php";
     $.getJSON(query, function(data) {
        var dataArr = data[0].split(",");
-        heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
+        heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: (parseInt(dataArr[2])/1000)});
     });
     // Lib.ajax.getJSON({
     //     url:"/server/getHeatmapPoints.php",
@@ -141,6 +141,7 @@ function initHeatMap(heatData){
   heatmap.setMap(null);
 }
 
+// not working
  // Lib.ajax.getJSON({
  //        url: 'https://api.twitter.com/1/statuses/user_timeline.json?&screen_name=gabromanato&callback=?&count=1',
  //        type: 'jsonp'
