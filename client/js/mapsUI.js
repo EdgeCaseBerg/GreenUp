@@ -16,8 +16,8 @@ pickupMarkers = [];
 function initializeGPS(){
     db = Lawnchair({name : 'db'}, function(store) {
         lawnDB = store;
-        setInterval(function() {runUpdate(store)},15000);//update user location every 5 seconds
-        setInterval(function() {upload(store)},60000);//upload locations to the server every 30 seconds
+        setInterval(function() {runUpdate(store)},5000);//update user location every 5 seconds
+        setInterval(function() {upload(store)},3000);//upload locations to the server every 30 seconds
     });
 }
 
