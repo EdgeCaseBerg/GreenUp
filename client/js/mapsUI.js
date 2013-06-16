@@ -23,11 +23,11 @@ function getHeatmapData(){
     // });
     Lib.ajax.getJSON({
         url:"/server/getHeatmapPoints.php",
-        type: 'json'
-        }function(points){
+        type: "json"
+        }, function(points){
             heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
         }
-    });
+    );
     return heatmapData;
 } // end getHeatmapData
 
@@ -189,42 +189,6 @@ function markerSelectUp(event){
 
 // native javascript version of $.getJSON
 // http://gabrieleromanato.name/javascript-implementing-getjson-from-scratch/
-(function() {
-    var Lib = {
-        ajax: {
-            xhr: function() {
-                var instance = new XMLHttpRequest();
-                return instance;
-            },
-            getJSON: function(options, callback) {
-                var xhttp = this.xhr();
-                options.url = options.url || location.href;
-                options.data = options.data || null;
-                callback = callback ||
-                function() {};
-                options.type = options.type || 'json';
-                var url = options.url;
-                if (options.type == 'jsonp') {
-                    window.jsonCallback = callback;
-                    var $url = url.replace('callback=?', 'callback=jsonCallback');
-                    var script = document.createElement('script');
-                    script.src = $url;
-                    document.body.appendChild(script);
-                }
-                xhttp.open('GET', options.url, true);
-                xhttp.send(options.data);
-                xhttp.onreadystatechange = function() {
-                    if (xhttp.status == 200 && xhttp.readyState == 4) {
-                        callback(xhttp.responseText);
-                    }
-                };
-            }
-        }
-    };
-
-    window.Lib = Lib;
-})()
-
 
    
 
@@ -261,6 +225,43 @@ google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
 
 $(document).ready(function(){
+
+    var Lib = {
+            ajax: {
+                xhr: function() {
+                    var instance = new XMLHttpRequest();
+                    return instance;
+                },
+            
+                getJSON: function(options, callback) {
+                    var xhttp = this.xhr();
+                    options.url = options.url || location.href;
+                    options.data = options.data || null;
+                    callback = callback ||
+                    function() {};
+                    options.type = options.type || 'json';
+                    var url = options.url;
+                    if (options.type == 'jsonp') {
+                        window.jsonCallback = callback;
+                        var $url = url.replace('callback=?', 'callback=jsonCallback');
+                        var script = document.createElement('script');
+                        script.src = $url;
+                        document.body.appendChild(script);
+                    }
+                    xhttp.open('GET', options.url, true);
+                    xhttp.send(options.data);
+                    xhttp.onreadystatechange = function() {
+                        if (xhttp.status == 200 && xhttp.readyState == 4) {
+                            callback(xhttp.responseText);
+                        }
+                    };
+                }
+            }
+        };
+
+    window.Lib = Lib;
+
+
     // takes care of the horizontal scrolling on swipe
     $(document).bind("touchmove",function(e){
         e.preventDefault();
