@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
     // var scrollable = document.getElementByClassName('scrollable');
     var toggleHeat = document.getElementById('toggleHeat');
-    var toggleIcons = document.getElementById('toggleIcons');
+    var toggleIco = document.getElementById('toggleIcons');
     var selectPickup = document.getElementById('selectPickup');
     var selectComment = document.getElementById('selectComment');
     var selectTrash = document.getElementById('selectTrash');
@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded',function(){
         toggleHeatmap();
     }, false);
 
-    toggleIcons.addEventListener('click', function() {
+    toggleIco.addEventListener('click', function() {
         toggleIcons();
     }, false);
 
