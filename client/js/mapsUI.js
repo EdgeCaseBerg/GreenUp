@@ -25,6 +25,7 @@ function getHeatmapData(){
         url:"/server/getHeatmapPoints.php",
         type: "json"
         }, function(data){
+            console.log(data);
             var dataArr = data[0].split(",");
             heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
         }
