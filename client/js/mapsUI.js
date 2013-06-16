@@ -72,7 +72,11 @@ function initIcons(){
     var pickupIcon = "img/icons/greenCircle.png";
     pickupMarkers = [];
 
-  $.getJSON("/server/getPointsOfInterest.php", function(data) {
+  // $.getJSON("/server/getPointsOfInterest.php", function(data) {
+    Lib.ajax.getJSON({
+        url:"/server/getPointsOfInterest.php",
+        type: "json"
+        }, function(data){
        for (var i = data.length - 1; i >= 0; i--) {
            var types = [null, "img/icons/blueCircle.png" ,"img/icons/redCircle.png" ,"img/icons/greenCircle.png" ];
            var marker =  new google.maps.Marker({position: new google.maps.LatLng(data[i].lat,data[i].lon), 
@@ -226,7 +230,8 @@ function initialize() {
 google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
 
-$(document).ready(function(){
+// $(document).ready(function(){
+document.addEventListener('DOMContentLoaded',function(){
 
     var Lib = {
             ajax: {
@@ -265,52 +270,113 @@ $(document).ready(function(){
 
 
     // takes care of the horizontal scrolling on swipe
-    $(document).bind("touchmove",function(e){
-        e.preventDefault();
-    });
+    // $(document).bind("touchmove",function(e){
+    //     e.preventDefault();
+    // });
     
-    $('.scrollable').bind("touchmove",function(e){
-        e.stopPropagation();
-    });
+    // $('.scrollable').bind("touchmove",function(e){
+    //     e.stopPropagation();
+    // });
     
-    $('#mapInit').mousedown(function(){
-        $('.mapDecoyContainer').hide(function(){
-            $('.mapContainer').show();
-        });
-    });
+    // $('#mapInit').mousedown(function(){
+    //     $('.mapDecoyContainer').hide(function(){
+    //         $('.mapContainer').show();
+    //     });
+    // });
 
-    $('#startButton').mousedown(function(){
-        start();
-    });
+    // $('#startButton').mousedown(function(){
+    //     start();
+    // });
 
-    $('#stopButton').mousedown(function(){
-        stop();
-    });
+    // $('#stopButton').mousedown(function(){
+    //     stop();
+    // });
     // loadScript();
-    $('#toggleHeat').click(function(){
-        toggleHeatmap();
-    });
-    $('#toggleIcons').click(function(){
-        toggleIcons();
-    });
+    document.addEventListener("touchmove", function(e){
+        e.preventDefault();
+    }, false);
 
-    $('#selectPickup').click(function(){
+    // var scrollable = document.getElementByClassName('scrollable');
+    var toggleHeat = document.getElementById('toggleHeat');
+    var toggleIcons = document.getElementById('toggleIcons');
+    var selectPickup = document.getElementById('selectPickup');
+    var selectComment = document.getElementById('selectComment');
+    var selectTrash = document.getElementById('selectTrash');
+
+    var mapInit = document.getElementById('mapInit');
+    var startButton = document.getElementById('startButton');
+    var stopButton = document.getElementById('stopButton');
+
+    // scrollable.addEventListener("touchmove", function(e){
+    //     e.stopPropagation();
+    // }, false);
+
+    
+    toggleHeat.addEventListener('click', function() {
+        toggleHeatmap();
+    }, false);
+
+    toggleIcons.addEventListener('click', function() {
+        toggleIcons();
+    }, false);
+
+    selectPickup.addEventListener('click', function() {
         $('#markerTypeDialog').toggle();
         $('.toggleContainer').hide();
         addPickupMarker();
-    });
+    }, false);
 
-    $('#selectComment').click(function(){
+    selectComment.addEventListener('click', function() {
         $('#markerTypeDialog').toggle();
         $('.toggleContainer').hide();
         addCommentMarker();
-    });
+    }, false);
 
-    $('#selectTrash').click(function(){
+    selectTrash.addEventListener('click', function() {
         $('#markerTypeDialog').toggle();
         $('.toggleContainer').hide();
         addTrashMarker();
-    });
+    }, false);
+
+    mapInit.addEventListener('mousedown', function() {
+         $('.mapDecoyContainer').hide(function(){
+            $('.mapContainer').show();
+        });
+    }, false);
+
+    startButton.addEventListener('mousedown', function() {
+        start();
+    }, false);
+
+    stopButton.addEventListener('mousedown', function() {
+        stop();
+    }, false);
+
+    // $('#toggleHeat').click(function(){
+    //     toggleHeatmap();
+    // });
+
+    // $('#toggleIcons').click(function(){
+    //     toggleIcons();
+    // });
+
+    // $('#selectPickup').click(function(){
+    //     $('#markerTypeDialog').toggle();
+    //     $('.toggleContainer').hide();
+    //     addPickupMarker();
+    // });
+
+    // $('#selectComment').click(function(){
+    //     $('#markerTypeDialog').toggle();
+    //     $('.toggleContainer').hide();
+    //     addCommentMarker();
+    // });
+
+    // $('#selectTrash').click(function(){
+    //     $('#markerTypeDialog').toggle();
+    //     $('.toggleContainer').hide();
+    //     addTrashMarker();
+    // });
 
 
     $('#pr1').mousedown(function(){
