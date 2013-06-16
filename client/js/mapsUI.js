@@ -13,6 +13,17 @@ var centerPoint = null;
 
 pickupMarkers = [];
 
+google.maps.event.addDomListener(window, 'load', initialize);
+google.maps.event.addDomListener(window, 'load', initIcons);
+
+function initialize() {
+    var heatmapData = getHeatmapData();
+    // initMap(lat, lon, zoom)
+    initMap(37.774546, -122.433523, 17);
+    initHeatMap(heatmapData);
+} // end initialize
+
+
 function initializeGPS(){
     db = Lawnchair({name : 'db'}, function(store) {
         lawnDB = store;
@@ -318,15 +329,7 @@ function changeOpacity() {
   heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
 }
 
-function initialize() {
-    var heatmapData = getHeatmapData();
-    // initMap(lat, lon, zoom)
-    initMap(37.774546, -122.433523, 17);
-    initHeatMap(heatmapData);
-} // end initialize
 
-google.maps.event.addDomListener(window, 'load', initialize);
-google.maps.event.addDomListener(window, 'load', initIcons);
 
 // $(document).ready(function(){
 document.addEventListener('DOMContentLoaded',function(){
