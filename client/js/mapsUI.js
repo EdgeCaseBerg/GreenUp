@@ -124,11 +124,6 @@ function findME(){
 function getHeatmapData(){
     var heatmapData = [];
     var query = "/server/getHeatmapPoints.php";
-    // $.getJSON(query, function(data) {
-    //     console.log(data);
-    //     var dataArr = data[0].split(",");
-    //     heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: (parseInt(dataArr[2])/1000)});
-    // });
     Lib.ajax.getJSON({
         url: query,
         type: "json"
@@ -136,8 +131,6 @@ function getHeatmapData(){
             var dataArr = eval("("+data+")");
             for(ii=0; ii<dataArr.length; ii++){
                 var dataA = dataArr[ii].split(",");
-                // console.log(dataArr[0]);
-                // console.log(data[ii]);
                 heatmapData.push({location: new google.maps.LatLng(parseFloat(dataA[0]), parseFloat(dataA[1])), weight: parseInt(dataA[2])});
             }
             console.log(heatmapData);
@@ -158,13 +151,6 @@ function initHeatMap(heatData){
   heatmap.setMap(null);
 }
 
-// not working
- // Lib.ajax.getJSON({
- //        url: 'https://api.twitter.com/1/statuses/user_timeline.json?&screen_name=gabromanato&callback=?&count=1',
- //        type: 'jsonp'
- //    }, function(tweet) {
- //        document.querySelector('#tweet').innerHTML = tweet[0].text;
- //    });
 
 // fire up our google map
 function initMap(centerpointLat, centerpointLon, zoom){
@@ -221,11 +207,6 @@ function initIcons(){
 }
 
 function toggleHeatmap() {
-    // var query = "http://ec2-54-214-91-160.us-west-2.compute.amazonaws.com/server/getHeatmapPoints.php";
-    // $.getJSON(query, function(data) {
-    //    var dataArr = data[0].split(",");
-    //     heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
-    // });
     heatmap.setMap(heatmap.getMap() ? null : map);
 }
 
@@ -340,6 +321,7 @@ function changeOpacity() {
 // $(document).ready(function(){
 document.addEventListener('DOMContentLoaded',function(){
 
+    // our native replacement for jquery.getJSON
     var Lib = {
             ajax: {
                 xhr: function() {
