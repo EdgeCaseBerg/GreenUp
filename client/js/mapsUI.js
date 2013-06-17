@@ -138,6 +138,7 @@ function getHeatmapData(){
                 var dataArr = data[ii].split(",");
                 heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
             }
+            console.log(heatmapData);
         }
     );
     return heatmapData;
