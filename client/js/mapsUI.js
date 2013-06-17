@@ -134,10 +134,10 @@ function getHeatmapData(){
         type: "json"
         }, function(data){
             console.log(data);
-            for(ii=0; ii<data.length; ii++){
-                var dataArr = data[ii].split(",");
+            // for(ii=0; ii<data.length; ii++){
+                var dataArr = data[0].split(",");
                 heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
-            }
+            // }
             console.log(heatmapData);
         }
     );
