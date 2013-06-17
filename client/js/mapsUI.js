@@ -124,19 +124,19 @@ function findME(){
 function getHeatmapData(){
     var heatmapData = [];
     var query = "/server/getHeatmapPoints.php";
-    // $.getJSON(query, function(data) {
-    //    var dataArr = data[0].split(",");
-    //     heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: (parseInt(dataArr[2])/1000)});
-    // });
-    Lib.ajax.getJSON({
-        url: query,
-        type: "json"
-        }, function(data){
-            console.log(data);
-            var dataArr = data[0].split(",");
-            heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
-        }
-    );
+    $.getJSON(query, function(data) {
+       var dataArr = data[0].split(",");
+        heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: (parseInt(dataArr[2])/1000)});
+    });
+    // Lib.ajax.getJSON({
+    //     url: query,
+    //     type: "json"
+    //     }, function(data){
+    //         console.log(data);
+    //         var dataArr = data[0].split(",");
+    //         heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
+    //     }
+    // );
     return heatmapData;
 } // end getHeatmapData
 
