@@ -131,9 +131,9 @@ function getHeatmapData(){
     // });
     Lib.ajax.getJSON({
         url: query,
-        type: "text"
+        type: "json"
         }, function(data){
-            console.log(data[0]);
+            console.log(eval("("+data+")");
             // for(ii=0; ii<data.length; ii++){
                 // var dataArr = data[0].split(",");
                 // console.log(dataArr);
