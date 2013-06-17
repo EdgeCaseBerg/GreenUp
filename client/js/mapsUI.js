@@ -135,10 +135,11 @@ function getHeatmapData(){
         }, function(data){
             console.log(data);
             for(ii=0; ii<data.length; ii++){
-                var dataArr = data[ii].split(",");
-                heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
+                // var dataArr = data[ii].split(",");
+                console.log(data[ii]);
+                // heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
             }
-            console.log(heatmapData);
+            // console.log(heatmapData);
         }
     );
     return heatmapData;
