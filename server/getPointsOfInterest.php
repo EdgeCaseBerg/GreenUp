@@ -7,7 +7,7 @@
 	$getPins = "SELECT lat,lon,pins.fkType as fkType,message from pins,talk where talk.pkId = pins.fkTalkId" ;
 	$statment = $dbh->query($getPins);
 	$returned = $statment->fetchAll(PDO::FETCH_ASSOC);
-
+	header('Content-Type: application/json');
 	echo json_encode($returned);
 
 ?>

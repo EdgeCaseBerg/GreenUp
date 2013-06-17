@@ -77,7 +77,7 @@ function upload(database){
             console.log(data);
             $.ajax({
                 type:'POST',
-                url: '/server/addGridData.php',
+                url: '../server/addGridData.php',
                 dataType:"json",
                 data: {data : data},
                 failure: function(errMsg){alert(errMsg);}
@@ -123,16 +123,18 @@ function findME(){
 // gets heatmap data and formats it for initHeatMap() 
 function getHeatmapData(){
     var heatmapData = [];
-    var query = "/server/getHeatmapPoints.php";
+    var query = "../server/getHeatmapPoints.php";
     Lib.ajax.getJSON({
         url: query,
         type: "json"
         }, function(data){
+            console.log(data);
             var dataArr = eval("("+data+")");
             for(ii=0; ii<dataArr.length; ii++){
                 var dataA = dataArr[ii].split(",");
                 heatmapData.push({location: new google.maps.LatLng(parseFloat(dataA[0]), parseFloat(dataA[1])), weight: parseInt(dataA[2])});
             }
+            console.log("working");
             console.log(heatmapData);
         }
     );
@@ -172,7 +174,7 @@ function initIcons(){
     var pickupIcon = "img/icons/greenCircle.png";
     pickupMarkers = [];
 
-  $.getJSON("/server/getPointsOfInterest.php", function(data) {
+  $.getJSON("../server/getPointsOfInterest.php", function(data) {
     // Lib.ajax.getJSON({
         // url:"/server/getPointsOfInterest.php",
         // type: "json"
@@ -234,7 +236,7 @@ function addPickupMarker(){
     pickupMarkers.push(marker);
 
     var info = new google.maps.InfoWindow();
-    info.setContent('<form id="hook" class="infowindow pickup" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="3" /><input type="hidden" name="add" /><input type="submit"  onmousedown="showToggleContainer" />');
+    info.setContent('<form id="hook" class="infowindow pickup" method="GET" action="../server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="3" /><input type="hidden" name="add" /><input type="submit"  onmousedown="showToggleContainer" />');
     info.setPosition(marker.position);
     info.open(map);
 }
@@ -249,7 +251,7 @@ function addCommentMarker(){
     pickupMarkers.push(marker);
 
     var info = new google.maps.InfoWindow();
-    info.setContent('<form id="hook" class="infowindow comment" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="1" /><input type="hidden" name="add" /><input type="submit"  onmousedown="showToggleContainer" />');
+    info.setContent('<form id="hook" class="infowindow comment" method="GET" action="../server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="1" /><input type="hidden" name="add" /><input type="submit"  onmousedown="showToggleContainer" />');
     info.setPosition(marker.position);
     info.open(map);
 }
@@ -265,7 +267,7 @@ function addTrashMarker(){
 
     //corresponds to the help needed
     var info = new google.maps.InfoWindow();
-    info.setContent('<form id="hook" class="infowindow helpme" method="GET" action="/server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="2" /><input type="hidden" name="add" /><input type="submit"  onmousedown="showToggleContainer" />');
+    info.setContent('<form id="hook" class="infowindow helpme" method="GET" action="../server/communication.php"><input type="hidden" name="lat" value="'+marker.position.lat()+'"/><input type="hidden" name="lon" value="'+marker.position.lng()+'" /><textarea name="message"/></textarea><input type="hidden" name="topic" value="2" /><input type="hidden" name="add" /><input type="submit"  onmousedown="showToggleContainer" />');
     info.setPosition(marker.position);
     info.open(map);
 }

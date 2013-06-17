@@ -1,6 +1,6 @@
 <?php
 include('Grid.php');
-include('log.php');
+// include('log.php');
 
 // $dataPoint['lat']= 47.1234;
 // $dataPoint['long']= -73.9877;
@@ -10,7 +10,7 @@ include('log.php');
 
 
 $data = $_POST['data'];
-logThis($data);
+// logThis($data);
 $grid = new Grid();
 $previousPoint = $data[0];
 
