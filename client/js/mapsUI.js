@@ -133,9 +133,9 @@ function getHeatmapData(){
         url: query,
         type: "json"
         }, function(data){
-            console.log(eval(data));
+            console.log(data[0]);
             // for(ii=0; ii<data.length; ii++){
-                // var dataArr = data[1].split(",");
+                // var dataArr = data[0].split(",");
                 // console.log(dataArr);
                 // console.log(data[ii]);
                 // heatmapData.push({location: new google.maps.LatLng(parseFloat(dataArr[0]), parseFloat(dataArr[1])), weight: parseInt(dataArr[2])});
