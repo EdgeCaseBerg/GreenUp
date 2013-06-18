@@ -118,6 +118,7 @@ function findME(){
     return coords;
 }
 
+
 // resolve our ip to a geolocation for initial map setup
 function getIpGeo(){
     var heatmapData = [];
