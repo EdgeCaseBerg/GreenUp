@@ -51,11 +51,11 @@ function start(){
     
 }
 
-function recenterMap(lat, lon){
+function recenterMap(data){
     // console.log(lat+"-"+lon);
-    // var newcenter = new google.maps.LatLng(lat, lon);
-    //     centerPoint = newcenter;
-    //     map.panTo(newcenter);
+    var newcenter = new google.maps.LatLng(data[0], data[1]);
+        centerPoint = newcenter;
+        map.panTo(newcenter);
 }
 
 
@@ -134,14 +134,12 @@ function getIpGeo(){
     Lib.ajax.getJSON({
         url: query,
         type: "json"
-        }, function(data){
-            console.log(data);
+        },
             // dataArr = data;
             // // var dataArr = eval("("+data+")");
             // console.log("working");
             // console.log();
-            recenterMap(data[0], data[1]);
-        }
+            recenterMap(data);
     );
     // return dataArr;
 }
