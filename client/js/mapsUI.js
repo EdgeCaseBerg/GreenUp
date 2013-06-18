@@ -19,7 +19,9 @@ google.maps.event.addDomListener(window, 'load', initIcons);
 function initialize() {
     var heatmapData = getHeatmapData();
     // initMap(lat, lon, zoom)
-    initMap(37.774546, -122.433523, 17);
+    var dataArr = getIpGeo();
+    initMap(dataArr[0], dataArr[1], dataArr[2]);
+    // initMap(37.774546, -122.433523, 17);
     initHeatMap(heatmapData);
 } // end initialize
 
@@ -115,6 +117,22 @@ function findME(){
     return coords;
 }
 
+// resolve our ip to a geolocation for initial map setup
+function getIpGeo(){
+    var heatmapData = [];
+    var query = "../server/getHeatmapPoints.php";
+    Lib.ajax.getJSON({
+        url: query,
+        type: "json"
+        }, function(data){
+            // console.log(data);
+            var dataArr = eval("("+data+")");
+            console.log("working");
+            console.log();
+        }
+    );
+    return dataArr;
+}
 
 
 
