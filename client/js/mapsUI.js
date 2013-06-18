@@ -134,7 +134,7 @@ function getIpGeo(){
             console.log();
         }
     );
-    return data;
+    return dataArr;
 }
 
 
