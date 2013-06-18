@@ -16,6 +16,7 @@ pickupMarkers = [];
 google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
 
+
 function initialize() {
     var heatmapData = getHeatmapData();
     // initMap(lat, lon, zoom)
