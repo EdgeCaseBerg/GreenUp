@@ -121,7 +121,7 @@ function findME(){
 // resolve our ip to a geolocation for initial map setup
 function getIpGeo(){
     var heatmapData = [];
-    var query = "../server/getHeatmapPoints.php";
+    var query = "../server/locationByIp.php";
     Lib.ajax.getJSON({
         url: query,
         type: "json"
