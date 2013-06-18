@@ -17,10 +17,10 @@ $errors = $ipLite->getError();
 // echo "<p>\n";
 // echo "<strong>First result</strong><br />\n";
 if (!empty($locations) && is_array($locations)) {
-	$dataArr[0] = $locations['latitude'];
-	$dataArr[1] = $locations['longitude'];
+	$dataArr[0] = floatval($locations['latitude']);
+	$dataArr[1] = floatval($locations['longitude']);
 	$dataArr[2] = 17;
-	// header("")
+	header('Content-Type: application/json');
 	echo json_encode($dataArr);
 
 //   foreach ($locations as $field => $val) {
