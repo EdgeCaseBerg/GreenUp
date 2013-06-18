@@ -19,9 +19,10 @@ google.maps.event.addDomListener(window, 'load', initIcons);
 function initialize() {
     var heatmapData = getHeatmapData();
     // initMap(lat, lon, zoom)
-    getIpGeo();
+    // getIpGeo();
     // initMap(dataArr[0], dataArr[1], dataArr[2]);
-    initMap(37.774546, -122.433523, 17);
+    initMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()), 17);
+    // initMap(37.774546, -122.433523, 17);
     initHeatMap(heatmapData);
 } // end initialize
 
@@ -51,7 +52,7 @@ function start(){
     
 }
 
-function recenterMap(lat, lon, map){
+function recenterMap(lat, lon){
     console.log(lon);
     var newcenter = new google.maps.LatLng(lat, lon);
         centerPoint = newcenter;

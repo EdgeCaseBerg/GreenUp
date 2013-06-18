@@ -215,7 +215,7 @@ $dataArr = ipGeo();
 			    		xmlHttp.send( null );
 					}
 
-                    recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()), map);
+                    // recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
 
 
                     
