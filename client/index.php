@@ -1,5 +1,5 @@
 <?php
-include 'server/locationByIp.php';
+include '../server/locationByIp.php';
 $dataArr = ipGeo();
 ?>
 
