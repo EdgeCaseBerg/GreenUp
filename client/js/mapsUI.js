@@ -403,8 +403,7 @@ document.addEventListener('DOMContentLoaded',function(){
     var startButton = document.getElementById('startButton');
     var stopButton = document.getElementById('stopButton');
 
-    recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
-    
+
     toggleHeat.addEventListener('click', function() {
         toggleHeatmap();
     }, false);
@@ -517,4 +516,7 @@ document.addEventListener('DOMContentLoaded',function(){
     // $('#map-canvas').mouseup(function(){
     //     MOUSEUP_TIME = new Date().getTime() / 1000;
     // });
+
+    recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
+
 });
