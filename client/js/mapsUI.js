@@ -121,13 +121,13 @@ function findME(){
 
 // resolve our ip to a geolocation for initial map setup
 function getIpGeo(){
-    var heatmapData = [];
+    dataArr =[];
     var query = "../server/locationByIp.php";
     Lib.ajax.getJSON({
         url: query,
         type: "json"
         }, function(data){
-            // console.log(data);
+            console.log(data);
             var dataArr = eval("("+data+")");
             console.log("working");
             console.log();
