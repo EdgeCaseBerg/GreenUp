@@ -128,6 +128,7 @@ function getIpGeo(){
         type: "json"
         }, function(data){
             console.log(data);
+            dataArr = data;
             // var dataArr = eval("("+data+")");
             console.log("working");
             console.log();
