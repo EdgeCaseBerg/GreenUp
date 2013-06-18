@@ -1,31 +1,35 @@
 <?php
 // uses the ip2location service to get initial map info (center the user on the map)
 include('lib/ip2locationlite.class.php');
-$apiKey = "e21591d300c4bac16c24c588069000db95b0137bfbe4e5a7b9c6a10a0a685c87";
- 
-//Load the class
-$ipLite = new ip2location_lite;
-$ipLite->setKey($apiKey);
- 
-//Get errors and locations
-$locations = $ipLite->getCity($_SERVER['REMOTE_ADDR']);
-$errors = $ipLite->getError();
+function ipGeo(){
+	$apiKey = "e21591d300c4bac16c24c588069000db95b0137bfbe4e5a7b9c6a10a0a685c87";
+	 
+	//Load the class
+	$ipLite = new ip2location_lite;
+	$ipLite->setKey($apiKey);
+	 
+	//Get errors and locations
+	$locations = $ipLite->getCity($_SERVER['REMOTE_ADDR']);
+	$errors = $ipLite->getError();
+	$dataArr = array();
 
+	 
+	// //Getting the result
+	// echo "<p>\n";
+	// echo "<strong>First result</strong><br />\n";
+	if (!empty($locations) && is_array($locations)) {
+		$dataArr[0] = floatval($locations['latitude']);
+		$dataArr[1] = floatval($locations['longitude']);
+		$dataArr[2] = 17;
+		// header('Content-Type: application/json');
+		// echo json_encode($dataArr);
 
- 
-// //Getting the result
-// echo "<p>\n";
-// echo "<strong>First result</strong><br />\n";
-if (!empty($locations) && is_array($locations)) {
-	$dataArr[0] = floatval($locations['latitude']);
-	$dataArr[1] = floatval($locations['longitude']);
-	$dataArr[2] = 17;
-	header('Content-Type: application/json');
-	echo json_encode($dataArr);
+	//   foreach ($locations as $field => $val) {
+	//     echo $field . ' : ' . $val . "<br />\n";
+	//   }
+	}
+return $dataArr;
 
-//   foreach ($locations as $field => $val) {
-//     echo $field . ' : ' . $val . "<br />\n";
-//   }
 }
 // echo "</p>\n";
  
