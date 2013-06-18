@@ -131,8 +131,8 @@ function getHeatmapData(){
             console.log(data);
             var dataArr = eval("("+data+")");
             for(ii=0; ii<dataArr.length; ii++){
-                var dataA = dataArr[ii].split(",");
-                heatmapData.push({location: new google.maps.LatLng(parseFloat(dataA[0]), parseFloat(dataA[1])), weight: parseInt(dataA[2])});
+                // var dataA = dataArr[ii].split(",");
+                heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
             }
             console.log("working");
             console.log(heatmapData);
