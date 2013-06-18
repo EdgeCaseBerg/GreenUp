@@ -19,7 +19,7 @@ google.maps.event.addDomListener(window, 'load', initIcons);
 function initialize() {
     var heatmapData = getHeatmapData();
     // initMap(lat, lon, zoom)
-    // getIpGeo();
+    getIpGeo();
     // initMap(dataArr[0], dataArr[1], dataArr[2]);
     initMap(37.774546, -122.433523, 17);
     initHeatMap(heatmapData);
@@ -51,9 +51,8 @@ function start(){
     
 }
 
-function recenterMap(data){
-    // console.log(lat+"-"+lon);
-    var newcenter = new google.maps.LatLng(data[0], data[1]);
+function recenterMap(lat, lon){
+    var newcenter = new google.maps.LatLng(lat, lon);
         centerPoint = newcenter;
         map.panTo(newcenter);
 }
@@ -134,12 +133,13 @@ function getIpGeo(){
     Lib.ajax.getJSON({
         url: query,
         type: "json"
-        },
+        },function(data){
             // dataArr = data;
             // // var dataArr = eval("("+data+")");
             // console.log("working");
             // console.log();
-            recenterMap(data);
+            // recenterMap(data);
+        }
     );
     // return dataArr;
 }
@@ -403,6 +403,7 @@ document.addEventListener('DOMContentLoaded',function(){
     var startButton = document.getElementById('startButton');
     var stopButton = document.getElementById('stopButton');
 
+    recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
     
     toggleHeat.addEventListener('click', function() {
         toggleHeatmap();
