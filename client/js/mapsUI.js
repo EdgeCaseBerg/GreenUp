@@ -127,9 +127,10 @@ function getHeatmapData(){
     Lib.ajax.getJSON({
         url: query,
         type: "json"
-        }, function(data){
-            console.log(data);
-            var dataArr = eval("("+data+")");
+        }, function(dataArr){
+            // console.log(data);
+            // var dataArr = eval("("+data+")");
+
             for(ii=0; ii<dataArr.length; ii++){
                 // var dataA = dataArr[ii].split(",");
                 heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
