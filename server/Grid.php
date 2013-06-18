@@ -23,8 +23,11 @@ class Grid{
 		$returnArr = $statement->fetchAll();
 		$arrSize =  count($returnArr);
 		for($ii=0; $ii<$arrSize; $ii++){
-			$dataStr = $returnArr[$ii]['pkLat'].",".$returnArr[$ii]['pkLon'].",".$returnArr[$ii]['secondsWorked'];
-			array_push($mapData, $dataStr);
+			$dataArr[0] = $returnArr[$ii]['pkLat'];
+			$dataArr[1] = $returnArr[$ii]['pkLon'];
+			$dataArr[2] = $returnArr[$ii]['secondsWorked'];
+			// $dataStr = $returnArr[$ii]['pkLat'].",".$returnArr[$ii]['pkLon'].",".$returnArr[$ii]['secondsWorked'];
+			array_push($mapData, $dataArr);
 		}
 		return json_encode($mapData);
 	}
