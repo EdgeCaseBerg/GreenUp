@@ -1,6 +1,6 @@
 <?php
-// include 'server/locationByIp.php';
-// $dataArr = ipGeo();
+include '../server/locationByIp.php';
+$dataArr = ipGeo();
 ?>
 
 <!DOCTYPE html>
@@ -31,8 +31,8 @@
 	</div> -->
 
 	<div id="container">
-<!--         <input type="hidden" id="initLat" value=<? //echo "'".$dataArr[0]."'"; ?> />
-        <input type="hidden" id="initLon" value=<? //echo "'".$dataArr[1]."'"; ?> /> -->
+        <input type="hidden" id="initLat" value=<? echo "'".$dataArr[0]."'"; ?> />
+        <input type="hidden" id="initLon" value=<? echo "'".$dataArr[1]."'"; ?> />
 		<div class="panel" id="panel1">
 			<ul class="nav">
                 <li><a>Home</a></li>
