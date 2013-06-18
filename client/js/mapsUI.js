@@ -19,9 +19,9 @@ google.maps.event.addDomListener(window, 'load', initIcons);
 function initialize() {
     var heatmapData = getHeatmapData();
     // initMap(lat, lon, zoom)
-    var dataArr = getIpGeo();
-    initMap(dataArr[0], dataArr[1], dataArr[2]);
-    // initMap(37.774546, -122.433523, 17);
+    // var dataArr = getIpGeo();
+    // initMap(dataArr[0], dataArr[1], dataArr[2]);
+    initMap(37.774546, -122.433523, 17);
     initHeatMap(heatmapData);
 } // end initialize
 
@@ -50,6 +50,13 @@ function start(){
     });
     
 }
+
+function recenterMap(lat, lon){
+    var newcenter = new google.maps.LatLng(lat, lon);
+        centerPoint = newcenter;
+        map.panTo(newcenter);
+}
+
 
 function stop(){
     upload(lawnDB);
@@ -128,13 +135,14 @@ function getIpGeo(){
         type: "json"
         }, function(data){
             console.log(data);
-            dataArr = data;
-            // var dataArr = eval("("+data+")");
-            console.log("working");
-            console.log();
+            // dataArr = data;
+            // // var dataArr = eval("("+data+")");
+            // console.log("working");
+            // console.log();
+            recenterMap(data[0], data[1]);
         }
     );
-    return dataArr;
+    // return dataArr;
 }
 
 
