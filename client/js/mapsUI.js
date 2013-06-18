@@ -107,6 +107,7 @@ function updateLocation(database, latitude, longitude){
     }
 };
 
+
 function findME(){
     var coords = new array();
     lawnDB.all(function(obj){
