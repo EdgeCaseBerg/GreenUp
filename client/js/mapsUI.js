@@ -518,6 +518,5 @@ document.addEventListener('DOMContentLoaded',function(){
     //     MOUSEUP_TIME = new Date().getTime() / 1000;
     // });
 
-    recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
 
 });
