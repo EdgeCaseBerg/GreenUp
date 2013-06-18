@@ -19,7 +19,7 @@ google.maps.event.addDomListener(window, 'load', initIcons);
 function initialize() {
     var heatmapData = getHeatmapData();
     // initMap(lat, lon, zoom)
-    // var dataArr = getIpGeo();
+    getIpGeo();
     // initMap(dataArr[0], dataArr[1], dataArr[2]);
     initMap(37.774546, -122.433523, 17);
     initHeatMap(heatmapData);
