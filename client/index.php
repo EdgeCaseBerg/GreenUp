@@ -215,6 +215,9 @@ $dataArr = ipGeo();
 			    		xmlHttp.send( null );
 					}
 
+                    recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
+
+
                     
                     //httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
                     
