@@ -52,7 +52,7 @@ function start(){
 }
 
 function recenterMap(lat, lon){
-    console.log(lat);
+    console.log(lon);
     var newcenter = new google.maps.LatLng(lat, lon);
         centerPoint = newcenter;
         map.panTo(newcenter);
