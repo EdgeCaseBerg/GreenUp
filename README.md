@@ -20,10 +20,18 @@ Resources
 List of solid waste disposal facilities: http://www.anr.state.vt.us/dec/wastediv/solid/documents/cathylistforwebquery9-24-10.pdf
 (other pages on that site may also have useful info)
 
+
 Setup
 ------------------
 - Run a LAMP or WAMP server with mysql 5.5 and PHP 5.3
 - set the document root to the root directory of the web folder
+- Create a config.php file in the server directory with the proper user and password credentials for mysql 
+```php
+define("HOST","localhost");
+define("DB_NAME","GreenUp");
+define("DB_USER","");
+define("DB_PASS","");
+```
 - run the server/createDatabase.php script to create the database
 - Use the application
 
