@@ -63,8 +63,8 @@ Grid.php
 The Grid class is an interface to the grid table in the database. It's primary function is to respond to requests for grid locations and to increment the time spent within a specific grid location.
 
 ###To Do
--The Grid class currently retrieves all grid points from the database no matter the request. This query needs to be fine grained to return the grid locations only within a specific region of the map. 
--The incrementTime procedure doesn't work with certain versions of mySQL right now, it would be nice if we could have a version that worked accross all versions, or at least those within the 5.x subset.
+- The Grid class currently retrieves all grid points from the database no matter the request. This query needs to be fine grained to return the grid locations only within a specific region of the map. 
+- The incrementTime procedure doesn't work with certain versions of mySQL right now, it would be nice if we could have a version that worked accross all versions, or at least those within the 5.x subset.
 
 addGridData.php
 --------
