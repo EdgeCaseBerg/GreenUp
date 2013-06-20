@@ -34,11 +34,6 @@ $dataArr = ipGeo();
         <input type="hidden" id="initLat" value=<? echo "'".$dataArr[0]."'"; ?> />
         <input type="hidden" id="initLon" value=<? echo "'".$dataArr[1]."'"; ?> />
 		<div class="panel" id="panel1">
-			<ul class="nav">
-                <li><a>Home</a></li>
-                <li><a id="pr1">Maps</a></li>
-                <li><a id="prr1">Comments</a></li>
-            </ul>
 
             <!-- Main Page Content -->
 
@@ -52,28 +47,23 @@ $dataArr = ipGeo();
                 </p>
 
 
-            <div class="start" id="startButton">
-                <a id="startbutton" onclick="start">Start Cleaning Up</a>
+                <div class="start" id="startButton">
+                    <a id="startbutton" onclick="start">Start Cleaning Up</a>
+                </div>
+
+
+                <div class="stop" id="stopButton" style="display: none;">   
+                    <a id="stopButton">Stop Cleaning Up</a>
+                </div>
+            
             </div>
-
-
-            <div class="stop" id="stopButton" style="display: none;">   
-                <a id="stopButton">Stop Cleaning Up</a>
-            </div>
-        </div>
-
-
 		</div>
 
 		<!-- map panel -->
 		<div class="panel" id="panel2">
 			<!-- <div id="mapContainer" class="contentContainer"> -->
 				<!-- <div class="mobileContainer"> -->
-            		<ul class="nav">
-                		<li><a id="pl2">Home</a></li>
-                		<li><a >Maps</a></li>
-               			<li><a id="pr2">Comments</a></li>
-            		</ul>
+            		
         		<!-- </div> -->
 
         		<div class="mapContainer">
@@ -104,18 +94,9 @@ $dataArr = ipGeo();
 			</div>
 			<!-- <input type="button" value="panel left" id="pl2">
 			<input type="button" value="panel right" id="pr2"> -->
-		</div>
+        </div>
 
 		<div class="panel" id="panel3">
-			      
-            <ul class="nav">
-                <li><a id="pll3">Home</a></li>
-                <li><a id="pl3">Maps</a></li>
-                <li><a>Comments</a></li>
-            </ul>
-
-
-
                 <div>
                 <form action="/server/communication.php" method="GET">
                     <input type="hidden" name="add" value="true" />
@@ -227,10 +208,13 @@ $dataArr = ipGeo();
             <div id="moar">
             	<a href="#moar" onclick=moar();><h2>Load More</h2></a>
             </div>
-
-      
 		</div>
 	</div>
+    <ul class="nav">
+        <li><a id="pan1">Home</a></li>
+        <li><a id="pan2">Maps</a></li>
+        <li><a id="pan3">Comments</a></li>
+    </ul>
 </body>
 
 </html>

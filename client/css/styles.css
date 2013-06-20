@@ -37,7 +37,9 @@ a, a:hover, a:visited{
 }
 
 .nav{
-	position:relative;
+	position: fixed;
+    top:86%;
+    height:9%;
 	z-index:200;
 	margin:5px 0px 0px 0px;
 	width:100%;
@@ -105,7 +107,7 @@ a, a:hover, a:visited{
         background-color:#9ba892;
     }
     .nav a:active {
-        position:relative;
+        /*position:relative;*/
         top:1px;
     }
 
@@ -147,7 +149,7 @@ a, a:hover, a:visited{
     position:absolute;
     z-index:15;
     right:0%;
-    top:85%;
+    top:5%;
     width:170px;
     color:black;
     /*border:solid 1px blue;*/

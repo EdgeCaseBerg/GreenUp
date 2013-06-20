@@ -452,40 +452,22 @@ document.addEventListener('DOMContentLoaded',function(){
     }, false);
 
 
-    var pr1 = document.getElementById("pr1");
-    pr1.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel2Center";
-    }, false);
-
-    var prr1 = document.getElementById("prr1");
-    prr1.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel3Center";
-    }, false);
-
-    var pr2 = document.getElementById("pr2");
-    pr2.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel3Center";
-    }, false);
-
-    var pl2 = document.getElementById("pl2");
-    pl2.addEventListener('mousedown', function() {
+    var pan1 = document.getElementById("pan1");
+    pan1.addEventListener('mousedown', function() {
         document.getElementById("container").className = "";
         document.getElementById("container").className = "panel1Center";
     }, false);
 
-    var pl3 = document.getElementById("pl3");
-    pl3.addEventListener('mousedown', function() {
+    var pan2 = document.getElementById("pan2");
+    pan2.addEventListener('mousedown', function() {
         document.getElementById("container").className = "";
         document.getElementById("container").className = "panel2Center";
     }, false);
 
-    var pll3 = document.getElementById("pll3");
-    pll3.addEventListener('mousedown', function() {
+    var pan3 = document.getElementById("pan3");
+    pan3.addEventListener('mousedown', function() {
         document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel1Center";
+        document.getElementById("container").className = "panel3Center";
     }, false);
 
     //Get the parameters in the get url and expose them
