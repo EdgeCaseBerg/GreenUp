@@ -16,10 +16,14 @@ pickupMarkers = [];
 google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
 
+
 function initialize() {
     var heatmapData = getHeatmapData();
     // initMap(lat, lon, zoom)
-    initMap(37.774546, -122.433523, 17);
+    // getIpGeo();
+    // initMap(dataArr[0], dataArr[1], dataArr[2]);
+    initMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()), 17);
+    // initMap(37.774546, -122.433523, 17);
     initHeatMap(heatmapData);
 } // end initialize
 
@@ -48,6 +52,14 @@ function start(){
     });
     
 }
+
+function recenterMap(lat, lon){
+    console.log(lon);
+    var newcenter = new google.maps.LatLng(lat, lon);
+        centerPoint = newcenter;
+        map.panTo(newcenter);
+}
+
 
 function stop(){
     upload(lawnDB);
@@ -105,6 +117,7 @@ function updateLocation(database, latitude, longitude){
     }
 };
 
+
 function findME(){
     var coords = new array();
     lawnDB.all(function(obj){
@@ -115,6 +128,24 @@ function findME(){
     return coords;
 }
 
+
+// resolve our ip to a geolocation for initial map setup
+function getIpGeo(){
+    dataArr =[];
+    var query = "../server/locationByIp.php";
+    Lib.ajax.getJSON({
+        url: query,
+        type: "json"
+        },function(data){
+            // dataArr = data;
+            // // var dataArr = eval("("+data+")");
+            // console.log("working");
+            // console.log();
+            // recenterMap(data);
+        }
+    );
+    // return dataArr;
+}
 
 
 
@@ -375,7 +406,7 @@ document.addEventListener('DOMContentLoaded',function(){
     var startButton = document.getElementById('startButton');
     var stopButton = document.getElementById('stopButton');
 
-    
+
     toggleHeat.addEventListener('click', function() {
         toggleHeatmap();
     }, false);
@@ -488,4 +519,6 @@ document.addEventListener('DOMContentLoaded',function(){
     // $('#map-canvas').mouseup(function(){
     //     MOUSEUP_TIME = new Date().getTime() / 1000;
     // });
+
+
 });

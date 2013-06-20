@@ -1,3 +1,8 @@
+<?php
+include '../server/locationByIp.php';
+$dataArr = ipGeo();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,6 +31,8 @@
 	</div> -->
 
 	<div id="container">
+        <input type="hidden" id="initLat" value=<? echo "'".$dataArr[0]."'"; ?> />
+        <input type="hidden" id="initLon" value=<? echo "'".$dataArr[1]."'"; ?> />
 		<div class="panel" id="panel1">
 			<ul class="nav">
                 <li><a>Home</a></li>
@@ -207,6 +214,9 @@
 			    		xmlHttp.open( "GET", theUrl, true );
 			    		xmlHttp.send( null );
 					}
+
+                    // recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
+
 
                     
                     //httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);

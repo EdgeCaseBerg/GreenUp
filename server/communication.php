@@ -34,7 +34,7 @@
 			
 
 
-			header('location:/client/index.html?pane=2');
+			header('location:/client/index.php?pane=2');
 		}else{
 			//Handling adding a message from the communication panel
 			if(isset($_GET['message'])){
