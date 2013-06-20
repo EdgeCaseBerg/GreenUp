@@ -23,6 +23,7 @@ class Grid{
 		$returnArr = $statement->fetchAll();
 		$arrSize =  count($returnArr);
 		for($ii=0; $ii<$arrSize; $ii++){
+			// bug --- shouldnt have to parse these to float (already floats in DB), but we have to for some reason
 			$dataArr[0] = floatval($returnArr[$ii]['pkLat']);
 			$dataArr[1] = floatval($returnArr[$ii]['pkLon']);
 			$dataArr[2] = floatval($returnArr[$ii]['secondsWorked']/1000000000);
