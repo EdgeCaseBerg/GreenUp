@@ -6,9 +6,14 @@ threadsafe: true
 
 handlers:
 
+- url: /api/comments
+  script: comments.application
+
+- url: /api 
+  script: api.application
 
 - url: /.*
-  script: index.application
+  script: api.application
 
 libraries:
 - name: webapp2
