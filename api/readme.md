@@ -97,11 +97,20 @@ URL: **/api/comments**
 
 ####POST Data:
 <table>
-| name       | type           | description  |
-|: ------------- :|:-------------:|:-----|
-| type      | String | Can be either `forum`, `needs`, or `message` |
-| message   | String | The message to associated with this comment | 
-| pin (optional) | Integer | The id of a pin to be associated with this comment | 
+<thead>
+<tr><th>name</th><th>type</th><th>description</th></tr>
+</thead>
+<tbody>
+<tr>
+<td> type </td><td>String </td><td> Can be either `forum`, `needs`, or `message` </td>
+</tr>
+<tr>
+<td> message   </td><td> String </td><td> The message to associated with this comment </td>
+</tr>
+<tr>
+<td> pin (optional) </td><td> Integer </td><td> The id of a pin to be associated with this comment </td>
+</tr>
+</tbody>
 </table>
 
 ####Example Request
