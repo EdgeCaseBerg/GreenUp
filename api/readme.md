@@ -55,7 +55,7 @@ URL: **/api/comments**
 
 <table>
 <thead>
-<tr><th>name</th><th>type</th><th>description  </th>
+<tr><th>name</th><th>type</th><th>description  </th></tr>
 </thead>
 <tbody>
 <tr><td>type</td>String <td></td> Can be either `forum`, `needs`, or `message` </td></tr>
