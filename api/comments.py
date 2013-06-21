@@ -10,7 +10,12 @@ class Comments(webapp2.RequestHandler):
 	def get(self):
 		#TODO
 		self.response.set_status(200,"")
-		self.response.write("")	
+		self.response.write("{}")	
+
+	def post(self):
+		#TODO
+		self.response.set_status(200,"")
+		self.response.write("{}")
 
 		
 
