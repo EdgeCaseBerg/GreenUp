@@ -53,9 +53,15 @@ URL: **/api/comments**
 
 ####Optional Parameters:
 
-| name       | type           | description  |
-|: ------------- :|:-------------:|:-----|
-| type      | String | Can be either `forum`, `needs`, or `message` |
+<table>
+<thead>
+<tr><th>name</th><th>type</th><th>description  </th>
+</thead>
+<tbody>
+<tr><td>type</td>String <td></td> Can be either `forum`, `needs`, or `message` </td></tr>
+</tbody>
+
+</table> 
 
 No type specified will return all comments.
 
@@ -90,11 +96,13 @@ Method: **POST**
 URL: **/api/comments**
 
 ####POST Data:
+<table>
 | name       | type           | description  |
 |: ------------- :|:-------------:|:-----|
 | type      | String | Can be either `forum`, `needs`, or `message` |
 | message   | String | The message to associated with this comment | 
 | pin (optional) | Integer | The id of a pin to be associated with this comment | 
+</table>
 
 ####Example Request
 `http://greenup.xenonapps.com/api/comments`

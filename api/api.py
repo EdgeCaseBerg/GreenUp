@@ -14,7 +14,7 @@ class API(webapp2.RequestHandler):
 		self.response.write(info)	
 
 		
-
+#This is the catch all
 application = webapp2.WSGIApplication([
     ('.*', API),
 
