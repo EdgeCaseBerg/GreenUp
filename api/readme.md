@@ -58,7 +58,7 @@ URL: **/api/comments**
 <tr><th>name</th><th>type</th><th>description  </th></tr>
 </thead>
 <tbody>
-<tr><td>type</td>String <td></td> Can be either `forum`, `needs`, or `message` </td></tr>
+<tr><td>type</td><td>String </td><td> Can be either `forum`, `needs`, or `message` </td></tr>
 </tbody>
 
 </table> 
