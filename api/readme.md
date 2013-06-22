@@ -157,9 +157,9 @@ URL: **/api/heatmap**
     </thead>
     <tbody>
         <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve</td></tr>
-        <tr><td>latOffset</td><td>unsigned float</td><td>Offset to **add** to the latitude point to create a bounding rectangle on the points retrieved. __Required if latDegrees is used__</td></tr>
+        <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved. Required if latDegrees is used</td></tr>
         <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve</td></tr>
-        <tr><td>lonOffset</td><td>unsigned float</td>Offset to **add** to the longitude point to create a bounding rectanlge on the points retrieved. __Required if lonDegrees is used__</tr>
+        <tr><td>lonOffset</td><td>unsigned float</td>Offset to add to the longitude point to create a bounding rectanlge on the points retrieved. Required if lonDegrees is used</tr>
         <tr><td>precision</td><td>unsigned integer</td><td>The integer precision for rounding degrees. It is recommended to leave this blank unless you know what you're doing.</td></tr>
     </tbody>
 </table>
@@ -211,3 +211,67 @@ If the request is malformed the server will return an error code of `400 bad req
 
 
 -----------------------
+
+###Get Pins
+Method: **GET**
+URL: **/api/pins**
+
+####Optional Parameters
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve</td></tr>
+        <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved. Required if latDegrees is used</td></tr>
+        <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve</td></tr>
+        <tr><td>lonOffset</td><td>unsigned float</td>Offset to add to the longitude point to create a bounding rectangle on the points retrieved. Required if lonDegrees is used</tr>
+        <tr><td>precision</td><td>unsigned integer</td><td>The integer precision for rounding degrees. It is recommended to leave this blank unless you know what you're doing.</td></tr>
+    </tbody>
+</table>
+
+If no latitude or longitude are specified then all pins will be returned.
+
+####Example Request
+`http://greenup.xenonapps.com/api/pins`
+
+####Response
+```
+[
+    {"latDegrees" : 24.53, "lonDegrees" : 43.2, "type" : "message", "message", "I need help with the trash on Colchester ave"},
+    {"latDegrees" : 25.13, "lonDegrees" : 41.2, "type" : "needs", "message", "There's a lot of trash on Pearl St, I could use some help!"}
+]
+```
+
+
+---------------------
+
+###Submit Pin
+Method: **POST**
+URL: **/api/pins**
+
+####Required POST data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>latDegrees</td><td>float</td><td>The latitude coordinate of the pin in Decimal Degrees</td></tr>
+        <tr><td>lonDegrees</td><td>float</td><td>The longitude coordinate of the pin in Decimal Degrees</td></tr>
+        <tr><td> type </td><td>String </td><td> Can be either `trash`, `needs`, or `message` </td></tr>
+        <tr><td>message</td><td>String</td><td>The message associated with this pin</td></tr>
+    </tbody>
+</table>
+
+
+####Example Request
+`http://greenup.xenonapps.com/api/pins`
+#####Message Body
+`{"latDegrees" : 24.53, "lonDegrees" : 43.2, "type" : "trash", "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?"}`
+
+####Response
+```
+{"response" : 200}
+```
+
+If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
