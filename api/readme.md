@@ -176,8 +176,16 @@ If none of these parameters are specified, all points will be returned. Note tha
 ####Response
 ```
 [
-    {"latDegrees" : 24.53, "lonDegrees" : 43.2, "secondsWorked" : 120},
-    {"latDegrees" : 25.13, "lonDegrees" : 41.2, "secondsWorked" : 133}
+    {
+        "latDegrees" : 24.53, 
+        "lonDegrees" : 43.2, 
+        "secondsWorked" : 120
+    },
+    {
+        "latDegrees" : 25.13, 
+        "lonDegrees" : 41.2, 
+        "secondsWorked" : 133
+    }
 ]
 ```
 
@@ -210,11 +218,21 @@ If the request is malformed the server will return an error code of `400 bad req
 ####Example Request
 `http://greenup.xenonapps.com/api/heatmap`
 #####Message Body
-`[{"latDegrees" : 24.53, "lonDegrees" : 43.2, "secondsWorked" : 120}]`
+```
+[
+    {
+        "latDegrees" : 24.53, 
+        "lonDegrees" : 43.2, 
+        "secondsWorked" : 120
+    }
+]
+```
 
 ####Response
 ```
-{"response" : 200}
+{
+    "response" : 200
+}
 ```
 
 It is important to note that the heatmap endpoint for **PUT** accepts only json arrays of headmap data objects, this enables batch updating of the heatmap resource.
@@ -248,8 +266,18 @@ If no latitude or longitude are specified then all pins will be returned.
 ####Response
 ```
 [
-    {"latDegrees" : 24.53, "lonDegrees" : 43.2, "type" : "message", "message", "I need help with the trash on Colchester ave"},
-    {"latDegrees" : 25.13, "lonDegrees" : 41.2, "type" : "needs", "message", "There's a lot of trash on Pearl St, I could use some help!"}
+    {
+        "latDegrees" : 24.53, 
+        "lonDegrees" : 43.2, 
+        "type" : "message", 
+        "message", "I need help with the trash on Colchester ave"
+    },
+    {
+        "latDegrees" : 25.13, 
+        "lonDegrees" : 41.2, 
+        "type" : "needs", 
+        "message", "There's a lot of trash on Pearl St, I could use some help!"
+    }
 ]
 ```
 
@@ -277,11 +305,20 @@ URL: **/api/pins**
 ####Example Request
 `http://greenup.xenonapps.com/api/pins`
 #####Message Body
-`{"latDegrees" : 24.53, "lonDegrees" : 43.2, "type" : "trash", "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?"}`
+```
+{
+    "latDegrees" : 24.53, 
+    "lonDegrees" : 43.2, 
+    "type" : "trash", 
+    "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?"
+}
+```
 
 ####Response
 ```
-{"response" : 200}
+{
+    "response" : 200
+}
 ```
 
 If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
