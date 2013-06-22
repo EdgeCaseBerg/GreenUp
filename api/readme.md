@@ -195,7 +195,11 @@ URL: **/api/heatmap**
     <tbody>
         <tr>
             <td>latDegree</td><td>float</td><td>The latitude degree (in decimal degrees) of the grid point</td>
+        </tr>
+        <tr>
             <td>lonDegree</td><td>float</td><td>The longitude degree (in decimal degrees) of the grid point</td>
+        </tr>
+        <tr>
             <td>secondsWorked</td><td>unsigned integer</td><td>The number of seconds spent in this grid location</td>
         </tr>
     </tbody>
