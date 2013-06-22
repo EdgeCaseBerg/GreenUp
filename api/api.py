@@ -1,11 +1,10 @@
 #Import google sign in
 from google.appengine.ext import db
-
+from handlerBase import *
 
 import webapp2
-import json
 
-class API(webapp2.RequestHandler):
+class API(Handler):
 
 	def get(self):
 		#Display API information
