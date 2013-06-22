@@ -16,12 +16,14 @@ pickupMarkers = [];
 google.maps.event.addDomListener(window, 'load', initialize);
 google.maps.event.addDomListener(window, 'load', initIcons);
 
+
 function initialize() {
     var heatmapData = getHeatmapData();
     // initMap(lat, lon, zoom)
     getIpGeo();
     // initMap(dataArr[0], dataArr[1], dataArr[2]);
-    initMap(37.774546, -122.433523, 17);
+    initMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()), 17);
+    // initMap(37.774546, -122.433523, 17);
     initHeatMap(heatmapData);
 } // end initialize
 
@@ -52,7 +54,7 @@ function start(){
 }
 
 function recenterMap(lat, lon){
-    console.log(lat);
+    console.log(lon);
     var newcenter = new google.maps.LatLng(lat, lon);
         centerPoint = newcenter;
         map.panTo(newcenter);
@@ -518,6 +520,9 @@ document.addEventListener('DOMContentLoaded',function(){
     //     MOUSEUP_TIME = new Date().getTime() / 1000;
     // });
 
+<<<<<<< HEAD:client/js/mapsUI.js
     recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
+=======
+>>>>>>> origin:web/client/js/mapsUI.js
 
 });
