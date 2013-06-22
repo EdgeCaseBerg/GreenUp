@@ -32,6 +32,7 @@ All API parameters are returned in the JSON format, and all data sent to the API
 ###Get API Information
 
 Method: **GET**
+
 URL: **/api**
 
 ####Example request:
@@ -49,6 +50,7 @@ URL: **/api**
 
 ###Get Comments
 Method: **GET**
+
 URL: **/api/comments**
 
 ####Optional Parameters:
@@ -93,6 +95,7 @@ The pin field refers to a pin resource. (To-Do this should be elaborated on)
 
 ###Submit Comments
 Method: **POST**
+
 URL: **/api/comments**
 
 ####Required POST Data:
@@ -148,6 +151,7 @@ If the post data is malformed, the server will return a `400 bad request` respon
 
 ###Get Heatmap Data
 Method: **GET**
+
 URL: **/api/heatmap**
 
 ####Optional Parameters
@@ -202,12 +206,14 @@ If the request is malformed the server will return an error code of `400 bad req
 ####Example Request
 `http://greenup.xenonapps.com/api/heatmap`
 #####Message Body
-`{"latDegrees" : 24.53, "lonDegrees" : 43.2, "secondsWorked" : 120}`
+`[{"latDegrees" : 24.53, "lonDegrees" : 43.2, "secondsWorked" : 120}]`
 
 ####Response
 ```
 {"response" : 200}
 ```
+
+It is important to note that the heatmap endpoint for **PUT** accepts only json arrays of headmap data objects, this enables batch updating of the heatmap resource.
 
 
 -----------------------
