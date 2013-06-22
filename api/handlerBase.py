@@ -1,6 +1,4 @@
 import json
-import jinja2
-import os
 import webapp2
 
 class Handler(webapp2.RequestHandler):
@@ -11,7 +9,3 @@ class Handler(webapp2.RequestHandler):
 	'''
 	def write(self, *a, **kw):
 		self.response.out.write(*a, **kw)
-
-	def renderStr(self, template, **params):
-		t = jinja_env.get_template(template)
-		return t.render(params)
