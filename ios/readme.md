@@ -1,7 +1,6 @@
 GreenUp iOS  - v0.01
 =========
 Powered by XenonApps
-____
 
 
 An iOS client for The GreenUp API
