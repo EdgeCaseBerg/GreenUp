@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A5821A71775DC4C006B344B"
-               BuildableName = "client.app"
-               BlueprintName = "client"
-               ReferencedContainer = "container:client.xcodeproj">
+               BlueprintIdentifier = "2A48A9BB177689AF00160575"
+               BuildableName = "ios_client.app"
+               BlueprintName = "ios_client"
+               ReferencedContainer = "container:ios_client.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,20 +32,20 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A5821DB1775DC4C006B344B"
-               BuildableName = "clientTests.octest"
-               BlueprintName = "clientTests"
-               ReferencedContainer = "container:client.xcodeproj">
+               BlueprintIdentifier = "2A48A9EF177689AF00160575"
+               BuildableName = "ios_clientTests.octest"
+               BlueprintName = "ios_clientTests"
+               ReferencedContainer = "container:ios_client.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2A5821A71775DC4C006B344B"
-            BuildableName = "client.app"
-            BlueprintName = "client"
-            ReferencedContainer = "container:client.xcodeproj">
+            BlueprintIdentifier = "2A48A9BB177689AF00160575"
+            BuildableName = "ios_client.app"
+            BlueprintName = "ios_client"
+            ReferencedContainer = "container:ios_client.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -61,10 +61,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2A5821A71775DC4C006B344B"
-            BuildableName = "client.app"
-            BlueprintName = "client"
-            ReferencedContainer = "container:client.xcodeproj">
+            BlueprintIdentifier = "2A48A9BB177689AF00160575"
+            BuildableName = "ios_client.app"
+            BlueprintName = "ios_client"
+            ReferencedContainer = "container:ios_client.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -79,10 +79,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2A5821A71775DC4C006B344B"
-            BuildableName = "client.app"
-            BlueprintName = "client"
-            ReferencedContainer = "container:client.xcodeproj">
+            BlueprintIdentifier = "2A48A9BB177689AF00160575"
+            BuildableName = "ios_client.app"
+            BlueprintName = "ios_client"
+            ReferencedContainer = "container:ios_client.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
