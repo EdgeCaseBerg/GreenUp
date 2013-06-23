@@ -16,7 +16,7 @@ An iOS client for The GreenUp API
 License
 -
 
-<a href="3http://www.gnu.org/licenses/gpl.html">GPLv</a>
+<a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>
 
   
 
