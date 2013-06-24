@@ -23,6 +23,6 @@ class Pins(webapp2.RequestHandler):
 		
 
 application = webapp2.WSGIApplication([
-    ('/api/pins', Heatmap),
+    ('/api/pins', Pins),
 
 ], debug=True)
