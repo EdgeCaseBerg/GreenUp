@@ -11,10 +11,19 @@ import logging
 '''
 	Datastore Classes (entities), prefaced by an ancestor function to make them consistent.
 '''
-def app_key(name = 'default'):
-    return db.Key.from_path('things', name)
+def app_key(name = 'greenup'):
+	# default name being greenup. this can be changed as we expand functionality
+    return db.Key.from_path('apps', name)
 
-class Types(db.Model):
+class Greenup(db.Model):
+	'''
+		Here is our greenup database model superclass. This is done so we can expand with different classes (campaign, etc...)
+	'''
+	@classmethod
+	def by_id(cls, id):
+		raise NotImplementedError # override this on the child classes
+
+class Types(Greenup):
 	# What type of message/pin is being placed.
 	description = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
 
@@ -29,7 +38,7 @@ class Types(db.Model):
 		dt = Types.all().filter('description =', name).get()
 		return dt
 
-class GridPoints(db.Model):
+class GridPoints(Greenup):
 	# GridPoints contains the points of the map grid. 
 
 	lat = db.FloatProperty()
@@ -50,7 +59,7 @@ class GridPoints(db.Model):
 		longitudes = GridPoints.all().filter('lon =', name).get()
 		return longitudes
 
-class Comments(db.Model):
+class Comments(Greenup):
 	# A forum message with a particular type and timestamp, also optionally associated to a pin
 
 	commentType = db.ReferenceProperty(Types, collection_name ='types')
@@ -68,7 +77,7 @@ class Comments(db.Model):
 		ct = Comments.all().filter('commentType =', name).get()
 		return ct
 
-class Pins(db.Model):
+class Pins(Greenup):
 	# Pins are latitude and longitude points on the map with a particular type and a comment associated with them.
 
 	comment = db.ReferenceProperty(Comments, collection_name = 'comments')
