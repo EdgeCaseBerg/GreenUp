@@ -49,6 +49,7 @@ URL: **/api**
 -----------------------------
 
 ###Get Comments
+
 Method: **GET**
 
 URL: **/api/comments**
@@ -94,6 +95,7 @@ The pin field refers to a pin resource. (To-Do this should be elaborated on)
 -------------------------------------------------
 
 ###Submit Comments
+
 Method: **POST**
 
 URL: **/api/comments**
@@ -150,6 +152,7 @@ If the post data is malformed, the server will return a `400 bad request` respon
 
 
 ###Get Heatmap Data
+
 Method: **GET**
 
 URL: **/api/heatmap**
@@ -192,7 +195,9 @@ If none of these parameters are specified, all points will be returned. Note tha
 ---------------------------
 
 ###Update Heatmap Data
+
 Method: **PUT**
+
 URL: **/api/heatmap**
 
 ####Required PUT data
@@ -241,7 +246,9 @@ It is important to note that the heatmap endpoint for **PUT** accepts only json 
 -----------------------
 
 ###Get Pins
+
 Method: **GET**
+
 URL: **/api/pins**
 
 ####Optional Parameters
@@ -285,7 +292,9 @@ If no latitude or longitude are specified then all pins will be returned.
 ---------------------
 
 ###Submit Pin
+
 Method: **POST**
+
 URL: **/api/pins**
 
 ####Required POST data
