@@ -72,7 +72,7 @@ class Pins(db.Model):
 	# Pins are latitude and longitude points on the map with a particular type and a comment associated with them.
 
 	comment = db.ReferenceProperty(Comments, collection_name = 'comments')
-	pinType = db.ReferenceProperty(Types, collection_name = 'types')
+	pinType = db.ReferenceProperty(Types, collection_name = 'pin_types')
 
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
@@ -104,7 +104,18 @@ class Pins(db.Model):
 '''
 	Memcache methods that the user will call instead of direct datastore queries.
 '''
+def setData(key, val):
+	# simple wrapper for memcache.set, in case we need to extend it.
+	memcache.set(key, val)
 
+def getData(key):
+	# wrapper for memcache get, will return none if the data wasn't found
+	result = memcache.get(key)
+
+	if not result:
+		return None
+
+	return result
 
 '''
 	Test harness for reading and writing entities in the datastore.
@@ -114,9 +125,9 @@ class MakeDatastoreTest(webapp2.RequestHandler):
 		self.response.write("write worked")
 
 		# Set the same parent key on each entity to ensure consistent results and add some junk data
-		types = Types(parent = app_key(), description = "General Message")
+		types = Types(parent = app_key(), description = "Help Needed")
 		gridPoints = GridPoints(parent = app_key(), lat = 1.0, lon = 2.0, secondsWorked = 10.0)
-		comments = Comments(parent = app_key(), message = 'this is a message', commentType = "needs")
+		comments = Comments(parent = app_key(), message = 'this is a message')
 		pins = Pins(parent = app_key(), lat= 1.1, lon= 1.2)
 
 		# put the junk data in the datastore
@@ -124,6 +135,12 @@ class MakeDatastoreTest(webapp2.RequestHandler):
 		gridPoints.put()
 		comments.put()
 		pins.put()
+
+		# test out relational modelling
+		types = Types(parent = app_key(), description = "General Message")
+		types.put()
+		Comments(parent=app_key(), commentType = types, message='i hope this works').put()
+
 
 class DisplayDatastoreTest(webapp2.RequestHandler):
 	def get(self):
