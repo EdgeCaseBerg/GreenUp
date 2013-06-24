@@ -149,9 +149,11 @@ class DisplayDatastoreTest(webapp2.RequestHandler):
 		logging.info("## Types ##")
 		types_query = Types.all()
 		types_query.ancestor(app_key())
-
 		for types in types_query.run():
 			logging.info(types.description)
+
+		types_query = Types.by_descriptionType('Help Needed')
+		logging.info(types_query.description)
 
 		# gridPoints
 		logging.info("## GridPoints ##")
