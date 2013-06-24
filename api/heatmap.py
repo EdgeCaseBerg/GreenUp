@@ -8,14 +8,14 @@ import api
 
 
 
-class Comments(webapp2.RequestHandler):
+class Heatmap(webapp2.RequestHandler):
 
 	def get(self):
 		#TODO
 		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
 		self.response.write("{}")	
 
-	def post(self):
+	def put(self):
 		#TODO
 		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
 		self.response.write("{}")
@@ -23,6 +23,6 @@ class Comments(webapp2.RequestHandler):
 		
 
 application = webapp2.WSGIApplication([
-    ('/api/comments', Comments),
+    ('/api/heatmap', Heatmap),
 
 ], debug=True)

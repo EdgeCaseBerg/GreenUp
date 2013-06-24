@@ -8,7 +8,7 @@ import api
 
 
 
-class Comments(webapp2.RequestHandler):
+class Pins(webapp2.RequestHandler):
 
 	def get(self):
 		#TODO
@@ -23,6 +23,6 @@ class Comments(webapp2.RequestHandler):
 		
 
 application = webapp2.WSGIApplication([
-    ('/api/comments', Comments),
+    ('/api/pins', Heatmap),
 
 ], debug=True)
