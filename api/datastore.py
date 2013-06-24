@@ -1,48 +1,114 @@
 # datastore entities required by API.
 # https://developers.google.com/appengine/docs/python/gettingstartedpython27/usingdatastore
+# building relationships: https://developers.google.com/appengine/articles/modeling
 
 from google.appengine.ext import db
 from handlerBase import *
+from google.appengine.api import memcache # import memcache
+
 import logging 
 
+'''
+	Datastore Classes (entities), prefaced by an ancestor function to make them consistent.
+'''
 def app_key(name = 'default'):
     return db.Key.from_path('things', name)
 
 class Types(db.Model):
-	'''
-		What type of message/pin is being placed.
-	'''
-	description = db.StringProperty()
+	# What type of message/pin is being placed.
+	description = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
+
+	@classmethod
+	def by_id(cls, typeId):
+		# looks up type by id
+		return Comments.get_by_id(typeId, parent = app_key)
+	
+	@classmethod
+	def by_descriptionType(cls,name):
+		# looks up type by its description
+		dt = Types.all().filter('description =', name).get()
+		return dt
 
 class GridPoints(db.Model):
-	'''
-		GridPoints contains the points of the map grid. 
-	'''
+	# GridPoints contains the points of the map grid. 
+
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
 	secondsWorked = db.FloatProperty()
-	# maybe we need this, maybe we don't=> https://developers.google.com/appengine/docs/python/datastore/typesandpropertyclasses#GeoPtProperty
-	geoPoint = db.GeoPtProperty()
+
+	@classmethod
+	def by_id(cls, gridId):
+		return GridPoints.get_by_id(gridId, parent = app_key)
+
+	@classmethod
+	def by_lat(cls,name):
+		latitudes = GridPoints.all().filter('lat =', name).get()
+		return latitudes
+
+	@classmethod
+	def by_lon(cls,name):
+		longitudes = GridPoints.all().filter('lon =', name).get()
+		return longitudes
 
 class Comments(db.Model):
-	'''
-		A forum message with a particular type and timestamp, also optionally associated to a pin
-		This may be of use:
-			https://developers.google.com/appengine/docs/python/datastore/typesandpropertyclasses#ReferenceProperty
-	'''
+	# A forum message with a particular type and timestamp, also optionally associated to a pin
+
+	commentType = db.ReferenceProperty(Types, collection_name ='types')
 	message = db.TextProperty()
 	timeSent = db.DateTimeProperty(auto_now_add = True)
 
+	@classmethod
+	def by_id(cls, commentId):
+		# looks up comment by id
+		return Comments.get_by_id(commentId, parent = app_key)
+	
+	@classmethod
+	def by_commentType(cls,name):
+		# looks up comment by comment type
+		ct = Comments.all().filter('commentType =', name).get()
+		return ct
+
 class Pins(db.Model):
-	'''
-		Pins are latitude and longitude points on the map with a particular type and a comment associated with them.
-	'''
+	# Pins are latitude and longitude points on the map with a particular type and a comment associated with them.
+
+	comment = db.ReferenceProperty(Comments, collection_name = 'comments')
+	pinType = db.ReferenceProperty(Types, collection_name = 'types')
+
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
-	pinType = db.ReferenceProperty(Types)
-	pinComment = db.ReferenceProperty(Comments)
+	
+	@classmethod
+	def by_id(cls, pinId):
+		return Pins.get_by_id(pinId, parent = app_key)
 
-# test the datastore
+	@classmethod
+	def by_comment(cls, name):
+		bc = Pins.all().filter('comment =', name).get()
+		return bc
+
+	@classmethod
+	def by_type(cls, name):
+		bt = Pins.all().filter('pinType =', name).get()
+		return bt
+
+	@classmethod
+	def by_lat(cls,name):
+		latitudes = Pins.all().filter('lat =', name).get()
+		return latitudes
+
+	@classmethod
+	def by_lon(cls,name):
+		longitudes = Pins.all().filter('lon =', name).get()
+		return longitudes
+
+'''
+	Memcache methods that the user will call instead of direct datastore queries.
+'''
+
+
+'''
+	Test harness for reading and writing entities in the datastore.
+'''
 class MakeDatastoreTest(webapp2.RequestHandler):
 	def get(self):
 		self.response.write("write worked")
@@ -50,7 +116,7 @@ class MakeDatastoreTest(webapp2.RequestHandler):
 		# Set the same parent key on each entity to ensure consistent results and add some junk data
 		types = Types(parent = app_key(), description = "General Message")
 		gridPoints = GridPoints(parent = app_key(), lat = 1.0, lon = 2.0, secondsWorked = 10.0)
-		comments = Comments(parent = app_key(), message = 'this is a message')
+		comments = Comments(parent = app_key(), message = 'this is a message', commentType = "needs")
 		pins = Pins(parent = app_key(), lat= 1.1, lon= 1.2)
 
 		# put the junk data in the datastore
