@@ -3,7 +3,7 @@ GreenUp API Documenation
 
 Powered By [Xenon App's]
 
-[Xenon App's]:[http://www.XenonApps.com]
+[Xenon App's]: http://www.XenonApps.com
 
 License:
 ----------
@@ -32,6 +32,7 @@ All API parameters are returned in the JSON format, and all data sent to the API
 ###Get API Information
 
 Method: **GET**
+
 URL: **/api**
 
 ####Example request:
@@ -48,7 +49,9 @@ URL: **/api**
 -----------------------------
 
 ###Get Comments
+
 Method: **GET**
+
 URL: **/api/comments**
 
 ####Optional Parameters:
@@ -59,6 +62,7 @@ URL: **/api/comments**
 </thead>
 <tbody>
 <tr><td>type</td><td>String </td><td> Can be either `forum`, `needs`, or `message` </td></tr>
+<tr><td>page</td><td>unsigned Integer</td><td>Based on [RFC 5005], for use with pagination, a request for a page that does not exist will result in no comments being returned. A non-integer value for this parameter will result in a 422 HTTP status code. Paging begins at 1.</td></tr>
 </tbody>
 
 </table> 
@@ -70,29 +74,37 @@ No type specified will return all comments.
 
 ####Response:
 ```no-highlight
- [
-  { 
-  "type" : "needs", 
-  "message" : "I need help with the trash on Colchester ave",
-  "timestamp" : "2013-05-07 17:12:01",
-  "pin" : 3,
-  "id" : 4156
-  },
-  {
-  "type" : "needs",
-  "message" : "There's a lot of trash on Pearl St, I could use some help!"
-  "timestamp" : "1970-01-01 00:00:01",
-  "pin" : None,
-  "id" : 1134
-  }
- ]
+{
+    "comments" : [
+        { 
+            "type" : "needs", 
+            "message" : "I need help with the trash on Colchester ave",
+            "timestamp" : "2013-05-07 17:12:01",
+            "pin" : 3,
+            "id" : 4156
+        },
+        {
+            "type" : "needs",
+            "message" : "There's a lot of trash on Pearl St, I could use some help!"
+            "timestamp" : "1970-01-01 00:00:01",
+            "pin" : None,
+            "id" : 1134
+        }
+    ],
+    "page" : {
+        "next" : "http://greenup.xenonapps.com/api/comments?type=needs&amp;page=3",
+        "previous" : "http://greenup.xenonapps.com/api/comments?type=needs&amp;page=1"
+    }
+}
 ```
-The pin field refers to a pin resource. (To-Do this should be elaborated on)
+The pin field refers to a pin resource. Each pin is identified uniquely by an unsigned integer value assigned to it from the database. If a comment originated from a pin being created with a message, then this message will appear as a comment with a non None pin resource id.
 
 -------------------------------------------------
 
 ###Submit Comments
+
 Method: **POST**
+
 URL: **/api/comments**
 
 ####Required POST Data:
@@ -122,7 +134,7 @@ URL: **/api/comments**
     </tbody>
 </table>
 
-If the post data is malformed, the server will return a `400 bad request` response, on success a `200` will be returned
+If the post data is malformed, the server will return a `400 bad request` response, on success a `200` will be returned. If the POSTed data is syntactically correct but semantically incorrect (such as giving a string value instead of an integer for pin), a 422 will be returned. If a pin resource id is POSTed in the response, it must correspond to a valid pin and the message submited will replace the message stored for that pin.
 
 ####Example Request
 `http://greenup.xenonapps.com/api/comments`
@@ -147,7 +159,9 @@ If the post data is malformed, the server will return a `400 bad request` respon
 
 
 ###Get Heatmap Data
+
 Method: **GET**
+
 URL: **/api/heatmap**
 
 ####Optional Parameters
@@ -157,9 +171,9 @@ URL: **/api/heatmap**
     </thead>
     <tbody>
         <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve</td></tr>
-        <tr><td>latOffset</td><td>unsigned float</td><td>Offset to **add** to the latitude point to create a bounding rectangle on the points retrieved. __Required if latDegrees is used__</td></tr>
+        <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved. Required if latDegrees is used</td></tr>
         <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve</td></tr>
-        <tr><td>lonOffset</td><td>unsigned float</td>Offset to **add** to the longitude point to create a bounding rectanlge on the points retrieved. __Required if lonDegrees is used__</tr>
+        <tr><td>lonOffset</td><td>unsigned float</td>Offset to add to the longitude point to create a bounding rectanlge on the points retrieved. Required if lonDegrees is used</tr>
         <tr><td>precision</td><td>unsigned integer</td><td>The integer precision for rounding degrees. It is recommended to leave this blank unless you know what you're doing.</td></tr>
     </tbody>
 </table>
@@ -172,15 +186,25 @@ If none of these parameters are specified, all points will be returned. Note tha
 ####Response
 ```
 [
-    {"latDegrees" : 24.53, "lonDegrees" : 43.2, "secondsWorked" : 120},
-    {"latDegrees" : 25.13, "lonDegrees" : 41.2, "secondsWorked" : 133}
+    {
+        "latDegrees" : 24.53, 
+        "lonDegrees" : 43.2, 
+        "secondsWorked" : 120
+    },
+    {
+        "latDegrees" : 25.13, 
+        "lonDegrees" : 41.2, 
+        "secondsWorked" : 133
+    }
 ]
 ```
 
 ---------------------------
 
 ###Update Heatmap Data
+
 Method: **PUT**
+
 URL: **/api/heatmap**
 
 ####Required PUT data
@@ -191,7 +215,11 @@ URL: **/api/heatmap**
     <tbody>
         <tr>
             <td>latDegree</td><td>float</td><td>The latitude degree (in decimal degrees) of the grid point</td>
+        </tr>
+        <tr>
             <td>lonDegree</td><td>float</td><td>The longitude degree (in decimal degrees) of the grid point</td>
+        </tr>
+        <tr>
             <td>secondsWorked</td><td>unsigned integer</td><td>The number of seconds spent in this grid location</td>
         </tr>
     </tbody>
@@ -202,12 +230,113 @@ If the request is malformed the server will return an error code of `400 bad req
 ####Example Request
 `http://greenup.xenonapps.com/api/heatmap`
 #####Message Body
-`{"latDegrees" : 24.53, "lonDegrees" : 43.2, "secondsWorked" : 120}`
+```
+[
+    {
+        "latDegrees" : 24.53, 
+        "lonDegrees" : 43.2, 
+        "secondsWorked" : 120
+    }
+]
+```
 
 ####Response
 ```
-{"response" : 200}
+{
+    "response" : 200
+}
 ```
+
+It is important to note that the heatmap endpoint for **PUT** accepts only json arrays of headmap data objects, this enables batch updating of the heatmap resource.
 
 
 -----------------------
+
+###Get Pins
+
+Method: **GET**
+
+URL: **/api/pins**
+
+####Optional Parameters
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve</td></tr>
+        <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved. Required if latDegrees is used</td></tr>
+        <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve</td></tr>
+        <tr><td>lonOffset</td><td>unsigned float</td>Offset to add to the longitude point to create a bounding rectangle on the points retrieved. Required if lonDegrees is used</tr>
+        <tr><td>precision</td><td>unsigned integer</td><td>The integer precision for rounding degrees. It is recommended to leave this blank unless you know what you're doing.</td></tr>
+    </tbody>
+</table>
+
+If no latitude or longitude are specified then all pins will be returned.
+
+####Example Request
+`http://greenup.xenonapps.com/api/pins`
+
+####Response
+```
+[
+    {
+        "latDegrees" : 24.53, 
+        "lonDegrees" : 43.2, 
+        "type" : "message", 
+        "message", "I need help with the trash on Colchester ave"
+    },
+    {
+        "latDegrees" : 25.13, 
+        "lonDegrees" : 41.2, 
+        "type" : "needs", 
+        "message", "There's a lot of trash on Pearl St, I could use some help!"
+    }
+]
+```
+
+
+---------------------
+
+###Submit Pin
+
+Method: **POST**
+
+URL: **/api/pins**
+
+####Required POST data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>latDegrees</td><td>float</td><td>The latitude coordinate of the pin in Decimal Degrees</td></tr>
+        <tr><td>lonDegrees</td><td>float</td><td>The longitude coordinate of the pin in Decimal Degrees</td></tr>
+        <tr><td> type </td><td>String </td><td> Can be either `trash`, `needs`, or `message` </td></tr>
+        <tr><td>message</td><td>String</td><td>The message associated with this pin</td></tr>
+    </tbody>
+</table>
+
+
+####Example Request
+`http://greenup.xenonapps.com/api/pins`
+#####Message Body
+```
+{
+    "latDegrees" : 24.53, 
+    "lonDegrees" : 43.2, 
+    "type" : "trash", 
+    "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?"
+}
+```
+
+####Response
+```
+{
+    "response" : 200
+}
+```
+
+If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
+
+[RFC 5005]: http://www.ietf.org/rfc/rfc5005.txt

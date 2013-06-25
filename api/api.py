@@ -2,7 +2,22 @@
 from handlerBase import Handler
 from datastore import *
 
+import comments
+import heatmap
+import pins
+
+
 import webapp2
+
+""" Constants for use in response codes declared here """
+HTTP_NOT_IMPLEMENTED = 503
+HTTP_OK = 200
+HTTP_REQUEST_SEMANTICS_PROBLEM = 422
+HTTP_REQUEST_SYNTAX_PROBLEM = 400
+
+""" Constants for domain name and fully qualified http urls"""
+BASE_URL = "http://localhost:30002"
+CONTEXT_PATH = "/api"
 
 class API(webapp2.RequestHandler):
 
@@ -15,7 +30,10 @@ class API(webapp2.RequestHandler):
 		
 #This is the catch all #('.*', API)
 application = webapp2.WSGIApplication([
-										('/', API), 
+										('/api/heatmap',heatmap.Heatmap),
+										('/api/pins',Pins),
+										('/api/comments',Comments),
+										('/api', API), 
 										('/MakeDatastoreTest', MakeDatastoreTest),
 										('/DisplayDatastoreTest', DisplayDatastoreTest),
 									], debug=True)
