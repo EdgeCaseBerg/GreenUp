@@ -5,7 +5,8 @@ import api
 import logging
 
 #For extensions add to this list, or abstract to some type of properties file
-COMMENT_TYPES = ['FORUM', 'NEEDS', 'MESSAGE']
+COMMENT_TYPES = ['FORUM', 'NEEDS', 'MESSAGE','']
+RESOURCE_PATH = "comments"
 
 class Comments(webapp2.RequestHandler):
 
@@ -20,16 +21,45 @@ class Comments(webapp2.RequestHandler):
 			if commentType.upper() in COMMENT_TYPES:
 				#Yes it is well formed and we may execute a datastore query for the comments
 				pass
-				#TODO: Eventually return this response once things are done
-				#self.response.set_status(api.HTTP_OK,"")
 			else:
 				#Semantically incorrect query
 				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,'{ "Error_Message" : "Unrecognized type"} ')
+				self.response.write('{}')
+				return
+		#Check for other optional parameter:
+		page = self.request.get("page")
+		if page:
+			#We have a paging parameter, is it well formed?
+			try:
+				int(page)
+				page = int(page)
+			except Exception, e:
+				#Poorly formed page parameter
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,'{"Error_Message" : "Non-integer page value not allowed"}')
+				self.response.write('{}')
+				return
+		else:
+			#No page given, so start it off
+			page = 1
+		#If we're here we have (possibly) a comment type and a page to retrieve
 
+		#After retrieving the page we need to send back pagination information as well
+		previous = None
+		if page == 1:
+			#There is no previous
+			pass
+		else:
+			previous = "%s%s%s%s%s%s%i" % (api.BASE_URL,api.CONTEXT_PATH,RESOURCE_PATH,'?type=',commentType,'&page=',page -1)
+		next = "%s%s%s%s%s%s%i" % (api.BASE_URL,api.CONTEXT_PATH,RESOURCE_PATH,'?type=',commentType,'&page=',page +1)
 
-		#TODO
+		#write out the comments in json form
+		comments = []
+		response = { "comments" : comments, "page" : {"next" : next, "previous" : previous}}
 		
-		self.response.write("{}")	
+
+		#Send out the response
+		self.response.set_status(api.HTTP_OK,"")
+		self.response.write(json.dumps(response))	
 
 	def post(self):
 		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
