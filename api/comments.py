@@ -24,7 +24,7 @@ class Comments(webapp2.RequestHandler):
 				#self.response.set_status(api.HTTP_OK,"")
 			else:
 				#Semantically incorrect query
-				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,"")
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,'{ "Error_Message" : "Unrecognized type"} ')
 
 
 		#TODO
@@ -41,7 +41,7 @@ class Comments(webapp2.RequestHandler):
 		except Exception, e:
 			#The request body is malformed. 
 			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM,"")
-			self.response.write("{}")
+			self.response.write('{"Error_Message" : "Request body is malformed"}')
 			#Don't allow execution to proceed any further than this
 			return
 		info = json.loads(self.request.body)
@@ -53,22 +53,32 @@ class Comments(webapp2.RequestHandler):
 		except Exception, e:
 			#The request body lacks proper keys
 			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,"")
-			self.response.write("{}")
+			self.response.write('{"Error_Message" : "Required keys not present in request"}')
 			return
 
 		#Request has proper required keys
 		typeOfComment = info['type']
 		commentMessage = info['message']
 
+		#Determine if type is semantically correct
+		if typeOfComment.upper() in COMMENT_TYPES:
+			pass
+		else:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,"")
+			self.response.write('{ "Error_Message" : "Unrecognized Type" }')
+			return
+
+
 		pin = None
 		try:
 			info['pin']
-			pin = info['pin']
+			pin = int(info['pin'])
 		except Exception, e:
 			#Die silently if the pine is not there as it is optional
 			pass
 		
-		#All information present. Store information in the database
+		#All information present and valid. Store information in the database
+		
 
 		self.response.write("{}")
 
