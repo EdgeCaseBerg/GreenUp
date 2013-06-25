@@ -62,7 +62,7 @@ URL: **/api/comments**
 </thead>
 <tbody>
 <tr><td>type</td><td>String </td><td> Can be either `forum`, `needs`, or `message` </td></tr>
-<tr><td>page</td><td>unsigned Integer</td><td>For use with pagination, a request for a page that does not exist will result in no comments being returned. Based on [RFC 5005]</td></tr>
+<tr><td>page</td><td>unsigned Integer</td><td>Based on [RFC 5005], for use with pagination, a request for a page that does not exist will result in no comments being returned. A non-integer value for this parameter will result in a 422 HTTP status code. Paging begins at 1.</td></tr>
 </tbody>
 
 </table> 
