@@ -134,7 +134,7 @@ URL: **/api/comments**
     </tbody>
 </table>
 
-If the post data is malformed, the server will return a `400 bad request` response, on success a `200` will be returned
+If the post data is malformed, the server will return a `400 bad request` response, on success a `200` will be returned. If the POSTed data is syntactically correct but semantically incorrect (such as giving a string value instead of an integer for pin), a 422 will be returned. If a pin resource id is POSTed in the response, it must correspond to a valid pin and the message submited will replace the message stored for that pin.
 
 ####Example Request
 `http://greenup.xenonapps.com/api/comments`
