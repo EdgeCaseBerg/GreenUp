@@ -3,7 +3,7 @@ GreenUp API Documenation
 
 Powered By [Xenon App's]
 
-[Xenon App's]:[http://www.XenonApps.com]
+[Xenon App's]: http://www.XenonApps.com
 
 License:
 ----------
@@ -62,6 +62,7 @@ URL: **/api/comments**
 </thead>
 <tbody>
 <tr><td>type</td><td>String </td><td> Can be either `forum`, `needs`, or `message` </td></tr>
+<tr><td>page</td><td>unsigned Integer</td><td>For use with pagination, a request for a page that does not exist will result in no comments being returned. Based on [RFC 5005]</td></tr>
 </tbody>
 
 </table> 
@@ -73,24 +74,30 @@ No type specified will return all comments.
 
 ####Response:
 ```no-highlight
- [
-  { 
-  "type" : "needs", 
-  "message" : "I need help with the trash on Colchester ave",
-  "timestamp" : "2013-05-07 17:12:01",
-  "pin" : 3,
-  "id" : 4156
-  },
-  {
-  "type" : "needs",
-  "message" : "There's a lot of trash on Pearl St, I could use some help!"
-  "timestamp" : "1970-01-01 00:00:01",
-  "pin" : None,
-  "id" : 1134
-  }
- ]
+{
+    "comments" : [
+        { 
+            "type" : "needs", 
+            "message" : "I need help with the trash on Colchester ave",
+            "timestamp" : "2013-05-07 17:12:01",
+            "pin" : 3,
+            "id" : 4156
+        },
+        {
+            "type" : "needs",
+            "message" : "There's a lot of trash on Pearl St, I could use some help!"
+            "timestamp" : "1970-01-01 00:00:01",
+            "pin" : None,
+            "id" : 1134
+        }
+    ],
+    "page" : {
+        "next" : "http://greenup.xenonapps.com/api/comments?type=needs&amp;page=3",
+        "previous" : "http://greenup.xenonapps.com/api/comments?type=needs&amp;page=1"
+    }
+}
 ```
-The pin field refers to a pin resource. (To-Do this should be elaborated on)
+The pin field refers to a pin resource. Each pin is identified uniquely by an unsigned integer value assigned to it from the database. If a comment originated from a pin being created with a message, then this message will appear as a comment with a non None pin resource id.
 
 -------------------------------------------------
 
@@ -331,3 +338,5 @@ URL: **/api/pins**
 ```
 
 If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
+
+[RFC 5005]: http://www.ietf.org/rfc/rfc5005.txt
