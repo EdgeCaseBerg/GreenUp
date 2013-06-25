@@ -4,7 +4,7 @@ import json
 import api
 import logging
 
-
+#For extensions add to this list, or abstract to some type of properties file
 COMMENT_TYPES = ['FORUM', 'NEEDS', 'MESSAGE']
 
 class Comments(webapp2.RequestHandler):
