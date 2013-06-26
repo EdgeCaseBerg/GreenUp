@@ -19,6 +19,9 @@ HTTP_REQUEST_SYNTAX_PROBLEM = 400
 BASE_URL = "http://localhost:30002"
 CONTEXT_PATH = "/api"
 
+""" Miscellaneous Constants """
+DEFAULT_ROUNDING_PRECISION = 6
+
 class API(webapp2.RequestHandler):
 
 	def get(self):

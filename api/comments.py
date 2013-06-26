@@ -32,7 +32,7 @@ class Comments(webapp2.RequestHandler):
 			#We have a paging parameter, is it well formed?
 			try:
 				int(page)
-				page = int(page)
+				page = abs(int(page)) #We'll accept a negative number, but we'll make it positive. The specification says the value should be unsigned, so we should throw a semantic error here. But that's up to debate
 			except Exception, e:
 				#Poorly formed page parameter
 				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,'{"Error_Message" : "Non-integer page value not allowed"}')
