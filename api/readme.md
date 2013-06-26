@@ -173,7 +173,7 @@ URL: **/api/heatmap**
         <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve</td></tr>
         <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved. Required if latDegrees is used</td></tr>
         <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve</td></tr>
-        <tr><td>lonOffset</td><td>unsigned float</td>Offset to add to the longitude point to create a bounding rectanlge on the points retrieved. Required if lonDegrees is used</tr>
+        <tr><td>lonOffset</td><td>unsigned float</td><td>Offset to add to the longitude point to create a bounding rectanlge on the points retrieved. Required if lonDegrees is used</td></tr>
         <tr><td>precision</td><td>unsigned integer</td><td>The integer precision for rounding degrees. It is recommended to leave this blank unless you know what you're doing.</td></tr>
     </tbody>
 </table>
