@@ -188,12 +188,19 @@ class DisplayDatastoreTest(webapp2.RequestHandler):
 		for pins in pins_query.run():
 			logging.info('lat= %s, lon=%s' %(str(pins.lat), str(pins.lon)) )
 
-#Timeit is an extremely precise timing library that measures wallclock time
-import timeit
+import time
 import pickle
+import platform
 
 class MemcacheVsDatastore(webapp2.RequestHandler):
 	def get(self):
+		#This primes the pump for any non-unix machines (http://docs.python.org/2/library/time.html)
+		if( platform.system().lower().find("win") > -1 and platform.system().lower().find("win") < 3):
+			#win < 3 because of darwin
+			time.clock()
+			
+
+
 		#delete the datastore entities
 		db.delete(db.Query(keys_only=True))
 
@@ -203,21 +210,23 @@ class MemcacheVsDatastore(webapp2.RequestHandler):
 		
 		#time how long it takes to retrieve the pin from the datastore using it's key id
 		#We use 1000 times to really make a difference
-		datastoreRetrieval1 = timeit.timeit(stmt='Pins.by_id(fpID)',number=1000,setup="""
-from datastore import *
-from google.appengine.api import memcache 
-fpID = %i
-""" %(fpID))
+		beforeTime = time.clock()
+		for i in range(0,1000):
+			Pins.by_id(fpID)
+		afterTime = time.clock()
+		datastoreRetrieval1 = (afterTime - beforeTime)/1000
+
 
 		#Place the same entiry into the memcache
-		setData(str(fpID),firstPin)
-		
-		#time how long it takes to retrieve the pin from the memcache using its key id
-		memcacheRetrieval1 = timeit.timeit(stmt='getData(fpID)',number=1000,setup="""
-from datastore import *
-from google.appengine.api import memcache 
-fpID = '%s'
-""" %str(fpID))
+		beforeTime = time.clock()
+		for i in range(0,1000):
+			setData(str(fpID),firstPin)
+		afterTime = time.clock()
+
+		memcacheRetrieval1 = (afterTime - beforeTime)/1000
+
+		logging.info("First Round of tests done. ")
+		logging.info("Results: Datastore: %s Memcache: %s" % (str(datastoreRetrieval1),str(memcacheRetrieval1)))
 		
 		#Add 100,000 entries to the datastore and construct the entity that will be placed into the memcache
 		memPins = []
@@ -230,35 +239,37 @@ fpID = '%s'
 		
 		#Now time how long it takes to retrieve a pin	
 		#From the datastore
-		datastoreRetrieval2 = timeit.timeit(stmt='Pins.by_id(fpID)',number=1000,setup="""
-from datastore import *
-from google.appengine.api import memcache 
-fpID = %i
-""" %(fpID))
+		beforeTime = time.clock()
+		for i in range(0,100000):
+			Pins.by_id(fpID)
+		afterTime = time.clock()
+		datastoreRetrieval2 = (afterTime - beforeTime)/100000
 		
 		#From the memcache
-		memcacheRetrieval2 = timeit.timeit(stmt='getData(fpID)',number=1000,setup="""
-from datastore import *
-from google.appengine.api import memcache 
-fpID = %s
-""" %str(fpID))
+		beforeTime = time.clock()
+		for i in range(0,100000):
+			getData(str(fpID))
+		afterTime = time.clock()
+		memcacheRetrieval2 = (afterTime - beforeTime)/100000
+
+		logging.info("Second Round of tests done. ")
+		logging.info("Results: Datastore: %s Memcache %s" % (str(datastoreRetrieval2),str(memcacheRetrieval2)))
 		
 		#Now we need to know how long it takes to serialize and deserialize the memcache
 		f = open('datafile','w')
-		timeToSerialize = timeit.timeit('pickle.dump(memPins,f)',number=1,setup="""
-from datastore import *
-from google.appengine.api import memcache 
-f= open('datafile','w')""")
+		beforeTime = time.clock()
+		pickle.dump(memPins,f)
+		afterTime = time.clock()
+		timeToSerialize = beforeTime - afterTime
+
 		a = open('datafile','r')
-		timeToLoad = timeit.timeit('pickle.load(a)',number=1,setup="""
-from datastore import *
-from google.appengine.api import memcache 
-a = open('datafile', 'r')
-""")
+		beforeTime = time.clock()
+		pickle.load(a)
+		afterTime = time.clock()
+		timeToLoad = beforeTime - time.clock()
 
 		#Display results in log
-		logging.info("1 Retrieval from datastore: %s" % datastoreRetrieval1)
-		logging.info("1 Retrieval from memcache: %s" % memcacheRetrieval1)
-		logging.info("Retrieval from large datastore set: %s" % datastoreRetrieval2)
-		logging.info("Retrieval from large memcache  set: %s" % memcacheRetrieval2)
+		logging.info("Serialization Test Complete")
+		logging.info("Writing: %s " % str(timeToSerialize))
+		logging.info("Reading: %s " % str(timeToLoad))
 
