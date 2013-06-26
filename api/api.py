@@ -36,4 +36,5 @@ application = webapp2.WSGIApplication([
 										('/api', API), 
 										('/MakeDatastoreTest', MakeDatastoreTest),
 										('/DisplayDatastoreTest', DisplayDatastoreTest),
+										('/CacheTest',MemcacheVsDatastore)
 									], debug=True)

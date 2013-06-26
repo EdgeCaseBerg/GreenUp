@@ -88,7 +88,7 @@ class Pins(Greenup):
 	
 	@classmethod
 	def by_id(cls, pinId):
-		return Pins.get_by_id(pinId, parent = app_key)
+		return Pins.get_by_id(pinId, parent = app_key())
 
 	@classmethod
 	def by_comment(cls, name):
@@ -187,3 +187,92 @@ class DisplayDatastoreTest(webapp2.RequestHandler):
 
 		for pins in pins_query.run():
 			logging.info('lat= %s, lon=%s' %(str(pins.lat), str(pins.lon)) )
+
+import time
+import pickle
+import platform
+
+class MemcacheVsDatastore(webapp2.RequestHandler):
+	def get(self):
+		#This primes the pump for any non-unix machines (http://docs.python.org/2/library/time.html)
+		if( platform.system().lower().find("win") > -1 and platform.system().lower().find("win") < 3):
+			#win < 3 because of darwin
+			time.clock()
+			
+
+
+		#delete the datastore entities
+		db.delete(db.Query(keys_only=True))
+
+		#Place a single entity into the datastore
+		firstPin = Pins(parent = app_key(), lat=0.0,lon=2.3).put()
+		fpID = firstPin.id()
+		
+		#time how long it takes to retrieve the pin from the datastore using it's key id
+		#We use 1000 times to really make a difference
+		beforeTime = time.clock()
+		for i in range(0,1000):
+			Pins.by_id(fpID)
+		afterTime = time.clock()
+		datastoreRetrieval1 = (afterTime - beforeTime)/1000
+
+
+		#Place the same entiry into the memcache
+		setData(str(fpID),firstPin)
+		beforeTime = time.clock()
+		for i in range(0,1000):
+			getData(str(fpID))
+		afterTime = time.clock()
+
+		memcacheRetrieval1 = (afterTime - beforeTime)/1000
+
+		logging.info("First Round of tests done. ")
+		logging.info("Results: Datastore: %s Memcache: %s" % (str(datastoreRetrieval1),str(memcacheRetrieval1)))
+		
+		#Add 100,000 entries to the datastore and construct the entity that will be placed into the memcache
+		logging.info("Creating 100,000 Datastore entities")
+		memPins = []
+		for i in range(0,100000):
+			pins = Pins(parent = app_key(), lat= 1.1, lon= 1.2)
+			memPins.append(pins)
+			pins.put()
+			setData(str(fpID),pins)
+		logging.info("Finished creating 100,000 datastore entities")
+
+		
+		#Now time how long it takes to retrieve a pin	
+		#From the datastore
+		beforeTime = time.clock()
+		for i in range(0,1000):
+			Pins.by_id(fpID)
+		afterTime = time.clock()
+		datastoreRetrieval2 = (afterTime - beforeTime)/1000
+		
+		#From the memcache
+		beforeTime = time.clock()
+		for i in range(0,1000):
+			getData(str(fpID))
+		afterTime = time.clock()
+		memcacheRetrieval2 = (afterTime - beforeTime)/1000
+
+		logging.info("Second Round of tests done. ")
+		logging.info("Results: Datastore: %s Memcache %s" % (str(datastoreRetrieval2),str(memcacheRetrieval2)))
+		
+		#Now we need to know how long it takes to serialize and deserialize the memcache
+		f = open('datafile','w')
+		beforeTime = time.clock()
+		pickle.dump(memPins,f)
+		afterTime = time.clock()
+		timeToSerialize = beforeTime - afterTime
+
+		a = open('datafile','r')
+		beforeTime = time.clock()
+		pickle.load(a)
+		afterTime = time.clock()
+		timeToLoad = beforeTime - time.clock()
+
+		#Display results in log
+		logging.info("Serialization Test Complete")
+		logging.info("Writing: %s " % str(timeToSerialize))
+		logging.info("Reading: %s " % str(timeToLoad))
+
