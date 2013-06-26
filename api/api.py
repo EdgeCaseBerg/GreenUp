@@ -2,11 +2,6 @@
 from handlerBase import Handler
 from datastore import *
 
-import comments
-import heatmap
-import pins
-
-
 import webapp2
 
 """ Constants for use in response codes declared here """
@@ -33,9 +28,6 @@ class API(webapp2.RequestHandler):
 		
 #This is the catch all #('.*', API)
 application = webapp2.WSGIApplication([
-										('/api/heatmap',heatmap.Heatmap),
-										('/api/pins',Pins),
-										('/api/comments',Comments),
 										('/api', API), 
 										('/MakeDatastoreTest', MakeDatastoreTest),
 										('/DisplayDatastoreTest', DisplayDatastoreTest),

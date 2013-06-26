@@ -29,6 +29,17 @@ All API parameters are returned in the JSON format, and all data sent to the API
 
 --------------------
 
+Error Messages:
+--------------------
+
+When the API has difficulty processing any request it will return an error message within the json string in the following format:
+```
+{
+    "Error_Message" : "There was a problem with your request"
+}
+```
+The value of the `Error_Message` field will be an informative message that will help you troubleshoot your malformed request. 
+
 ###Get API Information
 
 Method: **GET**
