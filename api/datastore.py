@@ -88,7 +88,7 @@ class Pins(Greenup):
 	
 	@classmethod
 	def by_id(cls, pinId):
-		return Pins.get_by_id(pinId, parent = app_key)
+		return Pins.get_by_id(pinId, parent = app_key())
 
 	@classmethod
 	def by_comment(cls, name):
@@ -187,3 +187,78 @@ class DisplayDatastoreTest(webapp2.RequestHandler):
 
 		for pins in pins_query.run():
 			logging.info('lat= %s, lon=%s' %(str(pins.lat), str(pins.lon)) )
+
+#Timeit is an extremely precise timing library that measures wallclock time
+import timeit
+import pickle
+
+class MemcacheVsDatastore(webapp2.RequestHandler):
+	def get(self):
+		#delete the datastore entities
+		db.delete(db.Query(keys_only=True))
+
+		#Place a single entity into the datastore
+		firstPin = Pins(parent = app_key(), lat=0.0,lon=2.3).put()
+		fpID = firstPin.id()
+		
+		#time how long it takes to retrieve the pin from the datastore using it's key id
+		#We use 1000 times to really make a difference
+		datastoreRetrieval1 = timeit.timeit(stmt='Pins.by_id(fpID)',number=1000,setup="""
+from datastore import *
+from google.appengine.api import memcache 
+fpID = %i
+""" %(fpID))
+
+		#Place the same entiry into the memcache
+		setData(str(fpID),firstPin)
+		
+		#time how long it takes to retrieve the pin from the memcache using its key id
+		memcacheRetrieval1 = timeit.timeit(stmt='getData(fpID)',number=1000,setup="""
+from datastore import *
+from google.appengine.api import memcache 
+fpID = '%s'
+""" %str(fpID))
+		
+		#Add 100,000 entries to the datastore and construct the entity that will be placed into the memcache
+		memPins = []
+		for i in range(0,100000):
+			pins = Pins(parent = app_key(), lat= 1.1, lon= 1.2)
+			memPins.append(pins)
+			pins.put()
+			setData(str(fpID),pins)
+
+		
+		#Now time how long it takes to retrieve a pin	
+		#From the datastore
+		datastoreRetrieval2 = timeit.timeit(stmt='Pins.by_id(fpID)',number=1000,setup="""
+from datastore import *
+from google.appengine.api import memcache 
+fpID = %i
+""" %(fpID))
+		
+		#From the memcache
+		memcacheRetrieval2 = timeit.timeit(stmt='getData(fpID)',number=1000,setup="""
+from datastore import *
+from google.appengine.api import memcache 
+fpID = %s
+""" %str(fpID))
+		
+		#Now we need to know how long it takes to serialize and deserialize the memcache
+		f = open('datafile','w')
+		timeToSerialize = timeit.timeit('pickle.dump(memPins,f)',number=1,setup="""
+from datastore import *
+from google.appengine.api import memcache 
+f= open('datafile','w')""")
+		a = open('datafile','r')
+		timeToLoad = timeit.timeit('pickle.load(a)',number=1,setup="""
+from datastore import *
+from google.appengine.api import memcache 
+a = open('datafile', 'r')
+""")
+
+		#Display results in log
+		logging.info("1 Retrieval from datastore: %s" % datastoreRetrieval1)
+		logging.info("1 Retrieval from memcache: %s" % memcacheRetrieval1)
+		logging.info("Retrieval from large datastore set: %s" % datastoreRetrieval2)
+		logging.info("Retrieval from large memcache  set: %s" % memcacheRetrieval2)
+
