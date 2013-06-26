@@ -218,9 +218,10 @@ class MemcacheVsDatastore(webapp2.RequestHandler):
 
 
 		#Place the same entiry into the memcache
+		setData(str(fpID),firstPin)
 		beforeTime = time.clock()
 		for i in range(0,1000):
-			setData(str(fpID),firstPin)
+			getData(str(fpID))
 		afterTime = time.clock()
 
 		memcacheRetrieval1 = (afterTime - beforeTime)/1000
@@ -240,17 +241,17 @@ class MemcacheVsDatastore(webapp2.RequestHandler):
 		#Now time how long it takes to retrieve a pin	
 		#From the datastore
 		beforeTime = time.clock()
-		for i in range(0,100000):
+		for i in range(0,1000):
 			Pins.by_id(fpID)
 		afterTime = time.clock()
-		datastoreRetrieval2 = (afterTime - beforeTime)/100000
+		datastoreRetrieval2 = (afterTime - beforeTime)/1000
 		
 		#From the memcache
 		beforeTime = time.clock()
-		for i in range(0,100000):
+		for i in range(0,1000):
 			getData(str(fpID))
 		afterTime = time.clock()
-		memcacheRetrieval2 = (afterTime - beforeTime)/100000
+		memcacheRetrieval2 = (afterTime - beforeTime)/1000
 
 		logging.info("Second Round of tests done. ")
 		logging.info("Results: Datastore: %s Memcache %s" % (str(datastoreRetrieval2),str(memcacheRetrieval2)))
