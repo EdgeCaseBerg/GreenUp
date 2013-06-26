@@ -29,6 +29,17 @@ All API parameters are returned in the JSON format, and all data sent to the API
 
 --------------------
 
+Error Messages:
+--------------------
+
+When the API has difficulty processing any request it will return an error message within the json string in the following format:
+```
+{
+    "Error_Message" : "There was a problem with your request"
+}
+```
+The value of the `Error_Message` field will be an informative message that will help you troubleshoot your malformed request. 
+
 ###Get API Information
 
 Method: **GET**
@@ -170,10 +181,10 @@ URL: **/api/heatmap**
         <tr><th>name</th><th>type</th><th>description</th></tr>
     </thead>
     <tbody>
-        <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve</td></tr>
+        <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve,only values between -90.0 and 90.0 will be accepted.</td></tr>
         <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved. Required if latDegrees is used</td></tr>
-        <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve</td></tr>
-        <tr><td>lonOffset</td><td>unsigned float</td>Offset to add to the longitude point to create a bounding rectanlge on the points retrieved. Required if lonDegrees is used</tr>
+        <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve, only values between -180.0 and 180.0  will be accepted.</td></tr>
+        <tr><td>lonOffset</td><td>unsigned float</td><td>Offset to add to the longitude point to create a bounding rectanlge on the points retrieved. Required if lonDegrees is used</td></tr>
         <tr><td>precision</td><td>unsigned integer</td><td>The integer precision for rounding degrees. It is recommended to leave this blank unless you know what you're doing.</td></tr>
     </tbody>
 </table>
@@ -214,10 +225,10 @@ URL: **/api/heatmap**
     </thead>
     <tbody>
         <tr>
-            <td>latDegree</td><td>float</td><td>The latitude degree (in decimal degrees) of the grid point</td>
+            <td>latDegree</td><td>float</td><td>The latitude degree (in decimal degrees) of the grid point, between -90.0 and 90.0</td>
         </tr>
         <tr>
-            <td>lonDegree</td><td>float</td><td>The longitude degree (in decimal degrees) of the grid point</td>
+            <td>lonDegree</td><td>float</td><td>The longitude degree (in decimal degrees) of the grid point, between -180.0 and 180.0</td>
         </tr>
         <tr>
             <td>secondsWorked</td><td>unsigned integer</td><td>The number of seconds spent in this grid location</td>
@@ -264,9 +275,9 @@ URL: **/api/pins**
         <tr><th>name</th><th>type</th><th>description</th></tr>
     </thead>
     <tbody>
-        <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve</td></tr>
+        <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve, values must be between -90.0 and 90.0</td></tr>
         <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved. Required if latDegrees is used</td></tr>
-        <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve</td></tr>
+        <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve, values must be between -180.0 and 180.0</td></tr>
         <tr><td>lonOffset</td><td>unsigned float</td>Offset to add to the longitude point to create a bounding rectangle on the points retrieved. Required if lonDegrees is used</tr>
         <tr><td>precision</td><td>unsigned integer</td><td>The integer precision for rounding degrees. It is recommended to leave this blank unless you know what you're doing.</td></tr>
     </tbody>
@@ -310,8 +321,8 @@ URL: **/api/pins**
         <tr><th>name</th><th>type</th><th>description</th></tr>
     </thead>
     <tbody>
-        <tr><td>latDegrees</td><td>float</td><td>The latitude coordinate of the pin in Decimal Degrees</td></tr>
-        <tr><td>lonDegrees</td><td>float</td><td>The longitude coordinate of the pin in Decimal Degrees</td></tr>
+        <tr><td>latDegrees</td><td>float</td><td>The latitude coordinate of the pin in Decimal Degrees, values must range between -90.0 and 90.0</td></tr>
+        <tr><td>lonDegrees</td><td>float</td><td>The longitude coordinate of the pin in Decimal Degrees, values must range between -180.0 and 180.0</td></tr>
         <tr><td> type </td><td>String </td><td> Can be either `trash`, `needs`, or `message` </td></tr>
         <tr><td>message</td><td>String</td><td>The message associated with this pin</td></tr>
     </tbody>
