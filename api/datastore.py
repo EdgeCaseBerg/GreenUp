@@ -77,6 +77,27 @@ class Comments(Greenup):
 		ct = Comments.all().filter('commentType =', name).get()
 		return ct
 
+	@classmethod
+	def get_comments(cls, retrievalAmount = 10):
+		# retrieve paginated comments using a cursor
+		results = Comments.all()
+		cursor = memcache.get('greenupCursor')
+
+		# is there already a cursor in memcache? If so, use it.
+		if cursor:
+			results.with_cursor(start_cursor=cursor)
+		
+		# retrieve the amount you want
+		resultsRetrieved = results[:retrievalAmount]
+
+		# update the cursor
+		newCursor = results.cursor()
+		memcache.set('greenupCursor', newCursor)
+
+		# send those results to the user
+		return resultsRetrieved
+
+
 class Pins(Greenup):
 	# Pins are latitude and longitude points on the map with a particular type and a comment associated with them.
 
