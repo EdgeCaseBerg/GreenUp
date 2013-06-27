@@ -25,7 +25,7 @@ class SemanticError(Exception):
 	def __str__(self):
 		return repr(self.message)
 
-class API(webapp2.RequestHandler):
+class API(Handler):
 
 	def get(self):
 		#Display API information
@@ -37,7 +37,7 @@ class API(webapp2.RequestHandler):
 #This is the catch all #('.*', API)
 application = webapp2.WSGIApplication([
 										('/api', API), 
-										# ('/MakeDatastoreTest', MakeDatastoreTest),
+										# ('/writeTest', WriteTest),
 										# ('/DisplayDatastoreTest', DisplayDatastoreTest),
 										# ('/CacheTest',MemcacheVsDatastore)
 									], debug=True)

@@ -17,7 +17,13 @@ import logging
 class Campaign(db.Model):
 	pass
 class Greenup(Campaign):
-	pass
+	@classmethod
+	def populate(cls, numvalues):
+		logging.info('got here')
+
+	@classmethod
+	def app_key():
+	    return db.Key.from_path('apps', 'greenup')
 
 class Pins(Greenup):
 	message = db.TextProperty()
@@ -38,3 +44,4 @@ class GridPoints(Greenup):
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
 	secondsWorked = db.FloatProperty()
+
