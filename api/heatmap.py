@@ -12,9 +12,6 @@ import datastore
 class Heatmap(webapp2.RequestHandler):
 
 	def get(self):
-		#TODO
-		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
-
 		parameters = 0
 
 		#load optional parameters
@@ -142,12 +139,58 @@ class Heatmap(webapp2.RequestHandler):
 
 
 		#By this point we have a response and we simply have to send it back
-
-		
+		self.response.set_status(api.HTTP_OK,"")
 		self.response.write(json.dumps(response))	
 
 	def put(self):
-		#TODO
+		#Check for the existence of required parameters
+		latDegrees = self.request.get("latDegrees")
+		lonDegrees = self.request.get("lonDegrees")
+		secondsWorked = self.request.get("secondsWorked")
+
+		try:
+			latDegrees = float(latDegrees)
+			if latDegrees < -180.0 or latDegrees > 180.0:
+				raise api.SemanticError("latDegrees must be within the range of -180.0 and 180.0")
+		except ValueError, e:
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write('{"Error_Message" : "latDegrees parameter must be numeric" }')
+			return
+		except api.SemanticError, s:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "%s" } ' % s.message)
+			return
+
+		try:
+			lonDegrees = float(lonDegrees)
+			if lonDegrees <  -180.0 or lonDegrees > 180.0:
+				raise api.SemanticError
+		except ValueError, e:
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write('{"Error_Message" : "lonDegrees parameter must be numeric" }')
+			return
+		except api.SemanticError, s:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "%s"  }' % s.message)
+			return
+
+		try:
+			secondsWorked = int(secondsWorked)
+			if secondsWorked < 0:
+				raise api.SemanticError("Seconds worked must be a non negative unsigned integer value")
+		except ValueError, e:
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write('{"Error_Message" : "Seconds worked must be an unsigned integer value" }')
+			return
+		except api.SemanticError, s:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "%s"  }' % s.message)
+			return
+
+		#All 
+
+
+
 		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
 		self.response.write("{}")
 
