@@ -12,19 +12,14 @@ import datastore
 class Heatmap(webapp2.RequestHandler):
 
 	def get(self):
-		#TODO
-		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
-
 		parameters = 0
 
-		#Attempt to load optional parameters
+		#load optional parameters
 		latDegrees = self.request.get("latDegrees")
 		lonDegrees = self.request.get("lonDegrees")
 		latOffset = self.request.get("latOffset")
 		lonOffset = self.request.get("lonOffset")
-		precision = api.DEFAULT_ROUNDING_PRECISION
-		if self.request.get("precision"):
-			precision = self.request.get("precision")
+		precision = self.request.get("precision")
 		
 		#validate parameters
 		if latDegrees:
@@ -35,6 +30,7 @@ class Heatmap(webapp2.RequestHandler):
 				latDegrees = float(latDegrees)
 				if latDegrees < -180.0 or latDegrees > 180.0:
 					raise api.SemanticError("latDegrees must be within the range of -180.0 and 180.0")
+				parameters+= 1
 			except ValueError, v:
 				#Syntactic error
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
@@ -44,8 +40,7 @@ class Heatmap(webapp2.RequestHandler):
 				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
 				self.response.write('{"Error_Message" : "%s"}' % s.message)
 				return
-			else:
-				parameters+= 1
+		
 
 		if lonDegrees:
 			try:
@@ -54,6 +49,7 @@ class Heatmap(webapp2.RequestHandler):
 				lonDegrees = float(lonDegrees)
 				if lonDegrees < -90.0 or lonDegrees > 90.0:
 					raise api.SemanticError("lonDegrees must be within the range of -180.0 and 180.0")
+				parameters+=1
 			except ValueError, v:
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
 				self.response.write('{"Error_Message" : "%s" }' % "lonDegrees parameter must be numeric")
@@ -62,8 +58,7 @@ class Heatmap(webapp2.RequestHandler):
 				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
 				self.response.write('{ "Error_Message" : "%s" }' % s.message)
 				return
-			else:
-				parameters+=1
+				
 		
 		#Check offsets
 		#If one offset is present the other must be too
@@ -74,6 +69,7 @@ class Heatmap(webapp2.RequestHandler):
 			return
 
 		#the choice of lon is arbitrary, either lat or lon offset would work here
+		
 		if lonOffset:
 			try:
 				lonOffset = abs(int(lonOffset))
@@ -83,19 +79,25 @@ class Heatmap(webapp2.RequestHandler):
 			except ValueError, e:
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
 				self.response.write('{"Error_Message" : "Offsets defined must both be integers" }')
+				return
 
+		
 		#Check precision
 		if precision:
 			try:
 				precision = abs(int(precision))
+				parameters += 1
 			except ValueError, e:
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
 				self.response.write('{"Error_Message" : "Precision value must be a numeric integer" '  )
+				return
 			else:
-				parameters += 1
+				precision = api.DEFAULT_ROUNDING_PRECISION
+				
 
 		#If no parameters are specified we'll return everything we have for them
 		response = None
+		
 		if parameters == 0:
 			#Return everything
 			response = []
@@ -133,17 +135,62 @@ class Heatmap(webapp2.RequestHandler):
 				#This is a bad request.
 				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
 				self.response.write('{"Error_Message" : "Improperly formed query, if offsets or precision specified, at least one degree must be given"}')
+				return
 
 
-
-
-
-
-		
-		self.response.write("{}")	
+		#By this point we have a response and we simply have to send it back
+		self.response.set_status(api.HTTP_OK,"")
+		self.response.write(json.dumps(response))	
 
 	def put(self):
-		#TODO
+		#Check for the existence of required parameters
+		latDegrees = self.request.get("latDegrees")
+		lonDegrees = self.request.get("lonDegrees")
+		secondsWorked = self.request.get("secondsWorked")
+
+		try:
+			latDegrees = float(latDegrees)
+			if latDegrees < -180.0 or latDegrees > 180.0:
+				raise api.SemanticError("latDegrees must be within the range of -180.0 and 180.0")
+		except ValueError, e:
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write('{"Error_Message" : "latDegrees parameter must be numeric" }')
+			return
+		except api.SemanticError, s:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "%s" } ' % s.message)
+			return
+
+		try:
+			lonDegrees = float(lonDegrees)
+			if lonDegrees <  -180.0 or lonDegrees > 180.0:
+				raise api.SemanticError
+		except ValueError, e:
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write('{"Error_Message" : "lonDegrees parameter must be numeric" }')
+			return
+		except api.SemanticError, s:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "%s"  }' % s.message)
+			return
+
+		try:
+			secondsWorked = int(secondsWorked)
+			if secondsWorked < 0:
+				raise api.SemanticError("Seconds worked must be a non negative unsigned integer value")
+		except ValueError, e:
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write('{"Error_Message" : "Seconds worked must be an unsigned integer value" }')
+			return
+		except api.SemanticError, s:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "%s"  }' % s.message)
+			return
+
+		#All 
+
+
+
 		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
 		self.response.write("{}")
 
