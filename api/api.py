@@ -37,7 +37,7 @@ class API(webapp2.RequestHandler):
 #This is the catch all #('.*', API)
 application = webapp2.WSGIApplication([
 										('/api', API), 
-										('/MakeDatastoreTest', MakeDatastoreTest),
-										('/DisplayDatastoreTest', DisplayDatastoreTest),
-										('/CacheTest',MemcacheVsDatastore)
+										# ('/MakeDatastoreTest', MakeDatastoreTest),
+										# ('/DisplayDatastoreTest', DisplayDatastoreTest),
+										# ('/CacheTest',MemcacheVsDatastore)
 									], debug=True)
