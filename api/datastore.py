@@ -72,9 +72,9 @@ class Comments(Greenup):
 		return Comments.get_by_id(commentId, parent = app_key)
 	
 	@classmethod
-	def by_commentType(cls,name):
+	def by_commentType(cls,cType):
 		# looks up comment by comment type
-		ct = Comments.all().filter('commentType =', name).get()
+		ct = Comments.all().filter('commentType =', cType).get()
 		return ct
 
 class Pins(Greenup):
