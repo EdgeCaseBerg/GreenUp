@@ -162,7 +162,7 @@ If the post data is malformed, the server will return a `400 bad request` respon
 ```
 { 
  "status" : 200, 
- "message : "Succesfully submited new comment",
+ "message" : "Succesfully submited new comment",
 }
 ```
 
