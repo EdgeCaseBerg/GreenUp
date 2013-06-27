@@ -5,18 +5,17 @@ import webapp2
 import json
 
 import api
+import datastore
 
-class SemanticError(Exception):
-	def __init__(self,message):
-		self.message = message
-	def __str__(self):
-		return repr(self.message)
+
 
 class Heatmap(webapp2.RequestHandler):
 
 	def get(self):
 		#TODO
 		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
+
+		parameters = 0
 
 		#Attempt to load optional parameters
 		latDegrees = self.request.get("latDegrees")
@@ -35,16 +34,18 @@ class Heatmap(webapp2.RequestHandler):
 				#check range
 				latDegrees = float(latDegrees)
 				if latDegrees < -180.0 or latDegrees > 180.0:
-					raise SemanticError("latDegrees must be within the range of -180.0 and 180.0")
+					raise api.SemanticError("latDegrees must be within the range of -180.0 and 180.0")
 			except ValueError, v:
 				#Syntactic error
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
 				self.response.write('{"Error_Message" : "latDegrees parameter must be numeric"}')
 				return
-			except SemanticError, s:
+			except api.SemanticError, s:
 				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
 				self.response.write('{"Error_Message" : "%s"}' % s.message)
 				return
+			else:
+				parameters+= 1
 
 		if lonDegrees:
 			try:
@@ -52,36 +53,88 @@ class Heatmap(webapp2.RequestHandler):
 				#check range
 				lonDegrees = float(lonDegrees)
 				if lonDegrees < -90.0 or lonDegrees > 90.0:
-					raise SemanticError("lonDegrees must be within the range of -180.0 and 180.0")
+					raise api.SemanticError("lonDegrees must be within the range of -180.0 and 180.0")
 			except ValueError, v:
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write("{%s}" % "lonDegrees parameter must be numeric")
+				self.response.write('{"Error_Message" : "%s" }' % "lonDegrees parameter must be numeric")
 				return
-			except SemanticError, s:
+			except api.SemanticError, s:
 				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
-				self.response.write("{%s}" % s.message)
+				self.response.write('{ "Error_Message" : "%s" }' % s.message)
 				return
+			else:
+				parameters+=1
 		
 		#Check offsets
 		#If one offset is present the other must be too
 		#It'd be great if python had XOR for objects instead of just bitwise ^
 		if (lonOffset and not latOffset) or (latOffset and not lonOffset):
 			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write("%s" % "Both lonOffset and latOffset must be present if either is used")
+			self.response.write('{"Error_Message" : "%s"}' % "Both lonOffset and latOffset must be present if either is used")
 			return
 
 		#the choice of lon is arbitrary, either lat or lon offset would work here
 		if lonOffset:
 			try:
-				lonOffset = int(lonOffset)
-				latOffset = int(latOffset)
+				lonOffset = abs(int(lonOffset))
+				latOffset = abs(int(latOffset))
+				parameters+=2
+				#We could check to see if the offsets cause us to go out of range for our queries, but really that's unneccesary and would cause unneccesary calculation on the clientside to deal making sure they're within range.
 			except ValueError, e:
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
 				self.response.write('{"Error_Message" : "Offsets defined must both be integers" }')
+
+		#Check precision
+		if precision:
+			try:
+				precision = abs(int(precision))
+			except ValueError, e:
+				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+				self.response.write('{"Error_Message" : "Precision value must be a numeric integer" '  )
 			else:
+				parameters += 1
+
+		#If no parameters are specified we'll return everything we have for them
+		response = None
+		if parameters == 0:
+			#Return everything
+			response = []
+		else:
+			#Figure out what type of query to make depending on the parameters we have available
+			if not lonOffset and latDegrees and not lonDegrees:
+				#Only specified latDegrees
+				#Round latDegrees by precision value:
+				latDegrees = round(latDegrees,precision) 
+				response = GridPoints.by_lat(latDegrees)
+			elif not lonOffset and lonDegrees and not latDegrees:
+				#Only specified lonDegrees
+				lonDegrees = round(lonDegrees,precision)
+				response = GridPoints.by_lon(lonDegrees)
+			elif not lonOffset and latDegrees and lonDegrees:
+				#We have both lon and lat degrees
+				lonDegrees = round(lonDegrees,precision)
+				latDegrees = round(latDegrees,precision)
 				pass
-			finally:
+				#Do query for both (not implemented yet)
+			elif lonOffset and ((latDegrees and not lonDegrees) or (not latDegrees and lonDegrees)):
+				#Do query for degrees with offsets
+				if latDegrees:
+					#Do query for latitude with an offset
+					pass
+				elif lonDegrees:
+					#Do query for longitude with an offset
+					pass
 				pass
+			elif lonOffset and latDegrees and lonDegrees:
+				#We have offsets and both degrees, fire off the bounds request
+				pass
+			else:
+				#No degrees specified and offsets or just precision?
+				#This is a bad request.
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+				self.response.write('{"Error_Message" : "Improperly formed query, if offsets or precision specified, at least one degree must be given"}')
+
+
 
 
 

@@ -189,7 +189,9 @@ URL: **/api/heatmap**
     </tbody>
 </table>
 
-If none of these parameters are specified, all points will be returned. Note that this may be slow depending on the total number of points stored in the grid as well as the precision of the grid coordinates as well.
+If none of these parameters are specified, all points will be returned. Note that this may be slow depending on the total number of points stored in the grid as well as the precision of the grid coordinates as well. 
+
+If the request only specifies the offset or precision then the API will return an error message.
 
 ####Example Request
 `http://greenup.xenonapps.com/api/heatmap?latDegrees=23.45&latOffset=2.0&lonDegrees=40.3&lonOffset=5.12`

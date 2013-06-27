@@ -104,13 +104,14 @@ class Comments(webapp2.RequestHandler):
 			info['pin']
 			pin = int(info['pin'])
 		except Exception, e:
-			#Die silently if the pine is not there as it is optional
+			#Die silently if the pin is not there as it is optional
 			pass
 		
 		#All information present and valid. Store information in the database
 		
 
-		self.response.write("{}")
+		#self.response.write('{"status" : %i, "message" : "Successfuly submitted new comment" }')
+		self.response.write('{"status": %i, "message" : "" ')
 
 		
 
