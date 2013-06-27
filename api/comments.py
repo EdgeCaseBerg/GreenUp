@@ -23,8 +23,8 @@ class Comments(webapp2.RequestHandler):
 				pass
 			else:
 				#Semantically incorrect query
-				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,'{ "Error_Message" : "Unrecognized type"} ')
-				self.response.write('{}')
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+				self.response.write('{ "Error_Message" : "Unrecognized type"} ')
 				return
 		#Check for other optional parameter:
 		page = self.request.get("page")
@@ -35,8 +35,8 @@ class Comments(webapp2.RequestHandler):
 				page = abs(int(page)) #We'll accept a negative number, but we'll make it positive. The specification says the value should be unsigned, so we should throw a semantic error here. But that's up to debate
 			except Exception, e:
 				#Poorly formed page parameter
-				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,'{"Error_Message" : "Non-integer page value not allowed"}')
-				self.response.write('{}')
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+				self.response.write('{"Error_Message" : "Non-integer page value not allowed"}')
 				return
 		else:
 			#No page given, so start it off
@@ -104,13 +104,14 @@ class Comments(webapp2.RequestHandler):
 			info['pin']
 			pin = int(info['pin'])
 		except Exception, e:
-			#Die silently if the pine is not there as it is optional
+			#Die silently if the pin is not there as it is optional
 			pass
 		
 		#All information present and valid. Store information in the database
 		
 
-		self.response.write("{}")
+		#self.response.write('{"status" : %i, "message" : "Successfuly submitted new comment" }')
+		self.response.write('{"status": %i, "message" : "" ')
 
 		
 

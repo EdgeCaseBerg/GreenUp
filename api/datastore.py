@@ -50,13 +50,13 @@ class GridPoints(Greenup):
 		return GridPoints.get_by_id(gridId, parent = app_key)
 
 	@classmethod
-	def by_lat(cls,name):
-		latitudes = GridPoints.all().filter('lat =', name).get()
+	def by_lat(cls,lat):
+		latitudes = GridPoints.all().filter('lat =', lat).get()
 		return latitudes
 
 	@classmethod
-	def by_lon(cls,name):
-		longitudes = GridPoints.all().filter('lon =', name).get()
+	def by_lon(cls,lon):
+		longitudes = GridPoints.all().filter('lon =', lon).get()
 		return longitudes
 
 class Comments(Greenup):
@@ -72,9 +72,9 @@ class Comments(Greenup):
 		return Comments.get_by_id(commentId, parent = app_key)
 	
 	@classmethod
-	def by_commentType(cls,name):
+	def by_commentType(cls,cType):
 		# looks up comment by comment type
-		ct = Comments.all().filter('commentType =', name).get()
+		ct = Comments.all().filter('commentType =', cType).get()
 		return ct
 
 	@classmethod

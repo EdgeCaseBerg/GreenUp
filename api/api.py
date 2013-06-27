@@ -17,6 +17,14 @@ CONTEXT_PATH = "/api"
 """ Miscellaneous Constants """
 DEFAULT_ROUNDING_PRECISION = 6
 
+
+""" Error to throw on a sematic error in a request """
+class SemanticError(Exception):
+	def __init__(self,message):
+		self.message = message
+	def __str__(self):
+		return repr(self.message)
+
 class API(webapp2.RequestHandler):
 
 	def get(self):
