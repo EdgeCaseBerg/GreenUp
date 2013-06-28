@@ -348,7 +348,7 @@ URL: **/api/pins**
 ```
 { 
  "status" : 200, 
- "message" : "Successful submits ",
+ "message" : "Successful submit",
 }
 ```
 

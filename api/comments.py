@@ -81,7 +81,7 @@ class Comments(webapp2.RequestHandler):
 			info['message']
 		except Exception, e:
 			#The request body lacks proper keys
-			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,"")
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write('{"Error_Message" : "Required keys not present in request"}')
 			return
 
@@ -93,7 +93,7 @@ class Comments(webapp2.RequestHandler):
 		if typeOfComment.upper() in COMMENT_TYPES:
 			pass
 		else:
-			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,"")
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write('{ "Error_Message" : "Unrecognized Type" }')
 			return
 

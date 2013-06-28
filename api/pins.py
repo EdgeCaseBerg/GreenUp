@@ -6,7 +6,8 @@ import json
 
 import api
 
-
+#This shoudl be placed into some type of properties file or something along with the rest of the propertie esk settings
+PIN_TYPES = ['GENERAL MESSAGE', 'HELP NEEDED', 'TRASH PICKUP']
 
 class Pins(webapp2.RequestHandler):
 
@@ -146,9 +147,75 @@ class Pins(webapp2.RequestHandler):
 		self.response.write(json.dumps(response))	
 
 	def post(self):
-		#TODO
-		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
-		self.response.write("{}")
+		self.response.set_status(api.HTTP_NOT_IMPLEMENTED)
+
+		try:
+			json.loads(self.request.body)
+		except Exception, e:
+			#The request body is malformed. 
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write('{"Error_Message" : "Request body is malformed"}')
+			#Don't allow execution to proceed any further than this
+			return
+		info = json.loads(self.request.body)
+
+		try:
+			info['latDegrees']
+			info['lonDegrees']
+			info['type']
+			info['message']
+		except Exception, e:
+			#Improper request
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "Required keys not present in request"}')
+			return
+		
+		pinType = info['type']
+		latDegrees = info['latDegrees']
+		lonDegrees = info['lonDegrees']
+		message = info['message']
+
+		#Determine if the type is correct:
+		if pinType.upper() not in PIN_TYPES:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "Pin type not a valid type." }')
+			return
+
+		#Determine if lat Degrees and lon degrees are within the proper range and numeric
+		try:
+			latDegrees = float(latDegrees)
+			if latDegrees  < -180.0 or latDegrees > 180.0:
+				raise api.SemanticError("Lat degrees must be within the range between -180.0 and 180.0")
+		except ValueError, e:
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write('{"Error_Message" : "Lat degrees must be a numeric value" }')
+			return
+		except api.SemanticError,s:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "%s" }' % s.message)
+			return
+		
+		#do the same thing for lon degrees
+		try:
+			lonDegrees = float(lonDegrees)
+			if lonDegrees < -90.0 or lonDegrees > 90.0:
+				raise api.SemanticError("Lon degrees must be within the range of -90.0 and 90.0")
+		except ValueError, e:
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write('{"Error_Message" : "Lon degrees must be a numeric value"}')
+			return
+		except api.SemanticError, s:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "%s"}' % s.message)
+			return
+
+		#Don't know what to do about the message. perhaps just escape it or something I guess?
+
+		#Place the pin into the datastore
+
+
+		#self.response.set_status(api.HTTP_OK)		
+		self.response.write('{  "status" : 200,  "message" : "Successful submit",}')
 
 		
 

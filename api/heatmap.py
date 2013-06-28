@@ -195,7 +195,7 @@ class Heatmap(webapp2.RequestHandler):
 
 			try:
 				lonDegrees = float(lonDegrees)
-				if lonDegrees <  -180.0 or lonDegrees > 180.0:
+				if lonDegrees <  -90.0 or lonDegrees > 90.0:
 					raise api.SemanticError
 			except ValueError, e:
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
