@@ -16,6 +16,7 @@ import logging
 
 TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
 MEMCACHED_WRITE_KEY = "write_key"
+STALE_CACHE_LIMIT = 20
 
 class Campaign(db.Model):
 	pass
@@ -93,11 +94,11 @@ class GridPoints(Greenup):
 	memcache, then look into the datastore if the read fails. Writes directly connect with the datastore.
 '''
 class AbstractionLayer():
-	cpgnKey = ""
+	appKey = ""
 
 	def __init__(self):
-		cpgn = Greenup()
-		self.cpgnKey = Greenup.app_key()
+		app = Greenup()
+		self.appKey = Greenup.app_key()
 
 	def getComments(self, type, page):
 		# memcache or datastore read
@@ -105,7 +106,7 @@ class AbstractionLayer():
 
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
-		cmt = Comments(parent=self.cpgnKey, commentType=commentType, message=message, pin=pin).put()
+		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
 		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
@@ -114,7 +115,7 @@ class AbstractionLayer():
 
 	def updateHeatmap(self, latDegrees, lonDegrees, secondsWorked):
 		# datastore write
-		gp = GridPoints(parent=self.cpgnKey, lat=latDegrees, lon=lonDegrees, secondsWorked=secondsWorked).put()
+		gp = GridPoints(parent=self.appKey, lat=latDegrees, lon=lonDegrees, secondsWorked=secondsWorked).put()
 		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
@@ -123,7 +124,7 @@ class AbstractionLayer():
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
-		p = Pins(parent=self.cpgnKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
+		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
 		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 '''
@@ -152,7 +153,6 @@ def updateCachedWrite(key):
 
 		If the key hasn't been created, create it and update the writes saved to 1.
 	'''
-	X = 20
 	result = getCachedData(key)
 
 	if(not result):
@@ -160,8 +160,8 @@ def updateCachedWrite(key):
 		return True
 
 	result = int(result)
-	if(result+1 > X):
-		# flush and repopulate, and reset cache writes
+	if(result+1 > STALE_CACHE_LIMIT):
+		# TODO: flush and repopulate, and reset cache writes
 		logging.info("20 writes exceeded, resetting cache. Total writes == " + str(result+1))
 		setCachedData(key, 0)
 	else:
