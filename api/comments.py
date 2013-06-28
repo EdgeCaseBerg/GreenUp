@@ -65,7 +65,6 @@ class Comments(webapp2.RequestHandler):
 		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
 
 		#Confirm that all elements of the json are there.
-		logging.info(self.request.body)
 		try:
 			json.loads(self.request.body)
 		except Exception, e:
@@ -82,7 +81,7 @@ class Comments(webapp2.RequestHandler):
 			info['message']
 		except Exception, e:
 			#The request body lacks proper keys
-			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,"")
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write('{"Error_Message" : "Required keys not present in request"}')
 			return
 
@@ -94,7 +93,7 @@ class Comments(webapp2.RequestHandler):
 		if typeOfComment.upper() in COMMENT_TYPES:
 			pass
 		else:
-			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,"")
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write('{ "Error_Message" : "Unrecognized Type" }')
 			return
 
@@ -111,7 +110,7 @@ class Comments(webapp2.RequestHandler):
 		
 
 		#self.response.write('{"status" : %i, "message" : "Successfuly submitted new comment" }')
-		self.response.write('{"status": %i, "message" : "" ')
+		self.response.write('{"status": %i, "message" : "" ' % api.HTTP_NOT_IMPLEMENTED)
 
 		
 
