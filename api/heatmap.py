@@ -7,6 +7,7 @@ import json
 import api
 import datastore
 
+import logging
 
 
 class Heatmap(webapp2.RequestHandler):
@@ -96,7 +97,7 @@ class Heatmap(webapp2.RequestHandler):
 				
 
 		#If no parameters are specified we'll return everything we have for them
-		response = None
+		response = []
 		
 		if parameters == 0:
 			#Return everything
@@ -108,10 +109,14 @@ class Heatmap(webapp2.RequestHandler):
 				#Round latDegrees by precision value:
 				latDegrees = round(latDegrees,precision) 
 				response = GridPoints.by_lat(latDegrees)
+				if not response:
+					response = []
 			elif not lonOffset and lonDegrees and not latDegrees:
 				#Only specified lonDegrees
 				lonDegrees = round(lonDegrees,precision)
 				response = GridPoints.by_lon(lonDegrees)
+				if not response:
+					response = []
 			elif not lonOffset and latDegrees and lonDegrees:
 				#We have both lon and lat degrees
 				lonDegrees = round(lonDegrees,precision)
@@ -139,60 +144,93 @@ class Heatmap(webapp2.RequestHandler):
 
 
 		#By this point we have a response and we simply have to send it back
-		self.response.set_status(api.HTTP_OK,"")
+		self.response.set_status(api.HTTP_OK)
 		self.response.write(json.dumps(response))	
 
 	def put(self):
 		#Check for the existence of required parameters
-		latDegrees = self.request.get("latDegrees")
-		lonDegrees = self.request.get("lonDegrees")
-		secondsWorked = self.request.get("secondsWorked")
-
 		try:
-			latDegrees = float(latDegrees)
-			if latDegrees < -180.0 or latDegrees > 180.0:
-				raise api.SemanticError("latDegrees must be within the range of -180.0 and 180.0")
-		except ValueError, e:
-			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
-			self.response.write('{"Error_Message" : "latDegrees parameter must be numeric" }')
+			json.loads(self.request.body)
+		except Exception, e:
+			#The request body is malformed. 
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM,"")
+			self.response.write('{"Error_Message" : "Request body is malformed"}')
+			#Don't allow execution to proceed any further than this
 			return
-		except api.SemanticError, s:
-			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "%s" } ' % s.message)
-			return
+		info = json.loads(self.request.body)
 
-		try:
-			lonDegrees = float(lonDegrees)
-			if lonDegrees <  -180.0 or lonDegrees > 180.0:
-				raise api.SemanticError
-		except ValueError, e:
-			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
-			self.response.write('{"Error_Message" : "lonDegrees parameter must be numeric" }')
-			return
-		except api.SemanticError, s:
-			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "%s"  }' % s.message)
-			return
 
-		try:
-			secondsWorked = int(secondsWorked)
-			if secondsWorked < 0:
-				raise api.SemanticError("Seconds worked must be a non negative unsigned integer value")
-		except ValueError, e:
-			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
-			self.response.write('{"Error_Message" : "Seconds worked must be an unsigned integer value" }')
-			return
-		except api.SemanticError, s:
-			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "%s"  }' % s.message)
-			return
+		#For each pin we recieve we will enter them into the database. If any pins are malformed then no pointss are added
+		points = []
+		for i in range(len(info)):
+			try:
+				info[i]["latDegrees"]
+				info[i]["lonDegrees"]
+				info[i]["secondsWorked"]
+			except Exception, e:
+				raise e
+				#Request does not have proper keys
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,"")
+				self.response.write('{"Error_Message" : "Required keys not present in request"}')
+				return
+			
 
-		#All 
 
+			latDegrees = info[i]["latDegrees"]
+			lonDegrees = info[i]["lonDegrees"]
+			secondsWorked = info[i]["secondsWorked"]
+
+			try:
+				latDegrees = float(latDegrees)
+				if latDegrees < -180.0 or latDegrees > 180.0:
+					raise api.SemanticError("latDegrees must be within the range of -180.0 and 180.0")
+			except ValueError, e:
+				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+				self.response.write('{"Error_Message" : "latDegrees parameter must be numeric" }')
+				return
+			except api.SemanticError, s:
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+				self.response.write('{"Error_Message" : "%s" } ' % s.message)
+				return
+
+			try:
+				lonDegrees = float(lonDegrees)
+				if lonDegrees <  -180.0 or lonDegrees > 180.0:
+					raise api.SemanticError
+			except ValueError, e:
+				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+				self.response.write('{"Error_Message" : "lonDegrees parameter must be numeric" }')
+				return
+			except api.SemanticError, s:
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+				self.response.write('{"Error_Message" : "%s"  }' % s.message)
+				return
+
+			try:
+				secondsWorked = int(secondsWorked)
+				if secondsWorked < 0:
+					raise api.SemanticError("Seconds worked must be a non negative unsigned integer value")
+			except ValueError, e:
+				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+				self.response.write('{"Error_Message" : "Seconds worked must be an unsigned integer value" }')
+				return
+			except api.SemanticError, s:
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+				self.response.write('{"Error_Message" : "%s"  }' % s.message)
+				return
+
+			#All required parameters are here and validated.
+			#Add it to the list of points to be added
+			points.append(info[i])
+
+		#Add all points to datastore
+		logging.info(info)
+		for point in points:
+			pass
 
 
 		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
-		self.response.write("{}")
+		self.response.write('{"status": %i, "message" : "" ' % api.HTTP_NOT_IMPLEMENTED)
 
 		
 

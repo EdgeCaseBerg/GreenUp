@@ -65,7 +65,6 @@ class Comments(webapp2.RequestHandler):
 		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
 
 		#Confirm that all elements of the json are there.
-		logging.info(self.request.body)
 		try:
 			json.loads(self.request.body)
 		except Exception, e:
@@ -111,7 +110,7 @@ class Comments(webapp2.RequestHandler):
 		
 
 		#self.response.write('{"status" : %i, "message" : "Successfuly submitted new comment" }')
-		self.response.write('{"status": %i, "message" : "" ')
+		self.response.write('{"status": %i, "message" : "" ' % api.HTTP_NOT_IMPLEMENTED)
 
 		
 
