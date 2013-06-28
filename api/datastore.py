@@ -14,6 +14,8 @@ from google.appengine.api import memcache # import memcache
 
 import logging 
 
+TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
+
 class Campaign(db.Model):
 	pass
 
@@ -63,12 +65,10 @@ class Comments(Greenup):
 
 	@classmethod
 	def by_id(cls, commentId):
-		# looks up comment by id
 		return Comments.get_by_id(commentId, parent = app_key)
 	
 	@classmethod
 	def by_type(cls,cType):
-		# looks up comment by comment type
 		ct = Comments.all().filter('commentType =', cType).get()
 
 class GridPoints(Greenup):
@@ -99,3 +99,36 @@ class GridPoints(Greenup):
 	def by_lonOffset(cls, offset, etc):
 		# TODO: implement this
 		pass
+
+'''
+	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints. Reads first check
+	memcache, then look into the datastore if the read fails. Writes directly connect with the datastore.
+'''
+def getComments(type, page):
+	# memcache or datastore read
+	pass
+
+def submitComments(type, message, pin=None):
+	# datastore write
+	pass
+
+def getHeatmap(latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
+	# memcache or datastore read
+	pass
+
+def updateHeatmap(latDegree, lonDegree, secondsWorked):
+	# datastore write
+	pass
+
+def getPins(latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
+	# memcache or datastore read
+	pass
+
+def submitPin(latDegrees, lonDegrees, type, message):
+	# datastore write
+	pass
+
+'''
+	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
+	datastore writes have been performed.
+'''
