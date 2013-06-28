@@ -255,8 +255,9 @@ If the request is malformed the server will return an error code of `400 bad req
 
 ####Response
 ```
-{
-    "response" : 200
+{ 
+ "status" : 200, 
+ "message" : "Successful submit",
 }
 ```
 
@@ -345,8 +346,9 @@ URL: **/api/pins**
 
 ####Response
 ```
-{
-    "response" : 200
+{ 
+ "status" : 200, 
+ "message" : "Successful submits ",
 }
 ```
 
