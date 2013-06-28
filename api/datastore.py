@@ -104,31 +104,52 @@ class GridPoints(Greenup):
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints. Reads first check
 	memcache, then look into the datastore if the read fails. Writes directly connect with the datastore.
 '''
-def getComments(type, page):
-	# memcache or datastore read
-	pass
+class AbstractionLayer():
+	cpgnKey = ""
 
-def submitComments(type, message, pin=None):
-	# datastore write
-	pass
+	def __init__(self):
+		cpgn = Greenup()
+		self.cpgnKey = Greenup.app_key()
 
-def getHeatmap(latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
-	# memcache or datastore read
-	pass
+	def getComments(self, type, page):
+		# memcache or datastore read
+		pass
 
-def updateHeatmap(latDegree, lonDegree, secondsWorked):
-	# datastore write
-	pass
+	def submitComments(self, commentType, message, pin=None):
+		# datastore write
+		cmt = Comments(parent = self.cpgnKey, commentType=commentType, message=message, pin=pin).put()
 
-def getPins(latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
-	# memcache or datastore read
-	pass
+		# TODO: update # of datastore writes in memecached for refreshment purposes
 
-def submitPin(latDegrees, lonDegrees, type, message):
-	# datastore write
-	pass
+	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
+		# memcache or datastore read
+		pass
+
+	def updateHeatmap(self, latDegree, lonDegree, secondsWorked):
+		# datastore write
+		pass
+
+	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
+		# memcache or datastore read
+		pass
+
+	def submitPin(self, latDegrees, lonDegrees, type, message):
+		# datastore write
+		pass
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
 	datastore writes have been performed.
 '''
+def setData(key, val):
+	# simple wrapper for memcache.set, in case we need to extend it.
+	memcache.set(key, val)
+
+def getData(key):
+	# wrapper for memcache get, will return none if the data wasn't found
+	result = memcache.get(key)
+
+	if not result:
+		return None
+
+	return result

@@ -7,25 +7,46 @@ from handlerBase import *
 from datastore import *
 
 import random
+from random import shuffle
 
 class DummyData():
 	# used to seed datastore with dummy data
 	def __init__(self):
+		#delete the datastore entities
+		# db.delete(db.Query(keys_only=True))
+		
 		stringSeed = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 		splt = stringSeed.split(' ')
 		
 		inputFloats = []
 		inputStrings = []
 		inputTypes = []
+		inputSeconds = []
 
 		for i in range(1,100):
 			inputFloats.append( "{0:.5f}".format(random.uniform(0.0, 2.0)) )
+			inputSeconds.append( int(random.uniform(0.0, 10)) )
 			inputStrings.append( splt[int(random.uniform(0, len(splt)))] )
 			inputTypes.append( TYPES_AVAILABLE[int(random.uniform(0, len(TYPES_AVAILABLE)))] )
 
-		logging.info(str(inputFloats))
-		logging.info(inputStrings)
-		logging.info(inputTypes)
+		# logging.info(str(inputFloats))
+		# logging.info(inputStrings)
+		# logging.info(inputTypes)
+		# logging.info(str(inputSeconds))
+
+		# write dummy data to the datastore through the abstraction layer
+		al = AbstractionLayer()
+
+		for i in range(0,99):		
+			al.submitComments(inputTypes[i%len(inputTypes)], inputStrings[i%len(inputStrings)])
+			al.updateHeatmap(inputFloats[i], inputFloats[i], inputSeconds[i])
+			al.submitPin(inputFloats[i], inputFloats[i], inputTypes[i%len(inputTypes)], inputStrings[i%len(inputStrings)])
+
+			shuffle(inputFloats)
+			shuffle(inputStrings)
+			shuffle(inputTypes)
+			shuffle(inputSeconds)
+
 
 class WriteTest(Handler):
 	def get(self):
