@@ -11,7 +11,7 @@ HTTP_REQUEST_SEMANTICS_PROBLEM = 422
 HTTP_REQUEST_SYNTAX_PROBLEM = 400
 
 """ Constants for domain name and fully qualified http urls"""
-BASE_URL = "http://localhost:30002"
+BASE_URL = "http://greenup.xenonapps.com"
 CONTEXT_PATH = "/api"
 
 """ Miscellaneous Constants """

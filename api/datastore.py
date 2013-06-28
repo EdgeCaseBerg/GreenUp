@@ -251,14 +251,14 @@ class MemcacheVsDatastore(webapp2.RequestHandler):
 		logging.info("Results: Datastore: %s Memcache: %s" % (str(datastoreRetrieval1),str(memcacheRetrieval1)))
 		
 		#Add 100,000 entries to the datastore and construct the entity that will be placed into the memcache
-		logging.info("Creating 100,000 Datastore entities")
+		logging.info("Creating 10,000 Datastore entities")
 		memPins = []
-		for i in range(0,100000):
+		for i in range(0,10000):
 			pins = Pins(parent = app_key(), lat= 1.1, lon= 1.2)
 			memPins.append(pins)
 			pins.put()
 			setData(str(fpID),pins)
-		logging.info("Finished creating 100,000 datastore entities")
+		logging.info("Finished creating 10,000 datastore entities")
 
 		
 		#Now time how long it takes to retrieve a pin	
