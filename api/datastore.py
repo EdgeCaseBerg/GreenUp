@@ -100,7 +100,7 @@ class AbstractionLayer():
 		app = Greenup()
 		self.appKey = Greenup.app_key()
 
-	def getComments(self, type, page):
+	def getComments(self, type=None, page=None):
 		# memcache or datastore read
 		pass
 

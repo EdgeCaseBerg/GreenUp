@@ -29,11 +29,6 @@ class DummyData():
 			inputStrings.append( splt[int(random.uniform(0, len(splt)))] )
 			inputTypes.append( TYPES_AVAILABLE[int(random.uniform(0, len(TYPES_AVAILABLE)))] )
 
-		# logging.info(str(inputFloats))
-		# logging.info(inputStrings)
-		# logging.info(inputTypes)
-		# logging.info(str(inputSeconds))
-
 		# write dummy data to the datastore through the abstraction layer
 		al = AbstractionLayer()
 
