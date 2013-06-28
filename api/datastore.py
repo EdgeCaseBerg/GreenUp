@@ -15,6 +15,7 @@ from google.appengine.api import memcache # import memcache
 import logging 
 
 TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
+MEMCACHED_WRITE_KEY = "write_key"
 
 class Campaign(db.Model):
 	pass
@@ -29,9 +30,9 @@ class Pins(Greenup):
 	pinType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
-	latOffset = db.FloatProperty()
-	lonOffset = db.FloatProperty()
-	precision = db.FloatProperty()
+	# latOffset = db.FloatProperty()
+	# lonOffset = db.FloatProperty()
+	# precision = db.FloatProperty()
 
 	@classmethod
 	def by_id(cls, pinId):
@@ -117,35 +118,37 @@ class AbstractionLayer():
 
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
-		cmt = Comments(parent = self.cpgnKey, commentType=commentType, message=message, pin=pin).put()
-
-		# TODO: update # of datastore writes in memecached for refreshment purposes
+		cmt = Comments(parent=self.cpgnKey, commentType=commentType, message=message, pin=pin).put()
+		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
 		# memcache or datastore read
 		pass
 
-	def updateHeatmap(self, latDegree, lonDegree, secondsWorked):
+	def updateHeatmap(self, latDegrees, lonDegrees, secondsWorked):
 		# datastore write
-		pass
+		gp = GridPoints(parent=self.cpgnKey, lat=latDegrees, lon=lonDegrees, secondsWorked=secondsWorked).put()
+		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
 		# memcache or datastore read
 		pass
 
-	def submitPin(self, latDegrees, lonDegrees, type, message):
+	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
-		pass
+		p = Pins(parent=self.cpgnKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
+		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
 	datastore writes have been performed.
 '''
-def setData(key, val):
+def setCachedData(key, val):
 	# simple wrapper for memcache.set, in case we need to extend it.
+	logging.info("made it here")
 	memcache.set(key, val)
 
-def getData(key):
+def getCachedData(key):
 	# wrapper for memcache get, will return none if the data wasn't found
 	result = memcache.get(key)
 
@@ -153,3 +156,26 @@ def getData(key):
 		return None
 
 	return result
+
+def updateCachedWrite(key):
+	'''
+		Check and see if a key has been created in memecached to store the number of writes.
+		If it has, increment the amount of writes corresponding to that key, and check that number against some constant X.
+		If the number of writes exceeds X, then flush the cache and repopulate it (if it doesn't, then do nothing).
+
+		If the key hasn't been created, create it and update the writes saved to 1.
+	'''
+	X = 20
+	result = getCachedData(key)
+
+	if(not result):
+		setCachedData(key, 1)
+		return True
+
+	result = int(result)
+	if(result+1 > X):
+		# flush and repopulate, and reset cache writes
+		logging.info("20 writes exceeded, resetting cache. Total writes == " + str(result+1))
+		setCachedData(key, 0)
+	else:
+		setCachedData(key, result+1)
