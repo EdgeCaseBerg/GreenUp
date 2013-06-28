@@ -30,9 +30,6 @@ class Pins(Greenup):
 	pinType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
-	# latOffset = db.FloatProperty()
-	# lonOffset = db.FloatProperty()
-	# precision = db.FloatProperty()
 
 	@classmethod
 	def by_id(cls, pinId):
@@ -47,16 +44,6 @@ class Pins(Greenup):
 	def by_type(cls, pinType):
 		bt = Pins.all().filter('pinType =', pinType).get()
 		return bt
-
-	@classmethod
-	def by_lat(cls,lat):
-		latitudes = Pins.all().filter('lat =', lat).get()
-		return latitudes
-
-	@classmethod
-	def by_lon(cls,lon):
-		longitudes = Pins.all().filter('lon =', lon).get()
-		return longitudes
 
 class Comments(Greenup):
 	commentType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))

@@ -12,8 +12,8 @@ from random import shuffle
 class DummyData():
 	# used to seed datastore with dummy data
 	def __init__(self):
-		#delete the datastore entities
-		# db.delete(db.Query(keys_only=True))
+		# delete the datastore entities
+		db.delete(db.Query(keys_only=True))
 
 		stringSeed = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 		splt = stringSeed.split(' ')
@@ -29,7 +29,7 @@ class DummyData():
 			inputStrings.append( splt[int(random.uniform(0, len(splt)))] )
 			inputTypes.append( TYPES_AVAILABLE[int(random.uniform(0, len(TYPES_AVAILABLE)))] )
 
-		logging.info(str(inputFloats))
+		# logging.info(str(inputFloats))
 		# logging.info(inputStrings)
 		# logging.info(inputTypes)
 		# logging.info(str(inputSeconds))
@@ -50,7 +50,7 @@ class DummyData():
 
 class WriteTest(Handler):
 	def get(self):
-		self.write("got here to the write handler")
+		self.write("Got here to the write handler. The should be some data in the datastore now.")
 		d = DummyData()
 
 class ReadTest(Handler):
