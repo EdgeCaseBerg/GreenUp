@@ -44,5 +44,6 @@ application = webapp2.WSGIApplication([
 										('/api', API), 
 										('/api/writeTest', WriteTest),
 										('/api/readTest', ReadTest),
-										('/api/cacheTest', MemcacheVsDatastore)
+										('/api/cacheTest', MemcacheVsDatastore),
+										('/api/cacheView', MemecacheViewer)
 									], debug=True)

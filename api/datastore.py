@@ -11,6 +11,7 @@
 from google.appengine.ext import db
 from handlerBase import *
 from google.appengine.api import memcache # import memcache
+import pickle
 
 import logging 
 
@@ -116,7 +117,6 @@ class AbstractionLayer():
 	def updateHeatmap(self, latDegrees, lonDegrees, secondsWorked):
 		# datastore write
 		gp = GridPoints(parent=self.appKey, lat=latDegrees, lon=lonDegrees, secondsWorked=secondsWorked).put()
-		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
 		# memcache or datastore read
@@ -125,23 +125,28 @@ class AbstractionLayer():
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
-		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
 	datastore writes have been performed.
 '''
-def repopulate():
-	app = Greenup()
-	p = Pins.all().order('-time').fetch()
-	key = Greenup.app_key()
+# this is WAAAAY too costly
+# def repopulate():
+# 	app = Greenup()
+# 	key = Greenup.app_key()
 
-	# q = Posts.all().order('-time').fetch(limit = 50)
-	# key = "BLOG"
+# 	p = Pins.all()
+# 	p.ancestor(key)
+# 	p = list(p)
+# 	setCachedData('pins', p)
+
+# 	gp = GridPoints.all()
+# 	gp.ancestor(key)
+# 	gp = list(gp)
+# 	setCachedData('gridPoints', gp)
 
 def setCachedData(key, val):
 	# simple wrapper for memcache.set, in case we need to extend it.
-	logging.info("made it here")
 	memcache.set(key, val)
 
 def getCachedData(key):
@@ -172,7 +177,12 @@ def updateCachedWrite(key):
 		# TODO: flush, then repopulate the cache with the data from the datastore
 		logging.info("20 writes exceeded, resetting cache. Total writes == " + str(result+1))
 		memcache.flush_all()
-		repopulate()
-		setCachedData(key, 0)
+		setCachedData(key, 1)
 	else:
 		setCachedData(key, result+1)
+
+'''
+	TODO: 
+		1) Make the methods to read the appropriate data from the datastore and return it to the endpoint (gridpoints and pins).
+		2) Implement pagination for the comments, via memecache and cursors, using Ethan's algorithm from #27 
+'''

@@ -5,7 +5,7 @@
 import logging 
 from handlerBase import *
 from datastore import *
-
+import pickle
 import random
 from random import shuffle
 
@@ -48,13 +48,21 @@ class WriteTest(Handler):
 	def get(self):
 		self.write("Got here to the write handler. The should be some data in the datastore now.")
 		d = DummyData()
+		result = getCachedData('pins')
+		logging.info(result)
 
 class ReadTest(Handler):
 	def get(self):
 		self.write("got here to the read handler")
 
+class MemecacheViewer(Handler):
+	def get(self):
+		self.write("hello there, check the logs")
+		result = getCachedData('pins')
+		for r in result:
+			logging.info( r.message )
+
 import time
-import pickle
 import platform
 
 class MemcacheVsDatastore(webapp2.RequestHandler):
