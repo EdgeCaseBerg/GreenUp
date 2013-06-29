@@ -131,6 +131,14 @@ class AbstractionLayer():
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
 	datastore writes have been performed.
 '''
+def repopulate():
+	app = Greenup()
+	p = Pins.all().order('-time').fetch()
+	key = Greenup.app_key()
+
+	# q = Posts.all().order('-time').fetch(limit = 50)
+	# key = "BLOG"
+
 def setCachedData(key, val):
 	# simple wrapper for memcache.set, in case we need to extend it.
 	logging.info("made it here")
@@ -161,8 +169,10 @@ def updateCachedWrite(key):
 
 	result = int(result)
 	if(result+1 > STALE_CACHE_LIMIT):
-		# TODO: flush and repopulate, and reset cache writes
+		# TODO: flush, then repopulate the cache with the data from the datastore
 		logging.info("20 writes exceeded, resetting cache. Total writes == " + str(result+1))
+		memcache.flush_all()
+		repopulate()
 		setCachedData(key, 0)
 	else:
 		setCachedData(key, result+1)
