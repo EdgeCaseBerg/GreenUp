@@ -57,10 +57,11 @@ class ReadTest(Handler):
 
 class MemecacheViewer(Handler):
 	def get(self):
-		self.write("hello there, check the logs")
-		result = getCachedData('pins')
-		for r in result:
-			logging.info( r.message )
+		# self.write("hello there, check the logs")
+		# result = getCachedData('pins')
+		# for r in result:
+		# 	logging.info( r.message )
+		paging(5)
 
 import time
 import platform

@@ -171,16 +171,6 @@ def updateCachedWrite(key):
 
 		If the key hasn't been created, create it and update the writes saved to 1.
 	'''
-
-	'''
-		try to get from memcache: (greenUpCommentsPage + i)
-		cache hit: send info
-		cache miss: 
-		    for j=i, j > 0 j--
-		        try to get from memcache (greenupCommentsPage + i-j)
-		        if hit return results
-		    all misses run a query and build cursors up to i.
-	'''
 	result = getCachedData(key)
 
 	if(not result):
@@ -189,15 +179,38 @@ def updateCachedWrite(key):
 
 	result = int(result)
 	if(result+1 > STALE_CACHE_LIMIT):
-		# TODO: flush, then repopulate the cache with the data from the datastore
+		# flush, then repopulate the cache with the first page of comment data from the datastore
 		logging.info("20 writes exceeded, resetting cache. Total writes == " + str(result+1))
 		memcache.flush_all()
+		paging(1)
 		setCachedData(key, 1)
 	else:
 		setCachedData(key, result+1)
 
-'''
-	TODO: 
-		1) Make the methods to read the appropriate data from the datastore and return it to the endpoint (gridpoints and pins).
-		2) Implement pagination for the comments, via memecache and cursors, using Ethan's algorithm from #27 
-'''
+def paging(page):
+	'''
+	try to get from memcache: (greenUpCommentsPage + i)
+	cache hit: send info
+	cache miss: 
+	    for j=i, j > 0 j--
+	        try to get from memcache (greenupCommentsPage + i-j)
+	        if hit return results
+	    all misses run a query and build cursors up to i.
+	'''
+	results = Comments.all()
+	currentCursorKey = 'greeunup_comment_paging_cursor_%s' %(page)
+	pageInCache = memcache.get(currentCursorKey)
+	
+	if not pageInCache:
+		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
+		j = 1
+		for x in range(page):
+			prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(j)
+			inCache = memcache.get(prevCursorKey)
+			if inCache:
+				# return the results and update the cursor
+				logging.info("in the cache")
+			else:
+				# read the comments into memecache, set it, and update the cursor and continue the loop
+				logging.info("not in the cache")
+			j += 1
