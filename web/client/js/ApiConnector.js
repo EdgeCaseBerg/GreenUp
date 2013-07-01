@@ -7,6 +7,8 @@ function ApiConnector(){
 	var commentData = [];
 	var apiUrl;
 
+	var testurl = "../../testResponse.php";
+
 	var BASE = "http://greenup.xenonapps.com/api";
 
 	// get comments
@@ -20,14 +22,52 @@ function ApiConnector(){
 	// get pins
 	var pinsURI = "/pins";
 
-	function connect(){}
+	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(){
+		var URL = BASE+heatmapURI;
+		this.pullApiData(URL, "JSON", "GET", updateDom);
+	}
 
-	function pullHeatmapData(){}
+	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
+		var URL = BASE+heatmapURI;
+		this.pullApiData(URL, "JSON", "GET", updateDom);
+	}
 
-	function pullMarkerData(){}
+	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType){
+		var commentsUrl = ""
+		switch(commentType){
+			case "forum":
+				commentsUrl = forumURI;
+				break;
+			case "needs":
+				commentsUrl = needsUri; 
+				break;
+		}
+		var URL = BASE+heatmapURI;
+		this.pullApiData(URL, "JSON", "GET", updateDom);
+	}
 
-	function pullCommentData(){
-		this.getData(BASE+)
+	ApiConnector.prototype.testObj = function testObj(){
+		var URL = testurl;
+		this.pullApiData(URL, "JSON", "GET", this.updateDom);
+	}
+
+	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, callback){
+		$.ajax({
+			type: QUERYTYPE,
+			url: URL,
+			dataType: DATATYPE,
+			success: function(data){
+				console.log(data);
+				callback(data);
+			}
+		});
+	}
+
+	ApiConnector.prototype.updateDom = function updateDom(data){
+		alert(data);
 	}
 
 }
+
+var connector = new ApiConnector();
+connector.testObj();
