@@ -33,6 +33,10 @@ class Pins(Greenup):
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
 
+	# latOffset = db.FloatProperty()
+	# lonOffset = db.FloatProperty()
+	# precision = db.FloatProperty()
+
 	@classmethod
 	def by_id(cls, pinId):
 		return Pins.get_by_id(pinId, parent = app_key())
@@ -55,7 +59,7 @@ class Comments(Greenup):
 
 	@classmethod
 	def by_id(cls, commentId):
-		return Comments.get_by_id(commentId, parent = app_key)
+		return Comments.get_by_id(commentId, parent = app_key())
 	
 	@classmethod
 	def by_type(cls,cType):
@@ -68,7 +72,7 @@ class GridPoints(Greenup):
 
 	@classmethod
 	def by_id(cls, gridId):
-		return GridPoints.get_by_id(gridId, parent = app_key)
+		return GridPoints.get_by_id(gridId, parent = app_key())
 
 	@classmethod
 	def by_lat(cls,lat):
@@ -81,18 +85,19 @@ class GridPoints(Greenup):
 		return longitudes
 
 	@classmethod
-	def by_latOffset(cls, offset, etc):
-		# TODO: implement this
-		pass
+	def by_latOffset(cls, latDegrees, offset):
+		# query all points with a latitude between latDegrees and offset
+		q = GridPoints().all().filter('lat >=', latDegrees).filter('lat <=', latDegrees + offset).get()
+		return q
 
 	@classmethod
-	def by_lonOffset(cls, offset, etc):
-		# TODO: implement this
-		pass
+	def by_lonOffset(cls, lonDegrees, offset):
+		# query all points with a latitude between lonDegrees and offset
+		q = GridPoints().all().filter('lon >=', lonDegrees).filter('lon <=', lonDegrees + offset).get()
+		return q
 
 '''
-	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints. Reads first check
-	memcache, then look into the datastore if the read fails. Writes directly connect with the datastore.
+	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
 '''
 class AbstractionLayer():
 	appKey = ""
@@ -165,6 +170,16 @@ def updateCachedWrite(key):
 		If the number of writes exceeds X, then flush the cache and repopulate it (if it doesn't, then do nothing).
 
 		If the key hasn't been created, create it and update the writes saved to 1.
+	'''
+
+	'''
+		try to get from memcache: (greenUpCommentsPage + i)
+		cache hit: send info
+		cache miss: 
+		    for j=i, j > 0 j--
+		        try to get from memcache (greenupCommentsPage + i-j)
+		        if hit return results
+		    all misses run a query and build cursors up to i.
 	'''
 	result = getCachedData(key)
 
