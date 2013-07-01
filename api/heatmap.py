@@ -5,7 +5,7 @@ import webapp2
 import json
 
 import api
-import datastore
+from  datastore import *
 
 import logging
 
@@ -94,6 +94,8 @@ class Heatmap(webapp2.RequestHandler):
 				return
 			else:
 				precision = api.DEFAULT_ROUNDING_PRECISION
+		else:
+			precision = api.DEFAULT_ROUNDING_PRECISION
 				
 
 		#If no parameters are specified we'll return everything we have for them

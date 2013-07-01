@@ -4,6 +4,8 @@ from google.appengine.ext import db
 import webapp2
 import json
 
+from datastore import Pins as DBPins
+
 import api
 
 #This shoudl be placed into some type of properties file or something along with the rest of the propertie esk settings
@@ -93,7 +95,9 @@ class Pins(webapp2.RequestHandler):
 				return
 			else:
 				precision = api.DEFAULT_ROUNDING_PRECISION
-				
+		else:
+			precision = api.DEFAULT_ROUNDING_PRECISION	
+
 
 		#If no parameters are specified we'll return everything we have for them
 		response = []
@@ -107,13 +111,13 @@ class Pins(webapp2.RequestHandler):
 				#Only specified latDegrees
 				#Round latDegrees by precision value:
 				latDegrees = round(latDegrees,precision) 
-				response = GridPoints.by_lat(latDegrees)
+				response = DBPins.by_lat(latDegrees)
 				if not response:
 					response = []
 			elif not lonOffset and lonDegrees and not latDegrees:
 				#Only specified lonDegrees
 				lonDegrees = round(lonDegrees,precision)
-				response = GridPoints.by_lon(lonDegrees)
+				response = DBPins.by_lon(lonDegrees)
 				if not response:
 					response = []
 			elif not lonOffset and latDegrees and lonDegrees:
