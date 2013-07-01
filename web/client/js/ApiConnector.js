@@ -5,66 +5,80 @@ function ApiConnector(){
 	var heatmapData = []; 
 	var markerData = []; 
 	var commentData = [];
-	var apiUrl;
 
 	var testurl = "../../testResponse.php";
-
 	var BASE = "http://greenup.xenonapps.com/api";
 
-	// get comments
+	// api URLs
 	var forumURI = "/comments?type=forum";
 	var needsURI = "/comments?type=needs";
 	var messagesURI = "/comments?type=messages";
-
-	// heatmap
 	var heatmapURI = "/heatmap?latDegrees=23.45&latOffset=2.0&lonDegrees=40.3&lonOffset=5.12";
-
-	// get pins
 	var pinsURI = "/pins";
 
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(){
 		var URL = BASE+heatmapURI;
-		this.pullApiData(URL, "JSON", "GET", updateDom);
+		this.pullApiData(URL, "JSON", "GET", updateHeatmap);
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
 		var URL = BASE+heatmapURI;
-		this.pullApiData(URL, "JSON", "GET", updateDom);
+		this.pullApiData(URL, "JSON", "GET", updateMarker);
 	}
 
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType){
-		var commentsUrl = ""
+		var commentsUrl = "";
 		switch(commentType){
-			case "forum":
-				commentsUrl = forumURI;
-				break;
 			case "needs":
-				commentsUrl = needsUri; 
+				this.pullApiData(BASE+needsURI, "JSON", "GET", updateNeeds);
+				break;
+			case "messages":
+				this.pullApiData(BASE+messagesURI, "JSON", "GET", updateMessages);
+				break;
+			default:
+				this.pullApiData(BASE+forumURI, "JSON", "GET", updateForum);
 				break;
 		}
-		var URL = BASE+heatmapURI;
-		this.pullApiData(URL, "JSON", "GET", updateDom);
-	}
+	} // end pullCommentData()
 
-	ApiConnector.prototype.testObj = function testObj(){
-		var URL = testurl;
-		this.pullApiData(URL, "JSON", "GET", this.updateDom);
-	}
-
-	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, callback){
+	// performs the ajax call to get our data
+	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
 		$.ajax({
 			type: QUERYTYPE,
 			url: URL,
 			dataType: DATATYPE,
 			success: function(data){
 				console.log(data);
-				callback(data);
+				CALLBACK(data);
 			}
 		});
+	} // end pullApiData
+
+
+	ApiConnector.prototype.updateHeatmap = function updateHeatmap(data){
+		alert(data);
 	}
 
-	ApiConnector.prototype.updateDom = function updateDom(data){
+	ApiConnector.prototype.updateMarker = function updateMarker(data){
 		alert(data);
+	}
+
+	ApiConnector.prototype.updateMessages = function updateMessages(data){
+		alert(data);
+	}
+
+	ApiConnector.prototype.updateNeeds = function updateNeeds(data){
+		alert(data);
+	}
+
+	ApiConnector.prototype.updateForum = function updateForum(data){
+		alert(data);
+	}
+
+	// baseline testing
+	ApiConnector.prototype.testObj = function testObj(){
+		var URL = testurl;
+		this.pullApiData(URL, "JSON", "GET", this.updateDom);
 	}
 
 }
