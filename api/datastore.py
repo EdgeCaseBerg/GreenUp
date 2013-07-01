@@ -51,6 +51,16 @@ class Pins(Greenup):
 		bt = Pins.all().filter('pinType =', pinType).get()
 		return bt
 
+	@classmethod
+	def by_lat(cls,lat):
+		latitudes = Pins.all().filter('lat =', lat).get()
+		return latitudes
+
+	@classmethod
+	def by_lon(cls,lon):
+		longitudes = Pins.all().filter('lon =', lon).get()
+		return longitudes
+
 class Comments(Greenup):
 	commentType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
 	message = db.TextProperty()
