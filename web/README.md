@@ -1,10 +1,10 @@
 GreenUp WebClient  - v0.01
 =========
-Powered by XenonApps
+Powered by <a href="http://xenonapps.com">XenonApps</a>
 ____
 
 
-A mobile-web client for The GreenUp API
+A mobile-web client for GreenUp-VT 
 
  - Tabbed menus
  - Interactive Maps
