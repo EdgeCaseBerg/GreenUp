@@ -452,23 +452,23 @@ document.addEventListener('DOMContentLoaded',function(){
     }, false);
 
 
-    var pan1 = document.getElementById("pan1");
-    pan1.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel1Center";
-    }, false);
+    // var pan1 = document.getElementById("pan1");
+    // pan1.addEventListener('mousedown', function() {
+    //     document.getElementById("container").className = "";
+    //     document.getElementById("container").className = "panel1Center";
+    // }, false);
 
-    var pan2 = document.getElementById("pan2");
-    pan2.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel2Center";
-    }, false);
+    // var pan2 = document.getElementById("pan2");
+    // pan2.addEventListener('mousedown', function() {
+    //     document.getElementById("container").className = "";
+    //     document.getElementById("container").className = "panel2Center";
+    // }, false);
 
-    var pan3 = document.getElementById("pan3");
-    pan3.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel3Center";
-    }, false);
+    // var pan3 = document.getElementById("pan3");
+    // pan3.addEventListener('mousedown', function() {
+    //     document.getElementById("container").className = "";
+    //     document.getElementById("container").className = "panel3Center";
+    // }, false);
 
     //Get the parameters in the get url and expose them
     var prmstr = window.location.search.substr(1);

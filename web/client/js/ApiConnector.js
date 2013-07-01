@@ -13,7 +13,7 @@ function ApiConnector(){
 	var forumURI = "/comments?type=forum";
 	var needsURI = "/comments?type=needs";
 	var messagesURI = "/comments?type=messages";
-	var heatmapURI = "/heatmap?latDegrees=23.45&latOffset=2.0&lonDegrees=40.3&lonOffset=5.12";
+	var heatmapURI = "/heatmap?";
 	var pinsURI = "/pins";
 
 	// performs the ajax call to get our data
@@ -31,8 +31,8 @@ function ApiConnector(){
 
 
 	// ********** specific data pullers *************
-	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(){
-		var URL = BASE+heatmapURI;
+	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
+		var URL = BASE+heatmapURI+"lstDegrees="+latDegrees+"&latOffset="+latOffset+"&lonDegrees="+lonDegrees+"&lonOffset="+lonOffset;
 		this.pullApiData(URL, "JSON", "GET", updateHeatmap);
 	}
 
@@ -59,7 +59,6 @@ function ApiConnector(){
 	ApiConnector.prototype.pullTestData = function pullTestData(){
 		this.pullApiData(testurl, "JSON", "GET", updateTest);
 	}
-
 
 	// ******* DOM updaters *********** 
 	ApiConnector.prototype.updateHeatmap = function updateHeatmap(data){
@@ -94,8 +93,7 @@ function ApiConnector(){
 
 } // end ApiConnector class def
 
-function LoadingScreen(){ 
-	var loadingDiv; 
+function LoadingScreen(loadingDiv){ 
 	var isVisible; 
 
 	LoadingScreen.prototype.show = function show(){
@@ -105,7 +103,63 @@ function LoadingScreen(){
 	LoadingScreen.prototype.hide = function hide(){
 		this.loadingDiv.style.display = "none";
 	}
+} // end LoadingScreen class def
+
+function UiHandle(){
+	var currentDisplay = 0;
+
+	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(display){
+		document.getElementById("container").className = "";
+		switch(display){
+			case 0:
+				document.getElementById("container").className = "panel1Center";
+			break;
+			case 1:
+				document.getElementById("container").className = "panel2Center";
+			break;
+			case 2:
+				document.getElementById("container").className = "panel3Center";
+			break;
+			default:
+				document.getElementById("container").className = "panel1Center";
+		}
+	}
 }
 
-var connector = new ApiConnector();
-connector.testObj();
+
+function MapHandle(){
+
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+	// alert("working");
+	var connector = new ApiConnector();
+	var UI = new UiHandle();
+
+	var pan1 = document.getElementById("pan1");
+	var pan2 = document.getElementById("pan2");
+	var pan3 = document.getElementById("pan3");
+    pan1.addEventListener('mousedown', function(){
+    	UI.setActiveDisplay(0);
+    });
+    pan2.addEventListener('mousedown', function(){
+    	UI.setActiveDisplay(1)
+    });
+    pan3.addEventListener('mousedown', function(){
+    	UI.setActiveDisplay(2)
+    });
+
+    // var pan2 = document.getElementById("pan2");
+    // pan2.addEventListener('mousedown', function() {
+    //     document.getElementById("container").className = "";
+    //     document.getElementById("container").className = "panel2Center";
+    // }, false);
+
+    // var pan3 = document.getElementById("pan3");
+    // pan3.addEventListener('mousedown', function() {
+    //     document.getElementById("container").className = "";
+    //     document.getElementById("container").className = "panel3Center";
+    // }, false);
+
+});
+

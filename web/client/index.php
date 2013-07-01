@@ -1,7 +1,4 @@
-<?php
-include '../server/locationByIp.php';
-$dataArr = ipGeo();
-?>
+
 
 <!DOCTYPE html>
 <html>
@@ -20,7 +17,8 @@ $dataArr = ipGeo();
 <script src="js/markerwithlabel.js"></script>
 <script type="text/javascript" src="js/lawnchair-js.js"></script>
 <!-- <script type="text/javascript" src="js/app.js"></script> -->
-<script type="text/javascript" src="js/mapsUI.js"></script>
+<!-- <script type="text/javascript" src="js/mapsUI.js"></script> -->
+<script type="text/javascript" src="js/ApiConnector.js"></script>
 
 
 </head>
@@ -31,8 +29,8 @@ $dataArr = ipGeo();
 	</div> -->
 
 	<div id="container">
-        <input type="hidden" id="initLat" value=<? echo "'".$dataArr[0]."'"; ?> />
-        <input type="hidden" id="initLon" value=<? echo "'".$dataArr[1]."'"; ?> />
+        <input type="hidden" id="initLat" value="23" />
+        <input type="hidden" id="initLon" value=="22" />
 		<div class="panel" id="panel1">
 
             <!-- Main Page Content -->
@@ -135,75 +133,6 @@ $dataArr = ipGeo();
             <div >
             	
             	<ul id="messages" class="message"></ul>
-            	<script type="text/javascript">
-            		var beginLimit = 0;
-            		var endLimit = 10;
-
-            		//Get the parameters in the get url
-            		var prmstr = window.location.search.substr(1);
-					var prmarr = prmstr.split ("&");
-					var params = {};
-
-					for ( var i = 0; i < prmarr.length; i++) {
-    					var tmparr = prmarr[i].split("=");
-    					params[tmparr[0]] = tmparr[1];
-					}
-
-                    function showAll(where){
-                        var toAddTo = document.getElementById('messages');
-                        
-                        toAddTo.innerHTML = '';
-                        
-                        beginLimit = 0;
-                        endLimit = 20;
-                        httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+where);
-
-                        params.where = where;
-
-                        return false;
-                    }
-
-
-            		function addMessages(xmlHttp){
-            			//Yes I'm using eval. Deal.
-            			var messages = eval(xmlHttp.responseText);
-            			var toAddTo = document.getElementById('messages');
-
-            			if(typeof messages != "undefined"){
-	            			for (var i = 0; i < messages.length; i++) {
-	            				var message = document.createElement("li");
-	            				message.innerHTML = messages[i];
-	            				message.className = "message"
-	            				toAddTo.appendChild(message);
-	            				message.appendChild(document.createElement('hr'));
-	            			};
-            			}
-            		}
-
-            		function moar(){
-            			beginLimit = beginLimit + 10;
-			    		endLimit = endLimit + 10;
-			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
-            		}
-
-            		//Helper function to fetch URL contents
-					function httpGet(theUrl){
-						
-			    		var xmlHttp = null;
-			    		xmlHttp = new XMLHttpRequest();
-			    		xmlHttp.onreadystatechange = function(){addMessages(xmlHttp)};
-			    		xmlHttp.open( "GET", theUrl, true );
-			    		xmlHttp.send( null );
-					}
-
-                    recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
-                    // recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
-
-
-                    
-                    //httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
-                    
-            	</script>
             </div>
 
             <div id="moar">
