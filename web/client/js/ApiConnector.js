@@ -16,6 +16,21 @@ function ApiConnector(){
 	var heatmapURI = "/heatmap?latDegrees=23.45&latOffset=2.0&lonDegrees=40.3&lonOffset=5.12";
 	var pinsURI = "/pins";
 
+	// performs the ajax call to get our data
+	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
+		$.ajax({
+			type: QUERYTYPE,
+			url: URL,
+			dataType: DATATYPE,
+			success: function(data){
+				console.log(data);
+				CALLBACK(data);
+			}
+		});
+	} // end pullApiData
+
+
+	// ********** specific data pullers *************
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(){
 		var URL = BASE+heatmapURI;
 		this.pullApiData(URL, "JSON", "GET", updateHeatmap);
@@ -41,20 +56,12 @@ function ApiConnector(){
 		}
 	} // end pullCommentData()
 
-	// performs the ajax call to get our data
-	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
-		$.ajax({
-			type: QUERYTYPE,
-			url: URL,
-			dataType: DATATYPE,
-			success: function(data){
-				console.log(data);
-				CALLBACK(data);
-			}
-		});
-	} // end pullApiData
+	ApiConnector.prototype.pullTestData = function pullTestData(){
+		this.pullApiData(testurl, "JSON", "GET", updateTest);
+	}
 
 
+	// ******* DOM updaters *********** 
 	ApiConnector.prototype.updateHeatmap = function updateHeatmap(data){
 		alert(data);
 	}
@@ -75,12 +82,29 @@ function ApiConnector(){
 		alert(data);
 	}
 
+	ApiConnector.prototype.updateTest = function updateTest(data){
+		alert(data);
+	}
+
 	// baseline testing
 	ApiConnector.prototype.testObj = function testObj(){
 		var URL = testurl;
-		this.pullApiData(URL, "JSON", "GET", this.updateDom);
+		this.pullApiData(URL, "JSON", "GET", this.updateTest);
 	}
 
+} // end ApiConnector class def
+
+function LoadingScreen(){ 
+	var loadingDiv; 
+	var isVisible; 
+
+	LoadingScreen.prototype.show = function show(){
+		this.loadingDiv.style.display = "block";
+	}
+
+	LoadingScreen.prototype.hide = function hide(){
+		this.loadingDiv.style.display = "none";
+	}
 }
 
 var connector = new ApiConnector();
