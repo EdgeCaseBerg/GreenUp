@@ -131,10 +131,13 @@ function ApiConnector(){
 */
 function LoadingScreen(loadingDiv){ 
 	var ISVISIBLE = false;
+	this.loadingText = "Loading...";
+	var loadingTextDiv = document.getElementById("loadingText");
 
 	LoadingScreen.prototype.show = function show(){
 		this.ISVISIBLE = true;
 		loadingDiv.style.display = "block";
+		loadingTextDiv.innerHTML = window.LS.loadingText;
 	}
 
 	LoadingScreen.prototype.hide = function hide(){
@@ -144,6 +147,10 @@ function LoadingScreen(loadingDiv){
 
 	LoadingScreen.prototype.isVisible = function isVisible(){
 		return this.ISVISIBLE; 
+	}
+
+	LoadingScreen.prototype.setLoadingText = function setLoadingText(text){
+		this.loadingText = text;
 	}
 } // end LoadingScreen class def
 
@@ -332,6 +339,7 @@ function MapHandle(){
 	this.pickupMarkers = [];
 	// fire up our google map
 	MapHandle.prototype.initMap = function initMap(){
+		window.LS.setLoadingText("Please wait while the map loads");
 		window.LS.show();
 	    // define the initial location of our map
 	    centerPoint = new google.maps.LatLng(window.MAP.currentLat, window.MAP.currentLon); 
@@ -342,7 +350,7 @@ function MapHandle(){
 		  };
 
 		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-
+		  // for activating the loading screen while map loads
 		  google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
 		  google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
 		  google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);

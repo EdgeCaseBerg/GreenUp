@@ -161,6 +161,7 @@
         <div id="loadingGif">
             <img src="img/ajax-loader.gif" />
         </div>
+        <div id="loadingText" style="color:white; width:100%; text-align:center;"></div>
     </div>
 
     <ul class="nav">
