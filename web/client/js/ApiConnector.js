@@ -8,7 +8,7 @@ function ApiConnector(){
 	var markerData = []; 
 	var commentData = [];
 
-	var testurl = "../testResponse.php";
+	var testurl = "../testRespose.php";
 	var BASE = "http://greenup.xenonapps.com/api";
 
 	// api URLs
@@ -28,6 +28,26 @@ function ApiConnector(){
 			success: function(data){
 				console.log(data);
 				CALLBACK(data);
+			},
+			error: function(xhr, errorType, error){
+				// alert("error: "+xhr.status);
+				switch(xhr.status){
+					case 500:
+						// internal server error
+						break;
+					case 404:
+						// not found, stop trying
+						break;
+					case 400:
+						// bad request
+						break;
+					case 422:
+						// semantic error
+						break;
+					default:
+						alert("Error Contacting API: "+xhr.status);
+						break;
+				}
 			}
 		});
 	} // end pullApiData
@@ -442,7 +462,7 @@ document.addEventListener('DOMContentLoaded',function(){
 	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
 
 	window.ApiConnector = new ApiConnector();
-	// window.ApiConnector.pullTestData();
+	window.ApiConnector.pullTestData();
 	window.UI = new UiHandle();
 	window.UI.init();
 
@@ -452,21 +472,13 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.MAP.initMap();
 	window.logging = false;
 
-	$('#bigButton').on("click", function(){
+	document.getElementById("bigButton").addEventListener('mousedown', function(){
 		if(!window.logging){ 
 			window.GPS.start();
 		}else{
 			window.GPS.stop();
 		}
 	});
-	
-	// var time2 = window.setTimeout(function(){ls.hide()}, 1000);
-	// var time1 = window.setTimeout(function(){ls.show()}, 1500);
-	// var time3 = window.setTimeout(function(){ls.hide()}, 2000);
-	
-
-	//  loading screen controls
-	// ls.show();
 
 });
 
