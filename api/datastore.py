@@ -1,4 +1,3 @@
-# datastore entities required by API.
 # https://developers.google.com/appengine/docs/python/gettingstartedpython27/usingdatastore
 # building relationships: https://developers.google.com/appengine/articles/modeling
 
@@ -32,10 +31,6 @@ class Pins(Greenup):
 	pinType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
-
-	# latOffset = db.FloatProperty()
-	# lonOffset = db.FloatProperty()
-	# precision = db.FloatProperty()
 
 	@classmethod
 	def by_id(cls, pinId):
@@ -221,12 +216,10 @@ def initialPage():
 	commentsCursor = querySet.cursor()
 	memcache.set(initialCursorKey, commentsCursor)
 
-	# return results
-
 def paging(page):
 	'''
 		Paging works thusly:
-		Try to find the cursor key for the page passed in.
+		Try to find the cursor key for the page passed in. If you find it, look it up in cache and return it.
 		If this cursor doesn't exist, look through all of the cursors down to 1. 
 		When a hit occurs (and a hit must occur, as the first cursor and page is always read into memcache), build each page
 		and their cursors up until we reach the page requested. Then, return that page of results.
