@@ -32,6 +32,9 @@ function ApiConnector(){
 		});
 	} // end pullApiData
 
+	ApiConnector.prototype.pushApiData = function pushApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
+	}
+
 
 	// ********** specific data pullers *************
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
@@ -151,13 +154,14 @@ function UiHandle(){
 	this.MOUSEDOWN_TIME;
 	this.MOUSEUP_TIME;
 	this.markerDisplay;
+	this.isMarkerVisible = false;
+	this.isMapLoaded = false;
 
     UiHandle.prototype.init = function init(){
 	    // zepto code
 		$('#pan1').mousedown(function(){UI.setActiveDisplay(0);});
 		$('#pan2').mousedown(function(){UI.setActiveDisplay(1);});
 		$('#pan3').mousedown(function(){UI.setActiveDisplay(2);});
-
 		$('#selectPickup').mousedown(function(){window.UI.markerTypeSelect(0)});
 		$('#selectComment').mousedown(function(){window.UI.markerTypeSelect(1)});
 		$('#selectTrash').mousedown(function(){window.UI.markerTypeSelect(2)});
@@ -165,6 +169,7 @@ function UiHandle(){
 		this.markerDisplay = document.getElementById("markerTypeDialog");
 		this.toggleHeat = document.getElementById('toggleHeat');
 	    this.toggleIco = document.getElementById('toggleIcons');
+	    window.UI.toggleIco
 	    this.selectPickup = document.getElementById('selectPickup');
 	    this.selectComment = document.getElementById('selectComment');
 	    this.selectTrash = document.getElementById('selectTrash');
@@ -176,6 +181,11 @@ function UiHandle(){
 
 	UiHandle.prototype.setBigButtonText = function setBigButtonText(buttonText){
 		document.getElementById('bigButton').innerHTML = buttonText;
+	}
+
+	UiHandle.prototype.setMapLoaded = function setMapLoaded(){
+		window.MAP.isMapLoaded = true;
+		window.LS.hide();
 	}
 
 	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
@@ -199,6 +209,8 @@ function UiHandle(){
 				container.className = "panel1Center";
 		}
 	}
+
+
 
 	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerNum){
 		var markerType = "comment";
@@ -317,8 +329,10 @@ function MapHandle(){
 	this.currentZoom = 10;
 	this.markerEvent;
 	this.map;
+	this.pickupMarkers = [];
 	// fire up our google map
 	MapHandle.prototype.initMap = function initMap(){
+		window.LS.show();
 	    // define the initial location of our map
 	    centerPoint = new google.maps.LatLng(window.MAP.currentLat, window.MAP.currentLon); 
 	    var mapOptions = {
@@ -328,6 +342,10 @@ function MapHandle(){
 		  };
 
 		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+
+		  google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
+		  google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
+		  google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
 		  // our comment selector initializers
 		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.markerSelectDown);
 		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
@@ -355,16 +373,26 @@ function MapHandle(){
         	map: window.MAP.map,
         	icon: iconUrl
     	});
-    	// pickupMarkers.push(marker);
+
+    	window.MAP.pickupMarkers.push(marker);
 	}
 
 	MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
+			window.UI.isMapLoaded = false;
 		    var newcenter = new google.maps.LatLng(lat, lon);
-        	map.panTo(newcenter);
+        	window.MAP.map.panTo(newcenter);
 	}
 
 	MapHandle.prototype.toggleIcons = function toggleIcons(){
-
+		if(window.UI.isMarkerVisible){
+			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
+				window.MAP.pickupMarkers[i].setVisible(false);
+			}
+		}else{
+			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
+				window.MAP.pickupMarkers[i].setVisible(true);
+			}
+		}
 	}
 
 	MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
@@ -395,7 +423,6 @@ function MapHandle(){
 		return this.currentZoom;
 	}
 
-
 } //end MapHandle
 
 
@@ -405,11 +432,13 @@ function MapHandle(){
 */
 document.addEventListener('DOMContentLoaded',function(){
 	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+
 	window.ApiConnector = new ApiConnector();
 	// window.ApiConnector.pullTestData();
 	window.UI = new UiHandle();
 	window.UI.init();
-	window.ls = new LoadingScreen(document.getElementById("loadingScreen"));
+
+	window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
 	window.GPS = new GpsHandle();
 	window.MAP = new MapHandle();
 	window.MAP.initMap();
