@@ -150,13 +150,25 @@ function UiHandle(){
 	this.isMarkerDisplayVisible = false;
 	this.MOUSEDOWN_TIME;
 	this.MOUSEUP_TIME;
+	this.markerDisplay;
 
-	this.markerDisplay = document.getElementById("markerTypeDialog");
-	this.toggleHeat = document.getElementById('toggleHeat');
-    this.toggleIco = document.getElementById('toggleIcons');
-    this.selectPickup = document.getElementById('selectPickup');
-    this.selectComment = document.getElementById('selectComment');
-    this.selectTrash = document.getElementById('selectTrash');
+    UiHandle.prototype.init = function init(){
+	    // zepto code
+		$('#pan1').mousedown(function(){UI.setActiveDisplay(0);});
+		$('#pan2').mousedown(function(){UI.setActiveDisplay(1);});
+		$('#pan3').mousedown(function(){UI.setActiveDisplay(2);});
+
+		$('#selectPickup').mousedown(function(){window.UI.markerTypeSelect(0)});
+		$('#selectComment').mousedown(function(){window.UI.markerTypeSelect(1)});
+		$('#selectTrash').mousedown(function(){window.UI.markerTypeSelect(2)});
+
+		this.markerDisplay = document.getElementById("markerTypeDialog");
+		this.toggleHeat = document.getElementById('toggleHeat');
+	    this.toggleIco = document.getElementById('toggleIcons');
+	    this.selectPickup = document.getElementById('selectPickup');
+	    this.selectComment = document.getElementById('selectComment');
+	    this.selectTrash = document.getElementById('selectTrash');
+	}
 
 	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
 		document.getElementById('bigButton').style.backgroundColor=colorHex;
@@ -189,19 +201,37 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerNum){
+		var markerType = "comment";
+		switch(markerNum){
+			case 0:
+				markerType = "pickup";
+				break;
+			case 1:
+				markerType = "comment";
+				break;
+			case 2:
+				markerType = "trash";
+				break;
+			default: 
+				break;
+		}
 		// here we do something with the type we have selected
+		window.MAP.addMarker(markerType);
+		window.UI.markerDisplay.style.display = "none";
+		window.UI.isMarkerDisplayVisible = false;
 	}
 
 	UiHandle.prototype.markerSelectUp = function markerSelectUp(event){
-		markerEvent = event;
+		// set the coords of the marker event
+		window.MAP.markerEvent = event;
 	    MOUSEUP_TIME = new Date().getTime() / 1000;
-	    if((MOUSEUP_TIME - MOUSEDOWN_TIME) < 0.3){
+	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
 	        if(this.isMarkerDisplayVisible){
-	        	this.markerDisplay.style.display = "none";
-	        	this.isMarkerDisplayVisible = false;
+	        	window.UI.markerDisplay.style.display = "none";
+	        	window.UI.isMarkerDisplayVisible = false;
 	        }else{
-	        	this.markerDisplay.style.display = "block";
-	        	this.isMarkerDisplayVisible = true;
+	        	window.UI.markerDisplay.style.display = "block";
+	        	window.UI.isMarkerDisplayVisible = true;
 	        }
 	        this.MOUSEDOWN_TIME =0;
 	        this.MOUSEDOWN_TIME =0;
@@ -212,7 +242,8 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.markerSelectDown = function markerSelectDown(event){
-	    markerEvent = event;
+		// set the coords of the marker event
+	    window.MAP.markerEvent = event;
 	    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
 	}
 } // end UiHandle class def
@@ -284,6 +315,8 @@ function MapHandle(){
 	this.currentLat = 44.476621500000000; 
 	this.currentLon = -73.209998100000000;
 	this.currentZoom = 10;
+	this.markerEvent;
+	this.map;
 	// fire up our google map
 	MapHandle.prototype.initMap = function initMap(){
 	    // define the initial location of our map
@@ -294,21 +327,35 @@ function MapHandle(){
 		    mapTypeId: google.maps.MapTypeId.ROADMAP
 		  };
 
-		  map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 		  // our comment selector initializers
-		  google.maps.event.addListener(map, 'mousedown', window.UI.markerSelectDown);
-		  google.maps.event.addListener(map, 'mouseup', window.UI.markerSelectUp);
+		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.markerSelectDown);
+		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
 	}
 
 	MapHandle.prototype.addMarker = function addMarker(markerType){
+		var iconUrl; 
 		switch(markerType){
 			case "comment":
-			break;
+				iconUrl = "img/icons/blueCircle.png";
+				break;
 			case "pickup":
-			break;
+				iconUrl = "img/icons/greenCircle.png";
+				break;
 			case "trash":
-			break;
+				iconUrl = "img/icons/redCircle.png";
+				break;
+			default:
+				iconUrl = "img/icons/blueCircle.png";
+				break;
 		}
+
+		 var marker = new google.maps.Marker({
+        	position: this.markerEvent.latLng,
+        	map: window.MAP.map,
+        	icon: iconUrl
+    	});
+    	// pickupMarkers.push(marker);
 	}
 
 	MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
@@ -361,6 +408,7 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.ApiConnector = new ApiConnector();
 	// window.ApiConnector.pullTestData();
 	window.UI = new UiHandle();
+	window.UI.init();
 	window.ls = new LoadingScreen(document.getElementById("loadingScreen"));
 	window.GPS = new GpsHandle();
 	window.MAP = new MapHandle();
@@ -382,11 +430,6 @@ document.addEventListener('DOMContentLoaded',function(){
 
 	//  loading screen controls
 	// ls.show();
-
-	// zepto code
-	$('#pan1').mousedown(function(){UI.setActiveDisplay(0);});
-	$('#pan2').mousedown(function(){UI.setActiveDisplay(1);});
-	$('#pan3').mousedown(function(){UI.setActiveDisplay(2);});
 
 });
 
