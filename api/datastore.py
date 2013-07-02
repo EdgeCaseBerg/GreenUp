@@ -11,7 +11,7 @@
 from google.appengine.ext import db
 from handlerBase import *
 from google.appengine.api import memcache # import memcache
-import pickle
+from google.appengine.datastore import entity_pb
 
 import logging 
 
@@ -146,6 +146,7 @@ class AbstractionLayer():
 	datastore writes have been performed.
 '''
 def serialize_entities(models):
+	# http://blog.notdot.net/2009/9/Efficient-model-memcaching
 	if models is None:
 		return None
 	elif isinstance(models, db.Model):
@@ -156,6 +157,7 @@ def serialize_entities(models):
 		return [db.model_to_protobuf(x).Encode() for x in models]
 
 def deserialize_entities(data):
+	# http://blog.notdot.net/2009/9/Efficient-model-memcaching
 	 if data is None:
 		 return None
 	 elif isinstance(data, str):
@@ -211,6 +213,7 @@ def initialPage():
 	initialPageKey = 'greenup_comments_page_%s' %(1)
 
 	results = querySet[0:20]
+	# results = querySet.run(batch_size=20)
 
 	memcache.set(initialPageKey, serialize_entities(results))
 	# entities = deserialize_entities(memcache.get("somekey"))
@@ -222,13 +225,11 @@ def initialPage():
 
 def paging(page):
 	'''
-	try to get from memcache: (greenUpCommentsPage + i)
-	cache hit: send info
-	cache miss: 
-	    for j=i, j > 0 j--
-	        try to get from memcache (greenupCommentsPage + i-j)
-	        if hit return results
-	    all misses run a query and build cursors up to i.
+		Paging works thusly:
+		Try to find the cursor key for the page passed in.
+		If this cursor doesn't exist, look through all of the cursors down to 1. 
+		When a hit occurs (and a hit must occur, as the first cursor and page is always read into memcache), build each page
+		and their cursors up until we reach the page requested. Then, return that page of results.
 	'''
 	resultsPerPage = 20
 	querySet = Comments.all() # note that this hasn't been run yet
@@ -242,35 +243,57 @@ def paging(page):
 
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
-		# misses.append(currentCursorKey) # put in our first miss
-
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
 			prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(x)
 			prevPageInCache = memcache.get(prevCursorKey)
-			print prevCursorKey
 
 			if not prevPageInCache:
 				# if it isn't, then add it to the list of pages we need to create
 				misses.append(prevCursorKey)
-			else:
-				# if it is, then build all the pages we have in the misses stack 
-				print "a hit! a palpable hit!"
-				while misses:
-					# get results from datastore
-					# results = querySet[0:resultsPerPage]
-					# cursorForNextPage = getCursor(results)
-					# querySet = setCursor(querySet, cursorForNextPage)
-					# save those results in memecache with thier own key
-					print misses.pop()
 
+		# build all the pages we have in the misses stack 
+		while misses:
+			# get the cursor of the previous page
+			cursorKey = misses.pop()
+			oldNum = int(cursorKey[-1]) - 1
+			oldKey = 'greeunup_comment_paging_cursor_%s' %(oldNum)
+			cursor = memcache.get(oldKey)
+
+			# get 20 results from where we left off
+			results = querySet.with_cursor(start_cursor=cursor)
+			results = results.run(limit=resultsPerPage)
+
+			items = [item for item in results]
+
+			# save an updated cursor in cache 
+			commentsCursor = querySet.cursor()
+			memcache.set(cursorKey, commentsCursor)
+
+			# save those results in memecache with thier own key
+			pageKey = 'greenup_comments_page_%s' %(cursorKey[-1])
+			memcache.set(pageKey, serialize_entities(items))
 
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
+		prevCursor = 'greeunup_comment_paging_cursor_%s' %(page-1)
+		cursor = memcache.get(prevCursor)	
+		results = querySet.with_cursor(start_cursor=cursor)
+		results = results.run(limit=resultsPerPage)
 
+		items = [item for item in results]
 
+		# save updated cursor
+		commentsCursor = querySet.cursor()
+		memcache.set(currentCursorKey, commentsCursor)
 
+		# save results in memecache with key
+		pageKey = 'greenup_comments_page_%s' %(page)
+		memcache.set(pageKey, serialize_entities(results))
 
+		return items
 
-
-
-
+	# otherwise, just get the page out of memcache
+	print "did this instead, cause it was in the cache"
+	pageKey = "greenup_comments_page_%s" %(page)
+	results = deserialize_entities(memcache.get(pageKey))
+	return results

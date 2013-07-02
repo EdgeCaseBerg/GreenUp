@@ -62,8 +62,14 @@ class MemecacheViewer(Handler):
 		# for r in result:
 		# 	logging.info( r.message )
 		
-		# paging(5)
-		initialPage()
+		results = paging(6)
+		# for r in results:
+		# 	print r.message
+
+		# initialPage()
+		# entities = deserialize_entities(memcache.get("greenup_comments_page_1"))
+		# for e in entities:
+		# 	print e
 
 import time
 import platform
