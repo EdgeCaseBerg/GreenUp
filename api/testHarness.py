@@ -63,11 +63,7 @@ class MemecacheViewer(Handler):
 		# 	logging.info( r.message )
 		
 		# paging(5)
-		results = initialPage()
-
-		for r in results:
-			print r
-
+		initialPage()
 
 import time
 import platform

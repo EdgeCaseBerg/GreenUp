@@ -145,20 +145,24 @@ class AbstractionLayer():
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
 	datastore writes have been performed.
 '''
-# this is WAAAAY too costly
-# def repopulate():
-# 	app = Greenup()
-# 	key = Greenup.app_key()
+def serialize_entities(models):
+	if models is None:
+		return None
+	elif isinstance(models, db.Model):
+		# Just one instance
+		return db.model_to_protobuf(models).Encode()
+	else:
+		# A list
+		return [db.model_to_protobuf(x).Encode() for x in models]
 
-# 	p = Pins.all()
-# 	p.ancestor(key)
-# 	p = list(p)
-# 	setCachedData('pins', p)
-
-# 	gp = GridPoints.all()
-# 	gp.ancestor(key)
-# 	gp = list(gp)
-# 	setCachedData('gridPoints', gp)
+def deserialize_entities(data):
+	 if data is None:
+		 return None
+	 elif isinstance(data, str):
+		 # Just one instance
+		 return db.model_from_protobuf(entity_pb.EntityProto(data))
+	 else:
+		 return [db.model_from_protobuf(entity_pb.EntityProto(x)) for x in data]
 
 def setCachedData(key, val):
 	# simple wrapper for memcache.set, in case we need to extend it.
@@ -199,17 +203,22 @@ def updateCachedWrite(key):
 
 def initialPage():
 	'''
-		set up initial page in memecache and the initial cursor
+		set up initial page in memecache and the initial cursor. This will guarantee that at least one key and page will be 
+		in the cache (the first one).
 	'''
 	querySet = Comments.all()
-	initialCursorKey = 'greeunup_comment_paging_cursor_%s' %(0)
+	initialCursorKey = 'greeunup_comment_paging_cursor_%s' %(1)
+	initialPageKey = 'greenup_comments_page_%s' %(1)
 
 	results = querySet[0:20]
+
+	memcache.set(initialPageKey, serialize_entities(results))
+	# entities = deserialize_entities(memcache.get("somekey"))
 
 	commentsCursor = querySet.cursor()
 	memcache.set(initialCursorKey, commentsCursor)
 
-	return results
+	# return results
 
 def paging(page):
 	'''
@@ -227,6 +236,10 @@ def paging(page):
 	pageInCache = memcache.get(currentCursorKey)
 	misses = []
 
+	if not memcache.get('greeunup_comment_paging_cursor_1'):
+		# make sure the initial page is in cache
+		initialPage()
+
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		# misses.append(currentCursorKey) # put in our first miss
@@ -235,12 +248,14 @@ def paging(page):
 			# check to see if the page key x is in cache
 			prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(x)
 			prevPageInCache = memcache.get(prevCursorKey)
+			print prevCursorKey
 
 			if not prevPageInCache:
 				# if it isn't, then add it to the list of pages we need to create
 				misses.append(prevCursorKey)
 			else:
 				# if it is, then build all the pages we have in the misses stack 
+				print "a hit! a palpable hit!"
 				while misses:
 					# get results from datastore
 					# results = querySet[0:resultsPerPage]
