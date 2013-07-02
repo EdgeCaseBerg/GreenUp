@@ -192,10 +192,24 @@ def updateCachedWrite(key):
 		# flush, then repopulate the cache with the first page of comment data from the datastore
 		logging.info("20 writes exceeded, resetting cache. Total writes == " + str(result+1))
 		memcache.flush_all()
-		paging(1)
+		initialPage()
 		setCachedData(key, 1)
 	else:
 		setCachedData(key, result+1)
+
+def initialPage():
+	'''
+		set up initial page in memecache and the initial cursor
+	'''
+	querySet = Comments.all()
+	initialCursorKey = 'greeunup_comment_paging_cursor_%s' %(0)
+
+	results = querySet[0:20]
+
+	commentsCursor = querySet.cursor()
+	memcache.set(initialCursorKey, commentsCursor)
+
+	return results
 
 def paging(page):
 	'''
@@ -207,14 +221,15 @@ def paging(page):
 	        if hit return results
 	    all misses run a query and build cursors up to i.
 	'''
-	results = Comments.all() # note that this hasn't been run yet
+	resultsPerPage = 20
+	querySet = Comments.all() # note that this hasn't been run yet
 	currentCursorKey = 'greeunup_comment_paging_cursor_%s' %(page)
 	pageInCache = memcache.get(currentCursorKey)
 	misses = []
 
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
-		misses.append(currentCursorKey)
+		# misses.append(currentCursorKey) # put in our first miss
 
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
@@ -225,22 +240,22 @@ def paging(page):
 				# if it isn't, then add it to the list of pages we need to create
 				misses.append(prevCursorKey)
 			else:
-				# if it is, then build all the pages we have in the misses stack and return them
+				# if it is, then build all the pages we have in the misses stack 
 				while misses:
 					# get results from datastore
-					
+					# results = querySet[0:resultsPerPage]
+					# cursorForNextPage = getCursor(results)
+					# querySet = setCursor(querySet, cursorForNextPage)
 					# save those results in memecache with thier own key
+					print misses.pop()
 
-	# if not pageInCache:
-	# 	# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
-	# 	j = 1
-	# 	for x in range(page):
-	# 		prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(j)
-	# 		inCache = memcache.get(prevCursorKey)
-	# 		if inCache:
-	# 			# return the results and update the cursor
-	# 			logging.info("in the cache")
-	# 		else:
-	# 			# read the comments into memecache, set it, and update the cursor and continue the loop
-	# 			logging.info("not in the cache")
-	# 		j += 1
+
+		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
+
+
+
+
+
+
+
+

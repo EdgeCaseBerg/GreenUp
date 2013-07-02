@@ -61,7 +61,13 @@ class MemecacheViewer(Handler):
 		# result = getCachedData('pins')
 		# for r in result:
 		# 	logging.info( r.message )
-		paging(5)
+		
+		# paging(5)
+		results = initialPage()
+
+		for r in results:
+			print r
+
 
 import time
 import platform
