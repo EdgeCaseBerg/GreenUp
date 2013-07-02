@@ -207,20 +207,40 @@ def paging(page):
 	        if hit return results
 	    all misses run a query and build cursors up to i.
 	'''
-	results = Comments.all()
+	results = Comments.all() # note that this hasn't been run yet
 	currentCursorKey = 'greeunup_comment_paging_cursor_%s' %(page)
 	pageInCache = memcache.get(currentCursorKey)
-	
+	misses = []
+
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
-		j = 1
-		for x in range(page):
-			prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(j)
-			inCache = memcache.get(prevCursorKey)
-			if inCache:
-				# return the results and update the cursor
-				logging.info("in the cache")
+		misses.append(currentCursorKey)
+
+		for x in range(page - 1,0, -1):
+			# check to see if the page key x is in cache
+			prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(x)
+			prevPageInCache = memcache.get(prevCursorKey)
+
+			if not prevPageInCache:
+				# if it isn't, then add it to the list of pages we need to create
+				misses.append(prevCursorKey)
 			else:
-				# read the comments into memecache, set it, and update the cursor and continue the loop
-				logging.info("not in the cache")
-			j += 1
+				# if it is, then build all the pages we have in the misses stack and return them
+				while misses:
+					# get results from datastore
+					
+					# save those results in memecache with thier own key
+
+	# if not pageInCache:
+	# 	# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
+	# 	j = 1
+	# 	for x in range(page):
+	# 		prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(j)
+	# 		inCache = memcache.get(prevCursorKey)
+	# 		if inCache:
+	# 			# return the results and update the cursor
+	# 			logging.info("in the cache")
+	# 		else:
+	# 			# read the comments into memecache, set it, and update the cursor and continue the loop
+	# 			logging.info("not in the cache")
+	# 		j += 1
