@@ -28,94 +28,94 @@ function initialize() {
 } // end initialize
 
 
-function initializeGPS(){
-    db = Lawnchair({name : 'db'}, function(store) {
-        lawnDB = store;
-        setInterval(function() {runUpdate(store)},5000);//update user location every 5 seconds
-        setInterval(function() {upload(store)},3000);//upload locations to the server every 30 seconds
-    });
-}
+// function initializeGPS(){
+//     db = Lawnchair({name : 'db'}, function(store) {
+//         lawnDB = store;
+//         setInterval(function() {runUpdate(store)},5000);//update user location every 5 seconds
+//         setInterval(function() {upload(store)},3000);//upload locations to the server every 30 seconds
+//     });
+// }
 
-function start(){
-    logging = true;
-    initializeGPS();
-    console.log("starting...");
-    document.getElementById('startButton').style.display = 'none';
-    document.getElementById('stopButton').style.display = 'block';
-    //document.getElementById('panel1').style.backgroundImage = 'url(/client/img/icons/leaf.png)';
+// function start(){
+//     logging = true;
+//     initializeGPS();
+//     console.log("starting...");
+//     document.getElementById('startButton').style.display = 'none';
+//     document.getElementById('stopButton').style.display = 'block';
+//     //document.getElementById('panel1').style.backgroundImage = 'url(/client/img/icons/leaf.png)';
 
 
-    navigator.geolocation.getCurrentPosition(function(p){
-        var newcenter = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
-        centerPoint = newcenter;
-        map.panTo(newcenter);
-    });
+//     navigator.geolocation.getCurrentPosition(function(p){
+//         var newcenter = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+//         centerPoint = newcenter;
+//         map.panTo(newcenter);
+//     });
     
-}
+// }
 
-function recenterMap(lat, lon){
-    console.log(lon);
-    var newcenter = new google.maps.LatLng(lat, lon);
-        centerPoint = newcenter;
-        map.panTo(newcenter);
-}
+// function recenterMap(lat, lon){
+//     console.log(lon);
+//     var newcenter = new google.maps.LatLng(lat, lon);
+//         centerPoint = newcenter;
+//         map.panTo(newcenter);
+// }
 
 
-function stop(){
-    upload(lawnDB);
-    logging = false;
-    console.log("stopping...")
-    //document.getElementById('panel1').style.backgroundImage = '';
-    document.getElementById('startButton').style.display = 'block';
-    document.getElementById('stopButton').style.display= 'none';
-}
+// function stop(){
+//     upload(lawnDB);
+//     logging = false;
+//     console.log("stopping...")
+//     //document.getElementById('panel1').style.backgroundImage = '';
+//     document.getElementById('startButton').style.display = 'block';
+//     document.getElementById('stopButton').style.display= 'none';
+// }
 
 //Runs the update script:
 
-function runUpdate(database){
-    //Grab the geolocation data from the local machine
-    navigator.geolocation.getCurrentPosition(function(position) {
-          updateLocation(database, position.coords.latitude, position.coords.longitude);
-    });
-}
+// function runUpdate(database){
+//     //Grab the geolocation data from the local machine
+//     navigator.geolocation.getCurrentPosition(function(position) {
+//           updateLocation(database, position.coords.latitude, position.coords.longitude);
+//     });
+// }
 
-//Uploads all local database entries to the Server
-//Clears the local storage after upload
-function upload(database){
-    if(logging){
-        //server/addgriddata.php
+// //Uploads all local database entries to the Server
+// //Clears the local storage after upload
+// function upload(database){
+//     if(logging){
+//         //server/addgriddata.php
     
-        database.all(function(data){
-            console.log(data);
-            $.ajax({
-                type:'POST',
-                url: '../server/addGridData.php',
-                dataType:"json",
-                data: {data : data},
-                failure: function(errMsg){alert(errMsg);}
-            });//Ajax
+//         database.all(function(data){
+//             console.log(data);
+//             $.ajax({
+//                 type:'POST',
+//                 url: '../server/addGridData.php',
+//                 dataType:"json",
+//                 data: {data : data},
+//                 failure: function(errMsg){alert(errMsg);}
+//             });//Ajax
         
-            //Remove all uploaded database records
-            for(var i=1;i<data.length;i++){
-                database.remove(i);
-            }
-        });
-    }
-}
+//             //Remove all uploaded database records
+//             for(var i=1;i<data.length;i++){
+//                 database.remove(i);
+//             }
+//         });
+//     }
+// }
 
-//Updates the local couch DB with the current info
-function updateLocation(database, latitude, longitude){
-    if(logging){
-        var datetime = new Date().getTime();//generate timestamp
-        var location = {
-                "latitude" : latitude,
-                "longitude" : longitude,
-                "datetime" : datetime,
-        }
+// //Updates the local couch DB with the current info
+// function updateLocation(database, latitude, longitude){
+//     if(logging){
+//         var datetime = new Date().getTime();//generate timestamp
+//         var location = {
+//                 "latitude" : latitude,
+//                 "longitude" : longitude,
+//                 "datetime" : datetime,
+//         }
     
-        database.save({value:location});//Save the record
-    }
-};
+//         database.save({value:location});//Save the record
+//     }
+// };
 
 
 function findME(){

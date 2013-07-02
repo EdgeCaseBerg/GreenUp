@@ -93,73 +93,190 @@ function ApiConnector(){
 
 } // end ApiConnector class def
 
+/**
+* manage the loading screen
+*
+*/
 function LoadingScreen(loadingDiv){ 
-	var isVisible; 
+	var ISVISIBLE = false;
 
 	LoadingScreen.prototype.show = function show(){
-		this.loadingDiv.style.display = "block";
+		this.ISVISIBLE = true;
+		loadingDiv.style.display = "block";
 	}
 
 	LoadingScreen.prototype.hide = function hide(){
-		this.loadingDiv.style.display = "none";
+		this.ISVISIBLE = false;
+		loadingDiv.style.display = "none";
+	}
+
+	LoadingScreen.prototype.isVisible = function isVisible(){
+		return this.ISVISIBLE; 
 	}
 } // end LoadingScreen class def
+
 
 function UiHandle(){
 	var currentDisplay = 0;
 
-	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(display){
-		document.getElementById("container").className = "";
-		switch(display){
+	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
+		document.getElementById('bigButton').style.backgroundColor=colorHex;
+	}
+
+	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
+		var container = document.getElementById("container");
+		container.className = "";
+		switch(displayNum){
 			case 0:
-				document.getElementById("container").className = "panel1Center";
+				container.className = "panel1Center";
 			break;
 			case 1:
-				document.getElementById("container").className = "panel2Center";
+				container.className = "panel2Center";
 			break;
 			case 2:
-				document.getElementById("container").className = "panel3Center";
+				container.className = "panel3Center";
 			break;
 			default:
-				document.getElementById("container").className = "panel1Center";
+				dcontainer.className = "panel1Center";
 		}
 	}
 }
 
+function GpsHandle(){
+	
+	GpsHandle.prototype.initGps = function initGps(){
+    	db = Lawnchair({name : 'db'}, function(store) {
+        	lawnDB = store;
+        	setInterval(function() {this.runUpdate(store)},5000);//update user location every 5 seconds
+        	setInterval(function() {this.upload(store)},3000);//upload locations to the server every 30 seconds
+    	});
+	}
+
+	//Runs the update script:
+	GpsHandle.prototype.runUpdate = function runUpdate(database){
+	    //Grab the geolocation data from the local machine
+	    navigator.geolocation.getCurrentPosition(function(position) {
+	          this.updateLocation(database, position.coords.latitude, position.coords.longitude);
+	    });
+	}
+
+	GpsHandle.prototype.updateLocation = function updateLocation(database, latitude, longitude){
+	    if(logging){
+	        var datetime = new Date().getTime();//generate timestamp
+	        var location = {
+	                "latitude" : latitude,
+	                "longitude" : longitude,
+	                "datetime" : datetime,
+	        }
+	        database.save({value:location});//Save the record
+	    }
+	};
+
+	GpsHandle.prototype.recenterMap = function recenterMap(lat, lon){
+    	console.log(lon);
+    	var newcenter = new google.maps.LatLng(lat, lon);
+        centerPoint = newcenter;
+        map.panTo(newcenter);
+	}
+
+	GpsHandle.prototype.start = function start(){
+		document.UI.setBigButtonColor("#ff0000");
+		// logging = true;
+    	this.initGps();
+    	console.log("initializing GPS...");
+  //   	//document.getElementById('panel1').style.backgroundImage = 'url(/client/img/icons/leaf.png)';
+		navigator.geolocation.getCurrentPosition(function(p){
+  //       	var newcenter = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+  //    		centerPoint = newcenter;
+     		// map.panTo(newcenter);
+     		alert(p.coords.longitude);
+     	});
+    }
+
+
+	GpsHandle.prototype.stop = function stop(){
+    	upload(lawnDB);
+    	logging = false;
+    	console.log("stopping...");
+    	//document.getElementById('panel1').style.backgroundImage = '';
+    	document.getElementById('startButton').style.display = 'block';
+    	document.getElementById('stopButton').style.display= 'none';
+	}
+    
+
+
+	//Uploads all local database entries to the Server
+	//Clears the local storage after upload
+	GpsHandle.prototype.upload = function upload(database){
+	    if(logging){
+		        //server/addgriddata.php
+		    database.all(function(data){
+		        console.log(data);
+		        $.ajax({
+			        type:'POST',
+			        url: '../server/addGridData.php',
+			        dataType:"json",
+			        data: {data : data},
+			        failure: function(errMsg){
+			        	alert(errMsg);
+			        }
+			    });//Ajax
+			        
+			            //Remove all uploaded database records
+			    for(var i=1;i<data.length;i++){
+			        database.remove(i);
+			    }
+		    });
+		}
+	}
+} // end GpsHandle class def
+
 
 function MapHandle(){
+	// fire up our google map
+MapHandle.prototype.initMap = function initMap(centerpointLat, centerpointLon, zoom){
+    // define the initial location of our map
+    centerPoint = new google.maps.LatLng(centerpointLat, centerpointLon); 
+    var mapOptions = {
+	    zoom: zoom,
+	    center: centerPoint,
+	    mapTypeId: google.maps.MapTypeId.ROADMAP
+	  };
 
+	  map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+	  google.maps.event.addListener(map, 'mousedown', markerSelectDown);
+	  google.maps.event.addListener(map, 'mouseup', markerSelectUp);
+	}
 }
 
+
+/**
+* This is where all the action begins (once content is loaded)
+* @author Josh
+*/
 document.addEventListener('DOMContentLoaded',function(){
-	// alert("working");
-	var connector = new ApiConnector();
-	var UI = new UiHandle();
+	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+	document.connector = new ApiConnector();
+	document.UI = new UiHandle();
+	document.ls = new LoadingScreen(document.getElementById("loadingScreen"));
+	document.GPS = new GpsHandle();
 
-	var pan1 = document.getElementById("pan1");
-	var pan2 = document.getElementById("pan2");
-	var pan3 = document.getElementById("pan3");
-    pan1.addEventListener('mousedown', function(){
-    	UI.setActiveDisplay(0);
-    });
-    pan2.addEventListener('mousedown', function(){
-    	UI.setActiveDisplay(1)
-    });
-    pan3.addEventListener('mousedown', function(){
-    	UI.setActiveDisplay(2)
-    });
+	$('#bigButton').on("click", function(){ 
+		document.GPS.start();
+	});
+	
+	// var time2 = window.setTimeout(function(){ls.hide()}, 1000);
+	// var time1 = window.setTimeout(function(){ls.show()}, 1500);
+	// var time3 = window.setTimeout(function(){ls.hide()}, 2000);
+	
 
-    // var pan2 = document.getElementById("pan2");
-    // pan2.addEventListener('mousedown', function() {
-    //     document.getElementById("container").className = "";
-    //     document.getElementById("container").className = "panel2Center";
-    // }, false);
+	//  loading screen controls
+	// ls.show();
 
-    // var pan3 = document.getElementById("pan3");
-    // pan3.addEventListener('mousedown', function() {
-    //     document.getElementById("container").className = "";
-    //     document.getElementById("container").className = "panel3Center";
-    // }, false);
+
+	// $('#pan1').mousedown(function(){UI.setActiveDisplay(0);});
+	// $('#pan2').mousedown(function(){UI.setActiveDisplay(1);});
+	// $('#pan3').mousedown(function(){UI.setActiveDisplay(2);});
 
 });
 

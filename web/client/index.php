@@ -20,6 +20,28 @@
 <!-- <script type="text/javascript" src="js/mapsUI.js"></script> -->
 <script type="text/javascript" src="js/ApiConnector.js"></script>
 
+<style type="text/css">
+    #loadingScreen{
+        float:left;
+        position:absolute;
+        top:0px;
+        left:0px;
+        width:100%;
+        height:100%;
+        z-index:1000;
+        border:solid 1px green;
+        background:url("img/backgrounds/90_percent_black.png");
+        display:none;
+    }
+
+    #loadingGif{
+        height:70px;
+        width:60px;
+        margin:auto;
+        padding-top:35%;
+        /*border:solid 1px red;*/
+    }
+</style>
 
 </head>
 
@@ -46,14 +68,8 @@
 
 
                 <div class="start" id="startButton">
-                    <a id="startbutton" onclick="start">Start Cleaning Up</a>
+                    <a id="bigButton">Start Cleaning Up</a>
                 </div>
-
-
-                <div class="stop" id="stopButton" style="display: none;">   
-                    <a id="stopButton">Stop Cleaning Up</a>
-                </div>
-            
             </div>
 		</div>
 
@@ -140,6 +156,13 @@
             </div>
 		</div>
 	</div>
+
+    <div id="loadingScreen">
+        <div id="loadingGif">
+            <img src="img/ajax-loader.gif" />
+        </div>
+    </div>
+
     <ul class="nav">
         <li><a id="pan1">Home</a></li>
         <li><a id="pan2">Maps</a></li>

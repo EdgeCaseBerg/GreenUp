@@ -268,8 +268,14 @@ h1{
     background-repeat: no-repeat;
 }
 
+#bigButton{
+    cursor:pointer;
+    display:block;
+    padding:10px 20px 20px 10px;
+    background-color:#ffffff;
+}
 
-.start{
+/*.start{
     padding-top:25px;
     padding-bottom:35px;
     margin-bottom:10px;
@@ -399,7 +405,7 @@ h1{
 .stop a:active {
     position:relative;
     top:1px;
-}
+}*/
 
 
 h1{
