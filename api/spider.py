@@ -30,7 +30,7 @@ class Spider(object):
 	def followLink(self,link,withData={},httpMethod="GET"):
 		opener = urllib2.build_opener(BetterHTTPErrorProcessor)
 		if httpMethod == "POST" or httpMethod == "PUT":
-			data = json_data.encode(json.dumps(withData))
+			data = (json.dumps(withData))
 			request = urllib2.Request(link, data)
 		else:
 			#Construct get parameters
@@ -52,15 +52,18 @@ class Spider(object):
 		"""Returns an object from json returned from spiderlink, or None if the information is malformed or not there"""
 		if self.spiderlink:
 			try:
-				returnValue = json.loads(self.spiderlink.read())
+				raw = self.spiderlink.read()
+				#print raw
+				returnValue = json.loads(raw)
 				return returnValue
 			except Exception, e:
 				#Issue parsing json. Die a silent death and allow tests to fail due to None
+				print e
 				pass
 			
 
 
-def validateComments(comments_response_to_get):
+def validateCommentsGETRequest(comments_response_to_get):
 	#define filters
 	comments_params = {'type' : ['forum','needs','message'],
 	}
@@ -78,6 +81,14 @@ def validateComments(comments_response_to_get):
 			assert key in comment_response_inner_keys['comments']
 	for key in comments_response_to_get['page']:
 		assert key in comment_response_inner_keys['page']
+	return True
+
+def validateCommentsPOSTRequest(comments_response_to_post):
+	assert comments_response_to_post is not None
+	assert 'status' in comments_response_to_post
+	assert 'message' in comments_response_to_post
+	assert comments_response_to_post['status'] == 200
+	assert comments_response_to_post['message'] == "Successfuly submitted new comment"
 	return True
 
 def validateErrorMessageReturned(comments_error_response):
@@ -102,13 +113,13 @@ if __name__ == "__main__":
 	tester.followLink(endPoints['comments'])
 	assert tester.getCode() == HTTP_OK
 	comments_response_to_get = tester.getJSON()
-	validateComments(comments_response_to_get)
+	validateCommentsGETRequest(comments_response_to_get)
 	
 	#Next attempt to submit responses and verify that they are what they should be
 	tester.followLink(endPoints['comments'],withData={'type' : 'forum', 'page' : 1})
 	assert tester.getCode() == HTTP_OK
 	comments_response_to_get = tester.getJSON()
-	validateComments(comments_response_to_get)
+	validateCommentsGETRequest(comments_response_to_get)
 
 	#Give it something it should have a problem with:
 	tester.followLink(endPoints['comments'],withData={'type' : 'badvalue'})
@@ -118,9 +129,23 @@ if __name__ == "__main__":
 	#Give it another bad value that it will be ok with (it doesn't care about negatives)
 	tester.followLink(endPoints['comments'],withData={'type' : 'needs', 'page' : -2})
 	assert tester.getCode() == HTTP_OK
-	validateComments(tester.getJSON())
+	validateCommentsGETRequest(tester.getJSON())
 
-	print "Comments Endpoint Passed all assertion tests"
+	#Send a POST request to the endpoint with appropriate data
+	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : "This is a test message"},httpMethod="POST")
+	assert tester.getCode() == HTTP_OK
+	validateCommentsPOSTRequest(tester.getJSON())
+
+	#Send a bad POST request 
+	tester.followLink(endPoints['comments'],withData={"type" : "crap", "message" : "This is another test message"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['comments'],withData={"type" : "meessage", "message" : "This is another test message", "pin" : "badpinval"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	print "Comments Endpoint Passed all asserted tests"
 
 
 
