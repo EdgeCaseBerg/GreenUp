@@ -59,6 +59,11 @@ function ApiConnector(){
 	ApiConnector.prototype.pushApiData = function pushApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
 	}
 
+	ApiConnector.prototype.pushNewPin = function pushNewPin(Lat, Lon, Type, Message){
+		//zepto
+
+	}
+
 
 	// ********** specific data pullers *************
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
@@ -184,17 +189,16 @@ function UiHandle(){
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
 
-		$('#selectPickup').mousedown(function(){window.UI.markerTypeSelect(0)});
-		$('#selectComment').mousedown(function(){window.UI.markerTypeSelect(1)});
-		$('#selectTrash').mousedown(function(){window.UI.markerTypeSelect(2)});
+	    // marker type selectors
+	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
+	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
+	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
 
 		this.markerDisplay = document.getElementById("markerTypeDialog");
-		this.toggleHeat = document.getElementById('toggleHeat');
-	    this.toggleIco = document.getElementById('toggleIcons');
-	    window.UI.toggleIco
-	    this.selectPickup = document.getElementById('selectPickup');
-	    this.selectComment = document.getElementById('selectComment');
-	    this.selectTrash = document.getElementById('selectTrash');
+
+		// toggle map overlays
+		window.UI.toggleHeat = document.getElementById('toggleHeat');
+	    window.UI.toggleIcons = document.getElementById('toggleIcons');
 
 	    // for comment pagination
 	    this.commentsType = ""
@@ -210,6 +214,8 @@ function UiHandle(){
 		});
 	}
 
+
+
 	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
 		document.getElementById('bigButton').style.backgroundColor=colorHex;
 	}
@@ -223,6 +229,7 @@ function UiHandle(){
 		window.LS.hide();
 	}
 
+	// centers the appropriate panels
 	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
 		var container = document.getElementById("container");
 		container.className = "";
@@ -246,24 +253,12 @@ function UiHandle(){
 	}
 
 
-
-	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerNum){
-		var markerType = "comment";
-		switch(markerNum){
-			case 0:
-				markerType = "pickup";
-				break;
-			case 1:
-				markerType = "comment";
-				break;
-			case 2:
-				markerType = "trash";
-				break;
-			default: 
-				break;
-		}
-		// here we do something with the type we have selected
-		window.MAP.addMarker(markerType);
+	// when the user chooses which type of marker to add to the map
+	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
+		// (bug) need to get the message input from the user
+		var message = "DEFAULT MESSAGE TEXT markerTypeSelect()"; 
+		// here we add the appropriate marker to the map
+		window.MAP.addMarker(markerType, message);
 		window.UI.markerDisplay.style.display = "none";
 		window.UI.isMarkerDisplayVisible = false;
 	}
@@ -466,19 +461,25 @@ function MapHandle(){
 		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
 	}
 
-	MapHandle.prototype.addMarker = function addMarker(markerType){
+	MapHandle.prototype.addMarker = function addMarker(markerType, message){
+		var pin = new Pin();
+		pin.message = message;
 		var iconUrl; 
 		switch(markerType){
 			case "comment":
+				pin.type = "comment";
 				iconUrl = "img/icons/blueCircle.png";
 				break;
 			case "pickup":
+				pin.type = "pickup";
 				iconUrl = "img/icons/greenCircle.png";
 				break;
 			case "trash":
+				pin.type = "trash";
 				iconUrl = "img/icons/redCircle.png";
 				break;
 			default:
+				pin.type = "comment";
 				iconUrl = "img/icons/blueCircle.png";
 				break;
 		}
@@ -488,6 +489,11 @@ function MapHandle(){
         	map: window.MAP.map,
         	icon: iconUrl
     	});
+
+		pin.latDegrees = marker.lat;
+		pin.lonDegrees = marker.lng;
+		var jsp = JSON.stringify(pin);
+		alert(jsp);
 
     	window.MAP.pickupMarkers.push(marker);
 	}
@@ -539,6 +545,14 @@ function MapHandle(){
 	}
 
 } //end MapHandle
+
+// prototype objects for posting to API
+function Pin(){
+	this.latDegrees; 
+    this.lonDegrees;
+    this.type; 
+    this.message = "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?";
+}
 
 
 /**

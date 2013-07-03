@@ -18,6 +18,7 @@
 <script type="text/javascript" src="js/lawnchair-js.js"></script>
 <!-- <script type="text/javascript" src="js/app.js"></script> -->
 <!-- <script type="text/javascript" src="js/mapsUI.js"></script> -->
+<script type="text/javascript" src="js/JSON.js"></script>
 <script type="text/javascript" src="js/ApiConnector.js"></script>
 
 <style type="text/css">
@@ -146,6 +147,7 @@
                     <li><a  onclick='showAll("All"); return false;'>Show All</a></li>
                 </ul>
 
+            <!-- messages will be populated here by JS -->
             <div id="messagesContainer">
             </div>
 
