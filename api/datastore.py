@@ -1,53 +1,83 @@
-# datastore entities required by API.
 # https://developers.google.com/appengine/docs/python/gettingstartedpython27/usingdatastore
 # building relationships: https://developers.google.com/appengine/articles/modeling
+
+'''
+	Datastore entities required by the API. Entities are organized in a hierarchy much like a filesystem, with entity groups 
+	specified in order to create transactional domains, within which queries are strongly consistent. The root entity is the 
+	'campaign', with sub entities such as 'greenup' being its children. 
+'''
 
 from google.appengine.ext import db
 from handlerBase import *
 from google.appengine.api import memcache # import memcache
+from google.appengine.datastore import entity_pb
 
 import logging 
 
-'''
-	Datastore Classes (entities), prefaced by an ancestor function to make them consistent.
-'''
-def app_key(name = 'greenup'):
-	# default name being greenup. this can be changed as we expand functionality
-    return db.Key.from_path('apps', name)
+TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
+MEMCACHED_WRITE_KEY = "write_key"
+STALE_CACHE_LIMIT = 20
 
-class Greenup(db.Model):
-	'''
-		Here is our greenup database model superclass. This is done so we can expand with different classes (campaign, etc...)
-	'''
+class Campaign(db.Model):
+	pass
+
+class Greenup(Campaign):	
 	@classmethod
-	def by_id(cls, id):
-		raise NotImplementedError # override this on the child classes
+	def app_key(cls):
+	    return db.Key.from_path('apps', 'greenup')
 
-class Types(Greenup):
-	# What type of message/pin is being placed.
-	description = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
+class Pins(Greenup):
+	message = db.TextProperty()
+	pinType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
+	lat = db.FloatProperty()
+	lon = db.FloatProperty()
 
 	@classmethod
-	def by_id(cls, typeId):
-		# looks up type by id
-		return Comments.get_by_id(typeId, parent = app_key)
+	def by_id(cls, pinId):
+		return Pins.get_by_id(pinId, parent = app_key())
+
+	@classmethod
+	def by_message(cls, message):
+		bc = Pins.all().filter('message =', message).get()
+		return bc
+
+	@classmethod
+	def by_type(cls, pinType):
+		bt = Pins.all().filter('pinType =', pinType).get()
+		return bt
+
+	@classmethod
+	def by_lat(cls,lat):
+		latitudes = Pins.all().filter('lat =', lat).get()
+		return latitudes
+
+	@classmethod
+	def by_lon(cls,lon):
+		longitudes = Pins.all().filter('lon =', lon).get()
+		return longitudes
+
+class Comments(Greenup):
+	commentType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
+	message = db.TextProperty()
+	timeSent = db.DateTimeProperty(auto_now_add = True)	
+	pin = db.ReferenceProperty(Pins, collection_name ='pins')
+
+	@classmethod
+	def by_id(cls, commentId):
+		return Comments.get_by_id(commentId, parent = app_key())
 	
 	@classmethod
-	def by_descriptionType(cls,name):
-		# looks up type by its description
-		dt = Types.all().filter('description =', name).get()
-		return dt
+	def by_type(cls,cType):
+		ct = Comments.all().filter('commentType =', cType).get()
 
 class GridPoints(Greenup):
-	# GridPoints contains the points of the map grid. 
-
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
 	secondsWorked = db.FloatProperty()
 
 	@classmethod
 	def by_id(cls, gridId):
-		return GridPoints.get_by_id(gridId, parent = app_key)
+		return GridPoints.get_by_id(gridId, parent = app_key())
 
 	@classmethod
 	def by_lat(cls,lat):
@@ -59,86 +89,83 @@ class GridPoints(Greenup):
 		longitudes = GridPoints.all().filter('lon =', lon).get()
 		return longitudes
 
-class Comments(Greenup):
-	# A forum message with a particular type and timestamp, also optionally associated to a pin
-
-	commentType = db.ReferenceProperty(Types, collection_name ='types')
-	message = db.TextProperty()
-	timeSent = db.DateTimeProperty(auto_now_add = True)
+	@classmethod
+	def by_latOffset(cls, latDegrees, offset):
+		# query all points with a latitude between latDegrees and offset
+		q = GridPoints().all().filter('lat >=', latDegrees).filter('lat <=', latDegrees + offset).get()
+		return q
 
 	@classmethod
-	def by_id(cls, commentId):
-		# looks up comment by id
-		return Comments.get_by_id(commentId, parent = app_key)
-	
-	@classmethod
-	def by_commentType(cls,cType):
-		# looks up comment by comment type
-		ct = Comments.all().filter('commentType =', cType).get()
-		return ct
-
-	@classmethod
-	def get_comments(cls, retrievalAmount = 10):
-		# retrieve paginated comments using a cursor
-		results = Comments.all()
-		cursor = memcache.get('greenupCursor')
-
-		# is there already a cursor in memcache? If so, use it.
-		if cursor:
-			results.with_cursor(start_cursor=cursor)
-		
-		# retrieve the amount you want
-		resultsRetrieved = results[:retrievalAmount]
-
-		# update the cursor
-		newCursor = results.cursor()
-		memcache.set('greenupCursor', newCursor)
-
-		# send those results to the user
-		return resultsRetrieved
-
-
-class Pins(Greenup):
-	# Pins are latitude and longitude points on the map with a particular type and a comment associated with them.
-
-	comment = db.ReferenceProperty(Comments, collection_name = 'comments')
-	pinType = db.ReferenceProperty(Types, collection_name = 'pin_types')
-
-	lat = db.FloatProperty()
-	lon = db.FloatProperty()
-	
-	@classmethod
-	def by_id(cls, pinId):
-		return Pins.get_by_id(pinId, parent = app_key())
-
-	@classmethod
-	def by_comment(cls, name):
-		bc = Pins.all().filter('comment =', name).get()
-		return bc
-
-	@classmethod
-	def by_type(cls, name):
-		bt = Pins.all().filter('pinType =', name).get()
-		return bt
-
-	@classmethod
-	def by_lat(cls,name):
-		latitudes = Pins.all().filter('lat =', name).get()
-		return latitudes
-
-	@classmethod
-	def by_lon(cls,name):
-		longitudes = Pins.all().filter('lon =', name).get()
-		return longitudes
+	def by_lonOffset(cls, lonDegrees, offset):
+		# query all points with a latitude between lonDegrees and offset
+		q = GridPoints().all().filter('lon >=', lonDegrees).filter('lon <=', lonDegrees + offset).get()
+		return q
 
 '''
-	Memcache methods that the user will call instead of direct datastore queries.
+	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
 '''
-def setData(key, val):
+class AbstractionLayer():
+	appKey = ""
+
+	def __init__(self):
+		app = Greenup()
+		self.appKey = Greenup.app_key()
+
+	def getComments(self, type=None, page=None):
+		# memcache or datastore read
+		pass
+
+	def submitComments(self, commentType, message, pin=None):
+		# datastore write
+		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
+		updateCachedWrite(MEMCACHED_WRITE_KEY)
+
+	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
+		# memcache or datastore read
+		pass
+
+	def updateHeatmap(self, latDegrees, lonDegrees, secondsWorked):
+		# datastore write
+		gp = GridPoints(parent=self.appKey, lat=latDegrees, lon=lonDegrees, secondsWorked=secondsWorked).put()
+
+	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
+		# memcache or datastore read
+		pass
+
+	def submitPin(self, latDegrees, lonDegrees, pinType, message):
+		# datastore write
+		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
+
+'''
+	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
+	datastore writes have been performed.
+'''
+def serialize_entities(models):
+	# http://blog.notdot.net/2009/9/Efficient-model-memcaching
+	if models is None:
+		return None
+	elif isinstance(models, db.Model):
+		# Just one instance
+		return db.model_to_protobuf(models).Encode()
+	else:
+		# A list
+		return [db.model_to_protobuf(x).Encode() for x in models]
+
+def deserialize_entities(data):
+	# http://blog.notdot.net/2009/9/Efficient-model-memcaching
+	 if data is None:
+		 return None
+	 elif isinstance(data, str):
+		 # Just one instance
+		 return db.model_from_protobuf(entity_pb.EntityProto(data))
+	 else:
+		 return [db.model_from_protobuf(entity_pb.EntityProto(x)) for x in data]
+
+def setCachedData(key, val):
 	# simple wrapper for memcache.set, in case we need to extend it.
 	memcache.set(key, val)
 
-def getData(key):
+def getCachedData(key):
 	# wrapper for memcache get, will return none if the data wasn't found
 	result = memcache.get(key)
 
@@ -147,153 +174,119 @@ def getData(key):
 
 	return result
 
-'''
-	Test harness for reading and writing entities in the datastore.
-'''
-class MakeDatastoreTest(webapp2.RequestHandler):
-	def get(self):
-		self.response.write("write worked")
+def updateCachedWrite(key):
+	'''
+		Check and see if a key has been created in memecached to store the number of writes.
+		If it has, increment the amount of writes corresponding to that key, and check that number against some constant X.
+		If the number of writes exceeds X, then flush the cache and repopulate it (if it doesn't, then do nothing).
 
-		# Set the same parent key on each entity to ensure consistent results and add some junk data
-		types = Types(parent = app_key(), description = "Help Needed")
-		gridPoints = GridPoints(parent = app_key(), lat = 1.0, lon = 2.0, secondsWorked = 10.0)
-		comments = Comments(parent = app_key(), message = 'this is a message')
-		pins = Pins(parent = app_key(), lat= 1.1, lon= 1.2)
+		If the key hasn't been created, create it and update the writes saved to 1.
+	'''
+	result = getCachedData(key)
 
-		# put the junk data in the datastore
-		types.put()
-		gridPoints.put()
-		comments.put()
-		pins.put()
+	if(not result):
+		setCachedData(key, 1)
+		return True
 
-		# test out relational modelling
-		types = Types(parent = app_key(), description = "General Message")
-		types.put()
-		Comments(parent=app_key(), commentType = types, message='i hope this works').put()
+	result = int(result)
+	if(result+1 > STALE_CACHE_LIMIT):
+		# flush, then repopulate the cache with the first page of comment data from the datastore
+		logging.info("20 writes exceeded, resetting cache. Total writes == " + str(result+1))
+		memcache.flush_all()
+		initialPage()
+		setCachedData(key, 1)
+	else:
+		setCachedData(key, result+1)
 
+def initialPage():
+	'''
+		set up initial page in memecache and the initial cursor. This will guarantee that at least one key and page will be 
+		in the cache (the first one).
+	'''
+	querySet = Comments.all()
+	initialCursorKey = 'greeunup_comment_paging_cursor_%s' %(1)
+	initialPageKey = 'greenup_comments_page_%s' %(1)
 
-class DisplayDatastoreTest(webapp2.RequestHandler):
-	def get(self):
-		self.response.write("check logs for read")
-		# types
-		logging.info("## Types ##")
-		types_query = Types.all()
-		types_query.ancestor(app_key())
-		for types in types_query.run():
-			logging.info(types.description)
+	results = querySet[0:20]
+	# results = querySet.run(batch_size=20)
 
-		types_query = Types.by_descriptionType('Help Needed')
-		logging.info(types_query.description)
+	memcache.set(initialPageKey, serialize_entities(results))
+	# entities = deserialize_entities(memcache.get("somekey"))
 
-		# gridPoints
-		logging.info("## GridPoints ##")
-		gridPoints_query = GridPoints.all()
-		gridPoints_query.ancestor(app_key())
+	commentsCursor = querySet.cursor()
+	memcache.set(initialCursorKey, commentsCursor)
 
-		for gridPoints in gridPoints_query.run():
-			logging.info('lat= %s, lon= %s, secondsWorked=%s' %(str(gridPoints.lat), str(gridPoints.lon), str(gridPoints.secondsWorked)) )
+def paging(page):
+	'''
+		Paging works thusly:
+		Try to find the cursor key for the page passed in. If you find it, look it up in cache and return it.
+		If this cursor doesn't exist, look through all of the cursors down to 1. 
+		When a hit occurs (and a hit must occur, as the first cursor and page is always read into memcache), build each page
+		and their cursors up until we reach the page requested. Then, return that page of results.
+	'''
+	resultsPerPage = 20
+	querySet = Comments.all() # note that this hasn't been run yet
+	currentCursorKey = 'greeunup_comment_paging_cursor_%s' %(page)
+	pageInCache = memcache.get(currentCursorKey)
+	misses = []
 
-		# comments
-		logging.info("## Comments ##")
-		comments_query = Comments.all()
-		comments_query.ancestor(app_key())
+	if not memcache.get('greeunup_comment_paging_cursor_1'):
+		# make sure the initial page is in cache
+		initialPage()
 
-		for comments in comments_query.run():
-			logging.info(comments.message)
+	if not pageInCache:
+		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
+		for x in range(page - 1,0, -1):
+			# check to see if the page key x is in cache
+			prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(x)
+			prevPageInCache = memcache.get(prevCursorKey)
 
-		# pins
-		logging.info("## Pins ##")
-		pins_query = Pins.all()
-		pins_query.ancestor(app_key())
+			if not prevPageInCache:
+				# if it isn't, then add it to the list of pages we need to create
+				misses.append(prevCursorKey)
 
-		for pins in pins_query.run():
-			logging.info('lat= %s, lon=%s' %(str(pins.lat), str(pins.lon)) )
+		# build all the pages we have in the misses stack 
+		while misses:
+			# get the cursor of the previous page
+			cursorKey = misses.pop()
+			oldNum = int(cursorKey[-1]) - 1
+			oldKey = 'greeunup_comment_paging_cursor_%s' %(oldNum)
+			cursor = memcache.get(oldKey)
 
-import time
-import pickle
-import platform
+			# get 20 results from where we left off
+			results = querySet.with_cursor(start_cursor=cursor)
+			results = results.run(limit=resultsPerPage)
 
-class MemcacheVsDatastore(webapp2.RequestHandler):
-	def get(self):
-		#This primes the pump for any non-unix machines (http://docs.python.org/2/library/time.html)
-		if( platform.system().lower().find("win") > -1 and platform.system().lower().find("win") < 3):
-			#win < 3 because of darwin
-			time.clock()
-			
+			items = [item for item in results]
 
+			# save an updated cursor in cache 
+			commentsCursor = querySet.cursor()
+			memcache.set(cursorKey, commentsCursor)
 
-		#delete the datastore entities
-		db.delete(db.Query(keys_only=True))
+			# save those results in memecache with thier own key
+			pageKey = 'greenup_comments_page_%s' %(cursorKey[-1])
+			memcache.set(pageKey, serialize_entities(items))
 
-		#Place a single entity into the datastore
-		firstPin = Pins(parent = app_key(), lat=0.0,lon=2.3).put()
-		fpID = firstPin.id()
-		
-		#time how long it takes to retrieve the pin from the datastore using it's key id
-		#We use 1000 times to really make a difference
-		beforeTime = time.clock()
-		for i in range(0,1000):
-			Pins.by_id(fpID)
-		afterTime = time.clock()
-		datastoreRetrieval1 = (afterTime - beforeTime)/1000
+		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
+		prevCursor = 'greeunup_comment_paging_cursor_%s' %(page-1)
+		cursor = memcache.get(prevCursor)	
+		results = querySet.with_cursor(start_cursor=cursor)
+		results = results.run(limit=resultsPerPage)
 
+		items = [item for item in results]
 
-		#Place the same entiry into the memcache
-		setData(str(fpID),firstPin)
-		beforeTime = time.clock()
-		for i in range(0,1000):
-			getData(str(fpID))
-		afterTime = time.clock()
+		# save updated cursor
+		commentsCursor = querySet.cursor()
+		memcache.set(currentCursorKey, commentsCursor)
 
-		memcacheRetrieval1 = (afterTime - beforeTime)/1000
+		# save results in memecache with key
+		pageKey = 'greenup_comments_page_%s' %(page)
+		memcache.set(pageKey, serialize_entities(results))
 
-		logging.info("First Round of tests done. ")
-		logging.info("Results: Datastore: %s Memcache: %s" % (str(datastoreRetrieval1),str(memcacheRetrieval1)))
-		
-		#Add 100,000 entries to the datastore and construct the entity that will be placed into the memcache
-		logging.info("Creating 10,000 Datastore entities")
-		memPins = []
-		for i in range(0,10000):
-			pins = Pins(parent = app_key(), lat= 1.1, lon= 1.2)
-			memPins.append(pins)
-			pins.put()
-			setData(str(fpID),pins)
-		logging.info("Finished creating 10,000 datastore entities")
+		return items
 
-		
-		#Now time how long it takes to retrieve a pin	
-		#From the datastore
-		beforeTime = time.clock()
-		for i in range(0,1000):
-			Pins.by_id(fpID)
-		afterTime = time.clock()
-		datastoreRetrieval2 = (afterTime - beforeTime)/1000
-		
-		#From the memcache
-		beforeTime = time.clock()
-		for i in range(0,1000):
-			getData(str(fpID))
-		afterTime = time.clock()
-		memcacheRetrieval2 = (afterTime - beforeTime)/1000
-
-		logging.info("Second Round of tests done. ")
-		logging.info("Results: Datastore: %s Memcache %s" % (str(datastoreRetrieval2),str(memcacheRetrieval2)))
-		
-		#Now we need to know how long it takes to serialize and deserialize the memcache
-		f = open('datafile','w')
-		beforeTime = time.clock()
-		pickle.dump(memPins,f)
-		afterTime = time.clock()
-		timeToSerialize = beforeTime - afterTime
-
-		a = open('datafile','r')
-		beforeTime = time.clock()
-		pickle.load(a)
-		afterTime = time.clock()
-		timeToLoad = beforeTime - time.clock()
-
-		#Display results in log
-		logging.info("Serialization Test Complete")
-		logging.info("Writing: %s " % str(timeToSerialize))
-		logging.info("Reading: %s " % str(timeToLoad))
-
+	# otherwise, just get the page out of memcache
+	print "did this instead, cause it was in the cache"
+	pageKey = "greenup_comments_page_%s" %(page)
+	results = deserialize_entities(memcache.get(pageKey))
+	return results

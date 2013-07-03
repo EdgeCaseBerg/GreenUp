@@ -216,7 +216,7 @@ class Pins(webapp2.RequestHandler):
 		#Don't know what to do about the message. perhaps just escape it or something I guess?
 
 		#Place the pin into the datastore
-
+		
 
 		#self.response.set_status(api.HTTP_OK)		
 		self.response.write('{  "status" : 200,  "message" : "Successful submit",}')
