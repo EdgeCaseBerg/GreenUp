@@ -66,6 +66,7 @@ function ApiConnector(){
 			data: jsonObj,
 			dataType: "json",
 			success: function(data){
+				console.log("INFO: Pin successfully sent")
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
@@ -76,6 +77,10 @@ function ApiConnector(){
 						// consider leaving app
 						console.log("Error: api response = 500");
 						break;
+					case 503:
+						console.log("Service Unavailable");
+						break;
+
 					case 404:
 						// not found, stop trying
 						// consider leaving app
@@ -290,7 +295,7 @@ function UiHandle(){
 	// when the user chooses which type of marker to add to the map
 	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
 		// (bug) need to get the message input from the user
-		var message = "DEFAULT MESSAGE TEXT markerTypeSelect()"; 
+		var message = "DEFAULT MESSAGE TEXT"; 
 		// here we add the appropriate marker to the map
 		window.MAP.addMarker(markerType, message);
 		window.UI.markerDisplay.style.display = "none";
@@ -517,6 +522,9 @@ function MapHandle(){
 				iconUrl = "img/icons/blueCircle.png";
 				break;
 		}
+
+		// test "bad type" response
+		// pin.type = "bullshit";
 
 		 var marker = new google.maps.Marker({
         	position: this.markerEvent.latLng,
