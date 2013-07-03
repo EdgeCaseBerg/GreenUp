@@ -8,13 +8,13 @@ function ApiConnector(){
 	var markerData = []; 
 	var commentData = [];
 
-	var testurl = "../testRespose.php";
-	var BASE = "http://greenup.xenonapps.com/api";
+	var BASE = "http://localhost/apiProxy";
+	// var BASE = "http://greenup.xenonapps.com/api";
 
 	// api URLs
 	var forumURI = "/comments?type=forum";
 	var needsURI = "/comments?type=needs";
-	var messagesURI = "/comments?type=messages";
+	var messagesURI = "/comments?type=message";
 	var heatmapURI = "/heatmap?";
 	var pinsURI = "/pins";
 
@@ -26,7 +26,6 @@ function ApiConnector(){
 			url: URL,
 			dataType: DATATYPE,
 			success: function(data){
-				console.log(data);
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
@@ -35,16 +34,19 @@ function ApiConnector(){
 					case 500:
 						// internal server error
 						// consider leaving app
+						console.log("Error: api response = 500");
 						break;
 					case 404:
 						// not found, stop trying
 						// consider leaving app
+						console.log('Error: api response = 404');
 						break;
 					case 400:
 						// bad request
+						console.log("Error: api response = 400");
 						break;
 					case 422:
-						// semantic error
+						console.log("Error: api response = 422");
 						break;
 					default:
 						alert("Error Contacting API: "+xhr.status);
@@ -61,31 +63,35 @@ function ApiConnector(){
 	// ********** specific data pullers *************
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
 		var URL = BASE+heatmapURI+"lstDegrees="+latDegrees+"&latOffset="+latOffset+"&lonDegrees="+lonDegrees+"&lonOffset="+lonOffset;
-		this.pullApiData(URL, "JSON", "GET", updateHeatmap);
+		this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
 		var URL = BASE+heatmapURI;
-		this.pullApiData(URL, "JSON", "GET", updateMarker);
+		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
 	}
 
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType){
-		var commentsUrl = "";
 		switch(commentType){
 			case "needs":
-				this.pullApiData(BASE+needsURI, "JSON", "GET", updateNeeds);
+				this.pullApiData(BASE+needsURI, "JSON", "GET", window.UI.updateNeeds);
 				break;
 			case "messages":
-				this.pullApiData(BASE+messagesURI, "JSON", "GET", updateMessages);
+				this.pullApiData(BASE+messagesURI, "JSON", "GET",  window.UI.updateMessages);
 				break;
 			default:
-				this.pullApiData(BASE+forumURI, "JSON", "GET", updateForum);
+				this.pullApiData(BASE+forumURI, "JSON", "GET",  window.UI.updateForum);
 				break;
 		}
 	} // end pullCommentData()
 
 	ApiConnector.prototype.pullTestData = function pullTestData(){
-		this.pullApiData(testurl, "JSON", "GET", this.updateTest);
+		this.pullApiData(BASE, "JSON", "GET", this.updateTest);
+		this.pullCommentData("needs");
+		this.pullCommentData("messages");
+		this.pullCommentData("");
+		this.pullHeatmapData();
+		this.pullMarkerData();
 	}
 
 	//Uploads all local database entries to the Server
@@ -114,30 +120,7 @@ function ApiConnector(){
 		}
 	}
 
-	// ******* DOM updaters *********** 
-	ApiConnector.prototype.updateHeatmap = function updateHeatmap(data){
-		alert(data);
-	}
-
-	ApiConnector.prototype.updateMarker = function updateMarker(data){
-		alert(data);
-	}
-
-	ApiConnector.prototype.updateMessages = function updateMessages(data){
-		alert(data);
-	}
-
-	ApiConnector.prototype.updateNeeds = function updateNeeds(data){
-		alert(data);
-	}
-
-	ApiConnector.prototype.updateForum = function updateForum(data){
-		alert(data);
-	}
-
-	ApiConnector.prototype.updateTest = function updateTest(data){
-		alert(data);
-	}
+	
 
 	// baseline testing
 	ApiConnector.prototype.testObj = function testObj(){
@@ -286,6 +269,31 @@ function UiHandle(){
 		// set the coords of the marker event
 	    window.MAP.markerEvent = event;
 	    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
+	}
+
+	// ******* DOM updaters *********** 
+	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
+		console.log(data);
+	}
+
+	UiHandle.prototype.updateMarker = function updateMarker(data){
+		console.log(data);
+	}
+
+	UiHandle.prototype.updateMessages = function updateMessages(data){
+		console.log(data);
+	}
+
+	UiHandle.prototype.updateNeeds = function updateNeeds(data){
+		console.log(data);
+	}
+
+	UiHandle.prototype.updateForum = function updateForum(data){
+		console.log(data);
+	}
+
+	UiHandle.prototype.updateTest = function updateTest(data){
+		console.log(data);
 	}
 } // end UiHandle class def
 
@@ -464,15 +472,15 @@ document.addEventListener('DOMContentLoaded',function(){
 	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
 
 	window.ApiConnector = new ApiConnector();
-	window.ApiConnector.pullTestData();
 	window.UI = new UiHandle();
 	window.UI.init();
-
 	window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
 	window.GPS = new GpsHandle();
 	window.MAP = new MapHandle();
 	window.MAP.initMap();
 	window.logging = false;
+
+	window.ApiConnector.pullTestData();
 
 	document.getElementById("bigButton").addEventListener('mousedown', function(){
 		if(!window.logging){ 
