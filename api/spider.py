@@ -20,6 +20,8 @@ class BetterHTTPErrorProcessor(urllib2.BaseHandler):
     # that doesn't raise exceptions on status codes 201,204,206
     def http_error_200(self, request, response, code, msg, hdrs):
         return response
+    def http_error_400(self, request, response, code, msg, hdrs):
+        return response
     def http_error_422(self, request, response, code, msg, hdrs):
         return response
     def http_error_503(self, request, response, code, msg, hdrs):
@@ -103,7 +105,7 @@ def validateHeatmapPUTRequest(heatmap_response_to_put):
 	assert 'status' in heatmap_response_to_put
 	assert 'message' in heatmap_response_to_put
 	assert heatmap_response_to_put['status'] == 200
-	assert heatmap_response_to_put['message'] == "Successfuly submit"
+	assert heatmap_response_to_put['message'] == "Successful submit"
 	return True
 
 def validateErrorMessageReturned(comments_error_response):
@@ -165,10 +167,74 @@ if __name__ == "__main__":
 	#Default GET + no parameters
 	tester.followLink(endPoints['heatmap'])
 	assert tester.getCode() == HTTP_OK
-	validateHeatmapGETRequest(tester.getJSON)
+	validateHeatmapGETRequest(tester.getJSON())
 
-	#Get with some parameters
-	tester.followLink(endPoints['heatmap'],withData={})
+	#Default GET + bad latDegrees parameter
+	tester.followLink(endPoints['heatmap'],withData={"latDegrees" : 191})
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#GET with bad lonDegrees
+	tester.followLink(endPoints['heatmap'],withData={"lonDegrees" : 91})
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#get with bad offset (only one given)
+	tester.followLink(endPoints['heatmap'],withData={"latDegrees" : 1.2, "lonDegrees" : 4.5, "lonOffset" : 6})
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#get with good offsets, but not degrees
+	tester.followLink(endPoints['heatmap'],withData={"lonOffset" : 4, "latOffset" : 2})
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#Good get request with parameters
+	tester.followLink(endPoints['heatmap'],withData={"latDegrees" : -25.4, "lonDegrees" : 43.2, "latOffset" : 4,"lonOffset" : 2})
+	assert tester.getCode() == HTTP_OK
+	validateHeatmapGETRequest(tester.getJSON())
+
+	#Get with JUST precision (like a get all, but for a given precision)
+	tester.followLink(endPoints['heatmap'],withData={"precision" : 4})
+	assert tester.getCode() == HTTP_OK
+	validateHeatmapGETRequest(tester.getJSON())
+
+	#PUT requests to server checking
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_OK
+	validateHeatmapPUTRequest(tester.getJSON())
+
+	#Bad PUT request
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : -231, "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())	
+
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : -31, "lonDegrees" : -92, "secondsWorked" : 45}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())	
+
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 32, "secondsWorked" : -45}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())	
+
+	tester.followLink(endPoints['heatmap'],withData=[{ "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())	
+
+	tester.followLink(endPoints['heatmap'],withData=[{ "latDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())	
+
+	tester.followLink(endPoints['heatmap'],withData=[{ "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())	
+
+	tester.followLink(endPoints['heatmap'],withData=[{ "lonDegrees" : 32, "latDegrees" : 4}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())	
+
+	print "Heatmap endpoint Passed all assertion tests"
+
 
 	
 
