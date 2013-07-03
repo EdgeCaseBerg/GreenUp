@@ -81,8 +81,8 @@ class Comments(webapp2.RequestHandler):
 			info['message']
 		except Exception, e:
 			#The request body lacks proper keys
-				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "Required keys not present in request"}')
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(json.dumps({"Error_Message" : "Required keys not present in request"}))
 			return
 
 		#Request has proper required keys
@@ -94,7 +94,7 @@ class Comments(webapp2.RequestHandler):
 			pass
 		else:
 			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{ "Error_Message" : "Unrecognized Type" }')
+			self.response.write(json.dumps({ "Error_Message" : "Unrecognized Type" }))
 			return
 
 
@@ -102,15 +102,16 @@ class Comments(webapp2.RequestHandler):
 		try:
 			info['pin']
 			pin = int(info['pin'])
+		except ValueError, v:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{ "Error_Message" : "If pin information is sent in a request, it must be a numeric id" }')
 		except Exception, e:
 			#Die silently if the pin is not there as it is optional
 			pass
 		
 		#All information present and valid. Store information in the database
-		
 
-		#self.response.write('{"status" : %i, "message" : "Successfuly submitted new comment" }')
-		self.response.write('{"status": %i, "message" : "" ' % api.HTTP_NOT_IMPLEMENTED)
+		self.response.write('{"status" : %i, "message" : "Successfuly submitted new comment" }' % api.HTTP_OK)
 
 		
 

@@ -326,7 +326,7 @@ URL: **/api/pins**
     <tbody>
         <tr><td>latDegrees</td><td>float</td><td>The latitude coordinate of the pin in Decimal Degrees, values must range between -90.0 and 90.0</td></tr>
         <tr><td>lonDegrees</td><td>float</td><td>The longitude coordinate of the pin in Decimal Degrees, values must range between -180.0 and 180.0</td></tr>
-        <tr><td> type </td><td>String </td><td> Can be either `trash`, `needs`, or `message` </td></tr>
+        <tr><td> type </td><td>String </td><td> Can be either `general message`, `help needed`, or `trash pickup` </td></tr>
         <tr><td>message</td><td>String</td><td>The message associated with this pin</td></tr>
     </tbody>
 </table>
@@ -339,7 +339,7 @@ URL: **/api/pins**
 {
     "latDegrees" : 24.53, 
     "lonDegrees" : 43.2, 
-    "type" : "trash", 
+    "type" : "trash pickup", 
     "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?"
 }
 ```
