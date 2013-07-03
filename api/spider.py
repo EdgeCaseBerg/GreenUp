@@ -97,7 +97,6 @@ if __name__ == "__main__":
 	}
 
 
-
 	#Test the comment endpoint:
 	tester = Spider()
 	tester.followLink(endPoints['comments'])
@@ -116,7 +115,12 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())
 
+	#Give it another bad value that it will be ok with (it doesn't care about negatives)
+	tester.followLink(endPoints['comments'],withData={'type' : 'needs', 'page' : -2})
+	assert tester.getCode() == HTTP_OK
+	validateComments(tester.getJSON())
 
+	print "Comments Endpoint Passed all assertion tests"
 
 
 
