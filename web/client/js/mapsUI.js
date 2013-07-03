@@ -186,21 +186,21 @@ function initHeatMap(heatData){
 }
 
 
-// fire up our google map
-function initMap(centerpointLat, centerpointLon, zoom){
-    // define the initial location of our map
-    centerPoint = new google.maps.LatLng(centerpointLat, centerpointLon); 
-    var mapOptions = {
-    zoom: zoom,
-    center: centerPoint,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
+// // fire up our google map
+// function initMap(centerpointLat, centerpointLon, zoom){
+//     // define the initial location of our map
+//     centerPoint = new google.maps.LatLng(centerpointLat, centerpointLon); 
+//     var mapOptions = {
+//     zoom: zoom,
+//     center: centerPoint,
+//     mapTypeId: google.maps.MapTypeId.ROADMAP
+//   };
 
-  map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-  google.maps.event.addListener(map, 'mousedown', markerSelectDown);
-  google.maps.event.addListener(map, 'mouseup', markerSelectUp);
+//   map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+//   google.maps.event.addListener(map, 'mousedown', markerSelectDown);
+//   google.maps.event.addListener(map, 'mouseup', markerSelectUp);
 
-}
+// }
 
 function initIcons(){
     var pickupIcon = "img/icons/greenCircle.png";

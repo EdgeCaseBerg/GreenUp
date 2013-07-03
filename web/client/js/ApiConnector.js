@@ -34,9 +34,11 @@ function ApiConnector(){
 				switch(xhr.status){
 					case 500:
 						// internal server error
+						// consider leaving app
 						break;
 					case 404:
 						// not found, stop trying
+						// consider leaving app
 						break;
 					case 400:
 						// bad request
