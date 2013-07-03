@@ -4,6 +4,11 @@ from datastore import *
 
 import webapp2
 
+TESTING = True
+
+if TESTING:
+	from testHarness import *
+
 """ Constants for use in response codes declared here """
 HTTP_NOT_IMPLEMENTED = 503
 HTTP_OK = 200
@@ -25,19 +30,20 @@ class SemanticError(Exception):
 	def __str__(self):
 		return repr(self.message)
 
-class API(webapp2.RequestHandler):
+class API(Handler):
 
 	def get(self):
 		#Display API information
 		info = json.dumps({"version" : 1.00, "powered by" : "Xenon Apps"})
 		self.response.set_status(200,info)
-		self.response.out.write(info)
+		self.write(info)
 
 		
 #This is the catch all #('.*', API)
 application = webapp2.WSGIApplication([
 										('/api', API), 
-										('/MakeDatastoreTest', MakeDatastoreTest),
-										('/DisplayDatastoreTest', DisplayDatastoreTest),
-										('/CacheTest',MemcacheVsDatastore)
+										('/api/writeTest', WriteTest),
+										('/api/readTest', ReadTest),
+										('/api/cacheTest', MemcacheVsDatastore),
+										('/api/cacheView', MemecacheViewer)
 									], debug=True)
