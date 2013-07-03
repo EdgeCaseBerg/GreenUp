@@ -7,6 +7,8 @@
 import urllib2
 import json
 
+import numbers
+
 #Temporary in here
 HTTP_NOT_IMPLEMENTED = 503
 HTTP_OK = 200
@@ -65,8 +67,6 @@ class Spider(object):
 
 def validateCommentsGETRequest(comments_response_to_get):
 	#define filters
-	comments_params = {'type' : ['forum','needs','message'],
-	}
 	comment_response_keys = ['comments','page']
 	comment_response_inner_keys = {'comments' : ['type','message','timestamp','pin','id'],
 									'page' : ['next','previous']
@@ -89,6 +89,21 @@ def validateCommentsPOSTRequest(comments_response_to_post):
 	assert 'message' in comments_response_to_post
 	assert comments_response_to_post['status'] == 200
 	assert comments_response_to_post['message'] == "Successfuly submitted new comment"
+	return True
+
+def validateHeatmapGETRequest(heatmap_response_to_get):
+	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked']
+	for gridzone in heatmap_response_to_get:
+		for key,value in heatmap_response_to_get.iteritems():
+			assert key in heatmap_response_keys
+			assert isinstance(value,numbers.Number)
+
+def validateHeatmapPUTRequest(heatmap_response_to_put):
+	assert heatmap_response_to_put is not None
+	assert 'status' in heatmap_response_to_put
+	assert 'message' in heatmap_response_to_put
+	assert heatmap_response_to_put['status'] == 200
+	assert heatmap_response_to_put['message'] == "Successfuly submit"
 	return True
 
 def validateErrorMessageReturned(comments_error_response):
@@ -147,23 +162,13 @@ if __name__ == "__main__":
 
 	print "Comments Endpoint Passed all asserted tests"
 
+	#Default GET + no parameters
+	tester.followLink(endPoints['heatmap'])
+	assert tester.getCode() == HTTP_OK
+	validateHeatmapGETRequest(tester.getJSON)
 
-
-	heatmap_pin_params = {
-		'latDegrees' : [-191, -180, 2.3, 0, 180, 180.1,'bad'],
-		'lonDegrees' : [2.3, -4.5, 91.1, -91, 20,-20.4,'bad'],
-		'lonOffset' : [-1, 4, 'bad'],
-		'latOffset' : [-1, 4, 'good'],
-		'precision' : [-1, 0 ,6, 'badvalue']
-	}
-
-	heatmap_put_params = {'tests' : [ [], 
-					{}, 
-					[{},{}], 
-					[{'latDegrees' : 4, 'lonDegrees' : 5, 'secondsWorked' : 50}],
-					[{'latDegrees' : 4, 'lonDegrees' : 'bad5', 'secondsWorked' : 50}], 
-		]
-	}
+	#Get with some parameters
+	tester.followLink(endPoints['heatmap'],withData={})
 
 	
 
