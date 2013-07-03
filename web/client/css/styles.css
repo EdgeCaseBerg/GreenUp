@@ -279,6 +279,37 @@ h1{
     background-color:#ffffff;
 }
 
+/*    -------------------- messages ------- */
+.nextPrev{
+    display:inline-block;
+    width:40%;
+    border:solid 2px white;
+    padding:5px 10px 5px 10px;
+    cursor:pointer;
+}
+
+#messagesContainer{
+    border:solid 1px green;
+    width:90%;
+    margin:auto;
+}
+
+.messageListItem{
+    margin-top:3px;
+    color:#fff;
+    padding:3px 5px 10px 5px;
+}
+
+.commentDateContainer{
+    font-size:0.7em;
+    color:#ccc;
+    float:right;
+}
+
+.messageContentContainer{
+    margin-top:10px;
+}
+
 
 h1{
     text-align: center;

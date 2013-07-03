@@ -146,13 +146,12 @@
                     <li><a  onclick='showAll("All"); return false;'>Show All</a></li>
                 </ul>
 
-            <div >
-            	
-            	<ul id="messages" class="message"></ul>
+            <div id="messagesContainer">
             </div>
 
             <div id="moar">
-            	<a href="#moar" onclick=moar();><h2>Load More</h2></a>
+                <div class="nextPrev" id="prevPage">Prev</div>
+            	<div class="nextPrev" id="nextPage">Next</div>
             </div>
 		</div>
 	</div>

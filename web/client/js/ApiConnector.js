@@ -71,25 +71,34 @@ function ApiConnector(){
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
 	}
 
-	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType){
+	// by passing the url as an argument, we can use this method to get next pages
+	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
+		var urlStr = "";
 		switch(commentType){
 			case "needs":
-				this.pullApiData(BASE+needsURI, "JSON", "GET", window.UI.updateNeeds);
+				(url == null) ? (urlStr = BASE+needsURI) : (urlStr = url);
+				this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
 				break;
 			case "messages":
-				this.pullApiData(BASE+messagesURI, "JSON", "GET",  window.UI.updateMessages);
+				(url == null) ? (urlStr = BASE+messagesURI) : (urlStr = url);
+				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
+				break;
+			case "forum":
+				(url == null) ? (urlStr = BASE+forumURI) : (urlStr = url);
+				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 			default:
-				this.pullApiData(BASE+forumURI, "JSON", "GET",  window.UI.updateForum);
+				(url == null) ? (urlStr = BASE+forumURI) : (urlStr = url);
+				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 		}
 	} // end pullCommentData()
 
 	ApiConnector.prototype.pullTestData = function pullTestData(){
-		this.pullApiData(BASE, "JSON", "GET", this.updateTest);
-		this.pullCommentData("needs");
-		this.pullCommentData("messages");
-		this.pullCommentData("");
+		this.pullApiData(BASE, "JSON", "GET", window.UI.updateTest);
+		this.pullCommentData("needs", null);
+		this.pullCommentData("messages", null);
+		this.pullCommentData("", null);
 		this.pullHeatmapData();
 		this.pullMarkerData();
 	}
@@ -170,10 +179,11 @@ function UiHandle(){
 	this.isMapLoaded = false;
 
     UiHandle.prototype.init = function init(){
-	    // zepto code
-		$('#pan1').mousedown(function(){UI.setActiveDisplay(0);});
-		$('#pan2').mousedown(function(){UI.setActiveDisplay(1);});
-		$('#pan3').mousedown(function(){UI.setActiveDisplay(2);});
+	    // controls the main panel movement
+	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
+	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
+	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
+
 		$('#selectPickup').mousedown(function(){window.UI.markerTypeSelect(0)});
 		$('#selectComment').mousedown(function(){window.UI.markerTypeSelect(1)});
 		$('#selectTrash').mousedown(function(){window.UI.markerTypeSelect(2)});
@@ -185,6 +195,19 @@ function UiHandle(){
 	    this.selectPickup = document.getElementById('selectPickup');
 	    this.selectComment = document.getElementById('selectComment');
 	    this.selectTrash = document.getElementById('selectTrash');
+
+	    // for comment pagination
+	    this.commentsType = ""
+	    this.commentsNextPageUrl = "";
+	    this.commentsPrevPageUrl = "";
+	    document.getElementById("prevPage").addEventListener('mousedown', function(){
+			// load the previous page
+			window.ApiConnector.pullCommentData(this.commentsType, this.commentsPrevPageUrl);
+		});
+		document.getElementById("nextPage").addEventListener('mousedown', function(){
+			// load the previous page
+			window.ApiConnector.pullCommentData(this.commentsType, this.commentsNextPageUrl);
+		});
 	}
 
 	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
@@ -271,7 +294,7 @@ function UiHandle(){
 	    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
 	}
 
-	// ******* DOM updaters *********** 
+	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
 		console.log(data);
 	}
@@ -281,6 +304,40 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.updateMessages = function updateMessages(data){
+		window.UI.commentsNextPageUrl = data.page.next;
+		window.UI.commentsPrevPageUrl = data.page.previous;
+
+		var messagesContainer = document.getElementById("messagesContainer");
+		var messages = new Array();
+
+		(window.UI.commentsNextPageUrl != null) ? 
+			window.UI.showNextCommentsButton() : window.UI.hideNextCommentsButton();
+
+		(window.UI.commentsPrevPageUrl != null) ? 
+			window.UI.showPrevCommentsButton() : window.UI.hidePrevCommentsButton();
+
+		for(ii=0; ii<3; ii++){
+		// for(ii=0; ii<data.comments.length; ii++){
+			messages[ii] = document.createElement('div');
+			messages[ii].className = "messageListItem";
+			messages[ii].style.border = "1px solid red";
+			// create the div where the timestamp will display
+			var commentDateContainer = document.createElement('div');
+			commentDateContainer.className = "commentDateContainer";
+			// commentDateContainer.innerHTML = data.comments.timestamp;
+			commentDateContainer.innerHTML = "1970-01-01 00:00:01";
+			// create the div where the message content will be stored
+			var messageContentContainer = document.createElement('div');
+			messageContentContainer.className = "messageContentContainer";
+			// messageContentContainer.innerHTML = data.comments.message;
+			messageContentContainer.innerHTML = "sdfasdfasdfasdfadsfasdfadsfa";
+
+			messages[ii].appendChild(commentDateContainer);
+			messages[ii].appendChild(messageContentContainer);
+			messagesContainer.appendChild(messages[ii]);
+
+		}
+		// alert(window.UI.commentsNextPageUrl);
 		console.log(data);
 	}
 
@@ -295,6 +352,26 @@ function UiHandle(){
 	UiHandle.prototype.updateTest = function updateTest(data){
 		console.log(data);
 	}
+	// ******** End DOM Updaters *********
+
+	// ---- begin pagination control toggle ----
+	UiHandle.prototype.showNextCommentsButton = function showNextCommentsButton(){
+		document.getElementById("nextPage").style.display = "inline-block";
+	}
+
+	UiHandle.prototype.hideNextCommentsButton = function hideNextCommentsButton(){
+		document.getElementById("nextPage").style.display = "none";
+	}
+
+	UiHandle.prototype.showPrevCommentsButton = function showPrevCommentsButton(){
+		document.getElementById("prevPage").style.display = "inline-block";
+	}
+
+	UiHandle.prototype.hidePrevCommentsButton = function hidePrevCommentsButton(){
+		document.getElementById("prevPage").style.display = "none";
+	}
+	// ---- end pagination control toggle
+
 } // end UiHandle class def
 
 // class for managing all geolocation work
