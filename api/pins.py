@@ -147,7 +147,7 @@ class Pins(webapp2.RequestHandler):
 		self.response.write(json.dumps(response))	
 
 	def post(self):
-		self.response.set_status(api.HTTP_NOT_IMPLEMENTED)
+		self.response.set_status(api.HTTP_OK)
 
 		try:
 			json.loads(self.request.body)
