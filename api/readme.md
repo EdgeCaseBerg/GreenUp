@@ -339,7 +339,7 @@ URL: **/api/pins**
 {
     "latDegrees" : 24.53, 
     "lonDegrees" : 43.2, 
-    "type" : "trash", 
+    "type" : "trash pickup", 
     "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?"
 }
 ```

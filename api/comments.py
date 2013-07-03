@@ -12,7 +12,7 @@ class Comments(webapp2.RequestHandler):
 
 	def get(self):
 		#Default status if none are set
-		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
+		self.response.set_status(api.HTTP_OK,"")
 
 		#Check for optional parameters:
 		commentType = self.request.get("type")
