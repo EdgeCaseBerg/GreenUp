@@ -59,7 +59,41 @@ function ApiConnector(){
 	ApiConnector.prototype.pushApiData = function pushApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
 	}
 
-	ApiConnector.prototype.pushNewPin = function pushNewPin(Lat, Lon, Type, Message){
+	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
+		$.ajax({
+			type: "POST",
+			url: BASE+pinsURI,
+			data: jsonObj,
+			dataType: "json",
+			success: function(data){
+				CALLBACK(data);
+			},
+			error: function(xhr, errorType, error){
+				// alert("error: "+xhr.status);
+				switch(xhr.status){
+					case 500:
+						// internal server error
+						// consider leaving app
+						console.log("Error: api response = 500");
+						break;
+					case 404:
+						// not found, stop trying
+						// consider leaving app
+						console.log('Error: api response = 404');
+						break;
+					case 400:
+						// bad request
+						console.log("Error: api response = 400");
+						break;
+					case 422:
+						console.log("Error: api response = 422");
+						break;
+					default:
+						alert("Error Contacting API: "+xhr.status);
+						break;
+				}
+			}
+		});
 		//zepto
 
 	}
@@ -467,19 +501,19 @@ function MapHandle(){
 		var iconUrl; 
 		switch(markerType){
 			case "comment":
-				pin.type = "comment";
+				pin.type = "general message";
 				iconUrl = "img/icons/blueCircle.png";
 				break;
 			case "pickup":
-				pin.type = "pickup";
+				pin.type = "help needed";
 				iconUrl = "img/icons/greenCircle.png";
 				break;
 			case "trash":
-				pin.type = "trash";
+				pin.type = "trash pickup";
 				iconUrl = "img/icons/redCircle.png";
 				break;
 			default:
-				pin.type = "comment";
+				pin.type = "general message";
 				iconUrl = "img/icons/blueCircle.png";
 				break;
 		}
@@ -490,12 +524,14 @@ function MapHandle(){
         	icon: iconUrl
     	});
 
-		pin.latDegrees = marker.lat;
-		pin.lonDegrees = marker.lng;
-		var jsp = JSON.stringify(pin);
-		alert(jsp);
+		pin.latDegrees = marker.getPosition().lat();
+		pin.lonDegrees = marker.getPosition().lng();
+		var serializedPin = JSON.stringify(pin);
+		alert(serializedPin);
 
     	window.MAP.pickupMarkers.push(marker);
+    	window.ApiConnector.pushNewPin(serializedPin);
+
 	}
 
 	MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
