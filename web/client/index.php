@@ -166,6 +166,11 @@
     </div>
 
     <div id="dialogSlider">
+        <textarea id="dialogSliderTextarea" class="dialogSliderContents"></textarea>
+        <div class="dialogSliderContents">
+            <div class="dialogSliderButton"><div id="dialogCommentOk" class="buttonText">Ok</div></div>
+            <div class="dialogSliderButton"><div id="dialogCommentCancel" class="buttonText">Cancel</div></div>
+        </div>
     </div>
 
     <ul class="nav">

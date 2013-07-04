@@ -236,6 +236,14 @@ function UiHandle(){
 	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
 	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
 
+	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
+	    	window.UI.dialogSliderDown();
+	    });
+
+	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){
+	    	window.UI.dialogSliderDown();
+	    });
+
 		this.markerDisplay = document.getElementById("markerTypeDialog");
 
 		// toggle map overlays
@@ -303,12 +311,14 @@ function UiHandle(){
 		window.MAP.addMarker(markerType, message);
 		window.UI.markerDisplay.style.display = "none";
 		window.UI.isMarkerDisplayVisible = false;
-		window.UI.dialogSliderDown();
+		window.UI.dialogSliderUp();
+		// (bug) here we need to prevent more map touches
 	}
 
 	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(){
 		document.getElementById("dialogSlider").style.top = "72%";
 		document.getElementById("dialogSlider").style.opacity = "1.0";
+		document.getElementById("dialogSliderTextarea").focus();
 
 	}
 
@@ -323,11 +333,9 @@ function UiHandle(){
 	    MOUSEUP_TIME = new Date().getTime() / 1000;
 	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
 	        if(this.isMarkerDisplayVisible){
-	        	window.UI.dialogSliderDown();
 	        	window.UI.markerDisplay.style.display = "none";
 	        	window.UI.isMarkerDisplayVisible = false;
 	        }else{
-	        	window.UI.dialogSliderUp();
 	        	window.UI.markerDisplay.style.display = "block";
 	        	window.UI.isMarkerDisplayVisible = true;
 	        }

@@ -56,10 +56,39 @@ a, a:hover, a:visited{
     width:100%;
     padding:20px 0px 20px 0px;
     text-align:center;
-    background: white;
+    background-image: url('../img/backgrounds/dark_dotted2.png');
     -webkit-transition: all 0.7s ease-in-out;
     opacity: 0.0;
     /* top: 77%; */
+}
+
+.dialogSliderContents{
+    vertical-align: top;
+    display:inline-block;
+    width:25%;
+    height:90%;
+    border:solid 1px green;
+}
+
+.dialogSliderButton{
+    display:block;
+    width: 100%;
+    height:49%;
+    background: #eeeeee;
+    margin-top:2%;
+    cursor:pointer;
+}
+
+.buttonText{
+    width:100%;
+    height:auto;
+    padding-top:6px;
+    text-align: center;
+}
+
+#dialogSliderTextarea{
+    width:70%;
+    margin:auto;
 }
 
 /*.nav li{
