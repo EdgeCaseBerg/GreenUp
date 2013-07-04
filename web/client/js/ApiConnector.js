@@ -93,6 +93,9 @@ function ApiConnector(){
 					case 422:
 						console.log("Error: api response = 422");
 						break;
+					case 200:
+						console.log("Request successful");
+						break;
 					default:
 						alert("Error Contacting API: "+xhr.status);
 						break;
@@ -300,6 +303,18 @@ function UiHandle(){
 		window.MAP.addMarker(markerType, message);
 		window.UI.markerDisplay.style.display = "none";
 		window.UI.isMarkerDisplayVisible = false;
+		window.UI.dialogSliderDown();
+	}
+
+	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(){
+		document.getElementById("dialogSlider").style.top = "72%";
+		document.getElementById("dialogSlider").style.opacity = "1.0";
+
+	}
+
+	UiHandle.prototype.dialogSliderDown = function dialogSliderDown(){
+		document.getElementById("dialogSlider").style.top = "86%";
+		document.getElementById("dialogSlider").style.opacity = "0.0";
 	}
 
 	UiHandle.prototype.markerSelectUp = function markerSelectUp(event){
@@ -308,9 +323,11 @@ function UiHandle(){
 	    MOUSEUP_TIME = new Date().getTime() / 1000;
 	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
 	        if(this.isMarkerDisplayVisible){
+	        	window.UI.dialogSliderDown();
 	        	window.UI.markerDisplay.style.display = "none";
 	        	window.UI.isMarkerDisplayVisible = false;
 	        }else{
+	        	window.UI.dialogSliderUp();
 	        	window.UI.markerDisplay.style.display = "block";
 	        	window.UI.isMarkerDisplayVisible = true;
 	        }
@@ -535,7 +552,7 @@ function MapHandle(){
 		pin.latDegrees = marker.getPosition().lat();
 		pin.lonDegrees = marker.getPosition().lng();
 		var serializedPin = JSON.stringify(pin);
-		alert(serializedPin);
+		// alert(serializedPin);
 
     	window.MAP.pickupMarkers.push(marker);
     	window.ApiConnector.pushNewPin(serializedPin);

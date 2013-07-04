@@ -11,7 +11,7 @@
 <!-- <link rel="stylesheet" href="css/messages.css"> -->
 <link rel="stylesheet" href="css/styles.css">
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script> -->
 <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
 <script src="js/markerwithlabel.js"></script>
@@ -163,6 +163,9 @@
             <img src="img/ajax-loader.gif" />
         </div>
         <div id="loadingText" style="color:white; width:100%; text-align:center;"></div>
+    </div>
+
+    <div id="dialogSlider">
     </div>
 
     <ul class="nav">

@@ -47,6 +47,21 @@ a, a:hover, a:visited{
 	text-align:center;
 }
 
+#dialogSlider{
+    position: fixed;
+    top:86%;
+    height:9%;
+    z-index:100;
+    margin:5px 0px 0px 0px;
+    width:100%;
+    padding:20px 0px 20px 0px;
+    text-align:center;
+    background: white;
+    -webkit-transition: all 0.7s ease-in-out;
+    opacity: 0.0;
+    /* top: 77%; */
+}
+
 /*.nav li{
 	margin:0px;
 	padding:0px;
