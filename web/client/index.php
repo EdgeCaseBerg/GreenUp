@@ -97,12 +97,20 @@
                 </div>
 
 		        <div id="markerTypeDialog">
-		            <div id="markerTypeDialogNest">
+
+                    <div class="tileContainer">
+                        <div class="tile tile1" id="selectPickup">Pickup</div>
+                        <div class="tile tile2" id="selectComment">Comment</div>
+                        <div class="tile tile3" id="selectTrash">Trash</div>
+                        <div class="tile tile4" id="cancel">Cancel</div>
+                    </div>
+
+		        <!--     <div id="markerTypeDialogNest">
 		                <input type="button" value="Pickup point" id="selectPickup" />
 		                <input type="button" value="Comment point" id="selectComment" />
 		                <input type="button" value="Trash point" id="selectTrash" />
                         <input type="button" value="Close" onclick="$('#markerTypeDialog').toggle();" />
-		            </div>
+		            </div> -->
 		          <!--   <input type="button" value="Lots of Trash" onClick="addTrashMarker">
 		            <input type="button" value="Comment point" onClick="addCommentMarker"> -->
 		        <!-- </div> -->
@@ -168,8 +176,8 @@
     <div id="dialogSlider">
         <textarea id="dialogSliderTextarea" class="dialogSliderContents"></textarea>
         <div class="dialogSliderContents">
-            <div class="dialogSliderButton"><div id="dialogCommentOk" class="buttonText">Ok</div></div>
-            <div class="dialogSliderButton"><div id="dialogCommentCancel" class="buttonText">Cancel</div></div>
+            <div class="dialogSliderButton dialogButtonOk"><div id="dialogCommentOk" class="buttonText">Ok</div></div>
+            <div class="dialogSliderButton dialogButtonCancel"><div id="dialogCommentCancel" class="buttonText">Cancel</div></div>
         </div>
     </div>
 
