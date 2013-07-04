@@ -4,9 +4,9 @@ import json
 import api
 import logging
 
+from constants import *
+
 #For extensions add to this list, or abstract to some type of properties file
-COMMENT_TYPES = ['FORUM', 'NEEDS', 'MESSAGE','']
-RESOURCE_PATH = "comments"
 
 class Comments(webapp2.RequestHandler):
 
@@ -49,8 +49,8 @@ class Comments(webapp2.RequestHandler):
 			#There is no previous
 			pass
 		else:
-			previous = "%s%s%s%s%s%s%i" % (api.BASE_URL,api.CONTEXT_PATH,RESOURCE_PATH,'?type=',commentType,'&page=',page -1)
-		next = "%s%s%s%s%s%s%i" % (api.BASE_URL,api.CONTEXT_PATH,RESOURCE_PATH,'?type=',commentType,'&page=',page +1)
+			previous = "%s%s%s%s%s%s%i" % (api.BASE_URL,api.CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType,'&page=',page -1)
+		next = "%s%s%s%s%s%s%i" % (api.BASE_URL,api.CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType,'&page=',page +1)
 
 		#write out the comments in json form
 		comments = []
