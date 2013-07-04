@@ -87,6 +87,7 @@ def validateCommentsGETRequest(comments_response_to_get):
 
 def validateCommentsPOSTRequest(comments_response_to_post):
 	assert comments_response_to_post is not None
+	print comments_response_to_post
 	assert 'status' in comments_response_to_post
 	assert 'message' in comments_response_to_post
 	assert comments_response_to_post['status'] == 200
@@ -138,6 +139,7 @@ def validateErrorMessageReturned(comments_error_response):
 if __name__ == "__main__":
 	baseURL = 'http://greenupapi.appspot.com/api'
 	baseURL = 'http://localhost:30002/api'
+	baseURL = 'http://greenup.xenonapps.com/api'
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
