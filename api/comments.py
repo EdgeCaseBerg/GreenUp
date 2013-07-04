@@ -12,7 +12,7 @@ class Comments(webapp2.RequestHandler):
 
 	def get(self):
 		#Default status if none are set
-		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
+		self.response.set_status(api.HTTP_OK,"")
 
 		#Check for optional parameters:
 		commentType = self.request.get("type")
@@ -88,6 +88,12 @@ class Comments(webapp2.RequestHandler):
 		#Request has proper required keys
 		typeOfComment = info['type']
 		commentMessage = info['message']
+
+		if typeOfComment is None or commentMessage is None:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
+			return
+
 
 		#Determine if type is semantically correct
 		if typeOfComment.upper() in COMMENT_TYPES:

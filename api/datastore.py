@@ -29,6 +29,7 @@ class Greenup(Campaign):
 class Pins(Greenup):
 	message = db.TextProperty()
 	pinType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
+	# these must be stored precisely
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
 
@@ -47,12 +48,12 @@ class Pins(Greenup):
 		return bt
 
 	@classmethod
-	def by_lat(cls,lat):
-		latitudes = Pins.all().filter('lat =', lat).get()
+	def by_lat(cls,lat, precision=5):
+		latitudes = Pins.all().filter('lat =', lat).get()		
 		return latitudes
 
 	@classmethod
-	def by_lon(cls,lon):
+	def by_lon(cls,lon, precision=5):
 		longitudes = Pins.all().filter('lon =', lon).get()
 		return longitudes
 
@@ -92,6 +93,7 @@ class GridPoints(Greenup):
 	@classmethod
 	def by_latOffset(cls, latDegrees, offset):
 		# query all points with a latitude between latDegrees and offset
+		# this defines a chunk of the map containing the desired points
 		q = GridPoints().all().filter('lat >=', latDegrees).filter('lat <=', latDegrees + offset).get()
 		return q
 
@@ -100,6 +102,12 @@ class GridPoints(Greenup):
 		# query all points with a latitude between lonDegrees and offset
 		q = GridPoints().all().filter('lon >=', lonDegrees).filter('lon <=', lonDegrees + offset).get()
 		return q
+
+	# then we need to make a function that runs through that chunk and bucket-izes each point by rounding it (and stores the 
+	# seconds worked for each of those points that went into the bucket) [see bucket sort or alpha sort]. this could be a function
+	# separate from the datastore. 
+	# we are returing these buckets (the rounded center of each of those buckets, and the total seconds worked corresponding to
+	# each of those buckets).
 
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
@@ -269,7 +277,7 @@ def paging(page):
 
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
 		prevCursor = 'greeunup_comment_paging_cursor_%s' %(page-1)
-		cursor = memcache.get(prevCursor)	
+		cursor = memcache.get(prevCursor)
 		results = querySet.with_cursor(start_cursor=cursor)
 		results = results.run(limit=resultsPerPage)
 
