@@ -64,4 +64,5 @@ License:
 [Danielle Steimke]: https://github.com/iknitformydog
 [Justin Adams]:https://github.com/justcadams
 [Phelan Vendeville]: https://github.com/the-hobbes
+[Paul Kiripolsky]: https://github.com/kiripaul
 
