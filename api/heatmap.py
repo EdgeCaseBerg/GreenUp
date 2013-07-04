@@ -184,6 +184,11 @@ class Heatmap(webapp2.RequestHandler):
 			lonDegrees = info[i]["lonDegrees"]
 			secondsWorked = info[i]["secondsWorked"]
 
+			if latDegrees is None or lonDegrees is None or secondsWorked is None:
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+				self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
+				return
+
 			try:
 				latDegrees = float(latDegrees)
 				if latDegrees < -180.0 or latDegrees > 180.0:

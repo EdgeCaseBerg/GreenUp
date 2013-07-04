@@ -140,10 +140,14 @@ class Pins(webapp2.RequestHandler):
 				pass
 			else:
 				#No degrees specified and offsets or just precision?
-				#This is a bad request.
-				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
-				self.response.write('{"Error_Message" : "Improperly formed query, if offsets or precision specified, at least one degree must be given"}')
-				return
+				if parameters == 1:
+					#Just precision
+					pass
+				else:
+					#This is a bad request.
+					self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+					self.response.write('{"Error_Message" : "Improperly formed query, if offsets or precision specified, at least one degree must be given"}')
+					return
 
 
 		#By this point we have a response and we simply have to send it back
@@ -170,7 +174,7 @@ class Pins(webapp2.RequestHandler):
 			info['message']
 		except Exception, e:
 			#Improper request
-			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
 			self.response.write('{"Error_Message" : "Required keys not present in request"}')
 			return
 		
@@ -178,6 +182,12 @@ class Pins(webapp2.RequestHandler):
 		latDegrees = info['latDegrees']
 		lonDegrees = info['lonDegrees']
 		message = info['message']
+
+		#Catch nulls
+		if pinType is None or latDegrees is None or lonDegrees is None or message is None:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
+			return
 
 		#Determine if the type is correct:
 		if pinType.upper() not in PIN_TYPES:
@@ -219,7 +229,7 @@ class Pins(webapp2.RequestHandler):
 		
 
 		#self.response.set_status(api.HTTP_OK)		
-		self.response.write('{  "status" : 200,  "message" : "Successful submit",}')
+		self.response.write('{  "status" : 200,  "message" : "Successful submit"}')
 
 		
 

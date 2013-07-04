@@ -89,6 +89,12 @@ class Comments(webapp2.RequestHandler):
 		typeOfComment = info['type']
 		commentMessage = info['message']
 
+		if typeOfComment is None or commentMessage is None:
+			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
+			return
+
+
 		#Determine if type is semantically correct
 		if typeOfComment.upper() in COMMENT_TYPES:
 			pass

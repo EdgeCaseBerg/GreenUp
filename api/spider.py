@@ -99,6 +99,7 @@ def validateHeatmapGETRequest(heatmap_response_to_get):
 		for key,value in heatmap_response_to_get.iteritems():
 			assert key in heatmap_response_keys
 			assert isinstance(value,numbers.Number)
+	return True
 
 def validateHeatmapPUTRequest(heatmap_response_to_put):
 	assert heatmap_response_to_put is not None
@@ -106,6 +107,26 @@ def validateHeatmapPUTRequest(heatmap_response_to_put):
 	assert 'message' in heatmap_response_to_put
 	assert heatmap_response_to_put['status'] == 200
 	assert heatmap_response_to_put['message'] == "Successful submit"
+	return True
+
+def validatePINSGetRequest(pins_response_to_get):
+	pins_response_keys = ['latDegrees','lonDegrees','type','message']
+	assert pins_response_to_get is not None
+	for pin in pins_response_to_get:
+		for key,value in pin.iteritems():
+			assert key in pins_response_keys
+			if key in ['latDegrees','lonDegrees']:
+				assert isinstance(value,numbers.Number)
+			else:
+				assert isinstance(value,basestring)
+	return True
+
+def validatePinsPOSTRequest(pins_response_to_post):
+	assert pins_response_to_post is not None
+	assert 'status' in pins_response_to_post
+	assert 'message' in pins_response_to_post
+	assert pins_response_to_post['status'] == 200
+	assert pins_response_to_post['message'] == "Successful submit"
 	return True
 
 def validateErrorMessageReturned(comments_error_response):
@@ -155,6 +176,10 @@ if __name__ == "__main__":
 
 	#Send a bad POST request 
 	tester.followLink(endPoints['comments'],withData={"type" : "crap", "message" : "This is another test message"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['comments'],withData={"type" : None, "message" : None },httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())
 
@@ -209,6 +234,10 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())	
 
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : None, "lonDegrees" : None, "secondsWorked" : None}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())	
+
 	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : -31, "lonDegrees" : -92, "secondsWorked" : 45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())	
@@ -234,6 +263,116 @@ if __name__ == "__main__":
 	validateErrorMessageReturned(tester.getJSON())	
 
 	print "Heatmap endpoint Passed all assertion tests"
+
+
+	#Default GET
+	tester.followLink(endPoints['pins'])
+	assert tester.getCode() == HTTP_OK
+	validatePINSGetRequest(tester.getJSON())
+
+	#Get with parameters
+	#Default GET + bad latDegrees parameter
+	tester.followLink(endPoints['pins'],withData={"latDegrees" : 191})
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#GET with bad lonDegrees
+	tester.followLink(endPoints['pins'],withData={"lonDegrees" : 91})
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#get with bad offset (only one given)
+	tester.followLink(endPoints['pins'],withData={"latDegrees" : 1.2, "lonDegrees" : 4.5, "lonOffset" : 6})
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#get with good offsets, but not degrees
+	tester.followLink(endPoints['pins'],withData={"lonOffset" : 4, "latOffset" : 2})
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#Good get request with parameters
+	tester.followLink(endPoints['pins'],withData={"latDegrees" : -25.4, "lonDegrees" : 43.2, "latOffset" : 4,"lonOffset" : 2})
+	assert tester.getCode() == HTTP_OK
+	validatePINSGetRequest(tester.getJSON())
+
+	#Get with JUST precision (like a get all, but for a given precision)
+	tester.followLink(endPoints['pins'],withData={"precision" : 4})
+	assert tester.getCode() == HTTP_OK
+	validatePINSGetRequest(tester.getJSON())
+
+
+	#Test the POST
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_OK
+	validatePinsPOSTRequest(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "help needed", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_OK
+	validatePinsPOSTRequest(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "general message", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_OK
+	validatePinsPOSTRequest(tester.getJSON())
+
+	#Test the POSt with missing keys
+	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'latDegrees' : 2, 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'type' : "trash pickup", 'latDegrees' : 2},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#Test the POST with keys but bad data
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : -240, 'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 150, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 440, 'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#Because of pythons dynamic typing this is ok
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : "40", 'lonDegrees' : "50", 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_OK
+	validatePinsPOSTRequest(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trashickup", 'message' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trash pickup", 'messsage' : "Test"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : None, 'lonDegrees' : None, 'type' : None, 'message' : None},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	print "Pins endpoint passed all assertion tests"
+
+
+
+
+
+
 
 
 	
