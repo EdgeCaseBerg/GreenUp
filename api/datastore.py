@@ -14,6 +14,10 @@ from google.appengine.datastore import entity_pb
 
 import logging 
 
+from datetime import date
+
+from constants import *
+
 TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
 MEMCACHED_WRITE_KEY = "write_key"
 STALE_CACHE_LIMIT = 20
@@ -28,7 +32,7 @@ class Greenup(Campaign):
 
 class Pins(Greenup):
 	message = db.TextProperty()
-	pinType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
+	pinType = db.StringProperty(choices=PIN_TYPES)
 	# these must be stored precisely
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
@@ -58,7 +62,8 @@ class Pins(Greenup):
 		return longitudes
 
 class Comments(Greenup):
-	commentType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
+
+	commentType = db.StringProperty(choices=COMMENT_TYPES)
 	message = db.TextProperty()
 	timeSent = db.DateTimeProperty(auto_now_add = True)	
 	pin = db.ReferenceProperty(Pins, collection_name ='pins')
@@ -70,6 +75,7 @@ class Comments(Greenup):
 	@classmethod
 	def by_type(cls,cType):
 		ct = Comments.all().filter('commentType =', cType).get()
+		return ct
 
 class GridPoints(Greenup):
 	lat = db.FloatProperty()
@@ -119,9 +125,14 @@ class AbstractionLayer():
 		app = Greenup()
 		self.appKey = Greenup.app_key()
 
-	def getComments(self, type=None, page=None):
+	def getComments(self, cType=None, page=None):
 		# memcache or datastore read
-		pass
+		comments=  paging(page,cType)
+		#Convert comments to simple dictionaries for the comments endpoint to use
+		dictComments = []
+		for comment in comments:
+			dictComments.append({'commentType' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin, 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+		return dictComments
 
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
@@ -224,7 +235,7 @@ def initialPage():
 	commentsCursor = querySet.cursor()
 	memcache.set(initialCursorKey, commentsCursor)
 
-def paging(page):
+def paging(page,typeFilter):
 	'''
 		Paging works thusly:
 		Try to find the cursor key for the page passed in. If you find it, look it up in cache and return it.
@@ -233,7 +244,14 @@ def paging(page):
 		and their cursors up until we reach the page requested. Then, return that page of results.
 	'''
 	resultsPerPage = 20
-	querySet = Comments.all() # note that this hasn't been run yet
+	querySet = None
+	if typeFilter is not None:
+		querySet = Comments.by_type(typeFilter)
+	else:
+		querySet = Comments.all()
+	if page is None:
+		page = 1
+
 	currentCursorKey = 'greeunup_comment_paging_cursor_%s' %(page)
 	pageInCache = memcache.get(currentCursorKey)
 	misses = []

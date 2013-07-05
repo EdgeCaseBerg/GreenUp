@@ -6,6 +6,8 @@ import logging
 
 from constants import *
 
+from datastore import AbstractionLayer
+
 #For extensions add to this list, or abstract to some type of properties file
 
 class Comments(webapp2.RequestHandler):
@@ -52,8 +54,12 @@ class Comments(webapp2.RequestHandler):
 			previous = "%s%s%s%s%s%s%i" % (api.BASE_URL,api.CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType,'&page=',page -1)
 		next = "%s%s%s%s%s%s%i" % (api.BASE_URL,api.CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType,'&page=',page +1)
 
+		#Get comments:
+		layer = AbstractionLayer().getComments(cType=commentType,page=page)
+		logging.info(layer)
+
 		#write out the comments in json form
-		comments = []
+		comments = layer
 		response = { "comments" : comments, "page" : {"next" : next, "previous" : previous}}
 		
 
@@ -89,6 +95,7 @@ class Comments(webapp2.RequestHandler):
 		typeOfComment = info['type']
 		commentMessage = info['message']
 
+		logging.info(typeOfComment)
 		if typeOfComment is None or commentMessage is None:
 			self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
@@ -117,6 +124,7 @@ class Comments(webapp2.RequestHandler):
 			pass
 		
 		#All information present and valid. Store information in the database
+		AbstractionLayer().submitComments(commentType=typeOfComment.upper(), message=commentMessage, pin=pin)
 
 		self.response.write('{ "status" : %i, "message" : "Successfuly submitted new comment" }' % api.HTTP_OK)
 
