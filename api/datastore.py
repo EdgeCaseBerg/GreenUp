@@ -258,8 +258,6 @@ def paging(page=1,typeFilter=None):
 	currentCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page)
 	pageInCache = memcache.get(currentCursorKey)
 
-	logging.info(currentCursorKey)
-
 	misses = []
 
 	if not memcache.get('greeunup_comment_paging_cursor_%s_%s' %(typeFilter, 1) ):
@@ -305,8 +303,7 @@ def paging(page=1,typeFilter=None):
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
 		prevCursor = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page-1)
 		cursor = memcache.get(prevCursor)
-		#This causes an error on initial write. Not sure how to fix it, the querySet is None
-		#Phelan can you fix this?
+
 		results = querySet.with_cursor(start_cursor=cursor)
 		results = results.run(limit=resultsPerPage)
 
@@ -318,7 +315,6 @@ def paging(page=1,typeFilter=None):
 
 		# save results in memecache with key
 		pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, page)
-		logging.info(pageKey)
 		memcache.set(pageKey, serialize_entities(items))
 
 		return items
