@@ -18,7 +18,7 @@ from datetime import date
 
 from constants import *
 
-TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
+# TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
 MEMCACHED_WRITE_KEY = "write_key"
 STALE_CACHE_LIMIT = 20
 
@@ -75,6 +75,11 @@ class Comments(Greenup):
 	@classmethod
 	def by_type(cls,cType):
 		ct = Comments.all().filter('commentType =', cType).get()	
+		return ct
+
+	@classmethod
+	def by_type_pagination(cls, cType):
+		ct = Comments.all().filter('commentType =', cType)
 		return ct
 
 class GridPoints(Greenup):
@@ -217,14 +222,14 @@ def updateCachedWrite(key):
 	else:
 		setCachedData(key, result+1)
 
-def initialPage():
+def initialPage(typeFilter=None):
 	'''
 		set up initial page in memecache and the initial cursor. This will guarantee that at least one key and page will be 
 		in the cache (the first one).
 	'''
 	querySet = Comments.all()
-	initialCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(1,None)
-	initialPageKey = 'greenup_comments_page_%s_%s' %(1,None)
+	initialCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter,1)
+	initialPageKey = 'greenup_comments_page_%s_%s' %(typeFilter,1)
 
 	results = querySet[0:20]
 	# results = querySet.run(batch_size=20)
@@ -235,7 +240,7 @@ def initialPage():
 	commentsCursor = querySet.cursor()
 	memcache.set(initialCursorKey, commentsCursor)
 
-def paging(page,typeFilter):
+def paging(page=1,typeFilter=None):
 	'''
 		Paging works thusly:
 		Try to find the cursor key for the page passed in. If you find it, look it up in cache and return it.
@@ -246,25 +251,28 @@ def paging(page,typeFilter):
 	resultsPerPage = 20
 	querySet = None
 	if typeFilter is not None:
-		querySet = Comments.by_type(typeFilter)
+		querySet = Comments.by_type_pagination(typeFilter)
 	else:
 		querySet = Comments.all()
-	if page is None:
-		page = 1
 
-	currentCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(page,typeFilter)
+	currentCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page)
 	pageInCache = memcache.get(currentCursorKey)
+
+	logging.info(currentCursorKey)
+
 	misses = []
 
-	if not memcache.get('greeunup_comment_paging_cursor_1'):
+	if not memcache.get('greeunup_comment_paging_cursor_%s_%s' %(typeFilter, 1) ):
 		# make sure the initial page is in cache
-		initialPage()
+		initialPage(typeFilter)
+		logging.info("had to make initial page")
 
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
-			prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(x,typeFilter)
+			prevCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, x)
+			# logging.info(prevCursorKey)
 			prevPageInCache = memcache.get(prevCursorKey)
 
 			if not prevPageInCache:
@@ -274,9 +282,9 @@ def paging(page,typeFilter):
 		# build all the pages we have in the misses stack 
 		while misses:
 			# get the cursor of the previous page
-			cursorKey = misses.pop()
+			cursorKey = misses.pop()			
 			oldNum = int(cursorKey[-1]) - 1
-			oldKey = 'greeunup_comment_paging_cursor_%s_%s' %(oldNum,typeFilter)
+			oldKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, oldNum)
 			cursor = memcache.get(oldKey)
 
 			# get 20 results from where we left off
@@ -290,11 +298,12 @@ def paging(page,typeFilter):
 			memcache.set(cursorKey, commentsCursor)
 
 			# save those results in memecache with thier own key
-			pageKey = 'greenup_comments_page_%s_%s' %(cursorKey[-1],typeFilter)
+			pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, cursorKey[-1])
+			logging.info(pageKey)
 			memcache.set(pageKey, serialize_entities(items))
 
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
-		prevCursor = 'greeunup_comment_paging_cursor_%s_%s' %(page-1,typeFilter)
+		prevCursor = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page-1)
 		cursor = memcache.get(prevCursor)
 		#This causes an error on initial write. Not sure how to fix it, the querySet is None
 		#Phelan can you fix this?
@@ -308,13 +317,15 @@ def paging(page,typeFilter):
 		memcache.set(currentCursorKey, commentsCursor)
 
 		# save results in memecache with key
-		pageKey = 'greenup_comments_page_%s_%s' %(page,typeFilter)
-		memcache.set(pageKey, serialize_entities(results))
+		pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, page)
+		logging.info(pageKey)
+		memcache.set(pageKey, serialize_entities(items))
 
 		return items
 
 	# otherwise, just get the page out of memcache
 	print "did this instead, cause it was in the cache"
-	pageKey = "greenup_comments_page_%s_%s" %(page,typeFilter)
+	pageKey = "greenup_comments_page_%s_%s" %(typeFilter, page)
+	logging.info(pageKey)
 	results = deserialize_entities(memcache.get(pageKey))
 	return results
