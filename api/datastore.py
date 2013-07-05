@@ -250,7 +250,8 @@ def paging(page=1,typeFilter=None):
 	'''
 	resultsPerPage = 20
 	querySet = None
-	if typeFilter is not None:
+	if typeFilter is not None and typeFilter is not "":
+		logging.info(typeFilter)
 		querySet = Comments.by_type_pagination(typeFilter)
 	else:
 		querySet = Comments.all()
