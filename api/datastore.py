@@ -14,7 +14,11 @@ from google.appengine.datastore import entity_pb
 
 import logging 
 
-TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
+from datetime import date
+
+from constants import *
+
+# TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
 MEMCACHED_WRITE_KEY = "write_key"
 STALE_CACHE_LIMIT = 20
 
@@ -28,7 +32,7 @@ class Greenup(Campaign):
 
 class Pins(Greenup):
 	message = db.TextProperty()
-	pinType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
+	pinType = db.StringProperty(choices=PIN_TYPES)
 	# these must be stored precisely
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
@@ -58,7 +62,8 @@ class Pins(Greenup):
 		return longitudes
 
 class Comments(Greenup):
-	commentType = db.StringProperty(choices=('General Message', 'Help Needed', 'Trash Pickup'))
+
+	commentType = db.StringProperty(choices=COMMENT_TYPES)
 	message = db.TextProperty()
 	timeSent = db.DateTimeProperty(auto_now_add = True)	
 	pin = db.ReferenceProperty(Pins, collection_name ='pins')
@@ -69,7 +74,13 @@ class Comments(Greenup):
 	
 	@classmethod
 	def by_type(cls,cType):
-		ct = Comments.all().filter('commentType =', cType).get()
+		ct = Comments.all().filter('commentType =', cType).get()	
+		return ct
+
+	@classmethod
+	def by_type_pagination(cls, cType):
+		ct = Comments.all().filter('commentType =', cType)
+		return ct
 
 class GridPoints(Greenup):
 	lat = db.FloatProperty()
@@ -119,9 +130,14 @@ class AbstractionLayer():
 		app = Greenup()
 		self.appKey = Greenup.app_key()
 
-	def getComments(self, type=None, page=None):
+	def getComments(self, cType=None, page=None):
 		# memcache or datastore read
-		pass
+		comments=  paging(page,cType)
+		#Convert comments to simple dictionaries for the comments endpoint to use
+		dictComments = []
+		for comment in comments:
+			dictComments.append({'commentType' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin, 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+		return dictComments
 
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
@@ -206,14 +222,14 @@ def updateCachedWrite(key):
 	else:
 		setCachedData(key, result+1)
 
-def initialPage():
+def initialPage(typeFilter=None):
 	'''
 		set up initial page in memecache and the initial cursor. This will guarantee that at least one key and page will be 
 		in the cache (the first one).
 	'''
 	querySet = Comments.all()
-	initialCursorKey = 'greeunup_comment_paging_cursor_%s' %(1)
-	initialPageKey = 'greenup_comments_page_%s' %(1)
+	initialCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter,1)
+	initialPageKey = 'greenup_comments_page_%s_%s' %(typeFilter,1)
 
 	results = querySet[0:20]
 	# results = querySet.run(batch_size=20)
@@ -224,7 +240,7 @@ def initialPage():
 	commentsCursor = querySet.cursor()
 	memcache.set(initialCursorKey, commentsCursor)
 
-def paging(page):
+def paging(page=1,typeFilter=None):
 	'''
 		Paging works thusly:
 		Try to find the cursor key for the page passed in. If you find it, look it up in cache and return it.
@@ -233,20 +249,28 @@ def paging(page):
 		and their cursors up until we reach the page requested. Then, return that page of results.
 	'''
 	resultsPerPage = 20
-	querySet = Comments.all() # note that this hasn't been run yet
-	currentCursorKey = 'greeunup_comment_paging_cursor_%s' %(page)
+	querySet = None
+	if typeFilter is not None:
+		querySet = Comments.by_type_pagination(typeFilter)
+	else:
+		querySet = Comments.all()
+
+	currentCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page)
 	pageInCache = memcache.get(currentCursorKey)
+
 	misses = []
 
-	if not memcache.get('greeunup_comment_paging_cursor_1'):
+	if not memcache.get('greeunup_comment_paging_cursor_%s_%s' %(typeFilter, 1) ):
 		# make sure the initial page is in cache
-		initialPage()
+		initialPage(typeFilter)
+		logging.info("had to make initial page")
 
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
-			prevCursorKey = 'greeunup_comment_paging_cursor_%s' %(x)
+			prevCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, x)
+			# logging.info(prevCursorKey)
 			prevPageInCache = memcache.get(prevCursorKey)
 
 			if not prevPageInCache:
@@ -256,9 +280,9 @@ def paging(page):
 		# build all the pages we have in the misses stack 
 		while misses:
 			# get the cursor of the previous page
-			cursorKey = misses.pop()
+			cursorKey = misses.pop()			
 			oldNum = int(cursorKey[-1]) - 1
-			oldKey = 'greeunup_comment_paging_cursor_%s' %(oldNum)
+			oldKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, oldNum)
 			cursor = memcache.get(oldKey)
 
 			# get 20 results from where we left off
@@ -272,12 +296,14 @@ def paging(page):
 			memcache.set(cursorKey, commentsCursor)
 
 			# save those results in memecache with thier own key
-			pageKey = 'greenup_comments_page_%s' %(cursorKey[-1])
+			pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, cursorKey[-1])
+			logging.info(pageKey)
 			memcache.set(pageKey, serialize_entities(items))
 
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
-		prevCursor = 'greeunup_comment_paging_cursor_%s' %(page-1)
+		prevCursor = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page-1)
 		cursor = memcache.get(prevCursor)
+
 		results = querySet.with_cursor(start_cursor=cursor)
 		results = results.run(limit=resultsPerPage)
 
@@ -288,13 +314,14 @@ def paging(page):
 		memcache.set(currentCursorKey, commentsCursor)
 
 		# save results in memecache with key
-		pageKey = 'greenup_comments_page_%s' %(page)
-		memcache.set(pageKey, serialize_entities(results))
+		pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, page)
+		memcache.set(pageKey, serialize_entities(items))
 
 		return items
 
 	# otherwise, just get the page out of memcache
 	print "did this instead, cause it was in the cache"
-	pageKey = "greenup_comments_page_%s" %(page)
+	pageKey = "greenup_comments_page_%s_%s" %(typeFilter, page)
+	logging.info(pageKey)
 	results = deserialize_entities(memcache.get(pageKey))
 	return results

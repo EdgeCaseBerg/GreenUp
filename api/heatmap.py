@@ -5,6 +5,7 @@ import webapp2
 import json
 
 import api
+from constants import *
 from  datastore import *
 
 import logging
@@ -139,10 +140,13 @@ class Heatmap(webapp2.RequestHandler):
 				pass
 			else:
 				#No degrees specified and offsets or just precision?
-				#This is a bad request.
-				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
-				self.response.write('{"Error_Message" : "Improperly formed query, if offsets or precision specified, at least one degree must be given"}')
-				return
+				if parameters == 1:
+					#Only precision passed perform query for full grid with precision
+					pass
+				else:
+					self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+					self.response.write('{"Error_Message" : "Improperly formed query, if offsets or precision specified, at least one degree must be given"}')
+					return
 
 
 		#By this point we have a response and we simply have to send it back
@@ -170,9 +174,8 @@ class Heatmap(webapp2.RequestHandler):
 				info[i]["lonDegrees"]
 				info[i]["secondsWorked"]
 			except Exception, e:
-				raise e
 				#Request does not have proper keys
-				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,"")
+				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM,"")
 				self.response.write('{"Error_Message" : "Required keys not present in request"}')
 				return
 			
@@ -181,6 +184,11 @@ class Heatmap(webapp2.RequestHandler):
 			latDegrees = info[i]["latDegrees"]
 			lonDegrees = info[i]["lonDegrees"]
 			secondsWorked = info[i]["secondsWorked"]
+
+			if latDegrees is None or lonDegrees is None or secondsWorked is None:
+				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
+				self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
+				return
 
 			try:
 				latDegrees = float(latDegrees)
@@ -198,7 +206,7 @@ class Heatmap(webapp2.RequestHandler):
 			try:
 				lonDegrees = float(lonDegrees)
 				if lonDegrees <  -90.0 or lonDegrees > 90.0:
-					raise api.SemanticError
+					raise api.SemanticError("Longitude degrees must be within the range of -90 to 90 degree")
 			except ValueError, e:
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
 				self.response.write('{"Error_Message" : "lonDegrees parameter must be numeric" }')
@@ -231,8 +239,8 @@ class Heatmap(webapp2.RequestHandler):
 			pass
 
 
-		self.response.set_status(api.HTTP_NOT_IMPLEMENTED,"")
-		self.response.write('{"status": %i, "message" : "" ' % api.HTTP_NOT_IMPLEMENTED)
+		self.response.set_status(api.HTTP_OK)
+		self.response.write('{"status": %i, "message" : "Successful submit" }' % api.HTTP_OK)
 
 		
 
