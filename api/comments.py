@@ -56,12 +56,12 @@ class Comments(webapp2.RequestHandler):
 
 		#Get comments:
 		layer = AbstractionLayer().getComments(cType=commentType,page=page)
-		logging.info(layer)
 
 		#write out the comments in json form
 		comments = layer
 		response = { "comments" : comments, "page" : {"next" : next, "previous" : previous}}
 		
+		logging.info(response)
 
 		#Send out the response
 		self.response.set_status(api.HTTP_OK,"")

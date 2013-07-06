@@ -132,11 +132,11 @@ class AbstractionLayer():
 
 	def getComments(self, cType=None, page=None):
 		# memcache or datastore read
-		comments=  paging(page,cType)
+		comments=  paging(page,cType.upper())
 		#Convert comments to simple dictionaries for the comments endpoint to use
 		dictComments = []
 		for comment in comments:
-			dictComments.append({'commentType' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin, 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin, 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
 		return dictComments
 
 	def submitComments(self, commentType, message, pin=None):
@@ -250,7 +250,7 @@ def paging(page=1,typeFilter=None):
 	'''
 	resultsPerPage = 20
 	querySet = None
-	if typeFilter is not None:
+	if typeFilter is not None and typeFilter is not "":
 		querySet = Comments.by_type_pagination(typeFilter)
 	else:
 		querySet = Comments.all()
