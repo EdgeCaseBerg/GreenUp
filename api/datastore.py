@@ -348,6 +348,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 	toBeFiltered = GridPoints.get_all_delayed()
 	toBeBucketSorted = []
 
+	combined = False
 	if latDegrees is None and lonDegrees is None:
 		#Code in calling function must handle parsing to JSON the data modelst 
 		toBeBucketSorted = toBeFiltered
@@ -359,11 +360,17 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 		toBeBucketSorted = toBeFiltered.filter('lon <', lonDegrees + lonOffset).filter('lon >', lonDegrees - lonOffset)
 	else:
 		#lat degrees and londegrees are both present
-		toBeBucketSorted = toBeFiltered.filter('lat <', (latDegrees + latOffset)).filter('lat >', (latDegrees - latOffset)).filter('lon <', (lonDegrees + lonOffset)).filter('lon >', (lonDegrees - lonOffset))
+		toBeBucketSorted = toBeFiltered.filter('lat <', (latDegrees + latOffset)).filter('lat >', (latDegrees - latOffset))
+		combined = True #we must perform the second coordinates inequality in application code because of https://groups.google.com/forum/#!topic/google-appengine/F8f8JKJ0dPs
+
 
 	#Now that we have all the items we want, bucket sort em with the precision
 	buckets = {}
 	for point in toBeBucketSorted:
+		if combined:
+			#filter on lon
+			if not ((lonDegrees - lonOffset) <  point.lon and point.lon < (lonDegrees + lonOffset)):
+				continue
 		key = "%f_%f" % (round(point.lat,precision), round(point.lon,precision))
 		if key in buckets:
 			buckets[key].secondsWorked += point.secondsWorked
