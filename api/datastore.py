@@ -85,7 +85,7 @@ class Comments(Greenup):
 class GridPoints(Greenup):
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
-	secondsWorked = db.FloatProperty()
+	secondsWorked = db.IntegerProperty()
 
 	@classmethod
 	def by_id(cls, gridId):
@@ -113,6 +113,10 @@ class GridPoints(Greenup):
 		# query all points with a latitude between lonDegrees and offset
 		q = GridPoints().all().filter('lon >=', lonDegrees).filter('lon <=', lonDegrees + offset).get()
 		return q
+
+	@classmethod
+	def get_all_delayed(cls):
+		return GridPoints.all()
 
 	# then we need to make a function that runs through that chunk and bucket-izes each point by rounding it (and stores the 
 	# seconds worked for each of those points that went into the bucket) [see bucket sort or alpha sort]. this could be a function
@@ -145,12 +149,18 @@ class AbstractionLayer():
 		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
-		# memcache or datastore read
-		pass
+		dbPoints = heatmapFiltering(latdegrees,lonDegrees,latOffset,lonOffset,precision)
+		dictPoints = []
+		for gridpoint in dbPoints:
+			dictPoints.append({'latDegrees' : gridpoint.latdegrees, 'lonDegrees' : gridpoint.lonDegrees, 'secondsWorked' : gridpoint.secondsWorked})
+		return dictPoints
 
-	def updateHeatmap(self, latDegrees, lonDegrees, secondsWorked):
+	def updateHeatmap(self, heatmapList):
 		# datastore write
-		gp = GridPoints(parent=self.appKey, lat=latDegrees, lon=lonDegrees, secondsWorked=secondsWorked).put()
+		for point in heatmapList:
+			#We may want to consider some error checking here.
+			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
+
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
 		# memcache or datastore read
@@ -325,3 +335,32 @@ def paging(page=1,typeFilter=None):
 	logging.info(pageKey)
 	results = deserialize_entities(memcache.get(pageKey))
 	return results
+
+
+def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,precision=DEFAULT_ROUNDING_PRECISION):
+	#Make sure offsets are set to default if not specified (consider putting in constants)
+	if latOffset is None:
+		latOffset = 1
+	if lonOffset is None:
+		lonOffset = 1
+
+	#Get all unfiltered gridpoints
+	toBeFiltered = GridPoints.get_all_delayed()
+	toBeBucketSorted = []
+
+	if latDegrees is None and lonDegrees is None:
+		#Code in calling function must handle parsing to JSON the data modelst 
+		toBeBucketSorted = toBeFiltered.get()
+	elif latDegrees is None:
+		#No lonDegrees
+		toBeBucketSorted = toBeFiltered.filter('latDegrees <', latDegrees + latOffset).filter('latDegrees >', latDegrees - latOffset).get()
+	elif lonDegrees is None:
+		#no latdegrees
+		toBeBucketSorted = toBeFiltered.filter('lonDegrees <', lonDegrees + lonOffset).filter('lonDegrees >', lonDegrees - lonOffset).get()
+	else:
+		#lat degrees and londegrees are both present
+		toBeBucketSorted = toBeFiltered.filter('latDegrees <', latDegrees + latOffset).filter('latDegrees >', latDegrees - latOffset).filter('lonDegrees <', lonDegrees + lonOffset).filter('lonDegrees >', lonDegrees - lonOffset).get()
+
+	#Now that we have all the items we want, bucket sort em with the precision
+	
+
