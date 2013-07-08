@@ -373,7 +373,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 				continue
 		key = "%f_%f" % (round(point.lat,precision), round(point.lon,precision))
 		if key in buckets:
-			buckets[key].secondsWorked += point.secondsWorked
+			buckets[key]['secondsWorked'] += point.secondsWorked
 		else:
 			buckets[key] = {'latDegrees' : point.lat, 'lonDegrees' : point.lon, 'secondsWorked' : point.secondsWorked}
 	#Now send the buckets back as a list
