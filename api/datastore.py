@@ -52,14 +52,19 @@ class Pins(Greenup):
 		return bt
 
 	@classmethod
-	def by_lat(cls,lat, precision=5):
+	def by_lat(cls,lat, precision=DEFAULT_ROUNDING_PRECISION):
 		latitudes = Pins.all().filter('lat =', lat).get()		
 		return latitudes
 
 	@classmethod
-	def by_lon(cls,lon, precision=5):
+	def by_lon(cls,lon, precision=DEFAULT_ROUNDING_PRECISION):
 		longitudes = Pins.all().filter('lon =', lon).get()
 		return longitudes
+
+	@classmethod
+	def get_all_pins(cls):
+		pins = Pins.all()
+		return pins
 
 class Comments(Greenup):
 
@@ -162,19 +167,9 @@ class AbstractionLayer():
 			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
 
 
-	def getPins(self, latDegrees=None, latOffset=1, lonDegrees=None, lonOffset=1):
+	def getPins(self, latDegrees=None, lonDegrees=None, precision=DEFAULT_ROUNDING_PRECISION):
 		# datastore read
-		dbPins = pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset)
-		dictPins = []
-		for pin in dbPins:
-			dictPins.append({
-								'latDegrees' : pin.lat,
-								'lonDegrees' : pin.lon,
-								'type'		 : pin.pinType,
-								'message'	 : pin.message
-							})
-		return dictPins
-		
+		return pinsFiltering(latDegrees, lonDegrees, precision)
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
@@ -374,6 +369,34 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 	#Now that we have all the items we want, bucket sort em with the precision
 	
 
-def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
+def pinsFiltering(latDegrees, lonDegrees,  precision):
 	# filter by parameters passed in and return the appropriate dataset
 	
+	if latDegrees is None and lonDegrees is None:
+		# nothing specified, this means we return all of it
+		logging.info("nothing is specified")
+		dbPins = Pins.get_all_pins()
+		pins = []
+
+		# trim to precision and format
+		for pin in dbPins:
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			pins.append({
+							'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message
+							})
+		
+		return pins
+
+	elif latDegrees is None:
+		# only longitude supplied
+		pass
+	elif lonDegrees is None:
+		# only latitude supplied
+		pass
+	else:
+		# both the lat and lon are supplied
+		pass
