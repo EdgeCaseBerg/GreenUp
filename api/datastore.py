@@ -151,7 +151,7 @@ class AbstractionLayer():
 	def updateHeatmap(self, heatmapList):
 		# datastore write
 		for point in heatmapList:
-			gp = GridPoints(parent=self.appKey, lat=point['latDegrees'], lon=point['lonDegrees'], secondsWorked=point['secondsWorked']).put()
+			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
 
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
