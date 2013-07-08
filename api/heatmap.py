@@ -101,7 +101,7 @@ class Heatmap(webapp2.RequestHandler):
 
 		#If no parameters are specified we'll return everything we have for them
 		response = []
-		
+
 		if parameters == 0:
 			#Return everything
 			response = []
@@ -118,6 +118,7 @@ class Heatmap(webapp2.RequestHandler):
 				#Only specified lonDegrees
 				lonDegrees = round(lonDegrees,precision)
 				response = GridPoints.by_lon(lonDegrees)
+				logging.info(response)
 				if not response:
 					response = []
 			elif not lonOffset and latDegrees and lonDegrees:
@@ -234,10 +235,9 @@ class Heatmap(webapp2.RequestHandler):
 			points.append(info[i])
 
 		#Add all points to datastore
-		logging.info(info)
-		for point in points:
-			pass
-
+		layer = AbstractionLayer()
+		logging.info(points)
+		layer.updateHeatmap(points)
 
 		self.response.set_status(api.HTTP_OK)
 		self.response.write('{"status": %i, "message" : "Successful submit" }' % api.HTTP_OK)

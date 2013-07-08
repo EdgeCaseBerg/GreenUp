@@ -85,7 +85,7 @@ class Comments(Greenup):
 class GridPoints(Greenup):
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
-	secondsWorked = db.FloatProperty()
+	secondsWorked = db.IntegerProperty()
 
 	@classmethod
 	def by_id(cls, gridId):
@@ -148,9 +148,11 @@ class AbstractionLayer():
 		# memcache or datastore read
 		pass
 
-	def updateHeatmap(self, latDegrees, lonDegrees, secondsWorked):
+	def updateHeatmap(self, heatmapList):
 		# datastore write
-		gp = GridPoints(parent=self.appKey, lat=latDegrees, lon=lonDegrees, secondsWorked=secondsWorked).put()
+		for point in heatmapList:
+			gp = GridPoints(parent=self.appKey, lat=point['latDegrees'], lon=point['lonDegrees'], secondsWorked=point['secondsWorked']).put()
+
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
 		# memcache or datastore read
