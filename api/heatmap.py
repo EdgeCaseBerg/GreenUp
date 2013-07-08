@@ -236,7 +236,6 @@ class Heatmap(webapp2.RequestHandler):
 
 		#Add all points to datastore
 		layer = AbstractionLayer()
-		logging.info(points)
 		layer.updateHeatmap(points)
 
 		self.response.set_status(api.HTTP_OK)
