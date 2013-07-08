@@ -162,9 +162,19 @@ class AbstractionLayer():
 			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
 
 
-	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
-		# memcache or datastore read
-		pass
+	def getPins(self, latDegrees=None, latOffset=1, lonDegrees=None, lonOffset=1):
+		# datastore read
+		dbPins = pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset)
+		dictPins = []
+		for pin in dbPins:
+			dictPins.append({
+								'latDegrees' : pin.lat,
+								'lonDegrees' : pin.lon,
+								'type'		 : pin.pinType,
+								'message'	 : pin.message
+							})
+		return dictPins
+		
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
@@ -364,3 +374,6 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 	#Now that we have all the items we want, bucket sort em with the precision
 	
 
+def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
+	# filter by parameters passed in and return the appropriate dataset
+	
