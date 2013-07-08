@@ -93,7 +93,7 @@ def validateCommentsPOSTRequest(comments_response_to_post):
 def validateHeatmapGETRequest(heatmap_response_to_get):
 	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked']
 	for gridzone in heatmap_response_to_get:
-		for key,value in heatmap_response_to_get.iteritems():
+		for key,value in gridzone.iteritems():
 			assert key in heatmap_response_keys
 			assert isinstance(value,numbers.Number)
 	return True
@@ -133,9 +133,9 @@ def validateErrorMessageReturned(comments_error_response):
 
 
 if __name__ == "__main__":
+	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapi.appspot.com/api'
 	baseURL = 'http://localhost:30002/api'
-	#baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
@@ -204,11 +204,6 @@ if __name__ == "__main__":
 
 	#get with bad offset (only one given)
 	tester.followLink(endPoints['heatmap'],withData={"latDegrees" : 1.2, "lonDegrees" : 4.5, "lonOffset" : 6})
-	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
-
-	#get with good offsets, but not degrees
-	tester.followLink(endPoints['heatmap'],withData={"lonOffset" : 4, "latOffset" : 2})
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())
 
