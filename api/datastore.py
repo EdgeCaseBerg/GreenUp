@@ -413,7 +413,6 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 		dbPins = Pins.get_all_pins()		
 		# trim to precision and format
 		for pin in dbPins:		
-			print type(pin)	
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
 			key = "%f_%f" % (pin.lat, pin.lon)
@@ -424,54 +423,63 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 		for key,item in pins.iteritems():
 			toReturn.append(item)
 
-		print type(pins.itervalues().next())
+		# print type(pins.itervalues().next())
 		return toReturn
 
 	elif lonDegrees is None:
 		# only latitude supplied
 		logging.error("Got to only latDegrees filter")
-		print "this is lonDegrees: "
-		print lonDegrees
-		print "this is latdegrees"
-		print latDegrees
 		dbPins = Pins.by_lat(lat=latDegrees, offset=latOffset)
-		for pin in dbPins:
+		for pin in dbPins:		
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
-			pins.append({   'latDegrees' : pin.lat,
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
 							'message'	 : pin.message })
-		return pins
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+
+		return toReturn
 
 	elif latDegrees is None:
 		# only longitude supplied
 		logging.error("Got to only lonDegrees filter")
 		dbPins = Pins.by_lon(lon=lonDegrees, offset=lonOffset)
-		for pin in dbPins:
+		for pin in dbPins:		
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
-			pins.append({   'latDegrees' : pin.lat,
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
 							'message'	 : pin.message })
-		return pins
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+
+		return toReturn
 	
 	elif (latDegrees and lonDegrees) and not lonOffset:
 		# both lat and lon are supplied
 		logging.error("Got to both types filter")
 		# lat, latOffset, lon, lonOffset
 		dbPins = Pins.by_lat_and_lon(lon=lonDegrees, lat=latDegrees, latOffset=latOffset, lonOffset=lonOffset)
-		for pin in dbPins:
+		for pin in dbPins:		
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
-			pins.append({   'latDegrees' : pin.lat,
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
 							'message'	 : pin.message })
-		return pins
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+
+		return toReturn
 
 	elif latDegrees and latOffset and lonDegrees and lonOffset:
+		# degrees are supplied with offsets
 		dbPins = Pins.get_all_pins()
 		dbLats = dbPins.filter('lat <', (latDegrees + latOffset)).filter('lat >', (latDegrees - latOffset))
 		for pin in dbLats:
@@ -480,11 +488,15 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 				continue
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
-			pins.append({   'latDegrees' : pin.lat,
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
 							'message'	 : pin.message })
-		return pins
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+
+		return toReturn
 
 	else:		
 		logging.error("Got to Both supplied filter")

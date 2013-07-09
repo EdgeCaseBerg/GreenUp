@@ -51,7 +51,7 @@ class Spider(object):
 	def getJSON(self):
 		"""Returns an object from json returned from spiderlink, or None if the information is malformed or not there"""
 		print "got to GetJSON"
-		print self.spiderlink.read()
+		# print self.spiderlink.read()
 		if self.spiderlink:
 			try:
 				raw = self.spiderlink.read()
