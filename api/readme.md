@@ -169,9 +169,9 @@ If the post data is malformed, the server will return a `400 bad request` respon
 ---------------------------------
 
 
-###Get Heatmap Data
+    ###Get Heatmap Data
 
-Method: **GET**
+    Method: **GET**
 
 URL: **/api/heatmap**
 
@@ -182,16 +182,16 @@ URL: **/api/heatmap**
     </thead>
     <tbody>
         <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve,only values between -90.0 and 90.0 will be accepted.</td></tr>
-        <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved. Required if latDegrees is used</td></tr>
+        <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved.</td></tr>
         <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve, only values between -180.0 and 180.0  will be accepted.</td></tr>
-        <tr><td>lonOffset</td><td>unsigned float</td><td>Offset to add to the longitude point to create a bounding rectangle on the points retrieved. Required if lonDegrees is used</td></tr>
+        <tr><td>lonOffset</td><td>unsigned float</td><td>Offset to add to the longitude point to create a bounding rectangle on the points retrieved.</td></tr>
         <tr><td>precision</td><td>unsigned integer</td><td>The integer precision for rounding degrees. It is recommended to leave this blank unless you know what you're doing.</td></tr>
     </tbody>
 </table>
 
 If none of these parameters are specified, all points will be returned. Note that this may be slow depending on the total number of points stored in the grid as well as the precision of the grid coordinates as well. 
 
-If the request only specifies the offset or precision then the API will return an error message.
+If the request only specifies the offset then the API will return an error message.
 
 ####Example Request
 `http://greenup.xenonapps.com/api/heatmap?latDegrees=23.45&latOffset=2.0&lonDegrees=40.3&lonOffset=5.12`
