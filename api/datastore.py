@@ -154,11 +154,7 @@ class AbstractionLayer():
 		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
-		dbPoints = heatmapFiltering(latdegrees,lonDegrees,latOffset,lonOffset,precision)
-		dictPoints = []
-		for gridpoint in dbPoints:
-			dictPoints.append({'latDegrees' : gridpoint.latdegrees, 'lonDegrees' : gridpoint.lonDegrees, 'secondsWorked' : gridpoint.secondsWorked})
-		return dictPoints
+		return heatmapFiltering(latDegrees,lonDegrees,latOffset,lonOffset,precision)
 
 	def updateHeatmap(self, heatmapList):
 		# datastore write
@@ -353,20 +349,43 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 	toBeFiltered = GridPoints.get_all_delayed()
 	toBeBucketSorted = []
 
+	combined = False
 	if latDegrees is None and lonDegrees is None:
 		#Code in calling function must handle parsing to JSON the data modelst 
-		toBeBucketSorted = toBeFiltered.get()
+		toBeBucketSorted = toBeFiltered
 	elif latDegrees is None:
 		#No lonDegrees
-		toBeBucketSorted = toBeFiltered.filter('latDegrees <', latDegrees + latOffset).filter('latDegrees >', latDegrees - latOffset).get()
+		toBeBucketSorted = toBeFiltered.filter('lat <', latDegrees + latOffset).filter('lat >', latDegrees - latOffset)
 	elif lonDegrees is None:
 		#no latdegrees
-		toBeBucketSorted = toBeFiltered.filter('lonDegrees <', lonDegrees + lonOffset).filter('lonDegrees >', lonDegrees - lonOffset).get()
+		toBeBucketSorted = toBeFiltered.filter('lon <', lonDegrees + lonOffset).filter('lon >', lonDegrees - lonOffset)
 	else:
 		#lat degrees and londegrees are both present
-		toBeBucketSorted = toBeFiltered.filter('latDegrees <', latDegrees + latOffset).filter('latDegrees >', latDegrees - latOffset).filter('lonDegrees <', lonDegrees + lonOffset).filter('lonDegrees >', lonDegrees - lonOffset).get()
+		toBeBucketSorted = toBeFiltered.filter('lat <', (latDegrees + latOffset)).filter('lat >', (latDegrees - latOffset))
+		combined = True #we must perform the second coordinates inequality in application code because of https://groups.google.com/forum/#!topic/google-appengine/F8f8JKJ0dPs
+
 
 	#Now that we have all the items we want, bucket sort em with the precision
+	buckets = {}
+	for point in toBeBucketSorted:
+		if combined:
+			#filter on lon
+			if not ((lonDegrees - lonOffset) <  point.lon and point.lon < (lonDegrees + lonOffset)):
+				continue
+		key = "%f_%f" % (round(point.lat,precision), round(point.lon,precision))
+		if key in buckets:
+			buckets[key]['secondsWorked'] += point.secondsWorked
+		else:
+			buckets[key] = {'latDegrees' : point.lat, 'lonDegrees' : point.lon, 'secondsWorked' : point.secondsWorked}
+	#Now send the buckets back as a list
+	#note that buckets.items() will give back tuples, which is not what we want
+	toReturn = []
+	for key,bucket in buckets.iteritems():
+		toReturn.append(bucket)
+	return toReturn
+
+
+
 	
 
 def pinsFiltering(latDegrees, lonDegrees,  precision):
