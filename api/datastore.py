@@ -412,7 +412,8 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 		logging.error("Got to DEFAULT filter")
 		dbPins = Pins.get_all_pins()		
 		# trim to precision and format
-		for pin in dbPins:			
+		for pin in dbPins:		
+			print type(pin)	
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
 			key = "%f_%f" % (pin.lat, pin.lon)
@@ -422,6 +423,8 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 							'message'	 : pin.message })
 		for key,item in pins.iteritems():
 			toReturn.append(item)
+
+		print type(pins.itervalues().next())
 		return toReturn
 
 	elif lonDegrees is None:
