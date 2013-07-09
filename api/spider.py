@@ -6,7 +6,7 @@
 
 import urllib2
 import json
-
+import logging
 import numbers
 
 from constants import *
@@ -50,13 +50,15 @@ class Spider(object):
 
 	def getJSON(self):
 		"""Returns an object from json returned from spiderlink, or None if the information is malformed or not there"""
+		print "got to GetJSON"
+		# print self.spiderlink.read()
 		if self.spiderlink:
 			try:
 				raw = self.spiderlink.read()
-				#print raw
 				returnValue = json.loads(raw)
 				return returnValue
 			except Exception, e:
+				print "there's been an exception"
 				#Issue parsing json. Die a silent death and allow tests to fail due to None
 				print e
 				pass
@@ -107,6 +109,7 @@ def validateHeatmapPUTRequest(heatmap_response_to_put):
 	return True
 
 def validatePINSGetRequest(pins_response_to_get):
+	print "got to validatePINSGetRequest"
 	pins_response_keys = ['latDegrees','lonDegrees','type','message']
 	assert pins_response_to_get is not None
 	for pin in pins_response_to_get:
@@ -143,9 +146,10 @@ if __name__ == "__main__":
 			'heatmap' : baseURL + '/heatmap'
 	}
 
-
+	
 	#Test the comment endpoint:
 	tester = Spider()
+
 	tester.followLink(endPoints['comments'])
 	assert tester.getCode() == HTTP_OK
 	comments_response_to_get = tester.getJSON()
@@ -257,6 +261,10 @@ if __name__ == "__main__":
 
 	print "Heatmap endpoint Passed all assertion tests"
 
+
+	'''
+		****************** PINS SECTION ****************** 
+	'''
 
 	#Default GET
 	tester.followLink(endPoints['pins'])

@@ -3,9 +3,11 @@ from google.appengine.ext import db
 
 import webapp2
 import json
+import api
 
 from datastore import Pins as DBPins
 from constants import *
+from datastore import *
 
 class Pins(webapp2.RequestHandler):
 
@@ -19,6 +21,15 @@ class Pins(webapp2.RequestHandler):
 		lonOffset = self.request.get("lonOffset")
 		precision = self.request.get("precision")
 		
+		if latDegrees == "":
+			latDegrees = None
+		if lonDegrees == "":
+			lonDegrees = None
+		if lonOffset == "":
+			lonOffset = None
+		if latOffset == "":
+			latOffset = None
+
 		#validate parameters
 		if latDegrees:
 			try:
@@ -67,7 +78,6 @@ class Pins(webapp2.RequestHandler):
 			return
 
 		#the choice of lon is arbitrary, either lat or lon offset would work here
-		
 		if lonOffset:
 			try:
 				lonOffset = abs(int(lonOffset))
@@ -97,48 +107,52 @@ class Pins(webapp2.RequestHandler):
 
 		#If no parameters are specified we'll return everything we have for them
 		response = []
-		
+		layer = AbstractionLayer()
 		if parameters == 0:
 			#Return everything
-			response = []
+			response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
 		else:
 			#Figure out what type of query to make depending on the parameters we have available
 			if not lonOffset and latDegrees and not lonDegrees:
 				#Only specified latDegrees
 				#Round latDegrees by precision value:
-				latDegrees = round(latDegrees,precision) 
-				response = DBPins.by_lat(latDegrees)
+				# latDegrees = round(latDegrees,precision) 
+				# response = DBPins.by_lat(latDegrees)
+				response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
 				if not response:
 					response = []
 			elif not lonOffset and lonDegrees and not latDegrees:
 				#Only specified lonDegrees
-				lonDegrees = round(lonDegrees,precision)
-				response = DBPins.by_lon(lonDegrees)
+				# lonDegrees = round(lonDegrees,precision)
+				# response = DBPins.by_lon(lonDegrees)
+				response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
 				if not response:
 					response = []
 			elif not lonOffset and latDegrees and lonDegrees:
 				#We have both lon and lat degrees
-				lonDegrees = round(lonDegrees,precision)
-				latDegrees = round(latDegrees,precision)
-				pass
-				#Do query for both (not implemented yet)
+				# lonDegrees = round(lonDegrees,precision)
+				# latDegrees = round(latDegrees,precision)
+				response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
+				if not response:
+					response = []			
 			elif lonOffset and ((latDegrees and not lonDegrees) or (not latDegrees and lonDegrees)):
 				#Do query for degrees with offsets
 				if latDegrees:
 					#Do query for latitude with an offset
-					pass
+					response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset)
+					pass # this seems to be prevented by the fact that 'Both lonOffset and latOffset must be present if either is used'
 				elif lonDegrees:
 					#Do query for longitude with an offset
-					pass
-				pass
+					response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)				
+					pass # this seems to be prevented by the fact that 'Both lonOffset and latOffset must be present if either is used'
 			elif lonOffset and latDegrees and lonDegrees:
 				#We have offsets and both degrees, fire off the bounds request
-				pass
+				response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
 			else:
 				#No degrees specified and offsets or just precision?
 				if parameters == 1:
 					#Just precision
-					pass
+					response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
 				else:
 					#This is a bad request.
 					self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
@@ -148,7 +162,7 @@ class Pins(webapp2.RequestHandler):
 
 		#By this point we have a response and we simply have to send it back
 		self.response.set_status(HTTP_OK)
-		self.response.write(json.dumps(response))	
+		self.response.write(json.dumps(response))
 
 	def post(self):
 		self.response.set_status(HTTP_OK)
@@ -222,7 +236,8 @@ class Pins(webapp2.RequestHandler):
 		#Don't know what to do about the message. perhaps just escape it or something I guess?
 
 		#Place the pin into the datastore
-		
+		layer = AbstractionLayer()
+		layer.submitPin(latDegrees=latDegrees, lonDegrees=lonDegrees, pinType=pinType, message=message)
 
 		#self.response.set_status(HTTP_OK)		
 		self.response.write('{  "status" : 200,  "message" : "Successful submit"}')

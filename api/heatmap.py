@@ -103,13 +103,8 @@ class Heatmap(webapp2.RequestHandler):
 			lonOffset = 1
 			latOffset = 1
 
-		
-		
-				
-
 		#If no parameters are specified we'll return everything we have for them
 		response = []
-
 		layer = AbstractionLayer()
 		response = layer.getHeatmap(latDegrees,latOffset,lonDegrees,lonOffset, precision)
 

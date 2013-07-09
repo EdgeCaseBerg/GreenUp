@@ -52,14 +52,36 @@ class Pins(Greenup):
 		return bt
 
 	@classmethod
-	def by_lat(cls,lat, precision=5):
-		latitudes = Pins.all().filter('lat =', lat).get()		
+	def by_lat(cls,lat, offset=None):
+		if not offset:
+			latitudes = Pins.all().filter('lat =', lat)
+			return latitudes
+		else:
+			latitudes = Pins.all().filter('lat >=', lat).filter('lat <=', lat + offset)
 		return latitudes
 
 	@classmethod
-	def by_lon(cls,lon, precision=5):
-		longitudes = Pins.all().filter('lon =', lon).get()
+	def by_lon(cls,lon, offset=None):
+		if not offset:
+			longitudes = Pins.all().filter('lon =', lon)
+		else:
+			longitudes = Pins.all().filter('lon >=', lon).filter('lon <=', lon + offset)
 		return longitudes
+
+	@classmethod
+	def get_all_pins(cls):
+		pins = Pins.all()
+		return pins
+
+	@classmethod
+	def by_lat_and_lon(cls, lat, latOffset, lon, lonOffset):
+		if not latOffset:
+			both = Pins.all().filter('lon =', lon).filter('lat =', lat)
+			return both
+		else:
+			longitudes = Pins.all().filter('lon >=', lon).filter('lon <=', lon + offset)
+			latitudes = Pins.all().filter('lat >=', lat).filter('lat <=', lat + offset)
+		return longitudes, latitudes
 
 class Comments(Greenup):
 
@@ -159,8 +181,8 @@ class AbstractionLayer():
 
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
-		# memcache or datastore read
-		pass
+		# datastore read
+		return pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision)
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
@@ -264,8 +286,6 @@ def paging(page=1,typeFilter=None):
 	currentCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page)
 	pageInCache = memcache.get(currentCursorKey)
 
-	logging.info(currentCursorKey)
-
 	misses = []
 
 	if not memcache.get('greeunup_comment_paging_cursor_%s_%s' %(typeFilter, 1) ):
@@ -311,8 +331,7 @@ def paging(page=1,typeFilter=None):
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
 		prevCursor = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page-1)
 		cursor = memcache.get(prevCursor)
-		#This causes an error on initial write. Not sure how to fix it, the querySet is None
-		#Phelan can you fix this?
+
 		results = querySet.with_cursor(start_cursor=cursor)
 		results = results.run(limit=resultsPerPage)
 
@@ -324,13 +343,12 @@ def paging(page=1,typeFilter=None):
 
 		# save results in memecache with key
 		pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, page)
-		logging.info(pageKey)
 		memcache.set(pageKey, serialize_entities(items))
 
 		return items
 
 	# otherwise, just get the page out of memcache
-	print "did this instead, cause it was in the cache"
+	# print "did this instead, cause it was in the cache"
 	pageKey = "greenup_comments_page_%s_%s" %(typeFilter, page)
 	logging.info(pageKey)
 	results = deserialize_entities(memcache.get(pageKey))
@@ -383,7 +401,105 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 		toReturn.append(bucket)
 	return toReturn
 
-
-
+def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAULT_ROUNDING_PRECISION):
+	# filter by parameters passed in and return the appropriate dataset
+	pins = {}
+	toReturn = []
+	logging.error("Got to pinsFiltering")
 	
+	if latDegrees is None and lonDegrees is None:
+		# nothing specified, this means we return all of it
+		logging.error("Got to DEFAULT filter")
+		dbPins = Pins.get_all_pins()		
+		# trim to precision and format
+		for pin in dbPins:		
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		for key,item in pins.iteritems():
+			toReturn.append(item)
 
+		# print type(pins.itervalues().next())
+		return toReturn
+
+	elif lonDegrees is None:
+		# only latitude supplied
+		logging.error("Got to only latDegrees filter")
+		dbPins = Pins.by_lat(lat=latDegrees, offset=latOffset)
+		for pin in dbPins:		
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+
+		return toReturn
+
+	elif latDegrees is None:
+		# only longitude supplied
+		logging.error("Got to only lonDegrees filter")
+		dbPins = Pins.by_lon(lon=lonDegrees, offset=lonOffset)
+		for pin in dbPins:		
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+
+		return toReturn
+	
+	elif (latDegrees and lonDegrees) and not lonOffset:
+		# both lat and lon are supplied
+		logging.error("Got to both types filter")
+		# lat, latOffset, lon, lonOffset
+		dbPins = Pins.by_lat_and_lon(lon=lonDegrees, lat=latDegrees, latOffset=latOffset, lonOffset=lonOffset)
+		for pin in dbPins:		
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+
+		return toReturn
+
+	elif latDegrees and latOffset and lonDegrees and lonOffset:
+		# degrees are supplied with offsets
+		dbPins = Pins.get_all_pins()
+		dbLats = dbPins.filter('lat <', (latDegrees + latOffset)).filter('lat >', (latDegrees - latOffset))
+		for pin in dbLats:
+			#filter on lon
+			if not ((lonDegrees - lonOffset) <  pin.lon and pin.lon < (lonDegrees + lonOffset)):
+				continue
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+
+
+
+		return toReturn
+
+	else:		
+		logging.error("Got to Both supplied filter")
+		return "Something bad happened"
