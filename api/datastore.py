@@ -73,6 +73,16 @@ class Pins(Greenup):
 		pins = Pins.all()
 		return pins
 
+	@classmethod
+	def by_lat_and_lon(cls, lat, lon, offset):
+		if not offset:
+			longitudes = Pins.all().filter('lon =', lon)
+			latitudes = Pins.all().filter('lat =', lat)
+		else:
+			longitudes = Pins.all().filter('lon >=', lon).filter('lon <=', lon + offset)
+			latitudes = Pins.all().filter('lat >=', lat).filter('lat <=', lat + offset)
+		return longitudes, latitudes
+
 class Comments(Greenup):
 
 	commentType = db.StringProperty(choices=COMMENT_TYPES)
@@ -391,10 +401,6 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 		toReturn.append(bucket)
 	return toReturn
 
-
-
-	
-
 def pinsFiltering(latDegrees, lonDegrees, offset, precision):
 	# filter by parameters passed in and return the appropriate dataset
 	pins = []
@@ -428,7 +434,6 @@ def pinsFiltering(latDegrees, lonDegrees, offset, precision):
 	elif lonDegrees is None:
 		# only latitude supplied
 		dbPins = Pins.by_lat(lat=latDegrees, offset=offset)		
-		# trim to precision and format
 		for pin in dbPins:
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
@@ -439,5 +444,27 @@ def pinsFiltering(latDegrees, lonDegrees, offset, precision):
 		return pins
 		
 	else:
-		# both the lat and lon are supplied
-		pass
+		# both lat and lon are supplied
+		longitudes, latitudes = Pins.by_lat_and_lon(lat=latDegrees, lon=lonDegrees, offset=offset)
+		# need to zip these together
+		for pin in dbPins:
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			pins.append({   'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		return pins		
+
+	return "error"
+
+def pinRounding(dbPins, precision):
+	pins = []
+	for pin in dbPins:
+		pin.lat = round(pin.lat, precision)
+		pin.lon = round(pin.lon, precision)
+		pins.append({   'latDegrees' : pin.lat,
+						'lonDegrees' : pin.lon,
+						'type'		 : pin.pinType,
+						'message'	 : pin.message })
+		return pins		
