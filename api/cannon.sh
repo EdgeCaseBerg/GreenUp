@@ -1,5 +1,6 @@
 #!/bin/sh
-
+echo "Kill the PID below to stop script (kill 12)"
+echo $$
 echo "Cannon.sh creates 1000 curl processes against the passed in url\n"
 
 if [ "$#" -ne 1 ]
