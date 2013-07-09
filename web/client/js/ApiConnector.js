@@ -29,7 +29,7 @@ function ApiConnector(){
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
-				// alert("error: "+xhr.status);
+				// // alert("error: "+xhr.status);
 				switch(xhr.status){
 					case 500:
 						// internal server error
@@ -49,7 +49,7 @@ function ApiConnector(){
 						console.log("Error: api response = 422");
 						break;
 					default:
-						alert("Error Contacting API: "+xhr.status);
+						// alert("Error Contacting API: "+xhr.status);
 						break;
 				}
 			}
@@ -70,7 +70,7 @@ function ApiConnector(){
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
-				// alert("error: "+xhr.status);
+				// // alert("error: "+xhr.status);
 				switch(xhr.status){
 					case 500:
 						// internal server error
@@ -97,7 +97,7 @@ function ApiConnector(){
 						console.log("Request successful");
 						break;
 					default:
-						alert("Error Contacting API: "+xhr.status);
+						// alert("Error Contacting API: "+xhr.status);
 						break;
 				}
 			}
@@ -164,7 +164,7 @@ function ApiConnector(){
 			        dataType:"json",
 			        data: {data : data},
 			        failure: function(errMsg){
-			        	alert(errMsg);
+			        	// alert(errMsg);
 			        }
 			    });//Ajax
 			        
@@ -396,7 +396,7 @@ function UiHandle(){
 			messagesContainer.appendChild(messages[ii]);
 
 		}
-		// alert(window.UI.commentsNextPageUrl);
+		// // alert(window.UI.commentsNextPageUrl);
 		console.log(data);
 	}
 
@@ -560,7 +560,7 @@ function MapHandle(){
 		pin.latDegrees = marker.getPosition().lat();
 		pin.lonDegrees = marker.getPosition().lng();
 		var serializedPin = JSON.stringify(pin);
-		// alert(serializedPin);
+		// // alert(serializedPin);
 
     	window.MAP.pickupMarkers.push(marker);
     	window.ApiConnector.pushNewPin(serializedPin);
