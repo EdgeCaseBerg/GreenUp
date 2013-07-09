@@ -19,7 +19,6 @@ class Pins(webapp2.RequestHandler):
 		lonDegrees = self.request.get("lonDegrees")
 		latOffset = self.request.get("latOffset")
 		lonOffset = self.request.get("lonOffset")
-		precision = self.request.get("precision")
 		
 		if latDegrees == "":
 			latDegrees = None
@@ -89,77 +88,11 @@ class Pins(webapp2.RequestHandler):
 				self.response.write('{"Error_Message" : "Offsets defined must both be integers" }')
 				return
 
-		
-		#Check precision
-		if precision:
-			try:
-				precision = abs(int(precision))
-				parameters += 1
-			except ValueError, e:
-				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "Precision value must be a numeric integer" '  )
-				return
-			else:
-				precision = DEFAULT_ROUNDING_PRECISION
-		else:
-			precision = DEFAULT_ROUNDING_PRECISION	
-
-
 		#If no parameters are specified we'll return everything we have for them
 		response = []
 		layer = AbstractionLayer()
-		if parameters == 0:
-			#Return everything
-			response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
-		else:
-			#Figure out what type of query to make depending on the parameters we have available
-			if not lonOffset and latDegrees and not lonDegrees:
-				#Only specified latDegrees
-				#Round latDegrees by precision value:
-				# latDegrees = round(latDegrees,precision) 
-				# response = DBPins.by_lat(latDegrees)
-				response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
-				if not response:
-					response = []
-			elif not lonOffset and lonDegrees and not latDegrees:
-				#Only specified lonDegrees
-				# lonDegrees = round(lonDegrees,precision)
-				# response = DBPins.by_lon(lonDegrees)
-				response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
-				if not response:
-					response = []
-			elif not lonOffset and latDegrees and lonDegrees:
-				#We have both lon and lat degrees
-				# lonDegrees = round(lonDegrees,precision)
-				# latDegrees = round(latDegrees,precision)
-				response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
-				if not response:
-					response = []			
-			elif lonOffset and ((latDegrees and not lonDegrees) or (not latDegrees and lonDegrees)):
-				#Do query for degrees with offsets
-				if latDegrees:
-					#Do query for latitude with an offset
-					response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset)
-					pass # this seems to be prevented by the fact that 'Both lonOffset and latOffset must be present if either is used'
-				elif lonDegrees:
-					#Do query for longitude with an offset
-					response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)				
-					pass # this seems to be prevented by the fact that 'Both lonOffset and latOffset must be present if either is used'
-			elif lonOffset and latDegrees and lonDegrees:
-				#We have offsets and both degrees, fire off the bounds request
-				response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
-			else:
-				#No degrees specified and offsets or just precision?
-				if parameters == 1:
-					#Just precision
-					response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
-				else:
-					#This is a bad request.
-					self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-					self.response.write('{"Error_Message" : "Improperly formed query, if offsets or precision specified, at least one degree must be given"}')
-					return
-
-
+		#Return data
+		response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset)
 		#By this point we have a response and we simply have to send it back
 		self.response.set_status(HTTP_OK)
 		self.response.write(json.dumps(response))

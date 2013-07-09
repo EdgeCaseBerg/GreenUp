@@ -179,10 +179,9 @@ class AbstractionLayer():
 			#We may want to consider some error checking here.
 			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
 
-
-	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
+	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None):
 		# datastore read
-		return pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision)
+		return pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset)
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
@@ -401,7 +400,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 		toReturn.append(bucket)
 	return toReturn
 
-def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAULT_ROUNDING_PRECISION):
+def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 	# filter by parameters passed in and return the appropriate dataset
 	pins = {}
 	toReturn = []
@@ -410,73 +409,26 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 	if latDegrees is None and lonDegrees is None:
 		# nothing specified, this means we return all of it
 		logging.error("Got to DEFAULT filter")
-		dbPins = Pins.get_all_pins()		
-		# trim to precision and format
-		for pin in dbPins:		
-			pin.lat = round(pin.lat, precision)
-			pin.lon = round(pin.lon, precision)
-			key = "%f_%f" % (pin.lat, pin.lon)
-			pins[key] = ({  'latDegrees' : pin.lat,
-							'lonDegrees' : pin.lon,
-							'type'		 : pin.pinType,
-							'message'	 : pin.message })
-		for key,item in pins.iteritems():
-			toReturn.append(item)
-
-		# print type(pins.itervalues().next())
-		return toReturn
+		dbPins = Pins.get_all_pins()
+		return pinFormatter(dbPins)
 
 	elif lonDegrees is None:
 		# only latitude supplied
 		logging.error("Got to only latDegrees filter")
 		dbPins = Pins.by_lat(lat=latDegrees, offset=latOffset)
-		for pin in dbPins:		
-			pin.lat = round(pin.lat, precision)
-			pin.lon = round(pin.lon, precision)
-			key = "%f_%f" % (pin.lat, pin.lon)
-			pins[key] = ({  'latDegrees' : pin.lat,
-							'lonDegrees' : pin.lon,
-							'type'		 : pin.pinType,
-							'message'	 : pin.message })
-		for key,item in pins.iteritems():
-			toReturn.append(item)
-
-		return toReturn
+		return pinFormatter(dbPins)
 
 	elif latDegrees is None:
 		# only longitude supplied
 		logging.error("Got to only lonDegrees filter")
 		dbPins = Pins.by_lon(lon=lonDegrees, offset=lonOffset)
-		for pin in dbPins:		
-			pin.lat = round(pin.lat, precision)
-			pin.lon = round(pin.lon, precision)
-			key = "%f_%f" % (pin.lat, pin.lon)
-			pins[key] = ({  'latDegrees' : pin.lat,
-							'lonDegrees' : pin.lon,
-							'type'		 : pin.pinType,
-							'message'	 : pin.message })
-		for key,item in pins.iteritems():
-			toReturn.append(item)
+		return pinFormatter(dbPins)
 
-		return toReturn
-	
 	elif (latDegrees and lonDegrees) and not lonOffset:
 		# both lat and lon are supplied
 		logging.error("Got to both types filter")
-		# lat, latOffset, lon, lonOffset
 		dbPins = Pins.by_lat_and_lon(lon=lonDegrees, lat=latDegrees, latOffset=latOffset, lonOffset=lonOffset)
-		for pin in dbPins:		
-			pin.lat = round(pin.lat, precision)
-			pin.lon = round(pin.lon, precision)
-			key = "%f_%f" % (pin.lat, pin.lon)
-			pins[key] = ({  'latDegrees' : pin.lat,
-							'lonDegrees' : pin.lon,
-							'type'		 : pin.pinType,
-							'message'	 : pin.message })
-		for key,item in pins.iteritems():
-			toReturn.append(item)
-
-		return toReturn
+		return pinFormatter(dbPins)
 
 	elif latDegrees and latOffset and lonDegrees and lonOffset:
 		# degrees are supplied with offsets
@@ -486,8 +438,6 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  pin.lon and pin.lon < (lonDegrees + lonOffset)):
 				continue
-			pin.lat = round(pin.lat, precision)
-			pin.lon = round(pin.lon, precision)
 			key = "%f_%f" % (pin.lat, pin.lon)
 			pins[key] = ({  'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
@@ -496,10 +446,21 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 		for key,item in pins.iteritems():
 			toReturn.append(item)
 
-
-
 		return toReturn
 
-	else:		
-		logging.error("Got to Both supplied filter")
+	else:
 		return "Something bad happened"
+
+def pinFormatter(dbPins):
+	pins = {}
+	toReturn = []	
+	for pin in dbPins:		
+		key = "%f_%f" % (pin.lat, pin.lon)
+		pins[key] = ({  'latDegrees' : pin.lat,
+						'lonDegrees' : pin.lon,
+						'type'		 : pin.pinType,
+						'message'	 : pin.message })
+	for key,item in pins.iteritems():
+		toReturn.append(item)
+
+	return toReturn
