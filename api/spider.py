@@ -13,7 +13,7 @@ from constants import *
 
 class BetterHTTPErrorProcessor(urllib2.BaseHandler):
     # a substitute/supplement to urllib2.HTTPErrorProcessor
-    # that doesn't raise exceptions on status codes 201,204,206
+    # that doesn't raise exceptions on status codes 200,400,422,503
     def http_error_200(self, request, response, code, msg, hdrs):
         return response
     def http_error_400(self, request, response, code, msg, hdrs):
