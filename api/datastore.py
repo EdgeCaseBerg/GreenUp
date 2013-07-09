@@ -403,7 +403,8 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 
 def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAULT_ROUNDING_PRECISION):
 	# filter by parameters passed in and return the appropriate dataset
-	pins = []
+	pins = {}
+	toReturn = []
 	logging.error("Got to pinsFiltering")
 	
 	if latDegrees is None and lonDegrees is None:
@@ -411,14 +412,17 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 		logging.error("Got to DEFAULT filter")
 		dbPins = Pins.get_all_pins()		
 		# trim to precision and format
-		for pin in dbPins:
+		for pin in dbPins:			
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
-			pins.append({   'latDegrees' : pin.lat,
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
 							'message'	 : pin.message })
-		return pins
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+		return toReturn
 
 	elif lonDegrees is None:
 		# only latitude supplied
