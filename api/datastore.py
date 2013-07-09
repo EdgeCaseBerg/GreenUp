@@ -53,12 +53,19 @@ class Pins(Greenup):
 
 	@classmethod
 	def by_lat(cls,lat, offset=None):
-		latitudes = Pins.all().filter('lat =', lat)
+		if not offset:
+			latitudes = Pins.all().filter('lat =', lat)
+			return latitudes
+		else:
+			latitudes = Pins.all().filter('lat >=', lat).filter('lat <=', lat + offset)
 		return latitudes
 
 	@classmethod
 	def by_lon(cls,lon, offset=None):
-		longitudes = Pins.all().filter('lon =', lon)
+		if not offset:
+			longitudes = Pins.all().filter('lon =', lon)
+		else:
+			longitudes = Pins.all().filter('lon >=', lon).filter('lon <=', lon + offset)
 		return longitudes
 
 	@classmethod
@@ -163,9 +170,9 @@ class AbstractionLayer():
 			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
 
 
-	def getPins(self, latDegrees=None, lonDegrees=None, precision=DEFAULT_ROUNDING_PRECISION):
+	def getPins(self, latDegrees=None, lonDegrees=None, offset=None, precision=DEFAULT_ROUNDING_PRECISION):
 		# datastore read
-		return pinsFiltering(latDegrees, lonDegrees, precision)
+		return pinsFiltering(latDegrees, lonDegrees, offset, precision)
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
@@ -388,7 +395,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 
 	
 
-def pinsFiltering(latDegrees, lonDegrees,  precision):
+def pinsFiltering(latDegrees, lonDegrees, offset, precision):
 	# filter by parameters passed in and return the appropriate dataset
 	pins = []
 
@@ -408,7 +415,7 @@ def pinsFiltering(latDegrees, lonDegrees,  precision):
 
 	elif latDegrees is None:
 		# only longitude supplied
-		dbPins = Pins.by_lon(lon=lonDegrees)
+		dbPins = Pins.by_lon(lon=lonDegrees, offset=offset)
 		for pin in dbPins:
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
@@ -420,7 +427,7 @@ def pinsFiltering(latDegrees, lonDegrees,  precision):
 
 	elif lonDegrees is None:
 		# only latitude supplied
-		dbPins = Pins.by_lat(lat=latDegrees)		
+		dbPins = Pins.by_lat(lat=latDegrees, offset=offset)		
 		# trim to precision and format
 		for pin in dbPins:
 			pin.lat = round(pin.lat, precision)
