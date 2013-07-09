@@ -371,11 +371,12 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  point.lon and point.lon < (lonDegrees + lonOffset)):
 				continue
-		key = "%f_%f" % (round(point.lat,precision), round(point.lon,precision))
+		key = "%.*f_%.*f" % (latOffset,point.lat,lonOffset,point.lon)
+		logging.info(key)
 		if key in buckets:
 			buckets[key]['secondsWorked'] += point.secondsWorked
 		else:
-			buckets[key] = {'latDegrees' : point.lat, 'lonDegrees' : point.lon, 'secondsWorked' : point.secondsWorked}
+			buckets[key] = {'latDegrees' : float(round(point.lat,precision)), 'lonDegrees' : float(round(point.lon,precision)), 'secondsWorked' : point.secondsWorked}
 	#Now send the buckets back as a list
 	#note that buckets.items() will give back tuples, which is not what we want
 	toReturn = []
