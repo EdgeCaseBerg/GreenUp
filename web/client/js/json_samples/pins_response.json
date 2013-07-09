@@ -1,0 +1,14 @@
+[
+    {
+        "latDegrees" : 24.53, 
+        "lonDegrees" : 43.2, 
+        "type" : "message", 
+        "message", "I need help with the trash on Colchester ave"
+    },
+    {
+        "latDegrees" : 25.13, 
+        "lonDegrees" : 41.2, 
+        "type" : "needs", 
+        "message", "There's a lot of trash on Pearl St, I could use some help!"
+    }
+]
