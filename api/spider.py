@@ -6,7 +6,7 @@
 
 import urllib2
 import json
-
+import logging
 import numbers
 
 from constants import *
@@ -50,10 +50,11 @@ class Spider(object):
 
 	def getJSON(self):
 		"""Returns an object from json returned from spiderlink, or None if the information is malformed or not there"""
+		print "got to GetJSON"
 		if self.spiderlink:
 			try:
 				raw = self.spiderlink.read()
-				#print raw
+				# print type(raw)
 				returnValue = json.loads(raw)
 				return returnValue
 			except Exception, e:
@@ -107,6 +108,7 @@ def validateHeatmapPUTRequest(heatmap_response_to_put):
 	return True
 
 def validatePINSGetRequest(pins_response_to_get):
+	print "got to validatePINSGetRequest"
 	pins_response_keys = ['latDegrees','lonDegrees','type','message']
 	assert pins_response_to_get is not None
 	for pin in pins_response_to_get:
@@ -135,7 +137,7 @@ def validateErrorMessageReturned(comments_error_response):
 if __name__ == "__main__":
 	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapi.appspot.com/api'
-	baseURL = 'http://localhost:30002/api'
+	baseURL = 'http://localhost:16084/api'
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
@@ -257,11 +259,15 @@ if __name__ == "__main__":
 
 	print "Heatmap endpoint Passed all assertion tests"
 
+	'''
+		PINS SECTION
+	'''
 
 	#Default GET
 	tester.followLink(endPoints['pins'])
 	assert tester.getCode() == HTTP_OK
 	validatePINSGetRequest(tester.getJSON())
+	print "PASSED default GET"
 
 	#Get with parameters
 	#Default GET + bad latDegrees parameter

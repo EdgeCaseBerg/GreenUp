@@ -3,9 +3,11 @@ from google.appengine.ext import db
 
 import webapp2
 import json
+import api
 
 from datastore import Pins as DBPins
 from constants import *
+from datastore import *
 
 class Pins(webapp2.RequestHandler):
 
@@ -19,6 +21,11 @@ class Pins(webapp2.RequestHandler):
 		lonOffset = self.request.get("lonOffset")
 		precision = self.request.get("precision")
 		
+		if latDegrees == "":
+			latDegrees = None
+		if lonDegrees == "":
+			lonDegrees = None
+
 		#validate parameters
 		if latDegrees:
 			try:
@@ -97,10 +104,15 @@ class Pins(webapp2.RequestHandler):
 
 		#If no parameters are specified we'll return everything we have for them
 		response = []
-		
+
 		if parameters == 0:
 			#Return everything
 			response = []
+			layer = AbstractionLayer()
+			response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
+			self.response.set_status(api.HTTP_OK)
+			self.response.write(json.dumps(response))	
+
 		else:
 			#Figure out what type of query to make depending on the parameters we have available
 			if not lonOffset and latDegrees and not lonDegrees:
@@ -148,7 +160,7 @@ class Pins(webapp2.RequestHandler):
 
 		#By this point we have a response and we simply have to send it back
 		self.response.set_status(HTTP_OK)
-		self.response.write(json.dumps(response))	
+		self.response.write(json.dumps(response))
 
 	def post(self):
 		self.response.set_status(HTTP_OK)

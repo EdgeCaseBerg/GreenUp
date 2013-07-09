@@ -8,6 +8,7 @@ from datastore import *
 import pickle
 import random
 from random import shuffle
+import json
 
 class DummyData():
 	# used to seed datastore with dummy data
@@ -59,6 +60,7 @@ class ReadTest(Handler):
 		al = AbstractionLayer()
 		# pins = al.getPins(latDegrees = 1.76, offset=3, precision = 3)
 		pins = al.getPins()
+		jp = json.dumps(pins)
 		logging.info(pins)
 
 class MemecacheViewer(Handler):

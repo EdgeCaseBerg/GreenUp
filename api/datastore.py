@@ -74,8 +74,8 @@ class Pins(Greenup):
 		return pins
 
 	@classmethod
-	def by_lat_and_lon(cls, lat, lon, offset):
-		if not offset:
+	def by_lat_and_lon(cls, lat, latOffset, lon, lonOffset):
+		if not latOffset:
 			longitudes = Pins.all().filter('lon =', lon)
 			latitudes = Pins.all().filter('lat =', lat)
 		else:
@@ -180,9 +180,9 @@ class AbstractionLayer():
 			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
 
 
-	def getPins(self, latDegrees=None, lonDegrees=None, offset=None, precision=DEFAULT_ROUNDING_PRECISION):
+	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
 		# datastore read
-		return pinsFiltering(latDegrees, lonDegrees, offset, precision)
+		return pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision)
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
@@ -348,7 +348,7 @@ def paging(page=1,typeFilter=None):
 		return items
 
 	# otherwise, just get the page out of memcache
-	print "did this instead, cause it was in the cache"
+	# print "did this instead, cause it was in the cache"
 	pageKey = "greenup_comments_page_%s_%s" %(typeFilter, page)
 	logging.info(pageKey)
 	results = deserialize_entities(memcache.get(pageKey))
@@ -401,13 +401,13 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 		toReturn.append(bucket)
 	return toReturn
 
-def pinsFiltering(latDegrees, lonDegrees, offset, precision):
+def pinsFiltering(latDegrees=None, latOffset=1, lonDegrees=None, lonOffset=1, precision=DEFAULT_ROUNDING_PRECISION):
 	# filter by parameters passed in and return the appropriate dataset
 	pins = []
-
+	
 	if latDegrees is None and lonDegrees is None:
 		# nothing specified, this means we return all of it
-		logging.info("nothing specified")
+		logging.error("Got to DEFAULT filter")
 		dbPins = Pins.get_all_pins()		
 		# trim to precision and format
 		for pin in dbPins:
@@ -421,7 +421,8 @@ def pinsFiltering(latDegrees, lonDegrees, offset, precision):
 
 	elif latDegrees is None:
 		# only longitude supplied
-		dbPins = Pins.by_lon(lon=lonDegrees, offset=offset)
+		logging.error("Got to only latDegrees filter")
+		dbPins = Pins.by_lon(lon=lonDegrees, offset=lonOffset)
 		for pin in dbPins:
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
@@ -433,7 +434,8 @@ def pinsFiltering(latDegrees, lonDegrees, offset, precision):
 
 	elif lonDegrees is None:
 		# only latitude supplied
-		dbPins = Pins.by_lat(lat=latDegrees, offset=offset)		
+		logging.error("Got to only lonDegrees filter")
+		dbPins = Pins.by_lat(lat=latDegrees, offset=latOffset)		
 		for pin in dbPins:
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
@@ -444,27 +446,17 @@ def pinsFiltering(latDegrees, lonDegrees, offset, precision):
 		return pins
 		
 	else:
-		# both lat and lon are supplied
-		longitudes, latitudes = Pins.by_lat_and_lon(lat=latDegrees, lon=lonDegrees, offset=offset)
-		# need to zip these together
-		for pin in dbPins:
-			pin.lat = round(pin.lat, precision)
-			pin.lon = round(pin.lon, precision)
-			pins.append({   'latDegrees' : pin.lat,
-							'lonDegrees' : pin.lon,
-							'type'		 : pin.pinType,
-							'message'	 : pin.message })
-		return pins		
-
-	return "error"
-
-def pinRounding(dbPins, precision):
-	pins = []
-	for pin in dbPins:
-		pin.lat = round(pin.lat, precision)
-		pin.lon = round(pin.lon, precision)
-		pins.append({   'latDegrees' : pin.lat,
-						'lonDegrees' : pin.lon,
-						'type'		 : pin.pinType,
-						'message'	 : pin.message })
-		return pins		
+		pass
+		logging.error("Got to Both supplied filter")
+		# # both lat and lon are supplied
+		# longitudes, latitudes = Pins.by_lat_and_lon(lat=latDegrees, latOffset=latOffset, lon=lonDegrees, lonOffset=lonOffset)
+		# # need to zip these together
+		# for pin in dbPins:
+		# 	pin.lat = round(pin.lat, precision)
+		# 	pin.lon = round(pin.lon, precision)
+		# 	pins.append({   'latDegrees' : pin.lat,
+		# 					'lonDegrees' : pin.lon,
+		# 					'type'		 : pin.pinType,
+		# 					'message'	 : pin.message })
+		# return pins
+	return "managed to error the fuck out"
