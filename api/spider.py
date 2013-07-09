@@ -53,7 +53,7 @@ class Spider(object):
 		if self.spiderlink:
 			try:
 				raw = self.spiderlink.read()
-				#print raw
+				#print raw #You may only read from spiderlink once! so if you need to use the value from read more than once extend the variable classwide or save it in a temporary
 				returnValue = json.loads(raw)
 				return returnValue
 			except Exception, e:
