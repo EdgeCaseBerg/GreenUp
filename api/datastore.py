@@ -372,7 +372,6 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 			if not ((lonDegrees - lonOffset) <  point.lon and point.lon < (lonDegrees + lonOffset)):
 				continue
 		key = "%.*f_%.*f" % (latOffset,point.lat,lonOffset,point.lon)
-		logging.info(key)
 		if key in buckets:
 			buckets[key]['secondsWorked'] += point.secondsWorked
 		else:

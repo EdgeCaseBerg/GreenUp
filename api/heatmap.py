@@ -76,8 +76,6 @@ class Heatmap(webapp2.RequestHandler):
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
 				self.response.write('{"Error_Message" : "Precision value must be a numeric integer" '  )
 				return
-			else:
-				precision = api.DEFAULT_ROUNDING_PRECISION
 		else:
 			precision = api.DEFAULT_ROUNDING_PRECISION		
 		
