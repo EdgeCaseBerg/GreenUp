@@ -57,7 +57,7 @@ class ReadTest(Handler):
 	def get(self):
 		self.write("got here to the read handler")
 		al = AbstractionLayer()
-		pins = al.getPins()
+		pins = al.getPins(latDegrees = 1.7603706, precision = 3)
 		logging.info(pins)
 
 class MemecacheViewer(Handler):

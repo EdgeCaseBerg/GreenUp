@@ -52,13 +52,13 @@ class Pins(Greenup):
 		return bt
 
 	@classmethod
-	def by_lat(cls,lat, precision=DEFAULT_ROUNDING_PRECISION):
-		latitudes = Pins.all().filter('lat =', lat).get()		
+	def by_lat(cls,lat, offset=None):
+		latitudes = Pins.all().filter('lat =', lat)
 		return latitudes
 
 	@classmethod
-	def by_lon(cls,lon, precision=DEFAULT_ROUNDING_PRECISION):
-		longitudes = Pins.all().filter('lon =', lon).get()
+	def by_lon(cls,lon, offset=None):
+		longitudes = Pins.all().filter('lon =', lon)
 		return longitudes
 
 	@classmethod
@@ -390,32 +390,47 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 
 def pinsFiltering(latDegrees, lonDegrees,  precision):
 	# filter by parameters passed in and return the appropriate dataset
-	
+	pins = []
+
 	if latDegrees is None and lonDegrees is None:
 		# nothing specified, this means we return all of it
-		logging.info("nothing is specified")
-		dbPins = Pins.get_all_pins()
-		pins = []
-
+		logging.info("nothing specified")
+		dbPins = Pins.get_all_pins()		
 		# trim to precision and format
 		for pin in dbPins:
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
-			pins.append({
-							'latDegrees' : pin.lat,
+			pins.append({   'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
-							'message'	 : pin.message
-							})
-		
+							'message'	 : pin.message })
 		return pins
 
 	elif latDegrees is None:
 		# only longitude supplied
-		pass
+		dbPins = Pins.by_lon(lon=lonDegrees)
+		for pin in dbPins:
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			pins.append({   'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		return pins
+
 	elif lonDegrees is None:
 		# only latitude supplied
-		pass
+		dbPins = Pins.by_lat(lat=latDegrees)		
+		# trim to precision and format
+		for pin in dbPins:
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			pins.append({   'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		return pins
+		
 	else:
 		# both the lat and lon are supplied
 		pass
