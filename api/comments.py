@@ -59,8 +59,6 @@ class Comments(webapp2.RequestHandler):
 		#write out the comments in json form
 		comments = layer
 		response = { "comments" : comments, "page" : {"next" : next, "previous" : previous}}
-		
-		logging.info(response)
 
 		#Send out the response
 		self.response.set_status(HTTP_OK,"")
@@ -94,7 +92,6 @@ class Comments(webapp2.RequestHandler):
 		typeOfComment = info['type']
 		commentMessage = info['message']
 
-		logging.info(typeOfComment)
 		if typeOfComment is None or commentMessage is None:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
