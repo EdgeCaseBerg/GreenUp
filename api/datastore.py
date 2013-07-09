@@ -496,6 +496,8 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAUL
 		for key,item in pins.iteritems():
 			toReturn.append(item)
 
+
+
 		return toReturn
 
 	else:		

@@ -25,6 +25,10 @@ class Pins(webapp2.RequestHandler):
 			latDegrees = None
 		if lonDegrees == "":
 			lonDegrees = None
+		if lonOffset == "":
+			lonOffset = None
+		if latOffset == "":
+			latOffset = None
 
 		#validate parameters
 		if latDegrees:
@@ -106,11 +110,7 @@ class Pins(webapp2.RequestHandler):
 		layer = AbstractionLayer()
 		if parameters == 0:
 			#Return everything
-			response = []
 			response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset, precision=precision)
-			self.response.set_status(api.HTTP_OK)
-			self.response.write(json.dumps(response))	
-
 		else:
 			#Figure out what type of query to make depending on the parameters we have available
 			if not lonOffset and latDegrees and not lonDegrees:
