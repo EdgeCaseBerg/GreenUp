@@ -76,8 +76,8 @@ class Pins(Greenup):
 	@classmethod
 	def by_lat_and_lon(cls, lat, latOffset, lon, lonOffset):
 		if not latOffset:
-			longitudes = Pins.all().filter('lon =', lon)
-			latitudes = Pins.all().filter('lat =', lat)
+			both = Pins.all().filter('lon =', lon).filter('lat =', lat)
+			return both
 		else:
 			longitudes = Pins.all().filter('lon >=', lon).filter('lon <=', lon + offset)
 			latitudes = Pins.all().filter('lat >=', lat).filter('lat <=', lat + offset)
@@ -401,9 +401,10 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 		toReturn.append(bucket)
 	return toReturn
 
-def pinsFiltering(latDegrees=None, latOffset=1, lonDegrees=None, lonOffset=1, precision=DEFAULT_ROUNDING_PRECISION):
+def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset, precision=DEFAULT_ROUNDING_PRECISION):
 	# filter by parameters passed in and return the appropriate dataset
 	pins = []
+	logging.error("Got to pinsFiltering")
 	
 	if latDegrees is None and lonDegrees is None:
 		# nothing specified, this means we return all of it
@@ -419,10 +420,14 @@ def pinsFiltering(latDegrees=None, latOffset=1, lonDegrees=None, lonOffset=1, pr
 							'message'	 : pin.message })
 		return pins
 
-	elif latDegrees is None:
-		# only longitude supplied
+	elif lonDegrees is None:
+		# only latitude supplied
 		logging.error("Got to only latDegrees filter")
-		dbPins = Pins.by_lon(lon=lonDegrees, offset=lonOffset)
+		print "this is lonDegrees: "
+		print lonDegrees
+		print "this is latdegrees"
+		print latDegrees
+		dbPins = Pins.by_lat(lat=latDegrees, offset=latOffset)
 		for pin in dbPins:
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
@@ -432,10 +437,10 @@ def pinsFiltering(latDegrees=None, latOffset=1, lonDegrees=None, lonOffset=1, pr
 							'message'	 : pin.message })
 		return pins
 
-	elif lonDegrees is None:
-		# only latitude supplied
+	elif latDegrees is None:
+		# only longitude supplied
 		logging.error("Got to only lonDegrees filter")
-		dbPins = Pins.by_lat(lat=latDegrees, offset=latOffset)		
+		dbPins = Pins.by_lon(lon=lonDegrees, offset=lonOffset)
 		for pin in dbPins:
 			pin.lat = round(pin.lat, precision)
 			pin.lon = round(pin.lon, precision)
@@ -444,19 +449,36 @@ def pinsFiltering(latDegrees=None, latOffset=1, lonDegrees=None, lonOffset=1, pr
 							'type'		 : pin.pinType,
 							'message'	 : pin.message })
 		return pins
-		
-	else:
-		pass
+	
+	elif (latDegrees and lonDegrees) and not lonOffset:
+		# both lat and lon are supplied
+		logging.error("Got to both types filter")
+		# lat, latOffset, lon, lonOffset
+		dbPins = Pins.by_lat_and_lon(lon=lonDegrees, lat=latDegrees, latOffset=latOffset, lonOffset=lonOffset)
+		for pin in dbPins:
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			pins.append({   'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		return pins
+
+	elif latDegrees and latOffset and lonDegrees and lonOffset:
+		dbPins = Pins.get_all_pins()
+		dbLats = dbPins.filter('lat <', (latDegrees + latOffset)).filter('lat >', (latDegrees - latOffset))
+		for pin in dbLats:
+			#filter on lon
+			if not ((lonDegrees - lonOffset) <  pin.lon and pin.lon < (lonDegrees + lonOffset)):
+				continue
+			pin.lat = round(pin.lat, precision)
+			pin.lon = round(pin.lon, precision)
+			pins.append({   'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		return pins
+
+	else:		
 		logging.error("Got to Both supplied filter")
-		# # both lat and lon are supplied
-		# longitudes, latitudes = Pins.by_lat_and_lon(lat=latDegrees, latOffset=latOffset, lon=lonDegrees, lonOffset=lonOffset)
-		# # need to zip these together
-		# for pin in dbPins:
-		# 	pin.lat = round(pin.lat, precision)
-		# 	pin.lon = round(pin.lon, precision)
-		# 	pins.append({   'latDegrees' : pin.lat,
-		# 					'lonDegrees' : pin.lon,
-		# 					'type'		 : pin.pinType,
-		# 					'message'	 : pin.message })
-		# return pins
-	return "managed to error the fuck out"
+		return "Something bad happened"

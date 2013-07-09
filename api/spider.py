@@ -260,14 +260,14 @@ if __name__ == "__main__":
 	print "Heatmap endpoint Passed all assertion tests"
 
 	'''
-		PINS SECTION
+		****************** PINS SECTION ****************** 
 	'''
 
 	#Default GET
 	tester.followLink(endPoints['pins'])
 	assert tester.getCode() == HTTP_OK
 	validatePINSGetRequest(tester.getJSON())
-	print "PASSED default GET"
+	logging.error("PASSED default GET")
 
 	#Get with parameters
 	#Default GET + bad latDegrees parameter
