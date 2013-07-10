@@ -8,15 +8,15 @@ function ApiConnector(){
 	var markerData = []; 
 	var commentData = [];
 
-	var BASE = "http://localhost/apiProxy";
+	var BASE = "http://localhost/GreenUp/web/api_proxy/proxy.php";
 	// var BASE = "http://greenup.xenonapps.com/api";
 
 	// api URLs
-	var forumURI = "/comments?type=forum";
-	var needsURI = "/comments?type=needs";
-	var messagesURI = "/comments?type=message";
-	var heatmapURI = "/heatmap?";
-	var pinsURI = "/pins";
+	var forumURI = "comments?type=forum";
+	var needsURI = "comments?type=needs";
+	var messagesURI = "comments?type=message";
+	var heatmapURI = "heatmap?";
+	var pinsURI = "pins";
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
