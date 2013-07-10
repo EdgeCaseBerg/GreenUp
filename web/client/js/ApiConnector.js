@@ -8,7 +8,7 @@ function ApiConnector(){
 	var markerData = []; 
 	var commentData = [];
 
-	var BASE = "http://localhost/GreenUp/web/api_proxy/proxy.php";
+	var BASE = "http://localhost/GreenUp/web/api_proxy/proxy.php?";
 	// var BASE = "http://greenup.xenonapps.com/api";
 
 	// api URLs
