@@ -290,14 +290,12 @@ def paging(page=1,typeFilter=None):
 	if not memcache.get('greeunup_comment_paging_cursor_%s_%s' %(typeFilter, 1) ):
 		# make sure the initial page is in cache
 		initialPage(typeFilter)
-		logging.info("had to make initial page")
 
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
 			prevCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, x)
-			# logging.info(prevCursorKey)
 			prevPageInCache = memcache.get(prevCursorKey)
 
 			if not prevPageInCache:
@@ -324,7 +322,6 @@ def paging(page=1,typeFilter=None):
 
 			# save those results in memecache with thier own key
 			pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, cursorKey[-1])
-			logging.info(pageKey)
 			memcache.set(pageKey, serialize_entities(items))
 
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
@@ -349,7 +346,6 @@ def paging(page=1,typeFilter=None):
 	# otherwise, just get the page out of memcache
 	# print "did this instead, cause it was in the cache"
 	pageKey = "greenup_comments_page_%s_%s" %(typeFilter, page)
-	logging.info(pageKey)
 	results = deserialize_entities(memcache.get(pageKey))
 	return results
 
@@ -404,29 +400,24 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 	# filter by parameters passed in and return the appropriate dataset
 	pins = {}
 	toReturn = []
-	logging.error("Got to pinsFiltering")
 	
 	if latDegrees is None and lonDegrees is None:
 		# nothing specified, this means we return all of it
-		logging.error("Got to DEFAULT filter")
 		dbPins = Pins.get_all_pins()
 		return pinFormatter(dbPins)
 
 	elif lonDegrees is None:
 		# only latitude supplied
-		logging.error("Got to only latDegrees filter")
 		dbPins = Pins.by_lat(lat=latDegrees, offset=latOffset)
 		return pinFormatter(dbPins)
 
 	elif latDegrees is None:
 		# only longitude supplied
-		logging.error("Got to only lonDegrees filter")
 		dbPins = Pins.by_lon(lon=lonDegrees, offset=lonOffset)
 		return pinFormatter(dbPins)
 
 	elif (latDegrees and lonDegrees) and not lonOffset:
 		# both lat and lon are supplied
-		logging.error("Got to both types filter")
 		dbPins = Pins.by_lat_and_lon(lon=lonDegrees, lat=latDegrees, latOffset=latOffset, lonOffset=lonOffset)
 		return pinFormatter(dbPins)
 
