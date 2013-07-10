@@ -8,6 +8,7 @@ from datastore import *
 import pickle
 import random
 from random import shuffle
+import json
 
 class DummyData():
 	# used to seed datastore with dummy data
@@ -26,7 +27,7 @@ class DummyData():
 		pinsInputTypes = []
 
 		for i in range(1,100):
-			inputFloats.append( float( "{0:.5f}".format(random.uniform(0.0, 2.0)) ) )
+			inputFloats.append( float( "{0:.7f}".format(random.uniform(0.0, 2.0)) ) )
 			inputSeconds.append( float(random.uniform(0.0, 10)) )
 			inputStrings.append( splt[int(random.uniform(0, len(splt)))] )
 			commentInputTypes.append( COMMENT_TYPES[int(random.uniform(0, len(COMMENT_TYPES)))] )
@@ -37,7 +38,7 @@ class DummyData():
 
 		for i in range(0,99):		
 			al.submitComments(commentInputTypes[i%len(commentInputTypes)], inputStrings[i%len(inputStrings)])
-			al.updateHeatmap(inputFloats[i], inputFloats[i], inputSeconds[i])
+			# al.updateHeatmap(inputFloats[i], inputFloats[i], inputSeconds[i])
 			al.submitPin(inputFloats[i], inputFloats[i], pinsInputTypes[i%len(pinsInputTypes)], inputStrings[i%len(inputStrings)])
 
 			shuffle(pinsInputTypes)
@@ -56,6 +57,11 @@ class WriteTest(Handler):
 class ReadTest(Handler):
 	def get(self):
 		self.write("got here to the read handler")
+		al = AbstractionLayer()
+		# pins = al.getPins(latDegrees = 1.76, offset=3, precision = 3)
+		pins = al.getPins()
+		jp = json.dumps(pins)
+		logging.info(pins)
 
 class MemecacheViewer(Handler):
 	def get(self):

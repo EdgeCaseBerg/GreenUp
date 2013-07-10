@@ -6,7 +6,7 @@
 
 import urllib2
 import json
-
+import logging
 import numbers
 
 from constants import *
@@ -50,6 +50,7 @@ class Spider(object):
 
 	def getJSON(self):
 		"""Returns an object from json returned from spiderlink, or None if the information is malformed or not there"""
+		# print self.spiderlink.read()
 		if self.spiderlink:
 			try:
 				raw = self.spiderlink.read()
@@ -57,6 +58,7 @@ class Spider(object):
 				returnValue = json.loads(raw)
 				return returnValue
 			except Exception, e:
+				print "there's been an exception"
 				#Issue parsing json. Die a silent death and allow tests to fail due to None
 				print e
 				pass
@@ -83,7 +85,6 @@ def validateCommentsGETRequest(comments_response_to_get):
 
 def validateCommentsPOSTRequest(comments_response_to_post):
 	assert comments_response_to_post is not None
-	#print comments_response_to_post
 	assert 'status' in comments_response_to_post
 	assert 'message' in comments_response_to_post
 	assert comments_response_to_post['status'] == 200
@@ -143,9 +144,10 @@ if __name__ == "__main__":
 			'heatmap' : baseURL + '/heatmap'
 	}
 
-
+	
 	#Test the comment endpoint:
 	tester = Spider()
+
 	tester.followLink(endPoints['comments'])
 	assert tester.getCode() == HTTP_OK
 	comments_response_to_get = tester.getJSON()
@@ -258,6 +260,10 @@ if __name__ == "__main__":
 	print "Heatmap endpoint Passed all assertion tests"
 
 
+	'''
+		****************** PINS SECTION ****************** 
+	'''
+
 	#Default GET
 	tester.followLink(endPoints['pins'])
 	assert tester.getCode() == HTTP_OK
@@ -279,10 +285,6 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())
 
-	#get with good offsets, but not degrees
-	tester.followLink(endPoints['pins'],withData={"lonOffset" : 4, "latOffset" : 2})
-	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
 
 	#Good get request with parameters
 	tester.followLink(endPoints['pins'],withData={"latDegrees" : -25.4, "lonDegrees" : 43.2, "latOffset" : 4,"lonOffset" : 2})

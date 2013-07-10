@@ -10,6 +10,7 @@ TESTING = True
 
 if TESTING:
 	from testHarness import *
+	import logging
 
 
 class API(Handler):
@@ -19,7 +20,6 @@ class API(Handler):
 		info = json.dumps({"version" : 1.00, "powered by" : "Xenon Apps"})
 		self.response.set_status(200,info)
 		self.write(info)
-
 		
 #This is the catch all #('.*', API)
 application = webapp2.WSGIApplication([
