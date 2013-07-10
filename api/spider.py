@@ -50,7 +50,6 @@ class Spider(object):
 
 	def getJSON(self):
 		"""Returns an object from json returned from spiderlink, or None if the information is malformed or not there"""
-		print "got to GetJSON"
 		# print self.spiderlink.read()
 		if self.spiderlink:
 			try:
@@ -138,7 +137,7 @@ def validateErrorMessageReturned(comments_error_response):
 if __name__ == "__main__":
 	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapi.appspot.com/api'
-	baseURL = 'http://localhost:30002/api'
+	baseURL = 'http://localhost:16084/api'
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
