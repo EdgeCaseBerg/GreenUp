@@ -1,0 +1,2 @@
+#Don't care about compiled python files for the app engine, just the python themselves
+*.pyc
