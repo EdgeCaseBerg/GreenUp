@@ -20,7 +20,7 @@ google.maps.event.addDomListener(window, 'load', initIcons);
 function initialize() {
     var heatmapData = getHeatmapData();
     // initMap(lat, lon, zoom)
-    // getIpGeo();
+    getIpGeo();
     // initMap(dataArr[0], dataArr[1], dataArr[2]);
     initMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()), 17);
     // initMap(37.774546, -122.433523, 17);
@@ -28,94 +28,94 @@ function initialize() {
 } // end initialize
 
 
-function initializeGPS(){
-    db = Lawnchair({name : 'db'}, function(store) {
-        lawnDB = store;
-        setInterval(function() {runUpdate(store)},5000);//update user location every 5 seconds
-        setInterval(function() {upload(store)},3000);//upload locations to the server every 30 seconds
-    });
-}
+// function initializeGPS(){
+//     db = Lawnchair({name : 'db'}, function(store) {
+//         lawnDB = store;
+//         setInterval(function() {runUpdate(store)},5000);//update user location every 5 seconds
+//         setInterval(function() {upload(store)},3000);//upload locations to the server every 30 seconds
+//     });
+// }
 
-function start(){
-    logging = true;
-    initializeGPS();
-    console.log("starting...");
-    document.getElementById('startButton').style.display = 'none';
-    document.getElementById('stopButton').style.display = 'block';
-    //document.getElementById('panel1').style.backgroundImage = 'url(/client/img/icons/leaf.png)';
+// function start(){
+//     logging = true;
+//     initializeGPS();
+//     console.log("starting...");
+//     document.getElementById('startButton').style.display = 'none';
+//     document.getElementById('stopButton').style.display = 'block';
+//     //document.getElementById('panel1').style.backgroundImage = 'url(/client/img/icons/leaf.png)';
 
 
-    navigator.geolocation.getCurrentPosition(function(p){
-        var newcenter = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
-        centerPoint = newcenter;
-        map.panTo(newcenter);
-    });
+//     navigator.geolocation.getCurrentPosition(function(p){
+//         var newcenter = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+//         centerPoint = newcenter;
+//         map.panTo(newcenter);
+//     });
     
-}
+// }
 
-function recenterMap(lat, lon){
-    console.log(lon);
-    var newcenter = new google.maps.LatLng(lat, lon);
-        centerPoint = newcenter;
-        map.panTo(newcenter);
-}
+// function recenterMap(lat, lon){
+//     console.log(lon);
+//     var newcenter = new google.maps.LatLng(lat, lon);
+//         centerPoint = newcenter;
+//         map.panTo(newcenter);
+// }
 
 
-function stop(){
-    upload(lawnDB);
-    logging = false;
-    console.log("stopping...")
-    //document.getElementById('panel1').style.backgroundImage = '';
-    document.getElementById('startButton').style.display = 'block';
-    document.getElementById('stopButton').style.display= 'none';
-}
+// function stop(){
+//     upload(lawnDB);
+//     logging = false;
+//     console.log("stopping...")
+//     //document.getElementById('panel1').style.backgroundImage = '';
+//     document.getElementById('startButton').style.display = 'block';
+//     document.getElementById('stopButton').style.display= 'none';
+// }
 
 //Runs the update script:
 
-function runUpdate(database){
-    //Grab the geolocation data from the local machine
-    navigator.geolocation.getCurrentPosition(function(position) {
-          updateLocation(database, position.coords.latitude, position.coords.longitude);
-    });
-}
+// function runUpdate(database){
+//     //Grab the geolocation data from the local machine
+//     navigator.geolocation.getCurrentPosition(function(position) {
+//           updateLocation(database, position.coords.latitude, position.coords.longitude);
+//     });
+// }
 
-//Uploads all local database entries to the Server
-//Clears the local storage after upload
-function upload(database){
-    if(logging){
-        //server/addgriddata.php
+// //Uploads all local database entries to the Server
+// //Clears the local storage after upload
+// function upload(database){
+//     if(logging){
+//         //server/addgriddata.php
     
-        database.all(function(data){
-            console.log(data);
-            $.ajax({
-                type:'POST',
-                url: '../server/addGridData.php',
-                dataType:"json",
-                data: {data : data},
-                failure: function(errMsg){alert(errMsg);}
-            });//Ajax
+//         database.all(function(data){
+//             console.log(data);
+//             $.ajax({
+//                 type:'POST',
+//                 url: '../server/addGridData.php',
+//                 dataType:"json",
+//                 data: {data : data},
+//                 failure: function(errMsg){alert(errMsg);}
+//             });//Ajax
         
-            //Remove all uploaded database records
-            for(var i=1;i<data.length;i++){
-                database.remove(i);
-            }
-        });
-    }
-}
+//             //Remove all uploaded database records
+//             for(var i=1;i<data.length;i++){
+//                 database.remove(i);
+//             }
+//         });
+//     }
+// }
 
-//Updates the local couch DB with the current info
-function updateLocation(database, latitude, longitude){
-    if(logging){
-        var datetime = new Date().getTime();//generate timestamp
-        var location = {
-                "latitude" : latitude,
-                "longitude" : longitude,
-                "datetime" : datetime,
-        }
+// //Updates the local couch DB with the current info
+// function updateLocation(database, latitude, longitude){
+//     if(logging){
+//         var datetime = new Date().getTime();//generate timestamp
+//         var location = {
+//                 "latitude" : latitude,
+//                 "longitude" : longitude,
+//                 "datetime" : datetime,
+//         }
     
-        database.save({value:location});//Save the record
-    }
-};
+//         database.save({value:location});//Save the record
+//     }
+// };
 
 
 function findME(){
@@ -186,21 +186,21 @@ function initHeatMap(heatData){
 }
 
 
-// fire up our google map
-function initMap(centerpointLat, centerpointLon, zoom){
-    // define the initial location of our map
-    centerPoint = new google.maps.LatLng(centerpointLat, centerpointLon); 
-    var mapOptions = {
-    zoom: zoom,
-    center: centerPoint,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
+// // fire up our google map
+// function initMap(centerpointLat, centerpointLon, zoom){
+//     // define the initial location of our map
+//     centerPoint = new google.maps.LatLng(centerpointLat, centerpointLon); 
+//     var mapOptions = {
+//     zoom: zoom,
+//     center: centerPoint,
+//     mapTypeId: google.maps.MapTypeId.ROADMAP
+//   };
 
-  map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-  google.maps.event.addListener(map, 'mousedown', markerSelectDown);
-  google.maps.event.addListener(map, 'mouseup', markerSelectUp);
+//   map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+//   google.maps.event.addListener(map, 'mousedown', markerSelectDown);
+//   google.maps.event.addListener(map, 'mouseup', markerSelectUp);
 
-}
+// }
 
 function initIcons(){
     var pickupIcon = "img/icons/greenCircle.png";
@@ -452,41 +452,23 @@ document.addEventListener('DOMContentLoaded',function(){
     }, false);
 
 
-    var pr1 = document.getElementById("pr1");
-    pr1.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel2Center";
-    }, false);
+    // var pan1 = document.getElementById("pan1");
+    // pan1.addEventListener('mousedown', function() {
+    //     document.getElementById("container").className = "";
+    //     document.getElementById("container").className = "panel1Center";
+    // }, false);
 
-    var prr1 = document.getElementById("prr1");
-    prr1.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel3Center";
-    }, false);
+    // var pan2 = document.getElementById("pan2");
+    // pan2.addEventListener('mousedown', function() {
+    //     document.getElementById("container").className = "";
+    //     document.getElementById("container").className = "panel2Center";
+    // }, false);
 
-    var pr2 = document.getElementById("pr2");
-    pr2.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel3Center";
-    }, false);
-
-    var pl2 = document.getElementById("pl2");
-    pl2.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel1Center";
-    }, false);
-
-    var pl3 = document.getElementById("pl3");
-    pl3.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel2Center";
-    }, false);
-
-    var pll3 = document.getElementById("pll3");
-    pll3.addEventListener('mousedown', function() {
-        document.getElementById("container").className = "";
-        document.getElementById("container").className = "panel1Center";
-    }, false);
+    // var pan3 = document.getElementById("pan3");
+    // pan3.addEventListener('mousedown', function() {
+    //     document.getElementById("container").className = "";
+    //     document.getElementById("container").className = "panel3Center";
+    // }, false);
 
     //Get the parameters in the get url and expose them
     var prmstr = window.location.search.substr(1);
@@ -520,5 +502,9 @@ document.addEventListener('DOMContentLoaded',function(){
     //     MOUSEUP_TIME = new Date().getTime() / 1000;
     // });
 
+<<<<<<< HEAD:client/js/mapsUI.js
+    recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
+=======
+>>>>>>> origin:web/client/js/mapsUI.js
 
 });

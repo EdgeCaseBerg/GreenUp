@@ -1,7 +1,4 @@
-<?php
-include '../server/locationByIp.php';
-$dataArr = ipGeo();
-?>
+
 
 <!DOCTYPE html>
 <html>
@@ -14,14 +11,38 @@ $dataArr = ipGeo();
 <!-- <link rel="stylesheet" href="css/messages.css"> -->
 <link rel="stylesheet" href="css/styles.css">
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script> -->
 <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
 <script src="js/markerwithlabel.js"></script>
 <script type="text/javascript" src="js/lawnchair-js.js"></script>
 <!-- <script type="text/javascript" src="js/app.js"></script> -->
-<script type="text/javascript" src="js/mapsUI.js"></script>
+<!-- <script type="text/javascript" src="js/mapsUI.js"></script> -->
+<script type="text/javascript" src="js/JSON.js"></script>
+<script type="text/javascript" src="js/ApiConnector.js"></script>
 
+<style type="text/css">
+    #loadingScreen{
+        float:left;
+        position:absolute;
+        top:0px;
+        left:0px;
+        width:100%;
+        height:100%;
+        z-index:1000;
+        border:solid 1px green;
+        background:url("img/backgrounds/90_percent_black.png");
+        display:none;
+    }
+
+    #loadingGif{
+        height:70px;
+        width:60px;
+        margin:auto;
+        padding-top:35%;
+        /*border:solid 1px red;*/
+    }
+</style>
 
 </head>
 
@@ -31,14 +52,9 @@ $dataArr = ipGeo();
 	</div> -->
 
 	<div id="container">
-        <input type="hidden" id="initLat" value=<? echo "'".$dataArr[0]."'"; ?> />
-        <input type="hidden" id="initLon" value=<? echo "'".$dataArr[1]."'"; ?> />
+        <input type="hidden" id="initLat" value="23" />
+        <input type="hidden" id="initLon" value=="22" />
 		<div class="panel" id="panel1">
-			<ul class="nav">
-                <li><a>Home</a></li>
-                <li><a id="pr1">Maps</a></li>
-                <li><a id="prr1">Comments</a></li>
-            </ul>
 
             <!-- Main Page Content -->
 
@@ -52,28 +68,17 @@ $dataArr = ipGeo();
                 </p>
 
 
-            <div class="start" id="startButton">
-                <a id="startbutton" onclick="start">Start Cleaning Up</a>
+                <div class="start" id="startButton">
+                    <a id="bigButton">Start Cleaning Up</a>
+                </div>
             </div>
-
-
-            <div class="stop" id="stopButton" style="display: none;">   
-                <a id="stopButton">Stop Cleaning Up</a>
-            </div>
-        </div>
-
-
 		</div>
 
 		<!-- map panel -->
 		<div class="panel" id="panel2">
 			<!-- <div id="mapContainer" class="contentContainer"> -->
 				<!-- <div class="mobileContainer"> -->
-            		<ul class="nav">
-                		<li><a id="pl2">Home</a></li>
-                		<li><a >Maps</a></li>
-               			<li><a id="pr2">Comments</a></li>
-            		</ul>
+            		
         		<!-- </div> -->
 
         		<div class="mapContainer">
@@ -92,30 +97,29 @@ $dataArr = ipGeo();
                 </div>
 
 		        <div id="markerTypeDialog">
-		            <div id="markerTypeDialogNest">
+
+                    <div class="tileContainer">
+                        <div class="tile tile1" id="selectPickup">Pickup</div>
+                        <div class="tile tile2" id="selectComment">Comment</div>
+                        <div class="tile tile3" id="selectTrash">Trash</div>
+                        <div class="tile tile4" id="cancel">Cancel</div>
+                    </div>
+
+		        <!--     <div id="markerTypeDialogNest">
 		                <input type="button" value="Pickup point" id="selectPickup" />
 		                <input type="button" value="Comment point" id="selectComment" />
 		                <input type="button" value="Trash point" id="selectTrash" />
                         <input type="button" value="Close" onclick="$('#markerTypeDialog').toggle();" />
-		            </div>
+		            </div> -->
 		          <!--   <input type="button" value="Lots of Trash" onClick="addTrashMarker">
 		            <input type="button" value="Comment point" onClick="addCommentMarker"> -->
 		        <!-- </div> -->
 			</div>
 			<!-- <input type="button" value="panel left" id="pl2">
 			<input type="button" value="panel right" id="pr2"> -->
-		</div>
+        </div>
 
 		<div class="panel" id="panel3">
-			      
-            <ul class="nav">
-                <li><a id="pll3">Home</a></li>
-                <li><a id="pl3">Maps</a></li>
-                <li><a>Comments</a></li>
-            </ul>
-
-
-
                 <div>
                 <form action="/server/communication.php" method="GET">
                     <input type="hidden" name="add" value="true" />
@@ -151,86 +155,37 @@ $dataArr = ipGeo();
                     <li><a  onclick='showAll("All"); return false;'>Show All</a></li>
                 </ul>
 
-            <div >
-            	
-            	<ul id="messages" class="message"></ul>
-            	<script type="text/javascript">
-            		var beginLimit = 0;
-            		var endLimit = 10;
-
-            		//Get the parameters in the get url
-            		var prmstr = window.location.search.substr(1);
-					var prmarr = prmstr.split ("&");
-					var params = {};
-
-					for ( var i = 0; i < prmarr.length; i++) {
-    					var tmparr = prmarr[i].split("=");
-    					params[tmparr[0]] = tmparr[1];
-					}
-
-                    function showAll(where){
-                        var toAddTo = document.getElementById('messages');
-                        
-                        toAddTo.innerHTML = '';
-                        
-                        beginLimit = 0;
-                        endLimit = 20;
-                        httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+where);
-
-                        params.where = where;
-
-                        return false;
-                    }
-
-
-            		function addMessages(xmlHttp){
-            			//Yes I'm using eval. Deal.
-            			var messages = eval(xmlHttp.responseText);
-            			var toAddTo = document.getElementById('messages');
-
-            			if(typeof messages != "undefined"){
-	            			for (var i = 0; i < messages.length; i++) {
-	            				var message = document.createElement("li");
-	            				message.innerHTML = messages[i];
-	            				message.className = "message"
-	            				toAddTo.appendChild(message);
-	            				message.appendChild(document.createElement('hr'));
-	            			};
-            			}
-            		}
-
-            		function moar(){
-            			beginLimit = beginLimit + 10;
-			    		endLimit = endLimit + 10;
-			    		httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit+'&where='+params.where);
-            		}
-
-            		//Helper function to fetch URL contents
-					function httpGet(theUrl){
-						
-			    		var xmlHttp = null;
-			    		xmlHttp = new XMLHttpRequest();
-			    		xmlHttp.onreadystatechange = function(){addMessages(xmlHttp)};
-			    		xmlHttp.open( "GET", theUrl, true );
-			    		xmlHttp.send( null );
-					}
-
-                    // recenterMap(parseFloat($('#initLat').val()), parseFloat($('#initLon').val()));
-
-
-                    
-                    //httpGet('/server/communication.php?start='+beginLimit+'&end='+endLimit);
-                    
-            	</script>
+            <!-- messages will be populated here by JS -->
+            <div id="messagesContainer">
             </div>
 
             <div id="moar">
-            	<a href="#moar" onclick=moar();><h2>Load More</h2></a>
+                <div class="nextPrev" id="prevPage">Prev</div>
+            	<div class="nextPrev" id="nextPage">Next</div>
             </div>
-
-      
 		</div>
 	</div>
+
+    <div id="loadingScreen">
+        <div id="loadingGif">
+            <img src="img/ajax-loader.gif" />
+        </div>
+        <div id="loadingText" style="color:white; width:100%; text-align:center;"></div>
+    </div>
+
+    <div id="dialogSlider">
+        <textarea id="dialogSliderTextarea" class="dialogSliderContents"></textarea>
+        <div class="dialogSliderContents">
+            <div class="dialogSliderButton dialogButtonOk"><div id="dialogCommentOk" class="buttonText">Ok</div></div>
+            <div class="dialogSliderButton dialogButtonCancel"><div id="dialogCommentCancel" class="buttonText">Cancel</div></div>
+        </div>
+    </div>
+
+    <ul class="nav">
+        <li><a id="pan1">Home</a></li>
+        <li><a id="pan2">Maps</a></li>
+        <li><a id="pan3">Comments</a></li>
+    </ul>
 </body>
 
 </html>
