@@ -287,10 +287,6 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())
 
-	#get with good offsets, but not degrees
-	tester.followLink(endPoints['pins'],withData={"lonOffset" : 4, "latOffset" : 2})
-	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
 
 	#Good get request with parameters
 	tester.followLink(endPoints['pins'],withData={"latDegrees" : -25.4, "lonDegrees" : 43.2, "latOffset" : 4,"lonOffset" : 2})
