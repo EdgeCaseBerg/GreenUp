@@ -50,12 +50,15 @@ class Spider(object):
 
 	def getJSON(self):
 		"""Returns an object from json returned from spiderlink, or None if the information is malformed or not there"""
+		print "got to GetJSON"
+		# print self.spiderlink.read()
 		if self.spiderlink:
 			try:
 				raw = self.spiderlink.read()
 				returnValue = json.loads(raw)
 				return returnValue
 			except Exception, e:
+				print "there's been an exception"
 				#Issue parsing json. Die a silent death and allow tests to fail due to None
 				print e
 				pass
@@ -106,6 +109,7 @@ def validateHeatmapPUTRequest(heatmap_response_to_put):
 	return True
 
 def validatePINSGetRequest(pins_response_to_get):
+	print "got to validatePINSGetRequest"
 	pins_response_keys = ['latDegrees','lonDegrees','type','message']
 	assert pins_response_to_get is not None
 	for pin in pins_response_to_get:
@@ -134,7 +138,7 @@ def validateErrorMessageReturned(comments_error_response):
 if __name__ == "__main__":
 	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapi.appspot.com/api'
-	baseURL = 'http://localhost:16084/api'
+	baseURL = 'http://localhost:30002/api'
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
@@ -283,10 +287,6 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())
 
-	#get with good offsets, but not degrees
-	tester.followLink(endPoints['pins'],withData={"lonOffset" : 4, "latOffset" : 2})
-	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
 
 	#Good get request with parameters
 	tester.followLink(endPoints['pins'],withData={"latDegrees" : -25.4, "lonDegrees" : 43.2, "latOffset" : 4,"lonOffset" : 2})

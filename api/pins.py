@@ -170,7 +170,7 @@ class Pins(webapp2.RequestHandler):
 
 		#Place the pin into the datastore
 		layer = AbstractionLayer()
-		layer.submitPin(latDegrees=latDegrees, lonDegrees=lonDegrees, pinType=pinType, message=message)
+		layer.submitPin(latDegrees=latDegrees, lonDegrees=lonDegrees, pinType=pinType.upper(), message=message)
 
 		#self.response.set_status(HTTP_OK)		
 		self.response.write('{  "status" : 200,  "message" : "Successful submit"}')
