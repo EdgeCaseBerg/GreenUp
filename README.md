@@ -72,3 +72,5 @@ License:
 [National Day of Civic Hacking]: http://hackforchange.org/
 [Linux]: http://askubuntu.com/questions/123553/how-to-install-google-appengine/126687#126687
 [Windows or Mac]: https://developers.google.com/appengine/docs/python/gettingstartedpython27/devenvironment
+[Paul Kiripolsky]: https://github.com/kiripaul
+
