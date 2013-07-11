@@ -1,5 +1,5 @@
-application: greenup
-version: 0
+application: greenupapp
+version: 1
 runtime: python27
 api_version: 1
 threadsafe: false
@@ -23,10 +23,10 @@ handlers:
 
 - url: /
   static_files: web/client/index.html
-  upload: local/web/client/index.html
+  upload: web/client/index.html
 - url: /(.+)
   static_files: web/client/\1
-  upload: local/web/client/(.+)
+  upload: web/client/(.+)
 
 - url: /.*
   script: api.api.application
