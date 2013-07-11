@@ -32,6 +32,9 @@ Setup
 - Navigate to your localhost:XXXXX (where XXXXX is the port specified by the app server console)
 - All should be working well. If you have trouble, ask for our help with the issue tracker on github and we'll get back to you ASAP
 
+#### If you just want to run the API:
+- Run the dev_appserver.py script against GreenUp/api/
+
 
 Developers:
 ------------------
