@@ -1,0 +1,183 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, target-densityDpi=96"/>
+<link rel="stylesheet" href="css/styles.css">
+
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
+<script src="js/markerwithlabel.js"></script>
+<script type="text/javascript" src="js/lawnchair-js.js"></script>
+<script type="text/javascript" src="js/JSON.js"></script>
+<script type="text/javascript" src="js/ApiConnector.js"></script>
+
+<style type="text/css">
+    #loadingScreen{
+        float:left;
+        position:absolute;
+        top:0px;
+        left:0px;
+        width:100%;
+        height:100%;
+        z-index:1000;
+        border:solid 1px green;
+        background:url("img/backgrounds/90_percent_black.png");
+        display:none;
+    }
+
+    #loadingGif{
+        height:70px;
+        width:60px;
+        margin:auto;
+        padding-top:35%;
+        /*border:solid 1px red;*/
+    }
+</style>
+
+</head>
+
+<body>
+	<!-- <div id="loading">
+		<img src="img/startup/ajax-loader.gif">
+	</div> -->
+
+	<div id="container">
+        <input type="hidden" id="initLat" value="23" />
+        <input type="hidden" id="initLon" value=="22" />
+		<div class="panel" id="panel1">
+
+            <!-- Main Page Content -->
+
+            <h1> Green Up Vermont </h1>   
+            <div id="bodyText"> 
+                <p> Help keep Vermont green. Track your clean up progress, see what areas need the 
+                    most help, and find an area to drop off what you pick up.
+                        <br />
+                        <br />
+                    To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
+                </p>
+
+
+                <div class="start" id="startButton">
+                    <a id="bigButton">Start Cleaning Up</a>
+                </div>
+            </div>
+		</div>
+
+		<!-- map panel -->
+		<div class="panel" id="panel2">
+			<!-- <div id="mapContainer" class="contentContainer"> -->
+				<!-- <div class="mobileContainer"> -->
+            		
+        		<!-- </div> -->
+
+        		<div class="mapContainer">
+                    <input type="hidden" value="0" id="startCoords" />
+               		<div id="map-canvas"></div>
+                	<div class="toggleContainer" id="toggleContainer">
+                    	<ul>
+                        	<li><input type="checkbox" id="toggleHeat" /><span class="checkboxlabel">Heat Map</span></li>
+                        	<li><input type="checkbox" id="toggleIcons" /><span class="checkboxlabel">Points of Interest</span></li>
+                    	</ul>
+                	</div>
+        		</div>
+
+                <div class="mapDecoyContainer">
+                    <input type="button" value="Go Map" id="mapInit" />
+                </div>
+
+		        <div id="markerTypeDialog">
+
+                    <div class="tileContainer">
+                        <div class="tile tile1" id="selectPickup">Pickup</div>
+                        <div class="tile tile2" id="selectComment">Comment</div>
+                        <div class="tile tile3" id="selectTrash">Trash</div>
+                        <div class="tile tile4" id="cancel">Cancel</div>
+                    </div>
+
+		        <!--     <div id="markerTypeDialogNest">
+		                <input type="button" value="Pickup point" id="selectPickup" />
+		                <input type="button" value="Comment point" id="selectComment" />
+		                <input type="button" value="Trash point" id="selectTrash" />
+                        <input type="button" value="Close" onclick="$('#markerTypeDialog').toggle();" />
+		            </div> -->
+		          <!--   <input type="button" value="Lots of Trash" onClick="addTrashMarker">
+		            <input type="button" value="Comment point" onClick="addCommentMarker"> -->
+		        <!-- </div> -->
+			</div>
+			<!-- <input type="button" value="panel left" id="pl2">
+			<input type="button" value="panel right" id="pr2"> -->
+        </div>
+
+		<div class="panel" id="panel3">
+                <div>
+                <form action="/server/communication.php" method="GET">
+                    <input type="hidden" name="add" value="true" />
+                       <div>
+                        
+                        <h1>Recent Messages From the Green Up Community</h1>
+                        <div>
+                            <h3>Post your message</h3>
+                        <select name="topic">
+                          <option value="1">Forum Message</option>
+                          <option value="2">Volunteers Needed</option>
+                          <option value="3">Trash Pickup</option>
+                        </select>
+                        </div>  
+
+                        <textarea name="message" id="message"></textarea>
+
+                        <div>
+                        <input type="submit" name="Submit" value="Submit" />
+                        <input type="reset" name="Submit2" value="Reset" />
+                        </div>
+
+                        </div>
+
+                </form>
+                </div>
+
+
+                <ul class="filter">
+                    <li><a onclick='showAll("messages"); return false;'>Show Messages</a></li>
+                    <li><a  onclick='showAll("help"); return false;'>Show Needs</a></li>
+                    <li><a  onclick='showAll("trash"); return false;'>Show Trash</a></li>
+                    <li><a  onclick='showAll("All"); return false;'>Show All</a></li>
+                </ul>
+
+            <!-- messages will be populated here by JS -->
+            <div id="messagesContainer">
+            </div>
+
+            <div id="moar">
+                <div class="nextPrev" id="prevPage">Prev</div>
+            	<div class="nextPrev" id="nextPage">Next</div>
+            </div>
+		</div>
+	</div>
+
+    <div id="loadingScreen">
+        <div id="loadingGif">
+            <img src="img/ajax-loader.gif" />
+        </div>
+        <div id="loadingText" style="color:white; width:100%; text-align:center;"></div>
+    </div>
+
+    <div id="dialogSlider">
+        <textarea id="dialogSliderTextarea" class="dialogSliderContents"></textarea>
+        <div class="dialogSliderContents">
+            <div class="dialogSliderButton dialogButtonOk"><div id="dialogCommentOk" class="buttonText">Ok</div></div>
+            <div class="dialogSliderButton dialogButtonCancel"><div id="dialogCommentCancel" class="buttonText">Cancel</div></div>
+        </div>
+    </div>
+
+    <ul class="nav">
+        <li><a id="pan1">Home</a></li>
+        <li><a id="pan2">Maps</a></li>
+        <li><a id="pan3">Comments</a></li>
+    </ul>
+</body>
+
+</html>

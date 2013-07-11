@@ -1,0 +1,36 @@
+application: greenup
+version: 0
+runtime: python27
+api_version: 1
+threadsafe: false
+
+handlers:
+- url: /favicon.ico
+  static_files: api/favicon.ico
+  upload: api.favicon.ico
+
+- url: /api/heatmap
+  script: api.heatmap.application
+
+- url: /api/pins
+  script: api.pins.application
+
+- url: /api/comments
+  script: api.comments.application
+
+- url: /api 
+  script: api.api.application
+
+- url: /
+  static_files: web/client/index.html
+  upload: local/web/client/index.html
+- url: /(.+)
+  static_files: web/client/\1
+  upload: local/web/client/(.+)
+
+- url: /.*
+  script: api.api.application
+
+libraries:
+- name: webapp2
+  version: latest
