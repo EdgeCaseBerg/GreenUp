@@ -1,0 +1,29 @@
+application: greenupapi
+version: 1-01
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /favicon.ico
+  static_files: favicon.ico
+  upload: favicon.ico
+
+- url: /api/heatmap
+  script: heatmap.application
+
+- url: /api/pins
+  script: pins.application
+
+- url: /api/comments
+  script: comments.application
+
+- url: /api 
+  script: api.application
+
+- url: /.*
+  script: api.application
+
+libraries:
+- name: webapp2
+  version: latest
