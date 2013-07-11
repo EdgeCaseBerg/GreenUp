@@ -52,14 +52,36 @@ class Pins(Greenup):
 		return bt
 
 	@classmethod
-	def by_lat(cls,lat, precision=5):
-		latitudes = Pins.all().filter('lat =', lat).get()		
+	def by_lat(cls,lat, offset=None):
+		if not offset:
+			latitudes = Pins.all().filter('lat =', lat)
+			return latitudes
+		else:
+			latitudes = Pins.all().filter('lat >=', lat).filter('lat <=', lat + offset)
 		return latitudes
 
 	@classmethod
-	def by_lon(cls,lon, precision=5):
-		longitudes = Pins.all().filter('lon =', lon).get()
+	def by_lon(cls,lon, offset=None):
+		if not offset:
+			longitudes = Pins.all().filter('lon =', lon)
+		else:
+			longitudes = Pins.all().filter('lon >=', lon).filter('lon <=', lon + offset)
 		return longitudes
+
+	@classmethod
+	def get_all_pins(cls):
+		pins = Pins.all()
+		return pins
+
+	@classmethod
+	def by_lat_and_lon(cls, lat, latOffset, lon, lonOffset):
+		if not latOffset:
+			both = Pins.all().filter('lon =', lon).filter('lat =', lat)
+			return both
+		else:
+			longitudes = Pins.all().filter('lon >=', lon).filter('lon <=', lon + offset)
+			latitudes = Pins.all().filter('lat >=', lat).filter('lat <=', lat + offset)
+		return longitudes, latitudes
 
 class Comments(Greenup):
 
@@ -85,7 +107,7 @@ class Comments(Greenup):
 class GridPoints(Greenup):
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
-	secondsWorked = db.FloatProperty()
+	secondsWorked = db.IntegerProperty()
 
 	@classmethod
 	def by_id(cls, gridId):
@@ -114,6 +136,10 @@ class GridPoints(Greenup):
 		q = GridPoints().all().filter('lon >=', lonDegrees).filter('lon <=', lonDegrees + offset).get()
 		return q
 
+	@classmethod
+	def get_all_delayed(cls):
+		return GridPoints.all()
+
 	# then we need to make a function that runs through that chunk and bucket-izes each point by rounding it (and stores the 
 	# seconds worked for each of those points that went into the bucket) [see bucket sort or alpha sort]. this could be a function
 	# separate from the datastore. 
@@ -136,7 +162,7 @@ class AbstractionLayer():
 		#Convert comments to simple dictionaries for the comments endpoint to use
 		dictComments = []
 		for comment in comments:
-			dictComments.append({'commentType' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin, 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin, 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
 		return dictComments
 
 	def submitComments(self, commentType, message, pin=None):
@@ -145,16 +171,17 @@ class AbstractionLayer():
 		updateCachedWrite(MEMCACHED_WRITE_KEY)
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
-		# memcache or datastore read
-		pass
+		return heatmapFiltering(latDegrees,lonDegrees,latOffset,lonOffset,precision)
 
-	def updateHeatmap(self, latDegrees, lonDegrees, secondsWorked):
+	def updateHeatmap(self, heatmapList):
 		# datastore write
-		gp = GridPoints(parent=self.appKey, lat=latDegrees, lon=lonDegrees, secondsWorked=secondsWorked).put()
+		for point in heatmapList:
+			#We may want to consider some error checking here.
+			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
 
-	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
-		# memcache or datastore read
-		pass
+	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None):
+		# datastore read
+		return pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset)
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
@@ -258,21 +285,17 @@ def paging(page=1,typeFilter=None):
 	currentCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page)
 	pageInCache = memcache.get(currentCursorKey)
 
-	logging.info(currentCursorKey)
-
 	misses = []
 
 	if not memcache.get('greeunup_comment_paging_cursor_%s_%s' %(typeFilter, 1) ):
 		# make sure the initial page is in cache
 		initialPage(typeFilter)
-		logging.info("had to make initial page")
 
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
 			prevCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, x)
-			# logging.info(prevCursorKey)
 			prevPageInCache = memcache.get(prevCursorKey)
 
 			if not prevPageInCache:
@@ -299,14 +322,12 @@ def paging(page=1,typeFilter=None):
 
 			# save those results in memecache with thier own key
 			pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, cursorKey[-1])
-			logging.info(pageKey)
 			memcache.set(pageKey, serialize_entities(items))
 
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
 		prevCursor = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page-1)
 		cursor = memcache.get(prevCursor)
-		#This causes an error on initial write. Not sure how to fix it, the querySet is None
-		#Phelan can you fix this?
+
 		results = querySet.with_cursor(start_cursor=cursor)
 		results = results.run(limit=resultsPerPage)
 
@@ -318,14 +339,119 @@ def paging(page=1,typeFilter=None):
 
 		# save results in memecache with key
 		pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, page)
-		logging.info(pageKey)
 		memcache.set(pageKey, serialize_entities(items))
 
 		return items
 
 	# otherwise, just get the page out of memcache
-	print "did this instead, cause it was in the cache"
+	# print "did this instead, cause it was in the cache"
 	pageKey = "greenup_comments_page_%s_%s" %(typeFilter, page)
-	logging.info(pageKey)
 	results = deserialize_entities(memcache.get(pageKey))
 	return results
+
+
+def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,precision=DEFAULT_ROUNDING_PRECISION):
+	#Make sure offsets are set to default if not specified (consider putting in constants)
+	if latOffset is None:
+		latOffset = 1
+	if lonOffset is None:
+		lonOffset = 1
+
+	#Get all unfiltered gridpoints
+	toBeFiltered = GridPoints.get_all_delayed()
+	toBeBucketSorted = []
+
+	combined = False
+	if latDegrees is None and lonDegrees is None:
+		#Code in calling function must handle parsing to JSON the data modelst 
+		toBeBucketSorted = toBeFiltered
+	elif latDegrees is None:
+		#No lonDegrees
+		toBeBucketSorted = toBeFiltered.filter('lat <', latDegrees + latOffset).filter('lat >', latDegrees - latOffset)
+	elif lonDegrees is None:
+		#no latdegrees
+		toBeBucketSorted = toBeFiltered.filter('lon <', lonDegrees + lonOffset).filter('lon >', lonDegrees - lonOffset)
+	else:
+		#lat degrees and londegrees are both present
+		toBeBucketSorted = toBeFiltered.filter('lat <', (latDegrees + latOffset)).filter('lat >', (latDegrees - latOffset))
+		combined = True #we must perform the second coordinates inequality in application code because of https://groups.google.com/forum/#!topic/google-appengine/F8f8JKJ0dPs
+
+
+	#Now that we have all the items we want, bucket sort em with the precision
+	buckets = {}
+	for point in toBeBucketSorted:
+		if combined:
+			#filter on lon
+			if not ((lonDegrees - lonOffset) <  point.lon and point.lon < (lonDegrees + lonOffset)):
+				continue
+		key = "%.*f_%.*f" % (latOffset,point.lat,lonOffset,point.lon)
+		if key in buckets:
+			buckets[key]['secondsWorked'] += point.secondsWorked
+		else:
+			buckets[key] = {'latDegrees' : float(round(point.lat,precision)), 'lonDegrees' : float(round(point.lon,precision)), 'secondsWorked' : point.secondsWorked}
+	#Now send the buckets back as a list
+	#note that buckets.items() will give back tuples, which is not what we want
+	toReturn = []
+	for key,bucket in buckets.iteritems():
+		toReturn.append(bucket)
+	return toReturn
+
+def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
+	# filter by parameters passed in and return the appropriate dataset
+	pins = {}
+	toReturn = []
+	
+	if latDegrees is None and lonDegrees is None:
+		# nothing specified, this means we return all of it
+		dbPins = Pins.get_all_pins()
+		return pinFormatter(dbPins)
+
+	elif lonDegrees is None:
+		# only latitude supplied
+		dbPins = Pins.by_lat(lat=latDegrees, offset=latOffset)
+		return pinFormatter(dbPins)
+
+	elif latDegrees is None:
+		# only longitude supplied
+		dbPins = Pins.by_lon(lon=lonDegrees, offset=lonOffset)
+		return pinFormatter(dbPins)
+
+	elif (latDegrees and lonDegrees) and not lonOffset:
+		# both lat and lon are supplied
+		dbPins = Pins.by_lat_and_lon(lon=lonDegrees, lat=latDegrees, latOffset=latOffset, lonOffset=lonOffset)
+		return pinFormatter(dbPins)
+
+	elif latDegrees and latOffset and lonDegrees and lonOffset:
+		# degrees are supplied with offsets
+		dbPins = Pins.get_all_pins()
+		dbLats = dbPins.filter('lat <', (latDegrees + latOffset)).filter('lat >', (latDegrees - latOffset))
+		for pin in dbLats:
+			#filter on lon
+			if not ((lonDegrees - lonOffset) <  pin.lon and pin.lon < (lonDegrees + lonOffset)):
+				continue
+			key = "%f_%f" % (pin.lat, pin.lon)
+			pins[key] = ({  'latDegrees' : pin.lat,
+							'lonDegrees' : pin.lon,
+							'type'		 : pin.pinType,
+							'message'	 : pin.message })
+		for key,item in pins.iteritems():
+			toReturn.append(item)
+
+		return toReturn
+
+	else:
+		return "Something bad happened"
+
+def pinFormatter(dbPins):
+	pins = {}
+	toReturn = []	
+	for pin in dbPins:		
+		key = "%f_%f" % (pin.lat, pin.lon)
+		pins[key] = ({  'latDegrees' : pin.lat,
+						'lonDegrees' : pin.lon,
+						'type'		 : pin.pinType,
+						'message'	 : pin.message })
+	for key,item in pins.iteritems():
+		toReturn.append(item)
+
+	return toReturn

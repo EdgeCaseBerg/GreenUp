@@ -24,7 +24,7 @@ class Heatmap(webapp2.RequestHandler):
 		precision = self.request.get("precision")
 		
 		#validate parameters
-		if latDegrees:
+		if latDegrees is not None and latDegrees is not "":
 			try:
 				#Check that latDegrees is within the correct range and is numeric. throw syntax on numeric error, semantic on range
 				float(latDegrees)
@@ -32,6 +32,8 @@ class Heatmap(webapp2.RequestHandler):
 				latDegrees = float(latDegrees)
 				if latDegrees < -180.0 or latDegrees > 180.0:
 					raise api.SemanticError("latDegrees must be within the range of -180.0 and 180.0")
+				if latDegrees == "":
+					latDegrees = None
 				parameters+= 1
 			except ValueError, v:
 				#Syntactic error
@@ -42,9 +44,11 @@ class Heatmap(webapp2.RequestHandler):
 				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
 				self.response.write('{"Error_Message" : "%s"}' % s.message)
 				return
+		else:
+			latDegrees = None
 		
 
-		if lonDegrees:
+		if lonDegrees is not None and lonDegrees is not "":
 			try:
 				float(lonDegrees)
 				#check range
@@ -60,7 +64,20 @@ class Heatmap(webapp2.RequestHandler):
 				self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
 				self.response.write('{ "Error_Message" : "%s" }' % s.message)
 				return
-				
+		else:
+			lonDegrees = None
+		
+		#Check precision
+		if precision is not None and precision is not "":
+			try:
+				precision = abs(int(precision))
+				parameters += 1
+			except ValueError, e:
+				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
+				self.response.write('{"Error_Message" : "Precision value must be a numeric integer" '  )
+				return
+		else:
+			precision = api.DEFAULT_ROUNDING_PRECISION		
 		
 		#Check offsets
 		#If one offset is present the other must be too
@@ -70,9 +87,8 @@ class Heatmap(webapp2.RequestHandler):
 			self.response.write('{"Error_Message" : "%s"}' % "Both lonOffset and latOffset must be present if either is used")
 			return
 
-		#the choice of lon is arbitrary, either lat or lon offset would work here
-		
-		if lonOffset:
+		#the choice of lon is arbitrary, either lat or lon offset would work here		
+		if lonOffset is not None and lonOffset is not "":
 			try:
 				lonOffset = abs(int(lonOffset))
 				latOffset = abs(int(latOffset))
@@ -82,72 +98,15 @@ class Heatmap(webapp2.RequestHandler):
 				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
 				self.response.write('{"Error_Message" : "Offsets defined must both be integers" }')
 				return
-
-		
-		#Check precision
-		if precision:
-			try:
-				precision = abs(int(precision))
-				parameters += 1
-			except ValueError, e:
-				self.response.set_status(api.HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "Precision value must be a numeric integer" '  )
-				return
-			else:
-				precision = api.DEFAULT_ROUNDING_PRECISION
 		else:
-			precision = api.DEFAULT_ROUNDING_PRECISION
-				
+			#default
+			lonOffset = 1
+			latOffset = 1
 
 		#If no parameters are specified we'll return everything we have for them
 		response = []
-		
-		if parameters == 0:
-			#Return everything
-			response = []
-		else:
-			#Figure out what type of query to make depending on the parameters we have available
-			if not lonOffset and latDegrees and not lonDegrees:
-				#Only specified latDegrees
-				#Round latDegrees by precision value:
-				latDegrees = round(latDegrees,precision) 
-				response = GridPoints.by_lat(latDegrees)
-				if not response:
-					response = []
-			elif not lonOffset and lonDegrees and not latDegrees:
-				#Only specified lonDegrees
-				lonDegrees = round(lonDegrees,precision)
-				response = GridPoints.by_lon(lonDegrees)
-				if not response:
-					response = []
-			elif not lonOffset and latDegrees and lonDegrees:
-				#We have both lon and lat degrees
-				lonDegrees = round(lonDegrees,precision)
-				latDegrees = round(latDegrees,precision)
-				pass
-				#Do query for both (not implemented yet)
-			elif lonOffset and ((latDegrees and not lonDegrees) or (not latDegrees and lonDegrees)):
-				#Do query for degrees with offsets
-				if latDegrees:
-					#Do query for latitude with an offset
-					pass
-				elif lonDegrees:
-					#Do query for longitude with an offset
-					pass
-				pass
-			elif lonOffset and latDegrees and lonDegrees:
-				#We have offsets and both degrees, fire off the bounds request
-				pass
-			else:
-				#No degrees specified and offsets or just precision?
-				if parameters == 1:
-					#Only precision passed perform query for full grid with precision
-					pass
-				else:
-					self.response.set_status(api.HTTP_REQUEST_SEMANTICS_PROBLEM)
-					self.response.write('{"Error_Message" : "Improperly formed query, if offsets or precision specified, at least one degree must be given"}')
-					return
-
+		layer = AbstractionLayer()
+		response = layer.getHeatmap(latDegrees,latOffset,lonDegrees,lonOffset, precision)
 
 		#By this point we have a response and we simply have to send it back
 		self.response.set_status(api.HTTP_OK)
@@ -234,10 +193,8 @@ class Heatmap(webapp2.RequestHandler):
 			points.append(info[i])
 
 		#Add all points to datastore
-		logging.info(info)
-		for point in points:
-			pass
-
+		layer = AbstractionLayer()
+		layer.updateHeatmap(points)
 
 		self.response.set_status(api.HTTP_OK)
 		self.response.write('{"status": %i, "message" : "Successful submit" }' % api.HTTP_OK)
