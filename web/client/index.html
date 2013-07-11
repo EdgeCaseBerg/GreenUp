@@ -4,20 +4,12 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, target-densityDpi=96"/>
-<!-- <link rel="stylesheet" href="css/homepage.css"> -->
-<!-- <link rel="stylesheet" href="css/mapUI.css"> -->
-<!-- <link rel="stylesheet" href="css/homeUI.css"> -->
-<!-- <link rel="stylesheet" href="css/cardsUI.css"> -->
-<!-- <link rel="stylesheet" href="css/messages.css"> -->
 <link rel="stylesheet" href="css/styles.css">
 
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script> -->
 <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
 <script src="js/markerwithlabel.js"></script>
 <script type="text/javascript" src="js/lawnchair-js.js"></script>
-<!-- <script type="text/javascript" src="js/app.js"></script> -->
-<!-- <script type="text/javascript" src="js/mapsUI.js"></script> -->
 <script type="text/javascript" src="js/JSON.js"></script>
 <script type="text/javascript" src="js/ApiConnector.js"></script>
 
