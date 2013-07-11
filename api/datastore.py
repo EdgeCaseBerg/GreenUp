@@ -398,8 +398,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 
 def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 	# filter by parameters passed in and return the appropriate dataset
-	pins = {}
-	toReturn = []
+	pins = []
 	
 	if latDegrees is None and lonDegrees is None:
 		# nothing specified, this means we return all of it
@@ -429,29 +428,22 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  pin.lon and pin.lon < (lonDegrees + lonOffset)):
 				continue
-			key = "%f_%f" % (pin.lat, pin.lon)
-			pins[key] = ({  'latDegrees' : pin.lat,
+			pins.append( {  'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
-							'message'	 : pin.message })
-		for key,item in pins.iteritems():
-			toReturn.append(item)
-
-		return toReturn
+							'message'	 : pin.message }
+						)
+		return pins
 
 	else:
 		return "Something bad happened"
 
 def pinFormatter(dbPins):
-	pins = {}
-	toReturn = []	
+	pins = []
 	for pin in dbPins:		
-		key = "%f_%f" % (pin.lat, pin.lon)
-		pins[key] = ({  'latDegrees' : pin.lat,
+		pins.append( {  'latDegrees' : pin.lat,
 						'lonDegrees' : pin.lon,
 						'type'		 : pin.pinType,
-						'message'	 : pin.message })
-	for key,item in pins.iteritems():
-		toReturn.append(item)
-
-	return toReturn
+						'message'	 : pin.message }
+					)
+	return pins
