@@ -28,7 +28,7 @@ Setup
 ------------------
 - `$$ git clone https://github.com/EJEHardenberg/GreenUp.git` (or fork the repository then download it)
 - Install the google app engine for your system. [Linux] or [Windows or Mac]
-- Run the dev_appserver.py script against GreenUp/web/api/ or use the GUI interface to make a new project against that folder
+- Run the dev_appserver.py script against GreenUp/ or use the GUI interface to make a new project against that folder
 - Navigate to your localhost:XXXXX (where XXXXX is the port specified by the app server console)
 - All should be working well. If you have trouble, ask for our help with the issue tracker on github and we'll get back to you ASAP
 
