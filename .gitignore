@@ -1,2 +1,9 @@
+<<<<<<< HEAD
 #Don't care about compiled python files for the app engine, just the python themselves
 *.pyc
+=======
+#Ignore my apache error log -Ethan
+error.log
+config.php
+html/
+>>>>>>> 07239d0777d33501422b6222e5560b9e8c455d6f
