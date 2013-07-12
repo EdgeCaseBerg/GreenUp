@@ -8,15 +8,15 @@ function ApiConnector(){
 	var markerData = []; 
 	var commentData = [];
 
-	var BASE = "http://localhost/GreenUp/web/api_proxy/proxy.php?";
-	// var BASE = "http://greenup.xenonapps.com/api";
+	//var BASE = "http://localhost/GreenUp/web/api_proxy/proxy.php?";
+	var BASE = "http://localhost:30002/api";
 
 	// api URLs
-	var forumURI = "comments?type=forum";
-	var needsURI = "comments?type=needs";
-	var messagesURI = "comments?type=message";
-	var heatmapURI = "heatmap?";
-	var pinsURI = "pins";
+	var forumURI = "/comments?type=forum";
+	var needsURI = "/comments?type=needs";
+	var messagesURI = "/comments?type=message";
+	var heatmapURI = "/heatmap?";
+	var pinsURI = "/pins";
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
@@ -109,8 +109,23 @@ function ApiConnector(){
 
 	// ********** specific data pullers *************
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
-		var URL = BASE+heatmapURI+"lstDegrees="+latDegrees+"&latOffset="+latOffset+"&lonDegrees="+lonDegrees+"&lonOffset="+lonOffset;
+		/*
+			To be extra safe we could do if(typeof(param) == "undefined" || param == null),
+			but there is an implicit cast against undefined defined for double equals in javascript
+		*/
+		params = "?";
+		if(latDegrees != null)
+			params += "latDegrees=" + latDegrees + "&";
+		if(latOffset != null)
+			params += "latOffset=" + latOffset + "&";
+		if(lonDegrees != null)
+			params += "lonDegrees" + lonDegrees + "&";
+		if(lonOffset != null)
+			params += "lonOffset" + lonOffset + "&";
+
+		var URL = BASE+heatmapURI+params;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
+
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
@@ -160,7 +175,7 @@ function ApiConnector(){
 		        // zepto code
 		        $.ajax({
 			        type:'POST',
-			        url: '../server/addGridData.php',
+			        url: BASE + heatmapURI,
 			        dataType:"json",
 			        data: {data : data},
 			        failure: function(errMsg){
@@ -168,7 +183,7 @@ function ApiConnector(){
 			        }
 			    });//Ajax
 			        
-			            //Remove all uploaded database records
+			    //Remove all uploaded database records
 			    for(var i=1;i<data.length;i++){
 			        database.remove(i);
 			    }
