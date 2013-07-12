@@ -192,6 +192,11 @@ class Heatmap(webapp2.RequestHandler):
 			#Add it to the list of points to be added
 			points.append(info[i])
 
+		#TO DO:
+		#Go through this the points list and if there are duplicate lat/lon points aggregate them together.
+		#We could acoomplish this by modifying the above appending to check the point before it since we're assuming that
+		#the points are in sequential order.
+
 		#Add all points to datastore
 		layer = AbstractionLayer()
 		layer.updateHeatmap(points)
