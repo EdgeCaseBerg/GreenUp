@@ -113,6 +113,12 @@
 
 		<div class="panel" id="panel3">
                 <div>
+                <!-- This form's submission event should be hijacked by ajax and the proper json should be created 
+                    $("form").live('submit', function(e) {
+                        e.preventDefault();
+                        e.returnValue = false;                    
+                });
+            -->
                 <form action="/server/communication.php" method="GET">
                     <input type="hidden" name="add" value="true" />
                        <div>
