@@ -61,8 +61,6 @@ function ApiConnector(){
 
 
 	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
-		console.log("in push new pin");
-		console.log(jsonObj);
 		$.ajax({
 			type: "POST",
 			url: BASE+pinsURI,
@@ -181,7 +179,7 @@ function ApiConnector(){
 		        console.log(data);
 		        // zepto code
 		        $.ajax({
-			        type:'POST',
+			        type:'PUT',
 			        url: BASE + heatmapURI,
 			        dataType:"json",
 			        data: {data : data},
