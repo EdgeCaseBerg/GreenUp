@@ -314,6 +314,7 @@ function UiHandle(){
 	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
 
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
+	    	window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
 	    	window.UI.dialogSliderDown();
 	    });
 
@@ -412,6 +413,8 @@ function UiHandle(){
 				break;
 		}
 
+		window.MAP.markerType = markerType;
+
 		var marker = new google.maps.Marker({
         	position: window.MAP.markerEvent.latLng,
         	map: window.MAP.map,
@@ -421,9 +424,9 @@ function UiHandle(){
 
 		// third we need to 
 		// (bug) need to get the message input from the user
-		var message = "DEFAULT MESSAGE TEXT"; 
+		// var message = "DEFAULT MESSAGE TEXT"; 
 		// here we add the appropriate marker to the map
-		window.MAP.addMarkerFromUi(markerType, message);
+			// window.MAP.addMarkerFromUi(markerType, message);
 		// window.UI.markerDisplay.style.display = "none";
 		// window.UI.isMarkerDisplayVisible = false;
 		window.UI.hideMarkerTypeSelect();
@@ -625,6 +628,7 @@ function MapHandle(){
 	this.currentLon = -73.209998100000000;
 	this.currentZoom = 10;
 	this.markerEvent;
+	this.markerType;
 	this.map;
 	this.pickupMarkers = [];
 	// fire up our google map
@@ -650,16 +654,16 @@ function MapHandle(){
 		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
 	}
 
-	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(markerType, message){
+	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message){
 		// console.log("in addMarker()");
 		var pin = new Pin();
 		pin.message = message;
-		pin.type = markerType;
+		pin.type = window.MAP.markerType;
 		// pin.latDegrees = lat;
 		// pin.lonDegrees = lon;
 
 		var iconUrl; 
-		switch(markerType){
+		switch(window.MAP.markerType){
 			case "comment":
 				pin.type = "general message";
 				iconUrl = "img/icons/blueCircle.png";
