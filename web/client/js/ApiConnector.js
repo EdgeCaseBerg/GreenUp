@@ -176,7 +176,10 @@ function ApiConnector(){
 	    if(window.logging){
 		        //server/addgriddata.php
 		    database.all(function(data){
-		        console.log(data);
+		    	//Make sure to not just send null data up or you'll get a 400 back
+		        if(data.length == 00){
+		        	data = "[]";
+		        }
 		        // zepto code
 		        $.ajax({
 			        type:'PUT',
