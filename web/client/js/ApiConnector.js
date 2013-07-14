@@ -8,7 +8,7 @@ function ApiConnector(){
 	var markerData = []; 
 	var commentData = [];
 
-	//var BASE = "http://localhost/GreenUp/web/api_proxy/proxy.php?";
+
 	var BASE = "http://localhost:30002/api";
 
 	// api URLs
@@ -59,15 +59,21 @@ function ApiConnector(){
 	ApiConnector.prototype.pushApiData = function pushApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
 	}
 
-	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj,CALLBACK){
+
+	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
+		console.log("in push new pin");
+		console.log(jsonObj);
 		$.ajax({
 			type: "POST",
 			url: BASE+pinsURI,
 			data: jsonObj,
+    		cache: false,
+			// processData: false,
 			dataType: "json",
+			// contentType: "application/json",
 			success: function(data){
 				console.log("INFO: Pin successfully sent")
-				CALLBACK(data);
+				window.ApiConnector.pullMarkerData();
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -129,7 +135,8 @@ function ApiConnector(){
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
-		var URL = BASE+heatmapURI;
+		console.log("in pullMarkerData");
+		var URL = BASE+pinsURI;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
 	}
 
@@ -180,6 +187,10 @@ function ApiConnector(){
 			        data: {data : data},
 			        failure: function(errMsg){
 			        	// alert(errMsg);
+			        	console.log("Failed to PUT heatmap: "+errMsg);
+			        }, 
+			        success: function(data){
+			        	console.log("PUT heatmap success: "+data);
 			        }
 			    });//Ajax
 			        
@@ -264,6 +275,9 @@ function UiHandle(){
 		// toggle map overlays
 		window.UI.toggleHeat = document.getElementById('toggleHeat');
 	    window.UI.toggleIcons = document.getElementById('toggleIcons');
+	   	window.UI.toggleIcons.addEventListener('mousedown', function(){
+	   		window.MAP.toggleIcons();
+	   	});
 
 	    // for comment pagination
 	    this.commentsType = ""
@@ -279,7 +293,15 @@ function UiHandle(){
 		});
 	}
 
+	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
+		window.UI.markerDisplay.style.display = "none";
+		window.UI.isMarkerDisplayVisible = false;
+	}
 
+	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
+		window.UI.markerDisplay.style.display = "block";
+		window.UI.isMarkerDisplayVisible = true;
+	}
 
 	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
 		document.getElementById('bigButton').style.backgroundColor=colorHex;
@@ -323,9 +345,10 @@ function UiHandle(){
 		// (bug) need to get the message input from the user
 		var message = "DEFAULT MESSAGE TEXT"; 
 		// here we add the appropriate marker to the map
-		window.MAP.addMarker(markerType, message);
-		window.UI.markerDisplay.style.display = "none";
-		window.UI.isMarkerDisplayVisible = false;
+		window.MAP.addMarkerFromUi(markerType, message);
+		// window.UI.markerDisplay.style.display = "none";
+		// window.UI.isMarkerDisplayVisible = false;
+		window.UI.hideMarkerTypeSelect();
 		window.UI.dialogSliderUp();
 		// (bug) here we need to prevent more map touches
 	}
@@ -342,17 +365,15 @@ function UiHandle(){
 		document.getElementById("dialogSlider").style.opacity = "0.0";
 	}
 
-	UiHandle.prototype.markerSelectUp = function markerSelectUp(event){
+	UiHandle.prototype.markerSelectUp = function markerSelectUp(){
 		// set the coords of the marker event
-		window.MAP.markerEvent = event;
+
 	    MOUSEUP_TIME = new Date().getTime() / 1000;
 	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
 	        if(this.isMarkerDisplayVisible){
-	        	window.UI.markerDisplay.style.display = "none";
-	        	window.UI.isMarkerDisplayVisible = false;
+	        	window.UI.hideMarkerTypeSelect();
 	        }else{
-	        	window.UI.markerDisplay.style.display = "block";
-	        	window.UI.isMarkerDisplayVisible = true;
+	        	window.UI.showMarkerTypeSelect();
 	        }
 	        this.MOUSEDOWN_TIME =0;
 	        this.MOUSEDOWN_TIME =0;
@@ -374,8 +395,17 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
-		console.log('update marker');
-		console.log(data);
+
+		console.log("marker response: "+data);
+		// var dataArr = eval("("+data+")");
+		var dataArr = data;
+
+            for(ii=0; ii<dataArr.length; ii++){
+                // var dataA = dataArr[ii].split(",");
+                window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
+                // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
+            }
+
 	}
 
 	UiHandle.prototype.updateMessages = function updateMessages(data){
@@ -537,13 +567,57 @@ function MapHandle(){
 		  google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
 		  google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
 		  // our comment selector initializers
-		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.markerSelectDown);
+		  // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
+		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectDown);
 		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
 	}
 
-	MapHandle.prototype.addMarker = function addMarker(markerType, message){
+	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(markerType, message){
+		// console.log("in addMarker()");
 		var pin = new Pin();
 		pin.message = message;
+		pin.type = markerType;
+		// pin.latDegrees = lat;
+		// pin.lonDegrees = lon;
+
+		var iconUrl; 
+		switch(markerType){
+			case "comment":
+				pin.type = "general message";
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+			case "pickup":
+				pin.type = "help needed";
+				iconUrl = "img/icons/greenCircle.png";
+				break;
+			case "trash":
+				pin.type = "trash pickup";
+				iconUrl = "img/icons/redCircle.png";
+				break;
+			default:
+				pin.type = "general message";
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+		}
+	
+		var eventLatLng = window.MAP.markerEvent;
+		console.log(eventLatLng.latLng);
+		pin.latDegrees = eventLatLng.latLng.jb;
+		pin.lonDegrees = eventLatLng.latLng.kb;
+		var serializedPin = JSON.stringify(pin);
+		console.log(serializedPin);
+    	window.ApiConnector.pushNewPin(serializedPin);
+
+	}
+
+	MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon){
+		// console.log("in addMarker()");
+		var pin = new Pin();
+		pin.message = message;
+		pin.type = markerType;
+		pin.latDegrees = lat;
+		pin.lonDegrees = lon;
+
 		var iconUrl; 
 		switch(markerType){
 			case "comment":
@@ -568,18 +642,23 @@ function MapHandle(){
 		// pin.type = "bullshit";
 
 		 var marker = new google.maps.Marker({
-        	position: this.markerEvent.latLng,
+        	position: new google.maps.LatLng(pin.latDegrees, pin.lonDegrees),
         	map: window.MAP.map,
         	icon: iconUrl
     	});
 
-		pin.latDegrees = marker.getPosition().lat();
-		pin.lonDegrees = marker.getPosition().lng();
-		var serializedPin = JSON.stringify(pin);
+		// pin.latDegrees = marker.getPosition().lat();
+		// pin.lonDegrees = marker.getPosition().lng();
+		// var serializedPin = JSON.stringify(pin);
 		// // alert(serializedPin);
-
+		// window.UI.markerDisplay.style.display = "none";
+		// window.UI.isMarkerDisplayVisible = false;
     	window.MAP.pickupMarkers.push(marker);
-    	window.ApiConnector.pushNewPin(serializedPin, window.UI.updateMarker);
+
+    	// console.log(window.MAP.pickupMarkers);
+    	// window.MAP.updateMap(this.currentLat,this.currentLon, this.currentZoom);
+    	// window.ApiConnector.pushNewPin(serializedPin);
+
 
 	}
 
@@ -590,13 +669,16 @@ function MapHandle(){
 	}
 
 	MapHandle.prototype.toggleIcons = function toggleIcons(){
+		console.log("toggle icons: "+window.MAP.pickupMarkers.length);
 		if(window.UI.isMarkerVisible){
 			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[i].setVisible(false);
+				window.MAP.pickupMarkers[ii].setVisible(false);
+				window.UI.isMarkerVisible = false;
 			}
 		}else{
 			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[i].setVisible(true);
+				window.MAP.pickupMarkers[ii].setVisible(true);
+				window.UI.isMarkerVisible = true;
 			}
 		}
 	}
@@ -615,6 +697,10 @@ function MapHandle(){
 
 	MapHandle.prototype.setCurrentZoom = function setCurrentZoom(CurrentZoom){
 		this.currentZoom = CurrentZoom;
+	}
+
+	MapHandle.prototype.setMarkerEvent = function setMarkerEvent(event){
+		this.markerEvent = event;
 	}
 
 	MapHandle.prototype.getCurrentLat = function getCurrentLat(){
@@ -656,7 +742,8 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.MAP.initMap();
 	window.logging = false;
 
-	window.ApiConnector.pullTestData();
+	// window.ApiConnector.pullTestData();
+	window.ApiConnector.pullMarkerData();
 
 	document.getElementById("bigButton").addEventListener('mousedown', function(){
 		if(!window.logging){ 
