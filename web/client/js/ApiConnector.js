@@ -395,6 +395,31 @@ function UiHandle(){
 
 	// when the user chooses which type of marker to add to the map
 	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
+		// first we need to show the marker on the map
+		var iconUrl = "img/icons/blueCircle.png";
+		switch(markerType){
+			case "comment":
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+			case "pickup":
+				iconUrl = "img/icons/greenCircle.png";
+				break;
+			case "trash":
+				iconUrl = "img/icons/redCircle.png";
+				break;
+			default:
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+		}
+
+		var marker = new google.maps.Marker({
+        	position: window.MAP.markerEvent.latLng,
+        	map: window.MAP.map,
+        	icon: iconUrl
+    	});
+		// second we need to get the user's message
+
+		// third we need to 
 		// (bug) need to get the message input from the user
 		var message = "DEFAULT MESSAGE TEXT"; 
 		// here we add the appropriate marker to the map
@@ -654,7 +679,7 @@ function MapHandle(){
 		}
 	
 		var eventLatLng = window.MAP.markerEvent;
-		console.log(eventLatLng.latLng);
+		// console.log(eventLatLng.latLng);
 		pin.latDegrees = eventLatLng.latLng.jb;
 		pin.lonDegrees = eventLatLng.latLng.kb;
 		var serializedPin = JSON.stringify(pin);
