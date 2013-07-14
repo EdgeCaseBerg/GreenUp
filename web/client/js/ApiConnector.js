@@ -27,6 +27,7 @@ function ApiConnector(){
 			url: URL,
 			dataType: DATATYPE,
 			success: function(data){
+				console.log("Pull API Data: SUCCESS");
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
@@ -48,6 +49,9 @@ function ApiConnector(){
 						break;
 					case 422:
 						console.log("Error: api response = 422");
+						break;
+					case 200:
+						console.log("Pull API data: 200");
 						break;
 					default:
 						// alert("Error Contacting API: "+xhr.status);
@@ -134,7 +138,6 @@ function ApiConnector(){
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
-		console.log("in pullMarkerData");
 		var URL = BASE+pinsURI;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
 	}
@@ -298,7 +301,6 @@ function UiHandle(){
 	this.isMarkerDisplayVisible = false;
 	this.MOUSEDOWN_TIME;
 	this.MOUSEUP_TIME;
-	this.markerDisplay;
 	this.isMarkerVisible = false;
 	this.isMapLoaded = false;
 
@@ -308,52 +310,42 @@ function UiHandle(){
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
 
-	    // marker type selectors
-	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
-	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
-	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
-
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
 	    	window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
 	    	window.UI.dialogSliderDown();
 	    });
-
-	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){
-	    	window.UI.dialogSliderDown();
-	    });
-
-		this.markerDisplay = document.getElementById("markerTypeDialog");
+	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
 
 		// toggle map overlays
-		window.UI.toggleHeat = document.getElementById('toggleHeat');
-	    window.UI.toggleIcons = document.getElementById('toggleIcons');
-	   	window.UI.toggleIcons.addEventListener('mousedown', function(){
-	   		window.MAP.toggleIcons();
-	   	});
+		document.getElementById('toggleHeat').addEventListener('mousedown', function(){window.MAP.toggleHeatmap();});
+	   	document.getElementById('toggleIcons').addEventListener('mousedown', function(){window.MAP.toggleIcons();});
 
-	    // for comment pagination
+		// for comment pagination
 	    this.commentsType = ""
 	    this.commentsNextPageUrl = "";
 	    this.commentsPrevPageUrl = "";
+	    // load the previous page
 	    document.getElementById("prevPage").addEventListener('mousedown', function(){
-			// load the previous page
-			window.ApiConnector.pullCommentData(this.commentsType, this.commentsPrevPageUrl);
+	    	window.ApiConnector.pullCommentData(this.commentsType, this.commentsPrevPageUrl);
 		});
+		// load the previous page
 		document.getElementById("nextPage").addEventListener('mousedown', function(){
-			// load the previous page
 			window.ApiConnector.pullCommentData(this.commentsType, this.commentsNextPageUrl);
 		});
 	}
 
 	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
-		console.log("in hideMarkerTypeSelect()");
-		window.UI.markerDisplay.style.display = "none";
+		document.getElementById("markerTypeDialog").style.display = "none";
 		window.UI.isMarkerDisplayVisible = false;
 	}
 
 	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
-		console.log("in showMarkerTypeSelect()");
-		window.UI.markerDisplay.style.display = "block";
+		// add marker type selectors
+	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
+	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
+	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
+		
+		document.getElementById("markerTypeDialog").style.display = "block";
 		window.UI.isMarkerDisplayVisible = true;
 	}
 
@@ -397,38 +389,30 @@ function UiHandle(){
 	// when the user chooses which type of marker to add to the map
 	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
 		// first we need to show the marker on the map
-		var iconUrl = "img/icons/blueCircle.png";
+		// var iconUrl = "img/icons/blueCircle.png";
+		var iconUrl = "";
 		switch(markerType){
 			case "comment":
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "img/icons/orangeCircle.png";
 				break;
 			case "pickup":
-				iconUrl = "img/icons/greenCircle.png";
+				iconUrl = "img/icons/blueCircle.png";
 				break;
 			case "trash":
-				iconUrl = "img/icons/redCircle.png";
+				iconUrl = "img/icons/greenCircle.png";
 				break;
 			default:
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "img/icons/orangeCircle.png";
 				break;
 		}
 
 		window.MAP.markerType = markerType;
-
 		var marker = new google.maps.Marker({
         	position: window.MAP.markerEvent.latLng,
         	map: window.MAP.map,
         	icon: iconUrl
     	});
-		// second we need to get the user's message
 
-		// third we need to 
-		// (bug) need to get the message input from the user
-		// var message = "DEFAULT MESSAGE TEXT"; 
-		// here we add the appropriate marker to the map
-			// window.MAP.addMarkerFromUi(markerType, message);
-		// window.UI.markerDisplay.style.display = "none";
-		// window.UI.isMarkerDisplayVisible = false;
 		window.UI.hideMarkerTypeSelect();
 		window.UI.dialogSliderUp();
 		// (bug) here we need to prevent more map touches
@@ -666,15 +650,15 @@ function MapHandle(){
 		switch(window.MAP.markerType){
 			case "comment":
 				pin.type = "general message";
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "img/icons/orangeCircle.png";
 				break;
 			case "pickup":
 				pin.type = "help needed";
-				iconUrl = "img/icons/greenCircle.png";
+				iconUrl = "img/icons/blueCircle.png";
 				break;
 			case "trash":
 				pin.type = "trash pickup";
-				iconUrl = "img/icons/redCircle.png";
+				iconUrl = "img/icons/greenCircle.png";
 				break;
 			default:
 				pin.type = "general message";
@@ -704,19 +688,19 @@ function MapHandle(){
 		switch(markerType){
 			case "comment":
 				pin.type = "general message";
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "img/icons/orangeCircle.png";
 				break;
 			case "pickup":
 				pin.type = "help needed";
-				iconUrl = "img/icons/greenCircle.png";
+				iconUrl = "img/icons/blueCircle.png";
 				break;
 			case "trash":
 				pin.type = "trash pickup";
-				iconUrl = "img/icons/redCircle.png";
+				iconUrl = "img/icons/greenCircle.png";
 				break;
 			default:
 				pin.type = "general message";
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "img/icons/orangeCircle.png";
 				break;
 		}
 
