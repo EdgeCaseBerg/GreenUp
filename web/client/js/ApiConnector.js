@@ -344,6 +344,9 @@ function UiHandle(){
 	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
 	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
 	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
+	    document.getElementById("cancel").addEventListener('mousedown', function(){
+	    	window.UI.hideMarkerTypeSelect();
+	    });
 		
 		document.getElementById("markerTypeDialog").style.display = "block";
 		window.UI.isMarkerDisplayVisible = true;
