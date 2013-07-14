@@ -16,7 +16,7 @@ function ApiConnector(){
 	var needsURI = "/comments?type=needs";
 	var messagesURI = "/comments?type=message";
 	var commentsUri = "/comments";
-	var heatmapURI = "/heatmap?";
+	var heatmapURI = "/heatmap";
 	var pinsURI = "/pins";
 
 	// performs the ajax call to get our data
@@ -62,8 +62,6 @@ function ApiConnector(){
 		});
 	} // end pullApiData
 
-	ApiConnector.prototype.pushApiData = function pushApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
-	}
 
 
 	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
@@ -231,10 +229,13 @@ function ApiConnector(){
 	    if(window.logging){
 		        //server/addgriddata.php
 		    database.all(function(data){
+		    	console.log(data);
 		    	//Make sure to not just send null data up or you'll get a 400 back
 		        if(data.length == 00){
 		        	data = "[]";
 		        }
+		        console.log("data being PUT to "+BASE+heatmapURI+": ");
+		        console.log(data);
 		        // zepto code
 		        $.ajax({
 			        type:'PUT',
@@ -461,7 +462,7 @@ function UiHandle(){
 
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
-		console.log(data);
+		console.log("Heatmap data: "+data);
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
@@ -572,9 +573,9 @@ function GpsHandle(){
 	    if(window.logging){
 	        var datetime = new Date().getTime();//generate timestamp
 	        var location = {
-	                "latitude" : latitude,
-	                "longitude" : longitude,
-	                "datetime" : datetime,
+	                "latDegree" : latitude,
+	                "lonDegree" : longitude,
+	                "secondsWorked" : datetime
 	        }
 	        database.save({value:location});//Save the record
 	    }
@@ -718,19 +719,7 @@ function MapHandle(){
         	icon: iconUrl
     	});
 
-		// pin.latDegrees = marker.getPosition().lat();
-		// pin.lonDegrees = marker.getPosition().lng();
-		// var serializedPin = JSON.stringify(pin);
-		// // alert(serializedPin);
-		// window.UI.markerDisplay.style.display = "none";
-		// window.UI.isMarkerDisplayVisible = false;
     	window.MAP.pickupMarkers.push(marker);
-
-    	// console.log(window.MAP.pickupMarkers);
-    	// window.MAP.updateMap(this.currentLat,this.currentLon, this.currentZoom);
-    	// window.ApiConnector.pushNewPin(serializedPin);
-
-
 	}
 
 	MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
@@ -815,6 +804,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
 	// window.ApiConnector.pullTestData();
 	window.ApiConnector.pullMarkerData();
+	window.ApiConnector.pullHeatmapData();
 
 	document.getElementById("bigButton").addEventListener('mousedown', function(){
 		if(!window.logging){ 
