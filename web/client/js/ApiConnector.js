@@ -345,11 +345,13 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
+		console.log("in hideMarkerTypeSelect()");
 		window.UI.markerDisplay.style.display = "none";
 		window.UI.isMarkerDisplayVisible = false;
 	}
 
 	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
+		console.log("in showMarkerTypeSelect()");
 		window.UI.markerDisplay.style.display = "block";
 		window.UI.isMarkerDisplayVisible = true;
 	}
@@ -619,7 +621,7 @@ function MapHandle(){
 		  google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
 		  // our comment selector initializers
 		  // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
-		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectDown);
+		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.markerSelectDown);
 		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
 	}
 
