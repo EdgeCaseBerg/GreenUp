@@ -28,6 +28,7 @@ function ApiConnector(){
 			dataType: DATATYPE,
 			success: function(data){
 				console.log("Pull API Data: SUCCESS");
+				// console.log(data);
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
@@ -167,6 +168,7 @@ function ApiConnector(){
 
 	ApiConnector.prototype.pushCommentData = function pushCommentData(commentType, message, pinType){
 		var jsonObj = '{ "type" : ' + commentType + ', "message" : ' + message + ', "pin" : ' + pinType + '}';
+		// console.log("push pin: "+jsonObj);
 		$.ajax({
 			type: "POST",
 			url: BASE+commentsUri,
@@ -689,16 +691,16 @@ function MapHandle(){
 
 		var iconUrl; 
 		switch(markerType){
-			case "comment":
-				pin.type = "general message";
+			case "GENERAL MESSAGE":
+				pin.type = "GENERAL MESSAGE";
 				iconUrl = "img/icons/orangeCircle.png";
 				break;
-			case "pickup":
-				pin.type = "help needed";
+			case "HELP NEEDED":
+				pin.type = "HELP NEEDED";
 				iconUrl = "img/icons/blueCircle.png";
 				break;
-			case "trash":
-				pin.type = "trash pickup";
+			case "TRASH PICKUP":
+				pin.type = "TRASH PICKUP";
 				iconUrl = "img/icons/greenCircle.png";
 				break;
 			default:
