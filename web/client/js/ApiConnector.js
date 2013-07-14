@@ -59,7 +59,7 @@ function ApiConnector(){
 	ApiConnector.prototype.pushApiData = function pushApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
 	}
 
-	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
+	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj,CALLBACK){
 		$.ajax({
 			type: "POST",
 			url: BASE+pinsURI,
@@ -110,7 +110,7 @@ function ApiConnector(){
 	// ********** specific data pullers *************
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
 		/*
-			To be extra safe we could do if(typeof(param) == "undefined" || param == null),
+			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
 			but there is an implicit cast against undefined defined for double equals in javascript
 		*/
 		params = "?";
@@ -374,6 +374,7 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
+		console.log('update marker');
 		console.log(data);
 	}
 
@@ -578,7 +579,7 @@ function MapHandle(){
 		// // alert(serializedPin);
 
     	window.MAP.pickupMarkers.push(marker);
-    	window.ApiConnector.pushNewPin(serializedPin);
+    	window.ApiConnector.pushNewPin(serializedPin, window.UI.updateMarker);
 
 	}
 
