@@ -395,8 +395,8 @@ function UiHandle(){
 	UiHandle.prototype.updateMarker = function updateMarker(data){
 
 		console.log("marker response: "+data);
-		// var dataArr = eval("("+data+")");
-		var dataArr = data;
+		var dataArr = eval("("+data+")");
+		//var dataArr = data;
 
             for(ii=0; ii<dataArr.length; ii++){
                 // var dataA = dataArr[ii].split(",");
