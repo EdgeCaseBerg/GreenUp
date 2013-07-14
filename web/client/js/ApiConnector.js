@@ -182,7 +182,7 @@ function ApiConnector(){
 			        type:'PUT',
 			        url: BASE + heatmapURI,
 			        dataType:"json",
-			        data: {data : data},
+			        data:  data,
 			        failure: function(errMsg){
 			        	// alert(errMsg);
 			        	console.log("Failed to PUT heatmap: "+errMsg);
@@ -394,9 +394,9 @@ function UiHandle(){
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
 
-		console.log("marker response: "+data);
+		//console.log("marker response: "+data);
 		var dataArr = eval("("+data+")");
-		//var dataArr = data;
+		//	var dataArr = data;
 
             for(ii=0; ii<dataArr.length; ii++){
                 // var dataA = dataArr[ii].split(",");
