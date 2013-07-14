@@ -557,13 +557,22 @@ function GpsHandle(){
     	db = Lawnchair({name : 'db'}, function(store) {
         	lawnDB = store;
         	setInterval(function() {window.GPS.runUpdate(store)},5000);//update user location every 5 seconds
-        	setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
+        	// instead of running 2 timers, we'll just set a counter and run the pushHeatmapData() on a multiple of... 
+        	// ...the runUpdate() function
+        	window.updateCounter = 0;
+        	// setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
     	});
 	}
 
 	//Runs the update script:
 	GpsHandle.prototype.runUpdate = function runUpdate(database){
 	    //Grab the geolocation data from the local machine
+	    if(window.updateCounter == 6){
+	    	window.updateCounter = 0;
+	    	window.ApiConnector.pushHeatmapData(database);
+	    }else{
+	    	window.updateCounter++;
+	    }
 	    navigator.geolocation.getCurrentPosition(function(position) {
 	          window.GPS.updateLocation(database, position.coords.latitude, position.coords.longitude);
 	    });
