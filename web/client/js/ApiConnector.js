@@ -15,6 +15,7 @@ function ApiConnector(){
 	var forumURI = "/comments?type=forum";
 	var needsURI = "/comments?type=needs";
 	var messagesURI = "/comments?type=message";
+	var commentsUri = "/comments";
 	var heatmapURI = "/heatmap?";
 	var pinsURI = "/pins";
 
@@ -160,6 +161,55 @@ function ApiConnector(){
 				break;
 		}
 	} // end pullCommentData()
+
+	ApiConnector.prototype.pushCommentData = function pushCommentData(commentType, message, pinType){
+		var jsonObj = '{ "type" : ' + commentType + ', "message" : ' + message + ', "pin" : ' + pinType + '}';
+		$.ajax({
+			type: "POST",
+			url: BASE+commentsUri,
+			data: jsonObj,
+    		cache: false,
+			// processData: false,
+			dataType: "json",
+			// contentType: "application/json",
+			success: function(data){
+				console.log("INFO: Comment successfully sent");
+				window.ApiConnector.pullCommentData(commentType,null);
+			},
+			error: function(xhr, errorType, error){
+				// // alert("error: "+xhr.status);
+				switch(xhr.status){
+					case 500:
+						// internal server error
+						// consider leaving app
+						console.log("Error: api response = 500");
+						break;
+					case 503:
+						console.log("Service Unavailable");
+						break;
+
+					case 404:
+						// not found, stop trying
+						// consider leaving app
+						console.log('Error: api response = 404');
+						break;
+					case 400:
+						// bad request
+						console.log("Error: api response = 400");
+						break;
+					case 422:
+						console.log("Error: api response = 422");
+						break;
+					case 200:
+						console.log("Request successful");
+						break;
+					default:
+						// alert("Error Contacting API: "+xhr.status);
+						break;
+				}
+			}
+		});
+	}
 
 	ApiConnector.prototype.pullTestData = function pullTestData(){
 		this.pullApiData(BASE, "JSON", "GET", window.UI.updateTest);
