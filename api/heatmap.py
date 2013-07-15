@@ -191,8 +191,10 @@ class Heatmap(webapp2.RequestHandler):
 			#All required parameters are here and validated.
 			#Add it to the list of points to be added, checking the previous point to see if it is the same
 			if (info[i-1]['latDegrees'] == info[i]['latDegrees']) and (info[i-1]['lonDegrees'] == info[i]['lonDegrees']):
-				info[i]['secondsWorked'] += info[i-1]['secondsWorked']
-				points.append(info[i])
+				if len(points) > 0:
+					points[-1]['secondsWorked'] += secondsWorked
+				else:
+					points.append(info[i])
 			else:
 				points.append(info[i])
 
