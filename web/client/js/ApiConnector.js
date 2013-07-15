@@ -16,7 +16,7 @@ function ApiConnector(){
 	var needsURI = "/comments?type=needs";
 	var messagesURI = "/comments?type=message";
 	var commentsUri = "/comments";
-	var heatmapURI = "/heatmap?";
+	var heatmapURI = "/heatmap";
 	var pinsURI = "/pins";
 
 	// performs the ajax call to get our data
@@ -27,6 +27,8 @@ function ApiConnector(){
 			url: URL,
 			dataType: DATATYPE,
 			success: function(data){
+				console.log("Pull API Data: SUCCESS");
+				// console.log(data);
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
@@ -49,6 +51,9 @@ function ApiConnector(){
 					case 422:
 						console.log("Error: api response = 422");
 						break;
+					case 200:
+						console.log("Pull API data: 200");
+						break;
 					default:
 						// alert("Error Contacting API: "+xhr.status);
 						break;
@@ -57,8 +62,6 @@ function ApiConnector(){
 		});
 	} // end pullApiData
 
-	ApiConnector.prototype.pushApiData = function pushApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
-	}
 
 
 	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
@@ -134,7 +137,6 @@ function ApiConnector(){
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
-		console.log("in pullMarkerData");
 		var URL = BASE+pinsURI;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
 	}
@@ -164,6 +166,7 @@ function ApiConnector(){
 
 	ApiConnector.prototype.pushCommentData = function pushCommentData(commentType, message, pinType){
 		var jsonObj = '{ "type" : ' + commentType + ', "message" : ' + message + ', "pin" : ' + pinType + '}';
+		// console.log("push pin: "+jsonObj);
 		$.ajax({
 			type: "POST",
 			url: BASE+commentsUri,
@@ -226,10 +229,13 @@ function ApiConnector(){
 	    if(window.logging){
 		        //server/addgriddata.php
 		    database.all(function(data){
+		    	console.log(data);
 		    	//Make sure to not just send null data up or you'll get a 400 back
 		        if(data.length == 00){
 		        	data = "[]";
 		        }
+		        console.log("data being PUT to "+BASE+heatmapURI+": ");
+		        console.log(data);
 		        // zepto code
 		        $.ajax({
 			        type:'PUT',
@@ -298,7 +304,6 @@ function UiHandle(){
 	this.isMarkerDisplayVisible = false;
 	this.MOUSEDOWN_TIME;
 	this.MOUSEUP_TIME;
-	this.markerDisplay;
 	this.isMarkerVisible = false;
 	this.isMapLoaded = false;
 
@@ -308,49 +313,45 @@ function UiHandle(){
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
 
-	    // marker type selectors
-	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
-	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
-	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
-
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
+	    	window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
 	    	window.UI.dialogSliderDown();
 	    });
-
-	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){
-	    	window.UI.dialogSliderDown();
-	    });
-
-		this.markerDisplay = document.getElementById("markerTypeDialog");
+	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
 
 		// toggle map overlays
-		window.UI.toggleHeat = document.getElementById('toggleHeat');
-	    window.UI.toggleIcons = document.getElementById('toggleIcons');
-	   	window.UI.toggleIcons.addEventListener('mousedown', function(){
-	   		window.MAP.toggleIcons();
-	   	});
+		document.getElementById('toggleHeat').addEventListener('mousedown', function(){window.MAP.toggleHeatmap();});
+	   	document.getElementById('toggleIcons').addEventListener('mousedown', function(){window.MAP.toggleIcons();});
 
-	    // for comment pagination
+		// for comment pagination
 	    this.commentsType = ""
 	    this.commentsNextPageUrl = "";
 	    this.commentsPrevPageUrl = "";
+	    // load the previous page
 	    document.getElementById("prevPage").addEventListener('mousedown', function(){
-			// load the previous page
-			window.ApiConnector.pullCommentData(this.commentsType, this.commentsPrevPageUrl);
+	    	window.ApiConnector.pullCommentData(this.commentsType, this.commentsPrevPageUrl);
 		});
+		// load the previous page
 		document.getElementById("nextPage").addEventListener('mousedown', function(){
-			// load the previous page
 			window.ApiConnector.pullCommentData(this.commentsType, this.commentsNextPageUrl);
 		});
 	}
 
 	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
-		window.UI.markerDisplay.style.display = "none";
+		document.getElementById("markerTypeDialog").style.display = "none";
 		window.UI.isMarkerDisplayVisible = false;
 	}
 
 	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
-		window.UI.markerDisplay.style.display = "block";
+		// add marker type selectors
+	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
+	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
+	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
+	    document.getElementById("cancel").addEventListener('mousedown', function(){
+	    	window.UI.hideMarkerTypeSelect();
+	    });
+		
+		document.getElementById("markerTypeDialog").style.display = "block";
 		window.UI.isMarkerDisplayVisible = true;
 	}
 
@@ -393,12 +394,31 @@ function UiHandle(){
 
 	// when the user chooses which type of marker to add to the map
 	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
-		// (bug) need to get the message input from the user
-		var message = "DEFAULT MESSAGE TEXT"; 
-		// here we add the appropriate marker to the map
-		window.MAP.addMarkerFromUi(markerType, message);
-		// window.UI.markerDisplay.style.display = "none";
-		// window.UI.isMarkerDisplayVisible = false;
+		// first we need to show the marker on the map
+		// var iconUrl = "img/icons/blueCircle.png";
+		var iconUrl = "";
+		switch(markerType){
+			case "comment":
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+			case "pickup":
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+			case "trash":
+				iconUrl = "img/icons/greenCircle.png";
+				break;
+			default:
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+		}
+
+		window.MAP.markerType = markerType;
+		var marker = new google.maps.Marker({
+        	position: window.MAP.markerEvent.latLng,
+        	map: window.MAP.map,
+        	icon: iconUrl
+    	});
+
 		window.UI.hideMarkerTypeSelect();
 		window.UI.dialogSliderUp();
 		// (bug) here we need to prevent more map touches
@@ -442,7 +462,7 @@ function UiHandle(){
 
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
-		console.log(data);
+		console.log("Heatmap data: "+data);
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
@@ -537,13 +557,22 @@ function GpsHandle(){
     	db = Lawnchair({name : 'db'}, function(store) {
         	lawnDB = store;
         	setInterval(function() {window.GPS.runUpdate(store)},5000);//update user location every 5 seconds
-        	setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
+        	// instead of running 2 timers, we'll just set a counter and run the pushHeatmapData() on a multiple of... 
+        	// ...the runUpdate() function
+        	window.updateCounter = 0;
+        	// setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
     	});
 	}
 
 	//Runs the update script:
 	GpsHandle.prototype.runUpdate = function runUpdate(database){
 	    //Grab the geolocation data from the local machine
+	    if(window.updateCounter == 6){
+	    	window.updateCounter = 0;
+	    	window.ApiConnector.pushHeatmapData(database);
+	    }else{
+	    	window.updateCounter++;
+	    }
 	    navigator.geolocation.getCurrentPosition(function(position) {
 	          window.GPS.updateLocation(database, position.coords.latitude, position.coords.longitude);
 	    });
@@ -553,9 +582,9 @@ function GpsHandle(){
 	    if(window.logging){
 	        var datetime = new Date().getTime();//generate timestamp
 	        var location = {
-	                "latitude" : latitude,
-	                "longitude" : longitude,
-	                "datetime" : datetime,
+	                "latDegree" : latitude,
+	                "lonDegree" : longitude,
+	                "secondsWorked" : datetime
 	        }
 	        database.save({value:location});//Save the record
 	    }
@@ -598,6 +627,7 @@ function MapHandle(){
 	this.currentLon = -73.209998100000000;
 	this.currentZoom = 10;
 	this.markerEvent;
+	this.markerType;
 	this.map;
 	this.pickupMarkers = [];
 	// fire up our google map
@@ -619,31 +649,31 @@ function MapHandle(){
 		  google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
 		  // our comment selector initializers
 		  // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
-		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectDown);
+		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.markerSelectDown);
 		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
 	}
 
-	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(markerType, message){
+	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message){
 		// console.log("in addMarker()");
 		var pin = new Pin();
 		pin.message = message;
-		pin.type = markerType;
+		pin.type = window.MAP.markerType;
 		// pin.latDegrees = lat;
 		// pin.lonDegrees = lon;
 
 		var iconUrl; 
-		switch(markerType){
+		switch(window.MAP.markerType){
 			case "comment":
 				pin.type = "general message";
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "img/icons/orangeCircle.png";
 				break;
 			case "pickup":
 				pin.type = "help needed";
-				iconUrl = "img/icons/greenCircle.png";
+				iconUrl = "img/icons/blueCircle.png";
 				break;
 			case "trash":
 				pin.type = "trash pickup";
-				iconUrl = "img/icons/redCircle.png";
+				iconUrl = "img/icons/greenCircle.png";
 				break;
 			default:
 				pin.type = "general message";
@@ -652,7 +682,7 @@ function MapHandle(){
 		}
 	
 		var eventLatLng = window.MAP.markerEvent;
-		console.log(eventLatLng.latLng);
+		// console.log(eventLatLng.latLng);
 		pin.latDegrees = eventLatLng.latLng.jb;
 		pin.lonDegrees = eventLatLng.latLng.kb;
 		var serializedPin = JSON.stringify(pin);
@@ -671,21 +701,21 @@ function MapHandle(){
 
 		var iconUrl; 
 		switch(markerType){
-			case "comment":
-				pin.type = "general message";
+			case "GENERAL MESSAGE":
+				pin.type = "GENERAL MESSAGE";
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+			case "HELP NEEDED":
+				pin.type = "HELP NEEDED";
 				iconUrl = "img/icons/blueCircle.png";
 				break;
-			case "pickup":
-				pin.type = "help needed";
+			case "TRASH PICKUP":
+				pin.type = "TRASH PICKUP";
 				iconUrl = "img/icons/greenCircle.png";
-				break;
-			case "trash":
-				pin.type = "trash pickup";
-				iconUrl = "img/icons/redCircle.png";
 				break;
 			default:
 				pin.type = "general message";
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "img/icons/orangeCircle.png";
 				break;
 		}
 
@@ -698,19 +728,7 @@ function MapHandle(){
         	icon: iconUrl
     	});
 
-		// pin.latDegrees = marker.getPosition().lat();
-		// pin.lonDegrees = marker.getPosition().lng();
-		// var serializedPin = JSON.stringify(pin);
-		// // alert(serializedPin);
-		// window.UI.markerDisplay.style.display = "none";
-		// window.UI.isMarkerDisplayVisible = false;
     	window.MAP.pickupMarkers.push(marker);
-
-    	// console.log(window.MAP.pickupMarkers);
-    	// window.MAP.updateMap(this.currentLat,this.currentLon, this.currentZoom);
-    	// window.ApiConnector.pushNewPin(serializedPin);
-
-
 	}
 
 	MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
@@ -795,6 +813,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
 	// window.ApiConnector.pullTestData();
 	window.ApiConnector.pullMarkerData();
+	window.ApiConnector.pullHeatmapData();
 
 	document.getElementById("bigButton").addEventListener('mousedown', function(){
 		if(!window.logging){ 
