@@ -164,9 +164,7 @@ function ApiConnector(){
 		}
 	} // end pullCommentData()
 
-	ApiConnector.prototype.pushCommentData = function pushCommentData(commentType, message, pinType){
-		var jsonObj = '{ "type" : ' + commentType + ', "message" : ' + message + ', "pin" : ' + pinType + '}';
-		// console.log("push pin: "+jsonObj);
+	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
 		$.ajax({
 			type: "POST",
 			url: BASE+commentsUri,
@@ -177,7 +175,7 @@ function ApiConnector(){
 			// contentType: "application/json",
 			success: function(data){
 				console.log("INFO: Comment successfully sent");
-				window.ApiConnector.pullCommentData(commentType,null);
+				window.ApiConnector.pullCommentData(JSON.parse(jsonObj).type,null);
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -335,6 +333,17 @@ function UiHandle(){
 		document.getElementById("nextPage").addEventListener('mousedown', function(){
 			window.ApiConnector.pullCommentData(this.commentsType, this.commentsNextPageUrl);
 		});
+
+		//Bind buttons to functions for comments
+
+		//Bind submission of comment to an intercepting call from the handler
+		var theForm =document.getElementById('comment_submission_form');
+        if( theForm.attachEvent){
+            theForm.attachEvent("submit",window.UI.commentSubmission);
+        }else{
+            theForm.addEventListener("submit",window.UI.commentSubmission);
+        }
+		
 	}
 
 	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
@@ -391,6 +400,23 @@ function UiHandle(){
 		}
 	}
 
+	// The user presses the submit button on the comment submission screen
+	UiHandle.prototype.commentSubmission = function commentSubmission(e){
+		//Prevent DOM bubbling
+		if(e.preventDefault) e.preventDefault();
+
+		var comment = new FCommment();
+		comment.message = document.getElementById('comment_message').value;
+		comment.pin = null;
+		comment.type = document.getElementById('comment_type').value;
+
+		var serializedComment = JSON.stringify(comment);
+
+		window.ApiConnector.pushCommentData(serializedComment);
+
+		//Return false to stop normal form submission form occuring
+		return false;
+	}
 
 	// when the user chooses which type of marker to add to the map
 	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
@@ -792,6 +818,14 @@ function Pin(){
     this.lonDegrees;
     this.type; 
     this.message = "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?";
+}
+
+
+//We cannot call this Comment because it's reserved by javascript
+function FCommment(){
+	this.message ="";
+	this.pin = null;
+	this.type = "";
 }
 
 

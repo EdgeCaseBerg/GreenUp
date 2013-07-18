@@ -119,25 +119,19 @@
                         e.returnValue = false;                    
                 });
             -->
-                <form action="/server/communication.php" method="GET">
-                    <input type="hidden" name="add" value="true" />
-                       <div>
-                        
+                <form action="" method="POST" id="comment_submission_form">
+                    <div>
+                        <input type="hidden" id="comment_type" name="type" value="forum" />
                         <h1>Recent Messages From the Green Up Community</h1>
                         <div>
-                            <h3>Post your message</h3>
-                        <select name="topic">
-                          <option value="1">Forum Message</option>
-                          <option value="2">Volunteers Needed</option>
-                          <option value="3">Trash Pickup</option>
-                        </select>
+                           <h3>Post your message</h3>
                         </div>  
 
-                        <textarea name="message" id="message"></textarea>
+                        <textarea name="message" id="comment_message"></textarea>
 
                         <div>
-                        <input type="submit" name="Submit" value="Submit" />
-                        <input type="reset" name="Submit2" value="Reset" />
+                            <input type="submit" name="Submit" value="Submit" />
+                            <input type="reset" name="Submit2" value="Reset" />
                         </div>
 
                         </div>
