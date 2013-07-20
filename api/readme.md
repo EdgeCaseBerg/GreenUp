@@ -169,9 +169,9 @@ If the post data is malformed, the server will return a `400 bad request` respon
 ---------------------------------
 
 
-    ###Get Heatmap Data
+###Get Heatmap Data
 
-    Method: **GET**
+Method: **GET**
 
 URL: **/api/heatmap**
 
@@ -281,7 +281,7 @@ URL: **/api/pins**
         <tr><td>latDegrees</td><td>float</td><td>The latitude boundary of the grid of points to retrieve, values must be between -90.0 and 90.0</td></tr>
         <tr><td>latOffset</td><td>unsigned float</td><td>Offset to add to the latitude point to create a bounding rectangle on the points retrieved.</td></tr>
         <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve, values must be between -180.0 and 180.0</td></tr>
-        <tr><td>lonOffset</td><td>unsigned float</td>Offset to add to the longitude point to create a bounding rectangle on the points retrieved.</tr>
+        <tr><td>lonOffset</td><td>unsigned float</td><td>Offset to add to the longitude point to create a bounding rectangle on the points retrieved.</td></tr>
     </tbody>
 </table>
 
