@@ -305,7 +305,15 @@ function UiHandle(){
 	this.isMarkerVisible = false;
 	this.isMapLoaded = false;
 
+	this.COMMENT = 0; 
+	this.MARKER = 1;
+
     UiHandle.prototype.init = function init(){
+    	// for comment pagination
+	    this.commentsType = ""
+	    this.commentsNextPageUrl = "";
+	    this.commentsPrevPageUrl = "";
+
 	    // controls the main panel movement
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
@@ -314,7 +322,28 @@ function UiHandle(){
 
 	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
 
+	    document.getElementById("addCommentButton").addEventListener('mousedown', function(){
+	    	document.getElementById("input_purpose").value = window.UI.COMMENT;
+	    	window.UI.dialogSliderUp(window.UI.COMMENT);
+	    });
+
+
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
+	    	var userComment = document.getElementById("dialogSliderTextarea").value;
+	    	switch(document.getElementById("input_purpose").value){
+	    		case window.UI.MARKER+"":
+	    			window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
+	    			window.UI.dialogSliderDown();
+	    			break;
+	    		case window.UI.COMMENT+"":
+	    			window.UI.commentSubmission();
+	    			window.UI.dialogSliderDown();
+	    			window.UI.clearDialogSliderInputs();
+	    			break;
+	    		default:
+	    			alert("no content type");
+	    			break;
+	    	}
 	    	window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
 	    	window.UI.dialogSliderDown();
 	    });
@@ -324,10 +353,7 @@ function UiHandle(){
 		document.getElementById('toggleHeat').addEventListener('mousedown', function(){window.MAP.toggleHeatmap();});
 	   	document.getElementById('toggleIcons').addEventListener('mousedown', function(){window.MAP.toggleIcons();});
 
-		// for comment pagination
-	    this.commentsType = ""
-	    this.commentsNextPageUrl = "";
-	    this.commentsPrevPageUrl = "";
+		
 	    // load the previous page
 	    document.getElementById("prevPage").addEventListener('mousedown', function(){
 	    	window.ApiConnector.pullCommentData(this.commentsType, this.commentsPrevPageUrl);
@@ -336,17 +362,14 @@ function UiHandle(){
 		document.getElementById("nextPage").addEventListener('mousedown', function(){
 			window.ApiConnector.pullCommentData(this.commentsType, this.commentsNextPageUrl);
 		});
-
-		//Bind buttons to functions for comments
-
-		//Bind submission of comment to an intercepting call from the handler
-		var theForm =document.getElementById('comment_submission_form');
-        if( theForm.attachEvent){
-            theForm.attachEvent("submit",window.UI.commentSubmission);
-        }else{
-            theForm.addEventListener("submit",window.UI.commentSubmission);
-        }
 		
+	}
+
+	UiHandle.prototype.clearDialogSliderInputs = function clearDialogSliderInputs(){
+		document.getElementById("comment_type").value = "";
+		document.getElementById("comment_message").value = "";
+		document.getElementById("input_purpose").value = "";
+		return false;
 	}
 
 	UiHandle.prototype.topSliderToggle = function topSliderToggle(){
@@ -424,9 +447,7 @@ function UiHandle(){
 	}
 
 	// The user presses the submit button on the comment submission screen
-	UiHandle.prototype.commentSubmission = function commentSubmission(e){
-		//Prevent DOM bubbling
-		if(e.preventDefault) e.preventDefault();
+	UiHandle.prototype.commentSubmission = function commentSubmission(){
 
 		var comment = new FCommment();
 		comment.message = document.getElementById('comment_message').value;
@@ -473,7 +494,12 @@ function UiHandle(){
 		// (bug) here we need to prevent more map touches
 	}
 
-	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(){
+	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(purpose){
+		if(purpose == window.UI.COMMENT){
+			document.getElementById("input_purpose").value == window.UI.COMMENT;
+		}else{
+			document.getElementById("input_purpose").value == window.UI.MARKER;
+		}
 		document.getElementById("dialogSlider").style.top = "72%";
 		document.getElementById("dialogSlider").style.opacity = "1.0";
 		document.getElementById("dialogSliderTextarea").focus();
