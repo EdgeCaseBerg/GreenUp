@@ -9,6 +9,16 @@ handlers:
   static_files: api/favicon.ico
   upload: api.favicon.ico
 
+- url: /greenup_logo.png
+  mime_type: image/png
+  static_files: greenup_logo.png
+  upload: greenup_logo.png
+
+- url: /iphone_black.png
+  mime_type: image/png
+  static_files: iphone_black.png
+  upload: iphone_black.png
+
 - url: /api/heatmap
   script: api.heatmap.application
 
