@@ -114,14 +114,18 @@
         </div>
 
 		<div class="panel" id="panel3">
-                <div>
-                <!-- This form's submission event should be hijacked by ajax and the proper json should be created 
-                    $("form").live('submit', function(e) {
-                        e.preventDefault();
-                        e.returnValue = false;                    
-                });
-            -->
-                <form action="" method="POST" id="comment_submission_form">
+            <div id="bubbleContainer">
+                <div class="bubbleRight bubble">
+                    <div class="bubbleTime">1hr</div>
+                    Vivamus porta mollis eros quis adipiscing. Duis ullamcorper porttitor erat a elementum. 
+                </div>
+                <div class="bubbleLeft bubble">
+                    <div class="bubbleTime">15min</div>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum felis a mauris condimentum, in sollicitudin quam sodales.
+                </div>
+            </div>
+
+            <form action="" method="POST" id="comment_submission_form">
                     <div>
                         <input type="hidden" id="comment_type" name="type" value="forum" />
                         <h1>Recent Messages From the Green Up Community</h1>
@@ -136,26 +140,13 @@
                             <input type="reset" name="Submit2" value="Reset" />
                         </div>
 
-                        </div>
+                    </div>
 
                 </form>
-                </div>
-
-
-                <ul class="filter">
-                    <li><a onclick='showAll("messages"); return false;'>Show Messages</a></li>
-                    <li><a  onclick='showAll("help"); return false;'>Show Needs</a></li>
-                    <li><a  onclick='showAll("trash"); return false;'>Show Trash</a></li>
-                    <li><a  onclick='showAll("All"); return false;'>Show All</a></li>
-                </ul>
-
-            <!-- messages will be populated here by JS -->
-            <div id="messagesContainer">
-            </div>
 
             <div id="moar">
                 <div class="nextPrev" id="prevPage">Prev</div>
-            	<div class="nextPrev" id="nextPage">Next</div>
+                <div class="nextPrev" id="nextPage">Next</div>
             </div>
 		</div>
 	</div>

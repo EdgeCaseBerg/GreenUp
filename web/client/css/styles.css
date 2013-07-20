@@ -623,6 +623,76 @@ h1{
 
 
 /*    -------------------- messages ------- */
+#bubbleContainer{
+    width:90%;
+    margin:auto;
+    text-align:center;
+}
+.bubble{
+    vertical-align: top;
+    text-align:left;
+    width: 95%;
+    position: relative;
+    margin-top:30px;
+    height: auto;
+    padding: 5px 3px 5px 3px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow:  0px 1px 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow:  0px 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.bubbleRight{
+    margin-left:3%;
+    background: #FFDCAB;
+}
+
+.bubbleRight:after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    right: 5%;
+    border-style: solid;
+    border-width: 15px 15px 0;
+    border-color: #FFDCAB transparent;
+    display: block;
+    width: 0;
+    z-index: 1;
+}
+
+.bubbleLeft{
+    background: #ddd;
+}
+
+.bubbleLeft:after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    left: 5%;
+    border-style: solid;
+    border-width: 15px 15px 0;
+    border-color: #ddd transparent;
+    display: block;
+    width: 0;
+    z-index: 1;
+}
+
+#comment_submission_form{
+    display:none;
+}
+
+.bubbleTime{
+    display:inline-block;
+    float:right;
+    margin:2px 3px 0px 0px;
+    color:#111;
+    font-style: italic;
+    font-size:0.3em;
+}
+
+
+
 .nextPrev{
     display:inline-block;
     width:40%;
