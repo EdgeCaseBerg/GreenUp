@@ -686,10 +686,20 @@ function MapHandle(){
 	    // define the initial location of our map
 	    centerPoint = new google.maps.LatLng(window.MAP.currentLat, window.MAP.currentLon); 
 	    var mapOptions = {
-		    zoom: window.MAP.currentZoom,
 		    center: centerPoint,
-		    mapTypeId: google.maps.MapTypeId.ROADMAP
+		    mapTypeId: google.maps.MapTypeId.ROADMAP, 
+		    mapTypeControl: true,
+   			mapTypeControlOptions: {
+      			position: google.maps.ControlPosition.TOP_CENTER,
+      			style: google.maps.MapTypeControlStyle.DEFAULT
+    		}, 
+    		zoom: window.MAP.currentZoom,
+    		streetViewControl: false
 		  };
+
+		  // google.maps.MapTypeControlOptions
+		  // google.maps.StreetViewControlOptions
+		  // google.maps.ZoomControlOptions
 
 		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 		  // for activating the loading screen while map loads
@@ -872,7 +882,7 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.ApiConnector.pullMarkerData();
 	window.ApiConnector.pullHeatmapData();
 
-	document.getElementById("bigButton").addEventListener('mousedown', function(){
+	document.getElementById("startButton").addEventListener('mousedown', function(){
 		if(!window.logging){ 
 			window.GPS.start();
 		}else{

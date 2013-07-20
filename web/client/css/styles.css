@@ -140,7 +140,7 @@ a, a:hover, a:visited{
 .nav{
     position: fixed;
     top:86%;
-    height:13%;
+    height:14%;
     z-index:200;
     margin:5px 0px 0px 0px;
     width:100%;
@@ -231,31 +231,7 @@ a, a:hover, a:visited{
     
 }
 
-.mapDecoyContainer{
-    height:90%;
-    width:100%;
-    background: url('../img/startup/mapDecoy.jpg');
-    display:none;
-}
 
-.toggleContainer{
-    text-align:left;
-    padding:5px 7px 5px 5px;
-    background: url('../img/backgrounds/80_percent_white.png');
-    position:absolute;
-    z-index:15;
-    right:0%;
-    top:5%;
-    width:170px;
-    color:black;
-    /*border:solid 1px blue;*/
-    -webkit-box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-    box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-}
-
-input[type="checkbox"]{
-    margin-right:3px;
-}
 
 
 
@@ -683,11 +659,13 @@ h1{
     height:2em;
     position: relative;
     top:97%;
+    left:90%;
     padding:5px;
     border-radius: 11px;
     background:green;
 }
 .hamburger {
+    cursor:pointer;
     position:relative;
     font-size: 10px;
     width: 3.3em; 
