@@ -305,8 +305,9 @@ function UiHandle(){
 	this.isMarkerVisible = false;
 	this.isMapLoaded = false;
 
-	this.COMMENT = 0; 
-	this.MARKER = 1;
+	this.commentPurpose = -1;
+	this.MARKER = 1; 
+	this.COMMENT = 0;
 
     UiHandle.prototype.init = function init(){
     	// for comment pagination
@@ -323,19 +324,20 @@ function UiHandle(){
 	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
 
 	    document.getElementById("addCommentButton").addEventListener('mousedown', function(){
-	    	document.getElementById("input_purpose").value = window.UI.COMMENT;
-	    	window.UI.dialogSliderUp(window.UI.COMMENT);
+	    	window.UI.commentPurpose = window.UI.COMMENT;
+	    	window.UI.dialogSliderUp();
 	    });
 
 
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
 	    	var userComment = document.getElementById("dialogSliderTextarea").value;
-	    	switch(document.getElementById("input_purpose").value){
-	    		case window.UI.MARKER+"":
+	    	switch(window.UI.commentPurpose){
+	    		case window.UI.MARKER:
 	    			window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
 	    			window.UI.dialogSliderDown();
+	    			window.UI.clearDialogSliderInputs();
 	    			break;
-	    		case window.UI.COMMENT+"":
+	    		case window.UI.COMMENT:
 	    			window.UI.commentSubmission();
 	    			window.UI.dialogSliderDown();
 	    			window.UI.clearDialogSliderInputs();
@@ -344,7 +346,6 @@ function UiHandle(){
 	    			alert("no content type");
 	    			break;
 	    	}
-	    	window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
 	    	window.UI.dialogSliderDown();
 	    });
 	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
@@ -386,6 +387,7 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
+		window.UI.commentPurpose = window.UI.MARKER;
 		// add marker type selectors
 	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
 	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
@@ -450,11 +452,12 @@ function UiHandle(){
 	UiHandle.prototype.commentSubmission = function commentSubmission(){
 
 		var comment = new FCommment();
-		comment.message = document.getElementById('comment_message').value;
+		comment.message = document.getElementById('dialogSliderTextarea').value;
 		comment.pin = null;
 		comment.type = document.getElementById('comment_type').value;
 
 		var serializedComment = JSON.stringify(comment);
+		console.log(serializedComment);
 
 		window.ApiConnector.pushCommentData(serializedComment);
 
@@ -554,50 +557,32 @@ function UiHandle(){
 
 	}
 
-	UiHandle.prototype.updateMessages = function updateMessages(data){
-		window.UI.commentsNextPageUrl = data.page.next;
-		window.UI.commentsPrevPageUrl = data.page.previous;
-
-		var messagesContainer = document.getElementById("messagesContainer");
-		var messages = new Array();
-
-		(window.UI.commentsNextPageUrl != null) ? 
-			window.UI.showNextCommentsButton() : window.UI.hideNextCommentsButton();
-
-		(window.UI.commentsPrevPageUrl != null) ? 
-			window.UI.showPrevCommentsButton() : window.UI.hidePrevCommentsButton();
-
-		for(ii=0; ii<3; ii++){
-		// for(ii=0; ii<data.comments.length; ii++){
-			messages[ii] = document.createElement('div');
-			messages[ii].className = "messageListItem";
-			messages[ii].style.border = "1px solid red";
-			// create the div where the timestamp will display
-			var commentDateContainer = document.createElement('div');
-			commentDateContainer.className = "commentDateContainer";
-			// commentDateContainer.innerHTML = data.comments.timestamp;
-			commentDateContainer.innerHTML = "1970-01-01 00:00:01";
-			// create the div where the message content will be stored
-			var messageContentContainer = document.createElement('div');
-			messageContentContainer.className = "messageContentContainer";
-			// messageContentContainer.innerHTML = data.comments.message;
-			messageContentContainer.innerHTML = "sdfasdfasdfasdfadsfasdfadsfa";
-
-			messages[ii].appendChild(commentDateContainer);
-			messages[ii].appendChild(messageContentContainer);
-			messagesContainer.appendChild(messages[ii]);
-
-		}
-		// // alert(window.UI.commentsNextPageUrl);
-		console.log(data);
-	}
-
 	UiHandle.prototype.updateNeeds = function updateNeeds(data){
 		console.log(data);
 	}
 
 	UiHandle.prototype.updateForum = function updateForum(data){
-		console.log(data);
+		console.log("Comment data: "+data);
+		var dataObj = JSON.parse(data);
+		// console.log(dataObj);
+		var comments = dataObj.comments;
+		for(var ii=0; ii<comments.length; ii++){
+				var div = document.createElement("div");
+				var timeDiv = document.createElement("div");
+				var messageContent = document.createElement("span");
+				messageContent.innerHTML = comments[ii]['message'];
+				timeDiv.innerHTML = comments[ii]['timestamp'];
+				timeDiv.className = "bubbleTime";
+				if(ii % 2 == 0){
+					div.className = "bubbleRight bubble"; 
+				}else{
+					div.className = "bubbleLeft bubble";
+				}
+				div.appendChild(timeDiv);
+				div.appendChild(messageContent);
+				document.getElementById("bubbleContainer").appendChild(div);
+				document.getElementById("bubbleContainer")
+		}
 	}
 
 	UiHandle.prototype.updateTest = function updateTest(data){
@@ -904,7 +889,7 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.MAP.initMap();
 	window.logging = false;
 
-	// window.ApiConnector.pullTestData();
+	window.ApiConnector.pullCommentData();
 	window.ApiConnector.pullMarkerData();
 	window.ApiConnector.pullHeatmapData();
 
