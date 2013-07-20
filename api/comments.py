@@ -118,13 +118,15 @@ class Comments(webapp2.RequestHandler):
 			pass
 
 		# validate the message
-		if len(info['message'].strip(" ")) == 0:
+		if (len(info['message'].strip(" ")) == 0) or (info['message'] == None):
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write(json.dumps({ "Error_Message" : "Cannot accept an empty message" }))
+			return
 
 		if len(info['message']) > 140:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write(json.dumps({ "Error_Message" : "Message exceeds 140 characters" }))
+			return
 
 		#All information present and valid. Store information in the database
 		AbstractionLayer().submitComments(commentType=typeOfComment.upper(), message=commentMessage, pin=pin)
