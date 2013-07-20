@@ -310,6 +310,7 @@ function UiHandle(){
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
+	    document.getElementById("panel1SlideDownContent").style.display = "block";
 
 	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
 
@@ -394,18 +395,30 @@ function UiHandle(){
 		switch(displayNum){
 			case 0:
 				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
 				container.className = "panel1Center";
 			break;
 			case 1:
 				this.currentDisplay = 2;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "block";
 				container.className = "panel2Center";
 			break;
 			case 2:
 				this.currentDisplay = 3;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "block";
 				container.className = "panel3Center";
 			break;
 			default:
 				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
 				container.className = "panel1Center";
 		}
 	}
