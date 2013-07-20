@@ -4,6 +4,11 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, target-densityDpi=96"/>
+
+
+<!-- Prototype fonts -->
+<link href='http://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/styles.css">
 
 <script type="text/javascript"
@@ -49,19 +54,26 @@
 		<div class="panel" id="panel1">
 
             <!-- Main Page Content -->
+            <div id="bodyContainer">
+                <img src="img/greenup_logo.png" id="greenupLogo">
 
-            <h1> Green Up Vermont </h1>   
-            <div id="bodyText"> 
-                <p> Help keep Vermont green. Track your clean up progress, see what areas need the 
-                    most help, and find an area to drop off what you pick up.
-                        <br />
-                        <br />
-                    To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
-                </p>
+                <div id="bodyText"> 
+                    <p><h3>Help keep Vermont green.</h3>Track your clean up progress.<br />See what areas need the 
+                        most help.<br /> Find an area to drop off what you pick up.
+                            <br />
+                            <br />
+                        To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
+                    </p>
+
+                    <div id="timeSpentClock">
+                        01:23:45
+                        <p class="clockDetail">time spent cleaning up</p>
+                    </div>
 
 
-                <div class="start" id="startButton">
-                    <a id="bigButton">Start Cleaning Up</a>
+                    <div class="start" id="startButton">
+                        Start Cleaning Up
+                    </div>
                 </div>
             </div>
 		</div>
@@ -76,17 +88,7 @@
         		<div class="mapContainer">
                     <input type="hidden" value="0" id="startCoords" />
                		<div id="map-canvas"></div>
-                	<div class="toggleContainer" id="toggleContainer">
-                    	<ul>
-                        	<li><input type="checkbox" id="toggleHeat" /><span class="checkboxlabel">Heat Map</span></li>
-                        	<li><input type="checkbox" id="toggleIcons" /><span class="checkboxlabel">Points of Interest</span></li>
-                    	</ul>
-                	</div>
         		</div>
-
-                <div class="mapDecoyContainer">
-                    <input type="button" value="Go Map" id="mapInit" />
-                </div>
 
 		        <div id="markerTypeDialog">
 
@@ -112,14 +114,18 @@
         </div>
 
 		<div class="panel" id="panel3">
-                <div>
-                <!-- This form's submission event should be hijacked by ajax and the proper json should be created 
-                    $("form").live('submit', function(e) {
-                        e.preventDefault();
-                        e.returnValue = false;                    
-                });
-            -->
-                <form action="" method="POST" id="comment_submission_form">
+            <div id="bubbleContainer">
+                <div class="bubbleRight bubble">
+                    <div class="bubbleTime">1hr</div>
+                    Vivamus porta mollis eros quis adipiscing. Duis ullamcorper porttitor erat a elementum. 
+                </div>
+                <div class="bubbleLeft bubble">
+                    <div class="bubbleTime">15min</div>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum felis a mauris condimentum, in sollicitudin quam sodales.
+                </div>
+            </div>
+
+            <form action="" method="POST" id="comment_submission_form">
                     <div>
                         <input type="hidden" id="comment_type" name="type" value="forum" />
                         <h1>Recent Messages From the Green Up Community</h1>
@@ -134,29 +140,47 @@
                             <input type="reset" name="Submit2" value="Reset" />
                         </div>
 
-                        </div>
+                    </div>
 
                 </form>
-                </div>
-
-
-                <ul class="filter">
-                    <li><a onclick='showAll("messages"); return false;'>Show Messages</a></li>
-                    <li><a  onclick='showAll("help"); return false;'>Show Needs</a></li>
-                    <li><a  onclick='showAll("trash"); return false;'>Show Trash</a></li>
-                    <li><a  onclick='showAll("All"); return false;'>Show All</a></li>
-                </ul>
-
-            <!-- messages will be populated here by JS -->
-            <div id="messagesContainer">
-            </div>
 
             <div id="moar">
                 <div class="nextPrev" id="prevPage">Prev</div>
-            	<div class="nextPrev" id="nextPage">Next</div>
+                <div class="nextPrev" id="nextPage">Next</div>
             </div>
 		</div>
 	</div>
+
+    <div id="topSlideDown" class="sliderUp">
+        <div id="slideContentContainer">
+            <div id="panel1SlideDownContent" class="panelSlideDownContent">
+                1111111111
+            </div>
+            <div id="panel2SlideDownContent" class="panelSlideDownContent">
+                <div id="heatChoice" class="mapToggleContainer">
+                    <div class="roundedTwo">
+                        <input type="checkbox" value="None" id="toggleHeat" class="checkboxUnder" name="check" checked />
+                        <label for="toggleHeat"></label>
+                    </div>
+                    <span>Heat Map</span>
+                </div>
+                <div id="markerChoice" class="mapToggleContainer">
+                    <div class="roundedTwo">
+                        <input type="checkbox" value="None" id="toggleIcons" class="checkboxUnder" name="check" checked />
+                        <label for="toggleIcons"></label>
+                    </div>
+                    <span>Markers</span>
+                </div>
+            </div>
+            <div id="panel3SlideDownContent" class="panelSlideDownContent">
+                33333333333
+            </div>
+        </div>
+
+        <div id="hamburgerNest">
+            <div id="hamburger" class="hamburger"></div>
+        </div>
+    </div>
 
     <div id="loadingScreen">
         <div id="loadingGif">

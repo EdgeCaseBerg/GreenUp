@@ -310,6 +310,9 @@ function UiHandle(){
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
+	    document.getElementById("panel1SlideDownContent").style.display = "block";
+
+	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
 
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
 	    	window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
@@ -344,6 +347,14 @@ function UiHandle(){
             theForm.addEventListener("submit",window.UI.commentSubmission);
         }
 		
+	}
+
+	UiHandle.prototype.topSliderToggle = function topSliderToggle(){
+		if (document.getElementById("topSlideDown").className.match("sliderDown")){
+			document.getElementById("topSlideDown").className = "sliderUp";
+		}else{
+			document.getElementById("topSlideDown").className = "sliderDown";
+		}
 	}
 
 	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
@@ -384,18 +395,30 @@ function UiHandle(){
 		switch(displayNum){
 			case 0:
 				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
 				container.className = "panel1Center";
 			break;
 			case 1:
 				this.currentDisplay = 2;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "block";
 				container.className = "panel2Center";
 			break;
 			case 2:
 				this.currentDisplay = 3;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "block";
 				container.className = "panel3Center";
 			break;
 			default:
 				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
 				container.className = "panel1Center";
 		}
 	}
@@ -663,10 +686,20 @@ function MapHandle(){
 	    // define the initial location of our map
 	    centerPoint = new google.maps.LatLng(window.MAP.currentLat, window.MAP.currentLon); 
 	    var mapOptions = {
-		    zoom: window.MAP.currentZoom,
 		    center: centerPoint,
-		    mapTypeId: google.maps.MapTypeId.ROADMAP
+		    mapTypeId: google.maps.MapTypeId.ROADMAP, 
+		    mapTypeControl: true,
+   			mapTypeControlOptions: {
+      			position: google.maps.ControlPosition.TOP_CENTER,
+      			style: google.maps.MapTypeControlStyle.DEFAULT
+    		}, 
+    		zoom: window.MAP.currentZoom,
+    		streetViewControl: false
 		  };
+
+		  // google.maps.MapTypeControlOptions
+		  // google.maps.StreetViewControlOptions
+		  // google.maps.ZoomControlOptions
 
 		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 		  // for activating the loading screen while map loads
@@ -849,7 +882,7 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.ApiConnector.pullMarkerData();
 	window.ApiConnector.pullHeatmapData();
 
-	document.getElementById("bigButton").addEventListener('mousedown', function(){
+	document.getElementById("startButton").addEventListener('mousedown', function(){
 		if(!window.logging){ 
 			window.GPS.start();
 		}else{
