@@ -2,10 +2,22 @@
 <head>
 	<style type="text/css">
 		body{
-			background: #000;
+			background: #fff;
+		}
+
+		#descriptionContainer{
+			vertical-align: top;
+			display:inline-block;
+			width:49%;
+			border:solid 1px green;
+			height:100%;
 		}
 		#phoneContainer{
-			width:1203px;
+			vertical-align: top;
+			display:inline-block;
+			width:49%;
+			border:solid 1px blue;
+			min-width:500px;
 			margin:auto;
 		}
 
@@ -14,7 +26,7 @@
 			margin:auto;
 			width:500px;
 			height: 1000px;
-			background: url('iphone.png');
+			background: url('iphone_black.png');
 			background-size: auto 100%;
 			background-repeat: no-repeat;
 			text-align:center;
@@ -36,10 +48,13 @@
 	</style>
 </head>
 <body>
+	<div id="descriptionContainer">
+		<img src="greenup_logo.png" id="greenup_logo"/>
+	</div>
 	<div id="phoneContainer">
 		<div id="phoneFrame">
 			<div id="phoneScreen">
-				<iframe id="iframe" src="http://localhost:30002"></iframe>
+				<iframe id="iframe" src="http://localhost/GreenUp/web/client/"></iframe>
 				<!-- // app content here -->
 			</div>
 		</div>
