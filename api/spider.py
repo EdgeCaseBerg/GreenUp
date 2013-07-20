@@ -136,7 +136,7 @@ def validateErrorMessageReturned(comments_error_response):
 if __name__ == "__main__":
 	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapi.appspot.com/api'
-	baseURL = 'http://localhost:30002/api'
+	baseURL = 'http://localhost:16084/api'
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
@@ -184,6 +184,16 @@ if __name__ == "__main__":
 	validateErrorMessageReturned(tester.getJSON())
 
 	tester.followLink(endPoints['comments'],withData={"type" : "meessage", "message" : "This is another test message", "pin" : "badpinval"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#Send a POST request to the endpoint with an empty message
+	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : " "},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#Send a POST request to the endpoint with more than 140 characters (145) in the message
+	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : "sfsdfsdlfhdslfhlksdfhlsdkfdsklfjldskjfkldsjflksdjflksdhfjsdkbgdsibosdihgfiosdhglkdshslkdhgioerhgoirenglsdkhgsdhgoierhgoirehglkfsdhgiofhgioshglks"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())
 

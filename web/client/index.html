@@ -124,29 +124,17 @@
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum felis a mauris condimentum, in sollicitudin quam sodales.
                 </div>
             </div>
-
-            <form action="" method="POST" id="comment_submission_form">
-                    <div>
-                        <input type="hidden" id="comment_type" name="type" value="forum" />
-                        <h1>Recent Messages From the Green Up Community</h1>
-                        <div>
-                           <h3>Post your message</h3>
-                        </div>  
-
-                        <textarea name="message" id="comment_message"></textarea>
-
-                        <div>
-                            <input type="submit" name="Submit" value="Submit" />
-                            <input type="reset" name="Submit2" value="Reset" />
-                        </div>
-
-                    </div>
-
-                </form>
+            <div class="addCommentNest">
+                <input type="hidden" id="commentTypeToBePosted" value="null" />
+                <input type="hidden" id="commentToBePosted" value="null" />
+                <div class="nextPrev commentButton" id="prevPage"><</div>
+                <div class="addCommentButton commentButton" id="addCommentButton">New Comment</div>
+                <div class="nextPrev commentButton" id="nextPage">></div>
+            </div>
 
             <div id="moar">
-                <div class="nextPrev" id="prevPage">Prev</div>
-                <div class="nextPrev" id="nextPage">Next</div>
+                
+                
             </div>
 		</div>
 	</div>
@@ -191,7 +179,10 @@
 
     <div id="dialogSlider">
         <textarea id="dialogSliderTextarea" class="dialogSliderContents"></textarea>
-        <div class="dialogSliderContents">
+        <div class="dialogSliderContents" id="dialogSliderContents">
+            <input type="hidden" id="comment_type" value="forum" />
+            <input type="hidden" id="comment_message" value="null" />
+            <input type="hidden" id="input_purpose" value="0" />
             <div class="dialogSliderButton dialogButtonOk"><div id="dialogCommentOk" class="buttonText">Ok</div></div>
             <div class="dialogSliderButton dialogButtonCancel"><div id="dialogCommentCancel" class="buttonText">Cancel</div></div>
         </div>
