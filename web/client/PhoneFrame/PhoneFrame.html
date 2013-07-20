@@ -1,5 +1,6 @@
 <html>
 <head>
+	<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400,900' rel='stylesheet' type='text/css'>
 	<style type="text/css">
 		body{
 			background: #fff;
@@ -9,20 +10,34 @@
 			vertical-align: top;
 			display:inline-block;
 			width:49%;
-			border:solid 1px green;
 			height:100%;
+			text-align:center;
+		}
+
+		#descriptionNest{
+			width:80%;
+			margin-left:15%;
+		}
+
+		#greenup_logo{
+
+		}
+		.contentHeader{
+			font-family: 'Source Code Pro', sans-serif;
+			font-size:1.3em;
+			text-align: left;
 		}
 		#phoneContainer{
 			vertical-align: top;
 			display:inline-block;
 			width:49%;
-			border:solid 1px blue;
 			min-width:500px;
 			margin:auto;
 		}
 
 		#phoneFrame{
-			border:solid 1px #000;
+			border-top:solid 1px #fff;
+			vertical-align: top;
 			margin:auto;
 			width:500px;
 			height: 1000px;
@@ -33,7 +48,6 @@
 		}
 
 		#phoneScreen{
-			border:solid 1px #000;
 			width: 79.1%;
 			height: 70.3%;
 			margin:auto;
@@ -49,12 +63,19 @@
 </head>
 <body>
 	<div id="descriptionContainer">
-		<img src="greenup_logo.png" id="greenup_logo"/>
+		<div id="descriptionNest">
+			<img src="greenup_logo.png" height="115" width="270" id="greenup_logo"/>
+			<p class="contentHeader">
+				&nbsp;&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum felis a mauris condimentum, in sollicitudin quam sodales. Vivamus porta mollis eros quis adipiscing. Duis ullamcorper porttitor erat a elementum. Praesent malesuada elit massa, quis laoreet tortor adipiscing a. Vivamus enim purus, scelerisque pretium interdum nec, volutpat a justo. Nam lacinia risus vitae interdum tincidunt. Sed eu porta magna. Vestibulum velit sapien, blandit vitae ante ut, malesuada tristique lorem. Nam pulvinar nulla eget scelerisque faucibus. Vestibulum justo nulla, molestie ac pulvinar eu, laoreet vitae elit. Nullam faucibus fermentum orci ac rutrum. Ut quis ipsum quam. Donec ac volutpat est.
+				<br / ><br />
+				&nbsp;&nbsp;&nbsp;Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc ante massa, venenatis a consectetur id, blandit at massa. Suspendisse interdum lacus eu libero volutpat, at dignissim ipsum iaculis. Aliquam porta facilisis imperdiet. Duis mattis turpis vel placerat egestas. Curabitur cursus ultrices purus, vel faucibus sapien egestas id. Nunc dapibus neque turpis, et sollicitudin tortor interdum id. Aliquam aliquam sit amet eros eu pulvinar.
+			</p>
+		</div>
 	</div>
 	<div id="phoneContainer">
 		<div id="phoneFrame">
 			<div id="phoneScreen">
-				<iframe id="iframe" src="http://localhost/GreenUp/web/client/"></iframe>
+				<iframe id="iframe" src="http://localhost:30002"></iframe>
 				<!-- // app content here -->
 			</div>
 		</div>
