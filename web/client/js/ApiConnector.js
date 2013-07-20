@@ -311,6 +311,8 @@ function UiHandle(){
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
 
+	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
+
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
 	    	window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
 	    	window.UI.dialogSliderDown();
@@ -344,6 +346,14 @@ function UiHandle(){
             theForm.addEventListener("submit",window.UI.commentSubmission);
         }
 		
+	}
+
+	UiHandle.prototype.topSliderToggle = function topSliderToggle(){
+		if (document.getElementById("topSlideDown").className.match("sliderDown")){
+			document.getElementById("topSlideDown").className = "sliderUp";
+		}else{
+			document.getElementById("topSlideDown").className = "sliderDown";
+		}
 	}
 
 	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){

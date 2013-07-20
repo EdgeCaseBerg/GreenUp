@@ -4,6 +4,11 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, target-densityDpi=96"/>
+
+
+<!-- Prototype fonts -->
+<link href='http://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/styles.css">
 
 <script type="text/javascript"
@@ -49,19 +54,26 @@
 		<div class="panel" id="panel1">
 
             <!-- Main Page Content -->
+            <div id="bodyContainer">
+                <img src="img/greenup_logo.png" id="greenupLogo">
 
-            <h1> Green Up Vermont </h1>   
-            <div id="bodyText"> 
-                <p> Help keep Vermont green. Track your clean up progress, see what areas need the 
-                    most help, and find an area to drop off what you pick up.
-                        <br />
-                        <br />
-                    To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
-                </p>
+                <div id="bodyText"> 
+                    <p><h3>Help keep Vermont green.</h3>Track your clean up progress.<br />See what areas need the 
+                        most help.<br /> Find an area to drop off what you pick up.
+                            <br />
+                            <br />
+                        To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
+                    </p>
+
+                    <div id="timeSpentClock">
+                        01:23:45
+                        <p class="clockDetail">time spent cleaning up</p>
+                    </div>
 
 
-                <div class="start" id="startButton">
-                    <a id="bigButton">Start Cleaning Up</a>
+                    <div class="start" id="startButton">
+                        Start Cleaning Up
+                    </div>
                 </div>
             </div>
 		</div>
@@ -157,6 +169,12 @@
             </div>
 		</div>
 	</div>
+
+    <div id="topSlideDown" class="sliderUp">
+        <div id="hamburgerNest">
+            <div id="hamburger" class="hamburger"></div>
+        </div>
+    </div>
 
     <div id="loadingScreen">
         <div id="loadingGif">
