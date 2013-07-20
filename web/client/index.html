@@ -166,8 +166,20 @@
                 1111111111
             </div>
             <div id="panel2SlideDownContent" class="panelSlideDownContent">
-                <input type="checkbox" id="toggleHeat" />
-                <input type="checkbox" id="toggleIcons" />
+                <div id="heatChoice" class="mapToggleContainer">
+                    <div class="roundedTwo">
+                        <input type="checkbox" value="None" id="toggleHeat" class="checkboxUnder" name="check" checked />
+                        <label for="toggleHeat"></label>
+                    </div>
+                    <span>Heat Map</span>
+                </div>
+                <div id="markerChoice" class="mapToggleContainer">
+                    <div class="roundedTwo">
+                        <input type="checkbox" value="None" id="toggleIcons" class="checkboxUnder" name="check" checked />
+                        <label for="toggleIcons"></label>
+                    </div>
+                    <span>Markers</span>
+                </div>
             </div>
             <div id="panel3SlideDownContent" class="panelSlideDownContent">
                 33333333333
