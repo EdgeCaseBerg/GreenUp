@@ -97,7 +97,6 @@ class Comments(webapp2.RequestHandler):
 			self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
 			return
 
-
 		#Determine if type is semantically correct
 		if typeOfComment.upper() in COMMENT_TYPES:
 			pass
@@ -105,7 +104,6 @@ class Comments(webapp2.RequestHandler):
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write(json.dumps({ "Error_Message" : "Unrecognized Type" }))
 			return
-
 
 		pin = None
 		try:
@@ -118,7 +116,16 @@ class Comments(webapp2.RequestHandler):
 		except Exception, e:
 			#Die silently if the pin is not there as it is optional
 			pass
-		
+
+		# validate the message
+		if len(info['message'].strip(" ")) == 0:
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(json.dumps({ "Error_Message" : "Cannot accept an empty message" }))
+
+		if len(info['message']) > 140:
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(json.dumps({ "Error_Message" : "Message exceeds 140 characters" }))
+
 		#All information present and valid. Store information in the database
 		AbstractionLayer().submitComments(commentType=typeOfComment.upper(), message=commentMessage, pin=pin)
 
