@@ -21,16 +21,18 @@ handlers:
 - url: /api 
   script: api.api.application
 
-- url: /
-  static_files: web/client/index.html
-  upload: web/client/index.html
 - url: /(.+)
   static_files: web/client/\1
   upload: web/client/(.+)
+
+- url: /
+  script: detector.application
 
 - url: /.*
   script: api.api.application
 
 libraries:
 - name: webapp2
+  version: latest
+- name: jinja2
   version: latest
