@@ -37,6 +37,9 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="WE NEED TO ADD THIS!! API KEY" />
+        
+        <activity android:name="com.xenon.androidclient.MapActivity"></activity>
+        <activity android:name="com.xenon.androidclient.CommentActivity"></activity>
     </application>
 
 </manifest>
