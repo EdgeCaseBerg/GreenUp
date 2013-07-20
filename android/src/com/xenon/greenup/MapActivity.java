@@ -1,9 +1,9 @@
-package com.xenon.androidclient;
+package com.xenon.greenup;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-public class CommentActivity extends Activity {
+public class MapActivity extends Activity {
 
 	/** Called when the activity is first created. */
 	@Override

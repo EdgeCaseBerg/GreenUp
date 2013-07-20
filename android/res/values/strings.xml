@@ -17,12 +17,11 @@
 <resources>
     <string name="app_name">GreenUp</string>
 
+    <string name="dummy_section_text">Section %1d is a placeholder</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="home_button">Home</string>
     <string name="maps_button">Maps</string>
     <string name="comments_button">Comments</string>
 	<string name="title_text">GreenUp VT</string>
 	<string name="welcome_text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis congue est. Cras volutpat.</string>
-
 </resources>
