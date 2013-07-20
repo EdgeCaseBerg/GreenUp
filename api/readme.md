@@ -128,7 +128,7 @@ URL: **/api/comments**
             <td> type </td><td>String </td><td> Can be either `forum`, `needs`, or `message` </td>
         </tr>
         <tr>
-            <td> message   </td><td> String </td><td> The message to associated with this comment </td>
+            <td> message   </td><td> String </td><td> The message to associated with this comment. Message length must not exceed 140 characters, and must also be non-empty. </td>
         </tr>
     </tbody>
 </table>
