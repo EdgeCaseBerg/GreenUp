@@ -18,7 +18,6 @@ package com.xenon.greenup;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -29,6 +28,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.xenon.greenup.HomeSectionFragment;
+import com.xenon.greenup.MapSectionFragment;
+import com.xenon.greenup.FeedSectionFragment;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -127,12 +129,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public Fragment getItem(int i)
         { 
         	switch (i) {
-            case 0:
-                // The first section of the app is the most interesting -- it offers
-                // a launchpad into the other demonstrations in this example application.
-                // return new LaunchpadSectionFragment();
-
-            default:
+            //case 0:
+        		//TODO: Launch HomeSectionFragment
+            //case 1:
+        		//TODO: Launch MapSectionFragment
+        	//case 2:
+        		//TODO: Launch FeedSectionFragment
+        	default:
                 // The other sections of the app are dummy placeholders.
                 Fragment fragment = new DummySectionFragment();
                 Bundle args = new Bundle();
@@ -153,17 +156,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
     }
     
-    public static class MapSectionFragment extends Fragment {
-    	//TODO: Create Map Fragment
-    }
-    
-    public static class HomeSectionFragment extends Fragment {
-    	//TODO: Create Home Fragment
-    }
-    
-    public static class FeedSectionFragment extends Fragment {
-    	//TODO: Create Feed Fragment
-    }
 
     /**
      * A dummy fragment representing a section of the app, but that simply displays dummy text.
