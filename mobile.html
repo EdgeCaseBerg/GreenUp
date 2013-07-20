@@ -1,89 +1,190 @@
+
+
+<!DOCTYPE html>
 <html>
 <head>
-	<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400,900' rel='stylesheet' type='text/css'>
-	<style type="text/css">
-		body{
-			background: #fff;
-		}
+<meta name="viewport" content="width=device-width, initial-scale=1, target-densityDpi=96"/>
 
-		#descriptionContainer{
-			vertical-align: top;
-			display:inline-block;
-			width:49%;
-			height:100%;
-			text-align:center;
-		}
 
-		#descriptionNest{
-			width:80%;
-			margin-left:15%;
-		}
+<!-- Prototype fonts -->
+<link href='http://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="css/styles.css">
 
-		#greenup_logo{
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
+<script src="js/markerwithlabel.js"></script>
+<script type="text/javascript" src="js/lawnchair-js.js"></script>
+<script type="text/javascript" src="js/JSON.js"></script>
+<script type="text/javascript" src="js/ApiConnector.js"></script>
 
-		}
-		.contentHeader{
-			font-family: 'Source Code Pro', sans-serif;
-			font-size:1.3em;
-			text-align: left;
-		}
-		#phoneContainer{
-			vertical-align: top;
-			display:inline-block;
-			width:49%;
-			min-width:500px;
-			margin:auto;
-		}
+<style type="text/css">
+    #loadingScreen{
+        float:left;
+        position:absolute;
+        top:0px;
+        left:0px;
+        width:100%;
+        height:100%;
+        z-index:1000;
+        border:solid 1px green;
+        background:url("img/backgrounds/90_percent_black.png");
+        display:none;
+    }
 
-		#phoneFrame{
-			border-top:solid 1px #fff;
-			vertical-align: top;
-			margin:auto;
-			width:500px;
-			height: 1000px;
-			background: url('iphone_black.png');
-			background-size: auto 100%;
-			background-repeat: no-repeat;
-			text-align:center;
-		}
+    #loadingGif{
+        height:70px;
+        width:60px;
+        margin:auto;
+        padding-top:35%;
+        /*border:solid 1px red;*/
+    }
+</style>
 
-		#phoneScreen{
-			width: 79.1%;
-			height: 70.3%;
-			margin:auto;
-			margin-top:29%;
-		}
-
-		#iframe{
-			width:100%;
-			height:100%;
-
-		}
-	</style>
 </head>
+
 <body>
-	<div id="descriptionContainer">
-		<div id="descriptionNest">
-			<img src="greenup_logo.png" height="115" width="270" id="greenup_logo"/>
-			<p class="contentHeader">
-				&nbsp;&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum felis a mauris condimentum, in sollicitudin quam sodales. Vivamus porta mollis eros quis adipiscing. Duis ullamcorper porttitor erat a elementum. Praesent malesuada elit massa, quis laoreet tortor adipiscing a. Vivamus enim purus, scelerisque pretium interdum nec, volutpat a justo. Nam lacinia risus vitae interdum tincidunt. Sed eu porta magna. Vestibulum velit sapien, blandit vitae ante ut, malesuada tristique lorem. Nam pulvinar nulla eget scelerisque faucibus. Vestibulum justo nulla, molestie ac pulvinar eu, laoreet vitae elit. Nullam faucibus fermentum orci ac rutrum. Ut quis ipsum quam. Donec ac volutpat est.
-				<br / ><br />
-				&nbsp;&nbsp;&nbsp;Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc ante massa, venenatis a consectetur id, blandit at massa. Suspendisse interdum lacus eu libero volutpat, at dignissim ipsum iaculis. Aliquam porta facilisis imperdiet. Duis mattis turpis vel placerat egestas. Curabitur cursus ultrices purus, vel faucibus sapien egestas id. Nunc dapibus neque turpis, et sollicitudin tortor interdum id. Aliquam aliquam sit amet eros eu pulvinar.
-			</p>
+	<!-- <div id="loading">
+		<img src="img/startup/ajax-loader.gif">
+	</div> -->
+
+	<div id="container">
+        <input type="hidden" id="initLat" value="23" />
+        <input type="hidden" id="initLon" value=="22" />
+		<div class="panel" id="panel1">
+
+            <!-- Main Page Content -->
+            <div id="bodyContainer">
+                <img src="img/greenup_logo.png" id="greenupLogo">
+
+                <div id="bodyText"> 
+                    <p><h3>Help keep Vermont green.</h3>Track your clean up progress.<br />See what areas need the 
+                        most help.<br /> Find an area to drop off what you pick up.
+                            <br />
+                            <br />
+                        To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page. 
+                    </p>
+
+                    <div id="timeSpentClock">
+                        01:23:45
+                        <p class="clockDetail">time spent cleaning up</p>
+                    </div>
+
+
+                    <div class="start" id="startButton">
+                        Start Cleaning Up
+                    </div>
+                </div>
+            </div>
 		</div>
-	</div>
-	<div id="phoneContainer">
-		<div id="phoneFrame">
-			<div id="phoneScreen">
 
-				<iframe id="iframe" src="http://localhost:30002/?agent=frame"></iframe>
+		<!-- map panel -->
+		<div class="panel" id="panel2">
+			<!-- <div id="mapContainer" class="contentContainer"> -->
+				<!-- <div class="mobileContainer"> -->
+            		
+        		<!-- </div> -->
 
-<!--
-				<iframe id="iframe" src="http://greenupapp.appspot.com"></iframe>
--->
-				<!-- // app content here -->
+        		<div class="mapContainer">
+                    <input type="hidden" value="0" id="startCoords" />
+               		<div id="map-canvas"></div>
+        		</div>
+
+		        <div id="markerTypeDialog">
+
+                    <div class="tileContainer">
+                        <div class="tile tile1" id="selectPickup">Pickup</div>
+                        <div class="tile tile2" id="selectComment">Comment</div>
+                        <div class="tile tile3" id="selectTrash">Trash</div>
+                        <div class="tile tile4" id="cancel">Cancel</div>
+                    </div>
+
+		        <!--     <div id="markerTypeDialogNest">
+		                <input type="button" value="Pickup point" id="selectPickup" />
+		                <input type="button" value="Comment point" id="selectComment" />
+		                <input type="button" value="Trash point" id="selectTrash" />
+                        <input type="button" value="Close" onclick="$('#markerTypeDialog').toggle();" />
+		            </div> -->
+		          <!--   <input type="button" value="Lots of Trash" onClick="addTrashMarker">
+		            <input type="button" value="Comment point" onClick="addCommentMarker"> -->
+		        <!-- </div> -->
 			</div>
+			<!-- <input type="button" value="panel left" id="pl2">
+			<input type="button" value="panel right" id="pr2"> -->
+        </div>
+
+		<div class="panel" id="panel3">
+            <div id="bubbleContainer">
+            </div>
+            <div class="addCommentNest">
+                <input type="hidden" id="commentTypeToBePosted" value="null" />
+                <input type="hidden" id="commentToBePosted" value="null" />
+                <div class="nextPrev commentButton" id="prevPage"><</div>
+                <div class="addCommentButton commentButton" id="addCommentButton">New Comment</div>
+                <div class="nextPrev commentButton" id="nextPage">></div>
+            </div>
+
+            <div id="moar">
+                
+                
+            </div>
 		</div>
 	</div>
+
+    <div id="topSlideDown" class="sliderUp">
+        <div id="slideContentContainer">
+            <div id="panel1SlideDownContent" class="panelSlideDownContent">
+                1111111111
+            </div>
+            <div id="panel2SlideDownContent" class="panelSlideDownContent">
+                <div id="heatChoice" class="mapToggleContainer">
+                    <div class="roundedTwo">
+                        <input type="checkbox" value="None" id="toggleHeat" class="checkboxUnder" name="check" checked />
+                        <label for="toggleHeat"></label>
+                    </div>
+                    <span>Heat Map</span>
+                </div>
+                <div id="markerChoice" class="mapToggleContainer">
+                    <div class="roundedTwo">
+                        <input type="checkbox" value="None" id="toggleIcons" class="checkboxUnder" name="check" checked />
+                        <label for="toggleIcons"></label>
+                    </div>
+                    <span>Markers</span>
+                </div>
+            </div>
+            <div id="panel3SlideDownContent" class="panelSlideDownContent">
+                33333333333
+            </div>
+        </div>
+
+        <div id="hamburgerNest">
+            <div id="hamburger" class="hamburger"></div>
+        </div>
+    </div>
+
+    <div id="loadingScreen">
+        <div id="loadingGif">
+            <img src="img/ajax-loader.gif" />
+        </div>
+        <div id="loadingText" style="color:white; width:100%; text-align:center;"></div>
+    </div>
+
+    <div id="dialogSlider">
+        <textarea id="dialogSliderTextarea" class="dialogSliderContents"></textarea>
+        <div class="dialogSliderContents" id="dialogSliderContents">
+            <input type="hidden" id="comment_type" value="forum" />
+            <input type="hidden" id="comment_message" value="null" />
+            <input type="hidden" id="input_purpose" />
+            <div class="dialogSliderButton dialogButtonOk"><div id="dialogCommentOk" class="buttonText">Ok</div></div>
+            <div class="dialogSliderButton dialogButtonCancel"><div id="dialogCommentCancel" class="buttonText">Cancel</div></div>
+        </div>
+    </div>
+
+    <ul class="nav">
+        <li><a id="pan1">Home</a></li>
+        <li><a id="pan2">Maps</a></li>
+        <li><a id="pan3">Comments</a></li>
+    </ul>
 </body>
+
 </html>
