@@ -306,6 +306,8 @@ function UiHandle(){
 	this.isMarkerVisible = true;
 	this.isMapLoaded = false;
 
+	this.dialogSliderIsUp = false;
+
 	this.isClockRunning = false;
 	this.clockHrs = 00;
 	this.clockMins = 00;
@@ -506,9 +508,14 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(purpose){
+		window.UI.dialogSliderIsUp = true;
 		if(purpose == window.UI.COMMENT){
 			document.getElementById("input_purpose").value == window.UI.COMMENT;
 		}else{
+			google.maps.event.addListener(window.MAP.map, 'mousedown', function(e){
+				e.cancelBubble = true; 
+  				if (e.stopPropagation) e.stopPropagation(); 
+			});
 			document.getElementById("input_purpose").value == window.UI.MARKER;
 		}
 		document.getElementById("dialogSlider").style.top = "72%";
@@ -518,6 +525,7 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.dialogSliderDown = function dialogSliderDown(){
+		window.UI.dialogSliderIsUp = false;
 		document.getElementById("dialogSlider").style.top = "86%";
 		document.getElementById("dialogSlider").style.opacity = "0.0";
 	}
@@ -542,8 +550,10 @@ function UiHandle(){
 
 	UiHandle.prototype.markerSelectDown = function markerSelectDown(event){
 		// set the coords of the marker event
-	    window.MAP.markerEvent = event;
-	    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
+		if(!window.UI.dialogSliderIsUp){
+		    window.MAP.markerEvent = event;
+		    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
+		}
 	}
 
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
