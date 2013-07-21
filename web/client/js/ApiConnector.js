@@ -602,12 +602,15 @@ function UiHandle(){
 	UiHandle.prototype.toggleClockRun = function toggleClockRun(){
 		if(window.UI.isClockRunning){
 			// stop the clock
+			console.log("stopping clock");
 			clearInterval(window.UI.clockInterval);
+			window.UI.clockInterval = null;
+			window.UI.isClockRunning = false;
 		}else{
 			// start the clock
 			console.log("starting clock");
-			window.UI.isClockRunning = true;
 			window.UI.clockInterval = setInterval(window.UI.updateClock, 1000);
+			window.UI.isClockRunning = true;
 		}
 	}
 
@@ -726,7 +729,6 @@ function GpsHandle(){
 
 
 	GpsHandle.prototype.stop = function stop(){
-		window.UI.toggleClockRun();
     	window.ApiConnector.pushHeatmapData(window.database);
     	window.logging = false;
     	console.log("stopping...");
