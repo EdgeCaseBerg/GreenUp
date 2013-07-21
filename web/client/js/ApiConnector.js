@@ -336,27 +336,30 @@ function UiHandle(){
 	    	window.UI.dialogSliderUp();
 	    });
 
-
-
-
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
-	    	var userComment = document.getElementById("dialogSliderTextarea").value;
-	    	switch(window.UI.commentPurpose){
-	    		case window.UI.MARKER:
-	    			window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
-	    			window.UI.dialogSliderDown();
-	    			window.UI.clearDialogSliderInputs();
-	    			break;
-	    		case window.UI.COMMENT:
-	    			window.UI.commentSubmission();
-	    			window.UI.dialogSliderDown();
-	    			window.UI.clearDialogSliderInputs();
-	    			break;
-	    		default:
-	    			alert("no content type");
-	    			break;
-	    	}
-	    	window.UI.dialogSliderDown();
+	    	// prevent OK from being clicked if dialogSlider textarea is empty
+	    	if(document.getElementById("dialogSliderTextarea").value == ""){
+	    		alert("no message entered");
+	    	}else{
+		    	var userComment = document.getElementById("dialogSliderTextarea").value;
+		    	switch(window.UI.commentPurpose){
+		    		case window.UI.MARKER:
+		    			window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
+		    			window.UI.dialogSliderDown();
+		    			window.UI.clearDialogSliderInputs();
+		    			break;
+		    		case window.UI.COMMENT:
+		    			window.UI.commentSubmission();
+		    			window.UI.dialogSliderDown();
+		    			window.UI.clearDialogSliderInputs();
+		    			break;
+		    		default:
+		    			alert("no content type");
+		    			break;
+		    	}
+		    	document.getElementById("dialogSliderTextarea").value = ""
+		   		window.UI.dialogSliderDown();
+		    }
 	    });
 	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
 		
@@ -664,7 +667,7 @@ function GpsHandle(){
 		window.updateCounter = 0;
     	db = Lawnchair({name : 'db'}, function(store) {
         	window.database = store;
-        	window.GPS.loggingIntrval = setInterval(function() {window.GPS.runUpdate()},30000);//update user location every 5 seconds
+        	window.GPS.loggingInterval = setInterval(function() {window.GPS.runUpdate()},30000);//update user location every 5 seconds
         	// instead of running 2 timers, we'll just set a counter and run the pushHeatmapData() on a multiple of... 
         	// ...the runUpdate() function
         	// setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
