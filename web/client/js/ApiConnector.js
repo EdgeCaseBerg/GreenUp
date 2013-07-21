@@ -726,7 +726,8 @@ function GpsHandle(){
 
 
 	GpsHandle.prototype.stop = function stop(){
-    	window.ApiConnector.pushHeatmapData(lawnDB);
+		window.UI.toggleClockRun();
+    	window.ApiConnector.pushHeatmapData(window.database);
     	window.logging = false;
     	console.log("stopping...");
     	window.UI.setBigButtonColor("#00ff00");
