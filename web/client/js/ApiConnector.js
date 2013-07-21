@@ -11,13 +11,13 @@ function ApiConnector(){
 
 	// var BASE = "http://greenupapp.appspot.com/api";
 	var BASE = "http://localhost:30002/api";
-	this.BASE = "http://localhost:30002/api/";
+	this.BASE = "http://localhost:30002/api";
 
 	// api URLs
 	var forumURI = "/comments?type=forum";
 	var needsURI = "/comments?type=needs";
 	var messagesURI = "/comments?type=message";
-	var commentsUri = "/comments";
+	var commentsURI = "/comments";
 	var heatmapURI = "/heatmap";
 	var pinsURI = "/pins";
 
@@ -146,26 +146,22 @@ function ApiConnector(){
 
 	// by passing the url as an argument, we can use this method to get next pages
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
-		console.log(url);
+		console.log("Pulling comment "+commentType+" data from: "+url);
 		var urlStr = "";
 		switch(commentType){
 			case "needs":
-				alert("needs");
 				urlStr = (url == null) ? BASE+needsURI : url;
 				this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
 				break;
 			case "messages":
-				alert("messages");
 				urlStr =  (url == null) ? BASE+messagesURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
 				break;
 			case "forum":
-				alert("forum");
 				urlStr =  (url == null) ? BASE+forumURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 			default:
-				alert("default");
 				commentType = "forum";
 				urlStr =  (url == null) ? BASE+forumURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
@@ -175,9 +171,10 @@ function ApiConnector(){
 
 	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
 		console.log("json to push: "+jsonObj);
+		console.log("Push comment data to: "+BASE+commentsURI);
 		$.ajax({
 			type: "POST",
-			url: BASE+commentsUri,
+			url: BASE+commentsURI,
 			data: jsonObj,
     		cache: false,
 			// processData: false,
@@ -185,7 +182,7 @@ function ApiConnector(){
 			// contentType: "application/json",
 			success: function(data){
 				console.log("INFO: Comment successfully sent");
-				window.ApiConnector.pullCommentData(JSON.parse(jsonObj).type,null);
+				window.ApiConnector.pullCommentData(JSON.parse(jsonObj).type, null);
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -237,13 +234,11 @@ function ApiConnector(){
 	    if(window.logging){
 		        //server/addgriddata.php
 		    window.database.all(function(data){
-		    	console.log(data);
 		    	//Make sure to not just send null data up or you'll get a 400 back
 		        if(data.length == 00){
 		        	data = "[]";
 		        }
-		        console.log("data being PUT to "+BASE+heatmapURI+": ");
-		        console.log(data);
+		        console.log("Heatmap data being PUT to "+BASE+heatmapURI+": ");
 		        // zepto code
 		        $.ajax({
 			        type:'PUT',
@@ -477,7 +472,8 @@ function UiHandle(){
 		var comment = new FCommment();
 		comment.message = document.getElementById("dialogSliderTextarea").value;
 		comment.pin = null;
-		comment.type = document.getElementById('comment_type').value;
+		comment.type = "";
+		// comment.type = document.getElementById('comment_type').value;
 
 		var serializedComment = JSON.stringify(comment);
 		console.log(serializedComment);
@@ -571,7 +567,6 @@ function UiHandle(){
 
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
-		console.log("Heatmap data: "+data);
 		window.MAP.applyHeatMap(data);
 	}
 
@@ -593,24 +588,22 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.updateForum = function updateForum(data){
+		console.log("In Update forum");
 		console.log("Comment data: "+data);
 		document.getElementById("bubbleContainer").innerHTML = "";
-
 		var dataObj = JSON.parse(data);
-		console.log("dataObj");
-		console.log(dataObj);
 		var comments = dataObj.comments;
 		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
 		// window.UI.commentsNextPageUrl = dataObj.page.next;
 		if(dataObj.page.next != null){
 			var nextArr = dataObj.page.next.split("xenonapps.com/api");
-			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+nextArr[1];
+			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
 		}else{
 			window.UI.commentsNextPageUrl = null;
 		}
 		if(dataObj.page.previous != null){
 			var prevArr = dataObj.page.previous.split("xenonapps.com/api");
-			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+prevArr[1];
+			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
 		}else{
 			window.UI.commentsPrevPageUrl = null;
 		}
@@ -653,7 +646,6 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.updateClock = function updateClock(){
-		console.log("updatingClock");
 		if(window.UI.clockSecs == 59){
 			window.UI.clockSecs = 00;
 			if(window.UI.clockMins == 59){
@@ -748,14 +740,13 @@ function GpsHandle(){
 	};
 
 	GpsHandle.prototype.recenterMap = function recenterMap(lat, lon){
-    	console.log(lon);
     	var newcenter = new google.maps.LatLng(lat, lon);
         centerPoint = newcenter;
         map.panTo(newcenter);
 	}
 
 	GpsHandle.prototype.start = function start(){
-		window.UI.setBigButtonColor("#ff0000");
+		document.getElementById("startButton").className = "bigStopButton";
 		window.UI.setBigButtonText("Stop Cleaning");
 		window.logging = true;
     	this.initGps();
@@ -767,11 +758,11 @@ function GpsHandle(){
 
 
 	GpsHandle.prototype.stop = function stop(){
+		document.getElementById("startButton").className = "bigStartButton";
     	window.ApiConnector.pushHeatmapData(window.database);
     	window.logging = false;
-    	console.log("stopping...");
+    	console.log("stopping GPS...");
     	clearInterval(window.GPS.loogingInterval);
-    	window.UI.setBigButtonColor("#00ff00");
     	window.UI.setBigButtonText("Start Cleaning");
 	}
     
