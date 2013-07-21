@@ -664,7 +664,7 @@ function GpsHandle(){
 		window.updateCounter = 0;
     	db = Lawnchair({name : 'db'}, function(store) {
         	window.database = store;
-        	setInterval(function() {window.GPS.runUpdate()},30000);//update user location every 5 seconds
+        	window.GPS.loggingIntrval = setInterval(function() {window.GPS.runUpdate()},30000);//update user location every 5 seconds
         	// instead of running 2 timers, we'll just set a counter and run the pushHeatmapData() on a multiple of... 
         	// ...the runUpdate() function
         	// setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
@@ -679,7 +679,7 @@ function GpsHandle(){
 	    	window.updateCounter = 0;
 	    	window.ApiConnector.pushHeatmapData(window.database);
 	    }else{
-	    	console.log("getting position data");
+	    	// console.log("getting position data");
 	    	 if(navigator.geolocation){
 	    	 	var options = {timeout:29000};
 	    	 	navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
@@ -696,8 +696,8 @@ function GpsHandle(){
 	}
 
 	GpsHandle.prototype.updateLocation = function updateLocation(position){
-		console.log("updateLocation");
-		console.log(position);
+		// console.log("updateLocation");
+		// console.log(position);
 	    if(window.logging){
 	        var datetime = new Date().getTime();//generate timestamp
 	        var location = {
@@ -732,6 +732,7 @@ function GpsHandle(){
     	window.ApiConnector.pushHeatmapData(window.database);
     	window.logging = false;
     	console.log("stopping...");
+    	clearInterval(window.GPS.loogingInterval);
     	window.UI.setBigButtonColor("#00ff00");
     	window.UI.setBigButtonText("Start Cleaning");
 	}
