@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	// var BASE = "http://greenupapp.appspot.com/api";
-	var BASE = "http://localhost:30002/api";
+	var BASE = "http://greenupapp.appspot.com/api";
+	// var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 	// api URLs
