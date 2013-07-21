@@ -224,10 +224,10 @@ function ApiConnector(){
 
 	//Uploads all local database entries to the Server
 	//Clears the local storage after upload
-	ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(database){
+	ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(){
 	    if(window.logging){
 		        //server/addgriddata.php
-		    database.all(function(data){
+		    window.database.all(function(data){
 		    	console.log(data);
 		    	//Make sure to not just send null data up or you'll get a 400 back
 		        if(data.length == 00){
@@ -252,7 +252,7 @@ function ApiConnector(){
 			        
 			    //Remove all uploaded database records
 			    for(var i=1;i<data.length;i++){
-			        database.remove(i);
+			        window.database.remove(i);
 			    }
 		    });
 		}
@@ -538,7 +538,7 @@ function UiHandle(){
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
 		console.log("Heatmap data: "+data);
-		window.MAP.applyHeatMap();
+		window.MAP.applyHeatMap(data);
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
@@ -616,39 +616,53 @@ function UiHandle(){
 function GpsHandle(){
 	
 	GpsHandle.prototype.initGps = function initGps(){
+		window.logging = true;
+		console.log("initGps");
+		window.updateCounter = 0;
     	db = Lawnchair({name : 'db'}, function(store) {
-        	lawnDB = store;
-        	setInterval(function() {window.GPS.runUpdate(store)},5000);//update user location every 5 seconds
+        	window.database = store;
+        	setInterval(function() {window.GPS.runUpdate()},30000);//update user location every 5 seconds
         	// instead of running 2 timers, we'll just set a counter and run the pushHeatmapData() on a multiple of... 
         	// ...the runUpdate() function
-        	window.updateCounter = 0;
         	// setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
     	});
 	}
 
 	//Runs the update script:
-	GpsHandle.prototype.runUpdate = function runUpdate(database){
+	GpsHandle.prototype.runUpdate = function runUpdate(){
+		console.log("runUpdate");
 	    //Grab the geolocation data from the local machine
 	    if(window.updateCounter == 6){
 	    	window.updateCounter = 0;
-	    	window.ApiConnector.pushHeatmapData(database);
+	    	window.ApiConnector.pushHeatmapData(window.database);
 	    }else{
-	    	window.updateCounter++;
+	    	console.log("getting position data");
+	    	 if(navigator.geolocation){
+	    	 	var options = {timeout:29000};
+	    	 	navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	window.updateCounter++;
+	    	 }else{
+	    	 	console.log("Geolocation is not supported by this browser.");
+	    	 }
 	    }
-	    navigator.geolocation.getCurrentPosition(function(position) {
-	          window.GPS.updateLocation(database, position.coords.latitude, position.coords.longitude);
-	    });
 	}
 
-	GpsHandle.prototype.updateLocation = function updateLocation(database, latitude, longitude){
+	GpsHandle.prototype.gpsErrorHandler = function gpsErrorHandler(error){
+		console.log("Gps error: "); 
+		console.log(error);
+	}
+
+	GpsHandle.prototype.updateLocation = function updateLocation(position){
+		console.log("updateLocation");
+		console.log(position);
 	    if(window.logging){
 	        var datetime = new Date().getTime();//generate timestamp
 	        var location = {
-	                "latDegree" : latitude,
-	                "lonDegree" : longitude,
+	                "latDegree" : position.coords.latitude,
+	                "lonDegree" : position.coords.longitude,
 	                "secondsWorked" : datetime
 	        }
-	        database.save({value:location});//Save the record
+	        window.database.save({value:location});//Save the record
 	    }
 	};
 
@@ -763,31 +777,31 @@ function MapHandle(){
 
 	}
 
-	MapHandle.prototype.applyHeatMap = function applyHeatMap(){
+	MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
 		var heatmapData = [
-                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 0.5}, 
-                {location: new google.maps.LatLng(44.4759, -73.2125), weight: 1},
-                {location: new google.maps.LatLng(44.4768, -73.2125), weight: 2},
-                {location: new google.maps.LatLng(44.4763, -73.2125), weight: 3},
-                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 2},
-                {location: new google.maps.LatLng(44.4758, -73.2135), weight: 1},
-                {location: new google.maps.LatLng(44.4758, -73.2145), weight: 0.5},
-                {location: new google.maps.LatLng(44.4758, -73.2185), weight: 3},
-                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 2},
-                {location: new google.maps.LatLng(44.4758, -73.2127), weight: 1},
-                {location: new google.maps.LatLng(44.4758, -73.2128), weight: 0.5},
-                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 1},
-                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 2},
-                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 3}
+                {location: new google.maps.LatLng(44.4758, -73.3125), weight: 101.5}, 
+                {location: new google.maps.LatLng(44.4751, -73.1125), weight: 238},
+                {location: new google.maps.LatLng(44.4762, -73.7125), weight: 112},
+                {location: new google.maps.LatLng(44.4763, -73.2825), weight: 29},
+                {location: new google.maps.LatLng(44.4754, -73.2225), weight: 112},
+                {location: new google.maps.LatLng(44.4755, -73.2135), weight: 1},
+                {location: new google.maps.LatLng(44.4366, -73.2145), weight: 7.5},
+                {location: new google.maps.LatLng(44.4268, -73.2185), weight: 163},
+                {location: new google.maps.LatLng(44.4867, -73.2128), weight: 112},
+                {location: new google.maps.LatLng(44.4162, -73.2111), weight: 123},
+                {location: new google.maps.LatLng(44.4791, -73.2130), weight: 16.5},
+                {location: new google.maps.LatLng(44.3730, -73.2125), weight: 111},
+                {location: new google.maps.LatLng(44.1732, -73.2120), weight: 112},
+                {location: new google.maps.LatLng(44.7758, -73.2115), weight: 113}
             ];
 
-             var pointArray = new google.maps.MVCArray(heatmapData);
+          var pointArray = new google.maps.MVCArray(heatmapData);
 
-  heatmap = new google.maps.visualization.HeatmapLayer({
-    data: pointArray,
-    dissipating: true, 
-    radius: 5
-  });
+		  heatmap = new google.maps.visualization.HeatmapLayer({
+		    data: pointArray,
+		    dissipating: true, 
+		    radius: 5
+		  });
 
   heatmap.setMap(window.MAP.map);
 
