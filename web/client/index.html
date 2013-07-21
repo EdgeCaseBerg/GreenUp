@@ -123,14 +123,14 @@
             <div id="panel2SlideDownContent" class="panelSlideDownContent">
                 <div id="heatChoice" class="mapToggleContainer">
                     <div class="roundedTwo">
-                        <input type="checkbox" value="None" id="toggleHeat" class="checkboxUnder" name="check" checked />
+                        <input type="checkbox" value="None" id="toggleHeat" onchange="window.MAP.toggleHeatmap()" class="checkboxUnder" name="check" checked />
                         <label for="toggleHeat"></label>
                     </div>
                     <span>Heat Map</span>
                 </div>
                 <div id="markerChoice" class="mapToggleContainer">
                     <div class="roundedTwo">
-                        <input type="checkbox" value="None" id="toggleIcons" class="checkboxUnder" name="check" checked />
+                        <input type="checkbox" value="None" id="toggleIcons" onchange="window.MAP.toggleIcons()" class="checkboxUnder" name="check" checked />
                         <label for="toggleIcons"></label>
                     </div>
                     <span>Markers</span>

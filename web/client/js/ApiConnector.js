@@ -303,7 +303,7 @@ function UiHandle(){
 	this.isMarkerDisplayVisible = false;
 	this.MOUSEDOWN_TIME;
 	this.MOUSEUP_TIME;
-	this.isMarkerVisible = false;
+	this.isMarkerVisible = true;
 	this.isMapLoaded = false;
 
 	this.commentPurpose = -1;
@@ -351,11 +351,6 @@ function UiHandle(){
 	    	window.UI.dialogSliderDown();
 	    });
 	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
-
-		// toggle map overlays
-		document.getElementById('toggleHeat').addEventListener('mousedown', function(){window.MAP.toggleHeatmap();});
-	   	document.getElementById('toggleIcons').addEventListener('mousedown', function(){window.MAP.toggleIcons();});
-
 		
 	    // load the previous page
 	    document.getElementById("prevPage").addEventListener('mousedown', function(){

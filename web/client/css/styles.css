@@ -350,10 +350,10 @@ a, a:hover, a:visited{
 
 .tileContainer{
     height:30%;
-    width:75%;
+    width:33.2%;
     margin:auto;
+    margin-top: 20%;
     /*border:solid 1px white;*/
-    margin-top:50%;
 }
 
 .tile{
