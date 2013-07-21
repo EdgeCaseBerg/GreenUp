@@ -543,6 +543,7 @@ function UiHandle(){
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
 		console.log("Heatmap data: "+data);
+		window.MAP.applyHeatMap();
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
@@ -765,6 +766,39 @@ function MapHandle(){
 		console.log(serializedPin);
     	window.ApiConnector.pushNewPin(serializedPin);
 
+	}
+
+	MapHandle.prototype.applyHeatMap = function applyHeatMap(){
+		var heatmapData = [
+                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 0.5}, 
+                {location: new google.maps.LatLng(44.4759, -73.2125), weight: 1},
+                {location: new google.maps.LatLng(44.4768, -73.2125), weight: 2},
+                {location: new google.maps.LatLng(44.4763, -73.2125), weight: 3},
+                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 2},
+                {location: new google.maps.LatLng(44.4758, -73.2135), weight: 1},
+                {location: new google.maps.LatLng(44.4758, -73.2145), weight: 0.5},
+                {location: new google.maps.LatLng(44.4758, -73.2185), weight: 3},
+                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 2},
+                {location: new google.maps.LatLng(44.4758, -73.2127), weight: 1},
+                {location: new google.maps.LatLng(44.4758, -73.2128), weight: 0.5},
+                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 1},
+                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 2},
+                {location: new google.maps.LatLng(44.4758, -73.2125), weight: 3}
+            ];
+
+             var pointArray = new google.maps.MVCArray(heatmapData);
+
+  heatmap = new google.maps.visualization.HeatmapLayer({
+    data: pointArray,
+    dissipating: true, 
+    radius: 5
+  });
+
+  heatmap.setMap(window.MAP.map);
+
+//   function toggleHeatmap() {
+//   heatmap.setMap(heatmap.getMap() ? null : map);
+// }
 	}
 
 	MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon){
