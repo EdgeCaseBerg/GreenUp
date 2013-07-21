@@ -306,6 +306,11 @@ function UiHandle(){
 	this.isMarkerVisible = true;
 	this.isMapLoaded = false;
 
+	this.isClockRunning = false;
+	this.clockHrs = 00;
+	this.clockMins = 00;
+	this.clockSecs = 00;
+
 	this.commentPurpose = -1;
 	this.MARKER = 1; 
 	this.COMMENT = 0;
@@ -318,6 +323,7 @@ function UiHandle(){
     UiHandle.prototype.init = function init(){
 
 	    // controls the main panel movement
+	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
@@ -329,6 +335,8 @@ function UiHandle(){
 	    	window.UI.commentPurpose = window.UI.COMMENT;
 	    	window.UI.dialogSliderUp();
 	    });
+
+
 
 
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
@@ -590,6 +598,38 @@ function UiHandle(){
 	UiHandle.prototype.updateTest = function updateTest(data){
 		console.log(data);
 	}
+
+	UiHandle.prototype.toggleClockRun = function toggleClockRun(){
+		if(window.UI.isClockRunning){
+			// stop the clock
+			clearInterval(window.UI.clockInterval);
+		}else{
+			// start the clock
+			console.log("starting clock");
+			window.UI.isClockRunning = true;
+			window.UI.clockInterval = setInterval(window.UI.updateClock, 1000);
+		}
+	}
+
+	UiHandle.prototype.updateClock = function updateClock(){
+		console.log("updatingClock");
+		if(window.UI.clockSecs == 59){
+			window.UI.clockSecs = 00;
+			if(window.UI.clockMins == 59){
+				window.UI.clockMins = 00;
+				window.UI.clockHrs++;
+			}else{
+				window.UI.clockMins++;
+			}
+		}else{
+			window.UI.clockSecs++;
+		}
+		var clockSecStr = (window.UI.clockSecs < 10) ? "0"+window.UI.clockSecs : window.UI.clockSecs;
+		var clockMinStr = (window.UI.clockMins < 10) ? "0"+window.UI.clockMins : window.UI.clockMins;
+		var clockHrStr = (window.UI.clockHrs < 10) ? "0"+window.UI.clockHrs : window.UI.clockHrs;
+		
+		document.getElementById("timeSpentClockDigits").innerHTML = clockHrStr + ":" + clockMinStr + ":" + clockSecStr;
+	}
 	// ******** End DOM Updaters *********
 
 	// ---- begin pagination control toggle ----
@@ -686,7 +726,8 @@ function GpsHandle(){
 
 
 	GpsHandle.prototype.stop = function stop(){
-    	window.ApiConnector.pushHeatmapData(lawnDB);
+		window.UI.toggleClockRun();
+    	window.ApiConnector.pushHeatmapData(window.database);
     	window.logging = false;
     	console.log("stopping...");
     	window.UI.setBigButtonColor("#00ff00");
@@ -943,10 +984,12 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.ApiConnector.pullHeatmapData();
 
 	document.getElementById("startButton").addEventListener('mousedown', function(){
-		if(!window.logging){ 
+		if(!window.logging){
+			window.UI.toggleClockRun(); 
 			window.GPS.start();
 		}else{
 			window.GPS.stop();
+			window.UI.toggleClockRun();
 		}
 	});
 
