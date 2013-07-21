@@ -10,7 +10,8 @@ function ApiConnector(){
 
 
 	// var BASE = "http://greenupapp.appspot.com/api";
-	var BASE = "http://localhost:30002/api"
+	var BASE = "http://localhost:30002/api";
+	this.BASE = "http://localhost:30002/api/";
 
 	// api URLs
 	var forumURI = "/comments?type=forum";
@@ -23,6 +24,7 @@ function ApiConnector(){
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
 		// zepto
+		console.log(URL);
 		$.ajax({
 			type: QUERYTYPE,
 			url: URL,
@@ -33,7 +35,7 @@ function ApiConnector(){
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
-				// // alert("error: "+xhr.status);
+				// alert("error: "+xhr.status);
 				switch(xhr.status){
 					case 500:
 						// internal server error
@@ -144,28 +146,35 @@ function ApiConnector(){
 
 	// by passing the url as an argument, we can use this method to get next pages
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
+		console.log(url);
 		var urlStr = "";
 		switch(commentType){
 			case "needs":
-				(url == null) ? (urlStr = BASE+needsURI) : (urlStr = url);
+				alert("needs");
+				urlStr = (url == null) ? BASE+needsURI : url;
 				this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
 				break;
 			case "messages":
-				(url == null) ? (urlStr = BASE+messagesURI) : (urlStr = url);
+				alert("messages");
+				urlStr =  (url == null) ? BASE+messagesURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
 				break;
 			case "forum":
-				(url == null) ? (urlStr = BASE+forumURI) : (urlStr = url);
+				alert("forum");
+				urlStr =  (url == null) ? BASE+forumURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 			default:
-				(url == null) ? (urlStr = BASE+forumURI) : (urlStr = url);
+				alert("default");
+				commentType = "forum";
+				urlStr =  (url == null) ? BASE+forumURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 		}
 	} // end pullCommentData()
 
 	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
+		console.log("json to push: "+jsonObj);
 		$.ajax({
 			type: "POST",
 			url: BASE+commentsUri,
@@ -367,11 +376,11 @@ function UiHandle(){
 		
 	    // load the previous page
 	    document.getElementById("prevPage").addEventListener('mousedown', function(){
-	    	window.ApiConnector.pullCommentData(this.commentsType, window.UI.commentsPrevPageUrl);
+	    	window.ApiConnector.pullCommentData("forum", window.UI.commentsPrevPageUrl);
 		});
 		// load the previous page
 		document.getElementById("nextPage").addEventListener('mousedown', function(){
-			window.ApiConnector.pullCommentData(this.commentsType, window.UI.commentsNextPageUrl);
+			window.ApiConnector.pullCommentData("forum", window.UI.commentsNextPageUrl);
 		});
 		
 	}
@@ -563,7 +572,6 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
-
 		//console.log("marker response: "+data);
 		var dataArr = eval("("+data+")");
 		//	var dataArr = data;
@@ -577,7 +585,7 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.updateNeeds = function updateNeeds(data){
-		console.log(data);
+		console.log("UPDATE NEEDS DOES NOTHING");
 	}
 
 	UiHandle.prototype.updateForum = function updateForum(data){
@@ -585,10 +593,19 @@ function UiHandle(){
 		document.getElementById("bubbleContainer").innerHTML = "";
 
 		var dataObj = JSON.parse(data);
-		// console.log(dataObj);
+		console.log("dataObj");
+		console.log(dataObj);
 		var comments = dataObj.comments;
-		window.UI.commentsNextPageUrl = dataObj.page.previous;
-		window.UI.commentsPrevPageUrl = dataObj.page.next;
+		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
+		// window.UI.commentsNextPageUrl = dataObj.page.next;
+		if(dataObj.page.next != null){
+			var nextArr = dataObj.page.next.split("xenonapps.com/api");
+			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+nextArr[1];
+		}
+		if(dataObj.page.previous != null){
+			var prevArr = dataObj.page.previous.split("xenonapps.com/api");
+			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+prevArr[1];
+		}
 
 		for(var ii=0; ii<comments.length; ii++){
 				var div = document.createElement("div");
