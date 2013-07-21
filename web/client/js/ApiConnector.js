@@ -9,7 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api"
 
 	// api URLs
 	var forumURI = "/comments?type=forum";
@@ -309,11 +310,12 @@ function UiHandle(){
 	this.MARKER = 1; 
 	this.COMMENT = 0;
 
+	// for comment pagination
+	this.commentsType = ""
+	this.commentsNextPageUrl = "";
+	this.commentsPrevPageUrl = "";
+
     UiHandle.prototype.init = function init(){
-    	// for comment pagination
-	    this.commentsType = ""
-	    this.commentsNextPageUrl = "";
-	    this.commentsPrevPageUrl = "";
 
 	    // controls the main panel movement
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
@@ -357,11 +359,11 @@ function UiHandle(){
 		
 	    // load the previous page
 	    document.getElementById("prevPage").addEventListener('mousedown', function(){
-	    	window.ApiConnector.pullCommentData(this.commentsType, this.commentsPrevPageUrl);
+	    	window.ApiConnector.pullCommentData(this.commentsType, window.UI.commentsPrevPageUrl);
 		});
 		// load the previous page
 		document.getElementById("nextPage").addEventListener('mousedown', function(){
-			window.ApiConnector.pullCommentData(this.commentsType, this.commentsNextPageUrl);
+			window.ApiConnector.pullCommentData(this.commentsType, window.UI.commentsNextPageUrl);
 		});
 		
 	}
@@ -401,11 +403,11 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
-		document.getElementById('bigButton').style.backgroundColor=colorHex;
+		document.getElementById('startButton').style.backgroundColor=colorHex;
 	}
 
 	UiHandle.prototype.setBigButtonText = function setBigButtonText(buttonText){
-		document.getElementById('bigButton').innerHTML = buttonText;
+		document.getElementById('startButton').innerHTML = buttonText;
 	}
 
 	UiHandle.prototype.setMapLoaded = function setMapLoaded(){
@@ -452,7 +454,7 @@ function UiHandle(){
 	UiHandle.prototype.commentSubmission = function commentSubmission(){
 
 		var comment = new FCommment();
-		comment.message = document.getElementById('dialogSliderTextarea').value;
+		comment.message = document.getElementById("dialogSliderTextarea").value;
 		comment.pin = null;
 		comment.type = document.getElementById('comment_type').value;
 
@@ -563,9 +565,14 @@ function UiHandle(){
 
 	UiHandle.prototype.updateForum = function updateForum(data){
 		console.log("Comment data: "+data);
+		document.getElementById("bubbleContainer").innerHTML = "";
+
 		var dataObj = JSON.parse(data);
 		// console.log(dataObj);
 		var comments = dataObj.comments;
+		window.UI.commentsNextPageUrl = dataObj.page.previous;
+		window.UI.commentsPrevPageUrl = dataObj.page.next;
+
 		for(var ii=0; ii<comments.length; ii++){
 				var div = document.createElement("div");
 				var timeDiv = document.createElement("div");
@@ -581,7 +588,6 @@ function UiHandle(){
 				div.appendChild(timeDiv);
 				div.appendChild(messageContent);
 				document.getElementById("bubbleContainer").appendChild(div);
-				document.getElementById("bubbleContainer")
 		}
 	}
 
