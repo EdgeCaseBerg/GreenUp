@@ -376,11 +376,15 @@ function UiHandle(){
 		
 	    // load the previous page
 	    document.getElementById("prevPage").addEventListener('mousedown', function(){
-	    	window.ApiConnector.pullCommentData("forum", window.UI.commentsPrevPageUrl);
+	    	if(window.UI.commentsPrevPageUrl != null){
+	    		window.ApiConnector.pullCommentData("forum", window.UI.commentsPrevPageUrl);
+	    	}
 		});
 		// load the previous page
 		document.getElementById("nextPage").addEventListener('mousedown', function(){
-			window.ApiConnector.pullCommentData("forum", window.UI.commentsNextPageUrl);
+			if(window.UI.commentsNextPageUrl != null){
+				window.ApiConnector.pullCommentData("forum", window.UI.commentsNextPageUrl);
+			}
 		});
 		
 	}
@@ -601,10 +605,14 @@ function UiHandle(){
 		if(dataObj.page.next != null){
 			var nextArr = dataObj.page.next.split("xenonapps.com/api");
 			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+nextArr[1];
+		}else{
+			window.UI.commentsNextPageUrl = null;
 		}
 		if(dataObj.page.previous != null){
 			var prevArr = dataObj.page.previous.split("xenonapps.com/api");
 			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+prevArr[1];
+		}else{
+			window.UI.commentsPrevPageUrl = null;
 		}
 
 		for(var ii=0; ii<comments.length; ii++){
