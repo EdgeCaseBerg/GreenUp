@@ -259,6 +259,8 @@ def initialPage(typeFilter=None):
 	initialPageKey = 'greenup_comments_page_%s_%s' %(typeFilter,1)
 
 	results = querySet[0:20]
+	logging.info("Results query list after invalidation:")
+	logging.info(results)
 	# results = querySet.run(batch_size=20)
 
 	memcache.set(initialPageKey, serialize_entities(results))
