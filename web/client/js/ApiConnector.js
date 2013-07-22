@@ -472,7 +472,7 @@ function UiHandle(){
 		var comment = new FCommment();
 		comment.message = document.getElementById("dialogSliderTextarea").value;
 		comment.pin = null;
-		comment.type = "";
+		comment.type = document.getElementById("comment_type").value;
 		// comment.type = document.getElementById('comment_type').value;
 
 		var serializedComment = JSON.stringify(comment);
