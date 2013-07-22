@@ -1,20 +1,107 @@
 @import url(http://fonts.googleapis.com/css?family=Pathway+Gothic+One);
 
+
+    div{
+        margin:0px;
+        padding:0px;
+    }
+
+    html{
+        height:100%;
+        width:100%;
+        margin:0px;
+        padding:0px;
+    }
+
+
 body{
 	height:100%;
 	width:100%;
-	/*text-align:center;*/
-	/*background-image: url('../img/backgrounds/dark_dotted2.png');*/
     background:#fff;
 	list-style-type: none;
+    overflow-x: hidden;
+    margin:0px;
+    padding:0px;
+}
+
+#bodyContainer{
+    text-align:center;
+}
+
+#bodyText{
+    font-size:0.7em;
+    color:#508534;
+    padding:0% 3% 0% 3%;
+}
+
+
+#timeSpentClock{
+    /*font-family: 'Armata', sans-serif;*/
+    font-family: 'Roboto', sans-serif;
+    color:#000;
+    text-align:center;
+    font-size:2.9em;
+}
+
+.clockDetail{
+    margin-top:-3px;
+    font-size:0.3em;
+
+}
+
+#startButton {
+    margin-top:20px;
+    cursor:pointer;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 2.0em;
+    padding: 4% 3% 4% 3%;
+    text-decoration: none;
+    -webkit-border-radius: 13px;
+    -moz-border-radius: 13px;
+    border-radius: 13px;
+    -webkit-box-shadow: 0px 1px 3px #666666;
+    -moz-box-shadow: 0px 1px 3px #666666;
+    box-shadow: 0px 1px 3px #666666;
+    text-shadow: 1px 1px 3px #666666;
+}
+
+.bigStartButton{
+    border: solid #a1a1a1 2px;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#47d14e), to(#12690a));
+    background: -moz-linear-gradient(top, #47d14e, #12690a);
+}
+.bigStartButton:hover {
+    background: #1c961c;
+}
+.bigStopButton{
+    border: solid #a1a1a1 2px;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#fa3f3f), to(#b50000));
+    background: -moz-linear-gradient(top, #fa3f3f, #b50000);
+}
+.bigStopButton:hover {
+    background: #ba3d3d;
+}
+
+#mainPageBody{
+    font-size: 1em;
+    line-height: 1.4;
+    background-image:url('../img/backgrounds/Vermont.png');
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#greenupLogo{
+    height:7%;
+    margin-top:3%;
 }
 
 .showInline{
-    display:inline;
 }
 
 .showBlock{
-    display:block;
+
+    display:inline;    display:block;
 }
 
 .showInlineBlock{
@@ -560,77 +647,8 @@ h1{
 
 }
 
-#bodyContainer{
-    text-align:center;
-}
-
-#bodyText{
-    /*text-align:left;*/
-    color:#508534;
-    padding:30px;
 
 
-}
-
-#timeSpentClock{
-    /*font-family: 'Armata', sans-serif;*/
-    font-family: 'Roboto', sans-serif;
-    color:#000;
-    text-align:center;
-    font-size:2.9em;
-}
-
-.clockDetail{
-    margin-top:-3px;
-    font-size:0.3em;
-
-}
-
-#startButton {
-    margin-top:20px;
-    cursor:pointer;
-    font-family: Arial;
-    color: #ffffff;
-    font-size: 35px;
-    padding: 14px;
-    text-decoration: none;
-    -webkit-border-radius: 13px;
-    -moz-border-radius: 13px;
-    border-radius: 13px;
-    -webkit-box-shadow: 0px 1px 3px #666666;
-    -moz-box-shadow: 0px 1px 3px #666666;
-    box-shadow: 0px 1px 3px #666666;
-    text-shadow: 1px 1px 3px #666666;
-}
-
-.bigStartButton{
-    border: solid #a1a1a1 2px;
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#47d14e), to(#12690a));
-    background: -moz-linear-gradient(top, #47d14e, #12690a);
-}
-.bigStartButton:hover {
-    background: #1c961c;
-}
-.bigStopButton{
-    border: solid #a1a1a1 2px;
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#fa3f3f), to(#b50000));
-    background: -moz-linear-gradient(top, #fa3f3f, #b50000);
-}
-.bigStopButton:hover {
-    background: #ba3d3d;
-}
-
-#mainPageBody{
-    font-size: 1em;
-    line-height: 1.4;
-    background-image:url('../img/backgrounds/Vermont.png');
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-#greenupLogo{
-    margin-top:10%;
-}
 
 
 /*    -------------------- messages ------- */
@@ -765,28 +783,6 @@ h1{
 }
 
 
-h1{
-    text-align: center;
-}
-
-    div{
-        margin:0px;
-        padding:0px;
-    }
-
-    html{
-        height:100%;
-        width:100%;
-        margin:0px;
-        padding:0px;
-    }
-    body{
-        height:100%;
-        width:100%;
-        overflow-x: hidden;
-        margin:0px;
-        padding:0px;
-    }
 
 
 
@@ -863,7 +859,7 @@ h1{
     padding:0.5%;
     margin:auto;
     padding-top:10%;
-    margin-top: 30%;
+    margin-top: 20%;
     height:68%;
     background:#eee;
     display:none;
@@ -920,18 +916,6 @@ h1{
         top: -20%;
     }
 
-/*  #panel1{
-        background: #FAC3D9;
-    }
-
-    #panel2{
-        background: #D4C3FA;
-    }
-
-    #panel3{
-        background: #C3FAC9;
-    }*/
-
     .contentContainer{
         width:100%;
         height:80%;
@@ -950,71 +934,4 @@ h1{
         margin:45% 0% 0% 45%;
     }
 
-    .message{
-    margin: 2em;
-    border-radius: .25em;
-    border: solid medium #00ff00;
-        padding: .5em;
-}
-li.message{
-        background-color: #ffffaf;
-}
-hr{
-        width: 80%;
-}
-ul.message{
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    margin-top: 1em;
-        color: #000000;
-        border: none;
-}
 
-ul.filter li{
-        width: 22%;
-        height: 3em;
-        cursor:pointer;
-        
-        -moz-box-shadow:inset 0px 0px 14px -3px #f2fadc;
-        -webkit-box-shadow:inset 0px 0px 14px -3px #f2fadc;
-        box-shadow:inset 0px 0px 14px -3px #f2fadc;
-        
-        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #dbe6c4), color-stop(1, #9ba892));
-        background:-moz-linear-gradient(top, #dbe6c4 5%, #9ba892 100%);
-        background:-webkit-linear-gradient(top, #dbe6c4 5%, #9ba892 100%);
-        background:-o-linear-gradient(top, #dbe6c4 5%, #9ba892 100%);
-        background:-ms-linear-gradient(top, #dbe6c4 5%, #9ba892 100%);
-        background:linear-gradient(to bottom, #dbe6c4 5%, #9ba892 100%);
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dbe6c4', endColorstr='#9ba892',GradientType=0);
-        
-        background-color:#dbe6c4;
-        
-        -moz-border-radius:2px;
-        -webkit-border-radius:2px;
-        border-radius:2px;
-        
-        border:1px solid #b2b8ad;
-        
-        display:inline-block;
-        color:#444;
-        
-        font-size:15px;
-        font-weight:bold;
-        padding:6px 0px 6px 0px;
-        text-decoration:none;
-        
-        text-shadow:0px 1px 0px #ced9bf;
-}
-ul.filter{
-        width: 100%;
-        display: block;
-        margin: auto;
-        margin-top: 1em;
-        text-align: center; 
-}
-ul.filter a{
-        display: block;
-        width: 100%;
-        height: 100%;
-}
