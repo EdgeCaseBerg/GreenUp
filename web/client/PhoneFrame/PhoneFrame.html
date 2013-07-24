@@ -37,11 +37,13 @@
 		}
 
 		#iphoneImage{
+			background-image: url('iphone_black.png');
+			background-size: 100% 100%;
 			position:absolute;
 			top:8px;
 			left:5px;
-			width:445px;
-			height:784px;
+			width:448px;
+			height:782px;
 		}
 
 
@@ -56,6 +58,7 @@
 			background-size: auto 100%;
 			background-repeat: no-repeat;
 			text-align:center;
+			z-index:1000;
 		}
 
 		#phoneScreen{
@@ -66,6 +69,8 @@
 		}
 
 		#iframe{
+			position:relative;
+			z-index:100;
 			width:100%;
 			height:100%;
 		}
@@ -85,12 +90,14 @@
 	<div id="phoneContainer">
 		<div id="phoneFrame">
 			<div id="phoneScreen">
-				<img src="iphone_black.png" id="iphoneImage"/>
+				<!-- <img src="iphone_black.png" id="iphoneImage"/> -->
+				<div id="iphoneImage">
+				</div>
 				<!-- <iframe id="iframe" src="http://localhost:30002/?agent=frame"></iframe> -->
 
 
-				<!-- <iframe id="iframe" src="http://greenupapp.appspot.com?agent=frame"></iframe> -->
-				<iframe id="iframe" src="http://localhost/web/client/"></iframe>
+				<iframe id="iframe" src="http://greenupapp.appspot.com?agent=frame"></iframe>
+				<!-- <iframe id="iframe" src="http://localhost/web/client/"></iframe> -->
 
 				<!-- // app content here -->
 			</div>
