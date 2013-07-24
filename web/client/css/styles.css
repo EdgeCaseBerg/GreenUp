@@ -129,11 +129,10 @@ a, a:hover, a:visited{
 #dialogSlider{
     position: fixed;
     top:86%;
-    height:9%;
+    height:14%;
     z-index:100;
     margin:5px 0px 0px 0px;
     width:100%;
-    padding:20px 0px 20px 0px;
     text-align:center;
     /*background: #ddd;*/
     background-image: url('../img/backgrounds/dark_dotted2.png');
@@ -153,54 +152,58 @@ a, a:hover, a:visited{
 }
 
 .dialogSliderButton{
+    padding:3px;
+    font-size:1.3em;
     display:block;
     width: 100%;
-    height:49%;
+    min-height:49%;
     background: #eeeeee;
     margin-bottom:4%;
     cursor:pointer;
     -moz-border-radius:2px;
-        -webkit-border-radius:2px;
-        border-radius:2px;
-
-        color:#444;
-        font-family:arial;
-        font-size:1.1em;
-        font-weight:bold;
-        text-decoration:none;
-        text-shadow:0px 1px 0px #ced9bf;
-
+    -webkit-border-radius:2px;
+    border-radius:2px;
+    color:#444;
+    font-family:arial;
+    font-size:1.1em;
+    font-weight:bold;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #ced9bf;
 }
 
 .dialogButtonOk{
     color:#fff;
     -moz-box-shadow:inset 0px 0px 14px -3px #0969A2;
-        -webkit-box-shadow:inset 0px 0px 14px -3px #0969A2;
-        box-shadow:inset 0px 0px 14px -3px #FFC973;
-        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #dbe6c4), color-stop(1, #9ba892));
-        background:-moz-linear-gradient(top, #0969A2 5%,  #03436A 100%);
-        background:-webkit-linear-gradient(top, #0969A2 5%,  #03436A 100%);
-        background:-o-linear-gradient(top, #0969A2 5%,  #03436A 100%);
-        background:-ms-linear-gradient(top, #0969A2 5%,  #03436A 100%);
-        background:linear-gradient(to bottom, #00B945 5%, #00782D 100%);
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0969A2', endColorstr=' #03436A',GradientType=0);
-        border:1px solid #00782D;
-
+    -webkit-box-shadow:inset 0px 0px 14px -3px #0969A2;
+    box-shadow:inset 0px 0px 14px -3px #FFC973;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #dbe6c4), color-stop(1, #9ba892));
+    background:-moz-linear-gradient(top, #0969A2 5%,  #03436A 100%);
+    background:-webkit-linear-gradient(top, #0969A2 5%,  #03436A 100%);
+    background:-o-linear-gradient(top, #0969A2 5%,  #03436A 100%);
+    background:-ms-linear-gradient(top, #0969A2 5%,  #03436A 100%);
+    background:linear-gradient(to bottom, #00B945 5%, #00782D 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0969A2', endColorstr=' #03436A',GradientType=0);
+    border:1px solid #00782D;
 }
 
 .dialogButtonCancel{
     color:#fff;
     -moz-box-shadow:inset 0px 0px 14px -3px #0969A2;
-        -webkit-box-shadow:inset 0px 0px 14px -3px #0969A2;
-        box-shadow:inset 0px 0px 14px -3px #FFC973;
-        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #dbe6c4), color-stop(1, #9ba892));
-        background:-moz-linear-gradient(top, #0969A2 5%,  #03436A 100%);
-        background:-webkit-linear-gradient(top, #0969A2 5%,  #03436A 100%);
-        background:-o-linear-gradient(top, #0969A2 5%,  #03436A 100%);
-        background:-ms-linear-gradient(top, #0969A2 5%,  #03436A 100%);
-        background:linear-gradient(to bottom, #ee0000 5%, #a60000 100%);
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0969A2', endColorstr=' #03436A',GradientType=0);
-        border:1px solid #ee1111;
+    -webkit-box-shadow:inset 0px 0px 14px -3px #0969A2;
+    box-shadow:inset 0px 0px 14px -3px #FFC973;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #dbe6c4), color-stop(1, #9ba892));
+    background:-moz-linear-gradient(top, #0969A2 5%,  #03436A 100%);
+    background:-webkit-linear-gradient(top, #0969A2 5%,  #03436A 100%);
+    background:-o-linear-gradient(top, #0969A2 5%,  #03436A 100%);
+    background:-ms-linear-gradient(top, #0969A2 5%,  #03436A 100%);
+    background:linear-gradient(to bottom, #ee0000 5%, #a60000 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0969A2', endColorstr=' #03436A',GradientType=0);
+    border:1px solid #ee1111;
+}
+
+#dialogSliderNest{
+    margin:0px;
+    padding:0px;
 }
 
 .buttonText{
@@ -211,6 +214,8 @@ a, a:hover, a:visited{
 }
 
 #dialogSliderTextarea{
+    font-size:1.2em;
+    padding:13px 2px 13px 2px;
     width:70%;
     margin:auto;
 }

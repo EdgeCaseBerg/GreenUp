@@ -434,6 +434,14 @@ function UiHandle(){
 	// centers the appropriate panels
 	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
 		var container = document.getElementById("container");
+		if(displayNum != window.UI.currentDisplay){
+			if(window.UI.isMarkerDisplayVisible){
+				window.UI.hideMarkerTypeSelect();
+			}
+			if(window.UI.dialogSliderIsUp){
+				window.UI.dialogSliderDown();
+			}
+		}
 		container.className = "";
 		switch(displayNum){
 			case 0:
