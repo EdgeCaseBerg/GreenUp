@@ -859,32 +859,26 @@ function MapHandle(){
 	}
 
 	MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
-		var heatmapData = [
-                {location: new google.maps.LatLng(44.4758, -73.3125), weight: 101.5}, 
-                {location: new google.maps.LatLng(44.4751, -73.1125), weight: 238},
-                {location: new google.maps.LatLng(44.4762, -73.7125), weight: 112},
-                {location: new google.maps.LatLng(44.4763, -73.2825), weight: 29},
-                {location: new google.maps.LatLng(44.4754, -73.2225), weight: 112},
-                {location: new google.maps.LatLng(44.4755, -73.2135), weight: 1},
-                {location: new google.maps.LatLng(44.4366, -73.2145), weight: 7.5},
-                {location: new google.maps.LatLng(44.4268, -73.2185), weight: 163},
-                {location: new google.maps.LatLng(44.4867, -73.2128), weight: 112},
-                {location: new google.maps.LatLng(44.4162, -73.2111), weight: 123},
-                {location: new google.maps.LatLng(44.4791, -73.2130), weight: 16.5},
-                {location: new google.maps.LatLng(44.3730, -73.2125), weight: 111},
-                {location: new google.maps.LatLng(44.1732, -73.2120), weight: 112},
-                {location: new google.maps.LatLng(44.7758, -73.2115), weight: 113}
-            ];
+		var heatmapData = [];
+		for(var ii; ii<data.length; ii){
+			heatmapData.push({location: new google.maps.LatLng(x[ii].latDegrees, x[ii].lonDegrees), weight: x[ii].secondsWorked});
+		}
 
-          var pointArray = new google.maps.MVCArray(heatmapData);
+// 			var heatmapData = [
+//          	{location: new google.maps.LatLng(44.4758, -73.3125), weight: 101.5}, 
+//          ];
 
-		  heatmap = new google.maps.visualization.HeatmapLayer({
-		    data: pointArray,
-		    dissipating: true, 
-		    radius: 5
-		  });
+  		if(heatmapData.length > 0){
+	        var pointArray = new google.maps.MVCArray(heatmapData);
 
-  heatmap.setMap(window.MAP.map);
+			heatmap = new google.maps.visualization.HeatmapLayer({
+			    data: pointArray,
+			    dissipating: true, 
+			    radius: 5
+			});
+
+	  		heatmap.setMap(window.MAP.map);
+	  	}
 
 //   function toggleHeatmap() {
 //   heatmap.setMap(heatmap.getMap() ? null : map);
