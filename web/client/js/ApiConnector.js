@@ -301,397 +301,7 @@ function LoadingScreen(loadingDiv){
 	}
 } // end LoadingScreen class def
 
-// class for managing the UI
-function UiHandle(){
-	this.currentDisplay = 1;
-	this.isMarkerDisplayVisible = false;
-	this.MOUSEDOWN_TIME;
-	this.MOUSEUP_TIME;
-	this.isMarkerVisible = true;
-	this.isMapLoaded = false;
 
-	this.dialogSliderIsUp = false;
-
-	this.isClockRunning = false;
-	this.clockHrs = 00;
-	this.clockMins = 00;
-	this.clockSecs = 00;
-
-	this.commentPurpose = -1;
-	this.MARKER = 1; 
-	this.COMMENT = 0;
-
-	// for comment pagination
-	this.commentsType = ""
-	this.commentsNextPageUrl = "";
-	this.commentsPrevPageUrl = "";
-
-    UiHandle.prototype.init = function init(){
-
-	    // controls the main panel movement
-	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
-	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
-	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
-	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
-	    document.getElementById("panel1SlideDownContent").style.display = "block";
-
-	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
-
-	    document.getElementById("addCommentButton").addEventListener('mousedown', function(){
-	    	window.UI.commentPurpose = window.UI.COMMENT;
-	    	window.UI.dialogSliderUp();
-	    });
-
-	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
-	    	// prevent OK from being clicked if dialogSlider textarea is empty
-	    	if(document.getElementById("dialogSliderTextarea").value == ""){
-	    		alert("no message entered");
-	    	}else{
-		    	var userComment = document.getElementById("dialogSliderTextarea").value;
-		    	switch(window.UI.commentPurpose){
-		    		case window.UI.MARKER:
-		    			window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
-		    			window.UI.dialogSliderDown();
-		    			window.UI.clearDialogSliderInputs();
-		    			break;
-		    		case window.UI.COMMENT:
-		    			window.UI.commentSubmission();
-		    			window.UI.dialogSliderDown();
-		    			window.UI.clearDialogSliderInputs();
-		    			break;
-		    		default:
-		    			alert("no content type");
-		    			break;
-		    	}
-		    	document.getElementById("dialogSliderTextarea").value = ""
-		   		window.UI.dialogSliderDown();
-		    }
-	    });
-	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
-		
-	    // load the previous page
-	    document.getElementById("prevPage").addEventListener('mousedown', function(){
-	    	if(window.UI.commentsPrevPageUrl != null){
-	    		window.ApiConnector.pullCommentData("forum", window.UI.commentsPrevPageUrl);
-	    	}
-		});
-		// load the previous page
-		document.getElementById("nextPage").addEventListener('mousedown', function(){
-			if(window.UI.commentsNextPageUrl != null){
-				window.ApiConnector.pullCommentData("forum", window.UI.commentsNextPageUrl);
-			}
-		});
-		
-	}
-
-	UiHandle.prototype.clearDialogSliderInputs = function clearDialogSliderInputs(){
-		document.getElementById("comment_type").value = "";
-		document.getElementById("comment_message").value = "";
-		document.getElementById("input_purpose").value = "";
-		return false;
-	}
-
-	UiHandle.prototype.topSliderToggle = function topSliderToggle(){
-		if (document.getElementById("topSlideDown").className.match("sliderDown")){
-			document.getElementById("topSlideDown").className = "sliderUp";
-		}else{
-			document.getElementById("topSlideDown").className = "sliderDown";
-		}
-	}
-
-	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
-		document.getElementById("markerTypeDialog").style.display = "none";
-		window.UI.isMarkerDisplayVisible = false;
-	}
-
-	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
-		window.UI.commentPurpose = window.UI.MARKER;
-		// add marker type selectors
-	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
-	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
-	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
-	    document.getElementById("cancel").addEventListener('mousedown', function(){
-	    	window.UI.hideMarkerTypeSelect();
-	    });
-		
-		document.getElementById("markerTypeDialog").style.display = "block";
-		window.UI.isMarkerDisplayVisible = true;
-	}
-
-	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
-		document.getElementById('startButton').style.backgroundColor=colorHex;
-	}
-
-	UiHandle.prototype.setBigButtonText = function setBigButtonText(buttonText){
-		document.getElementById('startButton').innerHTML = buttonText;
-	}
-
-	UiHandle.prototype.setMapLoaded = function setMapLoaded(){
-		window.MAP.isMapLoaded = true;
-		window.LS.hide();
-	}
-
-	// centers the appropriate panels
-	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
-		var container = document.getElementById("container");
-		if(displayNum != window.UI.currentDisplay){
-			if(window.UI.isMarkerDisplayVisible){
-				window.UI.hideMarkerTypeSelect();
-			}
-			if(window.UI.dialogSliderIsUp){
-				window.UI.dialogSliderDown();
-			}
-		}
-		container.className = "";
-		switch(displayNum){
-			case 0:
-				this.currentDisplay = 1;
-				document.getElementById("panel2SlideDownContent").style.display = "none";
-				document.getElementById("panel3SlideDownContent").style.display = "none";
-				document.getElementById("panel1SlideDownContent").style.display = "block";
-				container.className = "panel1Center";
-			break;
-			case 1:
-				this.currentDisplay = 2;
-				document.getElementById("panel1SlideDownContent").style.display = "none";
-				document.getElementById("panel3SlideDownContent").style.display = "none";
-				document.getElementById("panel2SlideDownContent").style.display = "block";
-				container.className = "panel2Center";
-			break;
-			case 2:
-				this.currentDisplay = 3;
-				document.getElementById("panel1SlideDownContent").style.display = "none";
-				document.getElementById("panel2SlideDownContent").style.display = "none";
-				document.getElementById("panel3SlideDownContent").style.display = "block";
-				container.className = "panel3Center";
-			break;
-			default:
-				this.currentDisplay = 1;
-				document.getElementById("panel2SlideDownContent").style.display = "none";
-				document.getElementById("panel3SlideDownContent").style.display = "none";
-				document.getElementById("panel1SlideDownContent").style.display = "block";
-				container.className = "panel1Center";
-		}
-	}
-
-	// The user presses the submit button on the comment submission screen
-	UiHandle.prototype.commentSubmission = function commentSubmission(){
-
-		var comment = new FCommment();
-		comment.message = document.getElementById("dialogSliderTextarea").value;
-		comment.pin = null;
-		comment.type = document.getElementById("comment_type").value;
-		// comment.type = document.getElementById('comment_type').value;
-
-		var serializedComment = JSON.stringify(comment);
-		console.log(serializedComment);
-
-		window.ApiConnector.pushCommentData(serializedComment);
-
-		//Return false to stop normal form submission form occuring
-		return false;
-	}
-
-	// when the user chooses which type of marker to add to the map
-	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
-		// first we need to show the marker on the map
-		// var iconUrl = "img/icons/blueCircle.png";
-		var iconUrl = "";
-		switch(markerType){
-			case "comment":
-				iconUrl = "img/icons/orangeCircle.png";
-				break;
-			case "pickup":
-				iconUrl = "img/icons/blueCircle.png";
-				break;
-			case "trash":
-				iconUrl = "img/icons/greenCircle.png";
-				break;
-			default:
-				iconUrl = "img/icons/orangeCircle.png";
-				break;
-		}
-
-		window.MAP.markerType = markerType;
-		var marker = new google.maps.Marker({
-        	position: window.MAP.markerEvent.latLng,
-        	map: window.MAP.map,
-        	icon: iconUrl
-    	});
-
-		window.UI.hideMarkerTypeSelect();
-		window.UI.dialogSliderUp();
-		// (bug) here we need to prevent more map touches
-	}
-
-	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(purpose){
-		window.UI.dialogSliderIsUp = true;
-		if(purpose == window.UI.COMMENT){
-			document.getElementById("input_purpose").value == window.UI.COMMENT;
-		}else{
-			google.maps.event.addListener(window.MAP.map, 'mousedown', function(e){
-				e.cancelBubble = true; 
-  				if (e.stopPropagation) e.stopPropagation(); 
-			});
-			document.getElementById("input_purpose").value == window.UI.MARKER;
-		}
-		document.getElementById("dialogSlider").style.top = "72%";
-		document.getElementById("dialogSlider").style.opacity = "1.0";
-		document.getElementById("dialogSliderTextarea").focus();
-
-	}
-
-	UiHandle.prototype.dialogSliderDown = function dialogSliderDown(){
-		window.UI.dialogSliderIsUp = false;
-		document.getElementById("dialogSlider").style.top = "86%";
-		document.getElementById("dialogSlider").style.opacity = "0.0";
-	}
-
-	UiHandle.prototype.markerSelectUp = function markerSelectUp(){
-		// set the coords of the marker event
-
-	    MOUSEUP_TIME = new Date().getTime() / 1000;
-	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
-	        if(this.isMarkerDisplayVisible){
-	        	window.UI.hideMarkerTypeSelect();
-	        }else{
-	        	window.UI.showMarkerTypeSelect();
-	        }
-	        this.MOUSEDOWN_TIME =0;
-	        this.MOUSEDOWN_TIME =0;
-	    }else{
-	        this.MOUSEDOWN_TIME =0;
-	        this.MOUSEDOWN_TIME =0;
-	    }
-	}
-
-	UiHandle.prototype.markerSelectDown = function markerSelectDown(event){
-		// set the coords of the marker event
-		if(!window.UI.dialogSliderIsUp){
-		    window.MAP.markerEvent = event;
-		    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
-		}
-	}
-
-	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
-	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
-		window.MAP.applyHeatMap(data);
-	}
-
-	UiHandle.prototype.updateMarker = function updateMarker(data){
-		//console.log("marker response: "+data);
-		var dataArr = eval("("+data+")");
-		//	var dataArr = data;
-
-            for(ii=0; ii<dataArr.length; ii++){
-                // var dataA = dataArr[ii].split(",");
-                window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
-                // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
-            }
-
-	}
-
-	UiHandle.prototype.updateNeeds = function updateNeeds(data){
-		console.log("UPDATE NEEDS DOES NOTHING");
-	}
-
-	UiHandle.prototype.updateForum = function updateForum(data){
-		console.log("In Update forum");
-		console.log("Comment data: "+data);
-		document.getElementById("bubbleContainer").innerHTML = "";
-		var dataObj = JSON.parse(data);
-		var comments = dataObj.comments;
-		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
-		// window.UI.commentsNextPageUrl = dataObj.page.next;
-		if(dataObj.page.next != null){
-			var nextArr = dataObj.page.next.split("xenonapps.com/api");
-			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
-		}else{
-			window.UI.commentsNextPageUrl = null;
-		}
-		if(dataObj.page.previous != null){
-			var prevArr = dataObj.page.previous.split("xenonapps.com/api");
-			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
-		}else{
-			window.UI.commentsPrevPageUrl = null;
-		}
-
-		for(var ii=0; ii<comments.length; ii++){
-				var div = document.createElement("div");
-				var timeDiv = document.createElement("div");
-				var messageContent = document.createElement("span");
-				messageContent.innerHTML = comments[ii]['message'];
-				timeDiv.innerHTML = comments[ii]['timestamp'];
-				timeDiv.className = "bubbleTime";
-				if(ii % 2 == 0){
-					div.className = "bubbleRight bubble"; 
-				}else{
-					div.className = "bubbleLeft bubble";
-				}
-				div.appendChild(timeDiv);
-				div.appendChild(messageContent);
-				document.getElementById("bubbleContainer").appendChild(div);
-		}
-	}
-
-	UiHandle.prototype.updateTest = function updateTest(data){
-		console.log(data);
-	}
-
-	UiHandle.prototype.toggleClockRun = function toggleClockRun(){
-		if(window.UI.isClockRunning){
-			// stop the clock
-			console.log("stopping clock");
-			clearInterval(window.UI.clockInterval);
-			window.UI.clockInterval = null;
-			window.UI.isClockRunning = false;
-		}else{
-			// start the clock
-			console.log("starting clock");
-			window.UI.clockInterval = setInterval(window.UI.updateClock, 1000);
-			window.UI.isClockRunning = true;
-		}
-	}
-
-	UiHandle.prototype.updateClock = function updateClock(){
-		if(window.UI.clockSecs == 59){
-			window.UI.clockSecs = 00;
-			if(window.UI.clockMins == 59){
-				window.UI.clockMins = 00;
-				window.UI.clockHrs++;
-			}else{
-				window.UI.clockMins++;
-			}
-		}else{
-			window.UI.clockSecs++;
-		}
-		var clockSecStr = (window.UI.clockSecs < 10) ? "0"+window.UI.clockSecs : window.UI.clockSecs;
-		var clockMinStr = (window.UI.clockMins < 10) ? "0"+window.UI.clockMins : window.UI.clockMins;
-		var clockHrStr = (window.UI.clockHrs < 10) ? "0"+window.UI.clockHrs : window.UI.clockHrs;
-		
-		document.getElementById("timeSpentClockDigits").innerHTML = clockHrStr + ":" + clockMinStr + ":" + clockSecStr;
-	}
-	// ******** End DOM Updaters *********
-
-	// ---- begin pagination control toggle ----
-	UiHandle.prototype.showNextCommentsButton = function showNextCommentsButton(){
-		document.getElementById("nextPage").style.display = "inline-block";
-	}
-
-	UiHandle.prototype.hideNextCommentsButton = function hideNextCommentsButton(){
-		document.getElementById("nextPage").style.display = "none";
-	}
-
-	UiHandle.prototype.showPrevCommentsButton = function showPrevCommentsButton(){
-		document.getElementById("prevPage").style.display = "inline-block";
-	}
-
-	UiHandle.prototype.hidePrevCommentsButton = function hidePrevCommentsButton(){
-		document.getElementById("prevPage").style.display = "none";
-	}
-	// ---- end pagination control toggle
-
-} // end UiHandle class def
 
 // class for managing all geolocation work
 function GpsHandle(){
@@ -979,6 +589,418 @@ function MapHandle(){
 	}
 
 } //end MapHandle
+
+// class for managing the UI
+function UiHandle(){
+	this.currentDisplay = 1;
+	this.isMarkerDisplayVisible = false;
+	this.MOUSEDOWN_TIME;
+	this.MOUSEUP_TIME;
+	this.isMarkerVisible = true;
+	this.isMapLoaded = false;
+
+	this.isNavbarUp = true;
+
+	this.dialogSliderIsUp = false;
+
+	this.isClockRunning = false;
+	this.clockHrs = 00;
+	this.clockMins = 00;
+	this.clockSecs = 00;
+
+	this.commentPurpose = -1;
+	this.MARKER = 1; 
+	this.COMMENT = 0;
+
+	// for comment pagination
+	this.commentsType = ""
+	this.commentsNextPageUrl = "";
+	this.commentsPrevPageUrl = "";
+
+    UiHandle.prototype.init = function init(){
+
+	    // controls the main panel movement
+	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
+	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
+	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
+	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
+	    document.getElementById("panel1SlideDownContent").style.display = "block";
+
+	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
+
+	    document.getElementById("addCommentButton").addEventListener('mousedown', function(){
+	    	window.UI.commentPurpose = window.UI.COMMENT;
+	    	window.UI.dialogSliderUp();
+	    });
+
+	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
+	    	// prevent OK from being clicked if dialogSlider textarea is empty
+	    	if(document.getElementById("dialogSliderTextarea").value == ""){
+	    		alert("no message entered");
+	    	}else{
+		    	var userComment = document.getElementById("dialogSliderTextarea").value;
+		    	switch(window.UI.commentPurpose){
+		    		case window.UI.MARKER:
+		    			window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
+		    			window.UI.dialogSliderDown();
+		    			window.UI.clearDialogSliderInputs();
+		    			break;
+		    		case window.UI.COMMENT:
+		    			window.UI.commentSubmission();
+		    			window.UI.dialogSliderDown();
+		    			window.UI.clearDialogSliderInputs();
+		    			break;
+		    		default:
+		    			alert("no content type");
+		    			break;
+		    	}
+		    	document.getElementById("dialogSliderTextarea").value = ""
+		   		window.UI.dialogSliderDown();
+		    }
+	    });
+	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
+		
+	    // load the previous page
+	    document.getElementById("prevPage").addEventListener('mousedown', function(){
+	    	if(window.UI.commentsPrevPageUrl != null){
+	    		window.ApiConnector.pullCommentData("forum", window.UI.commentsPrevPageUrl);
+	    	}
+		});
+		// load the previous page
+		document.getElementById("nextPage").addEventListener('mousedown', function(){
+			if(window.UI.commentsNextPageUrl != null){
+				window.ApiConnector.pullCommentData("forum", window.UI.commentsNextPageUrl);
+			}
+		});
+		
+	}
+
+	UiHandle.prototype.clearDialogSliderInputs = function clearDialogSliderInputs(){
+		document.getElementById("comment_type").value = "";
+		document.getElementById("comment_message").value = "";
+		document.getElementById("input_purpose").value = "";
+		return false;
+	}
+
+	UiHandle.prototype.topSliderToggle = function topSliderToggle(){
+		if(!window.UI.isNavbarUp){
+			window.UI.navbarSlideUp();
+		}
+
+		if (document.getElementById("topSlideDown").className.match("sliderDown")){
+			document.getElementById("topSlideDown").className = "sliderUp";
+		}else{
+			document.getElementById("topSlideDown").className = "sliderDown";
+		}
+	}
+
+	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
+		document.getElementById("markerTypeDialog").style.display = "none";
+		window.UI.isMarkerDisplayVisible = false;
+	}
+
+	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
+		window.UI.commentPurpose = window.UI.MARKER;
+		// add marker type selectors
+	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
+	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
+	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
+	    document.getElementById("cancel").addEventListener('mousedown', function(){
+	    	window.UI.hideMarkerTypeSelect();
+	    });
+		
+		document.getElementById("markerTypeDialog").style.display = "block";
+		window.UI.isMarkerDisplayVisible = true;
+	}
+
+	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
+		document.getElementById('startButton').style.backgroundColor=colorHex;
+	}
+
+	UiHandle.prototype.setBigButtonText = function setBigButtonText(buttonText){
+		document.getElementById('startButton').innerHTML = buttonText;
+	}
+
+	UiHandle.prototype.setMapLoaded = function setMapLoaded(){
+		window.MAP.isMapLoaded = true;
+		window.LS.hide();
+	}
+
+	// centers the appropriate panels
+	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
+		var container = document.getElementById("container");
+		if(displayNum != window.UI.currentDisplay){
+			if(window.UI.isMarkerDisplayVisible){
+				window.UI.hideMarkerTypeSelect();
+			}
+			if(window.UI.dialogSliderIsUp){
+				window.UI.dialogSliderDown();
+			}
+		}
+		container.className = "";
+		switch(displayNum){
+			case 0:
+				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
+				container.className = "panel1Center";
+			break;
+			case 1:
+				this.currentDisplay = 2;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "block";
+				container.className = "panel2Center";
+			break;
+			case 2:
+				this.currentDisplay = 3;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "block";
+				this.navbarSlideDown();
+				container.className = "panel3Center";
+			break;
+			default:
+				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
+				container.className = "panel1Center";
+
+		}
+	}
+
+	// The user presses the submit button on the comment submission screen
+	UiHandle.prototype.commentSubmission = function commentSubmission(){
+
+		var comment = new FCommment();
+		comment.message = document.getElementById("dialogSliderTextarea").value;
+		comment.pin = null;
+		comment.type = document.getElementById("comment_type").value;
+		// comment.type = document.getElementById('comment_type').value;
+
+		var serializedComment = JSON.stringify(comment);
+		console.log(serializedComment);
+
+		window.ApiConnector.pushCommentData(serializedComment);
+
+		//Return false to stop normal form submission form occuring
+		return false;
+	}
+
+	UiHandle.prototype.navbarSlideDown = function navbarSlideDown(){
+		window.UI.isNavbarUp = false;
+		document.getElementById("navbar").style.top = "100%";
+		document.getElementById("hamburger").className = "hamburgerComments";
+		// document.getElementById("hamburgerNest").innerHTML = "X";
+	}
+
+	UiHandle.prototype.navbarSlideUp = function navbarSlideUp(){
+		window.UI.isNavbarUp = true;
+		document.getElementById("navbar").style.top = "86%";
+	}
+
+	// when the user chooses which type of marker to add to the map
+	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
+		// first we need to show the marker on the map
+		// var iconUrl = "img/icons/blueCircle.png";
+		var iconUrl = "";
+		switch(markerType){
+			case "comment":
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+			case "pickup":
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+			case "trash":
+				iconUrl = "img/icons/greenCircle.png";
+				break;
+			default:
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+		}
+
+		window.MAP.markerType = markerType;
+		var marker = new google.maps.Marker({
+        	position: window.MAP.markerEvent.latLng,
+        	map: window.MAP.map,
+        	icon: iconUrl
+    	});
+
+		window.UI.hideMarkerTypeSelect();
+		window.UI.dialogSliderUp();
+		// (bug) here we need to prevent more map touches
+	}
+
+	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(purpose){
+		window.UI.dialogSliderIsUp = true;
+		if(purpose == window.UI.COMMENT){
+			document.getElementById("input_purpose").value == window.UI.COMMENT;
+		}else{
+			google.maps.event.addListener(window.MAP.map, 'mousedown', function(e){
+				e.cancelBubble = true; 
+  				if (e.stopPropagation) e.stopPropagation(); 
+			});
+			document.getElementById("input_purpose").value == window.UI.MARKER;
+		}
+		document.getElementById("dialogSlider").style.top = "72%";
+		document.getElementById("dialogSlider").style.opacity = "1.0";
+		document.getElementById("dialogSliderTextarea").focus();
+
+	}
+
+	UiHandle.prototype.dialogSliderDown = function dialogSliderDown(){
+		window.UI.dialogSliderIsUp = false;
+		document.getElementById("dialogSlider").style.top = "86%";
+		document.getElementById("dialogSlider").style.opacity = "0.0";
+	}
+
+	UiHandle.prototype.markerSelectUp = function markerSelectUp(){
+		// set the coords of the marker event
+
+	    MOUSEUP_TIME = new Date().getTime() / 1000;
+	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
+	        if(this.isMarkerDisplayVisible){
+	        	window.UI.hideMarkerTypeSelect();
+	        }else{
+	        	window.UI.showMarkerTypeSelect();
+	        }
+	        this.MOUSEDOWN_TIME =0;
+	        this.MOUSEDOWN_TIME =0;
+	    }else{
+	        this.MOUSEDOWN_TIME =0;
+	        this.MOUSEDOWN_TIME =0;
+	    }
+	}
+
+	UiHandle.prototype.markerSelectDown = function markerSelectDown(event){
+		// set the coords of the marker event
+		if(!window.UI.dialogSliderIsUp){
+		    window.MAP.markerEvent = event;
+		    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
+		}
+	}
+
+	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
+	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
+		window.MAP.applyHeatMap(data);
+	}
+
+	UiHandle.prototype.updateMarker = function updateMarker(data){
+		//console.log("marker response: "+data);
+		var dataArr = eval("("+data+")");
+		//	var dataArr = data;
+
+            for(ii=0; ii<dataArr.length; ii++){
+                // var dataA = dataArr[ii].split(",");
+                window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
+                // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
+            }
+
+	}
+
+	UiHandle.prototype.updateNeeds = function updateNeeds(data){
+		console.log("UPDATE NEEDS DOES NOTHING");
+	}
+
+	UiHandle.prototype.updateForum = function updateForum(data){
+		console.log("In Update forum");
+		console.log("Comment data: "+data);
+		document.getElementById("bubbleContainer").innerHTML = "";
+		var dataObj = JSON.parse(data);
+		var comments = dataObj.comments;
+		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
+		// window.UI.commentsNextPageUrl = dataObj.page.next;
+		if(dataObj.page.next != null){
+			var nextArr = dataObj.page.next.split("xenonapps.com/api");
+			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
+		}else{
+			window.UI.commentsNextPageUrl = null;
+		}
+		if(dataObj.page.previous != null){
+			var prevArr = dataObj.page.previous.split("xenonapps.com/api");
+			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
+		}else{
+			window.UI.commentsPrevPageUrl = null;
+		}
+
+		for(var ii=0; ii<comments.length; ii++){
+				var div = document.createElement("div");
+				var timeDiv = document.createElement("div");
+				var messageContent = document.createElement("span");
+				messageContent.innerHTML = comments[ii]['message'];
+				timeDiv.innerHTML = comments[ii]['timestamp'];
+				timeDiv.className = "bubbleTime";
+				if(ii % 2 == 0){
+					div.className = "bubbleRight bubble"; 
+				}else{
+					div.className = "bubbleLeft bubble";
+				}
+				div.appendChild(timeDiv);
+				div.appendChild(messageContent);
+				document.getElementById("bubbleContainer").appendChild(div);
+		}
+	}
+
+	UiHandle.prototype.updateTest = function updateTest(data){
+		console.log(data);
+	}
+
+	UiHandle.prototype.toggleClockRun = function toggleClockRun(){
+		if(window.UI.isClockRunning){
+			// stop the clock
+			console.log("stopping clock");
+			clearInterval(window.UI.clockInterval);
+			window.UI.clockInterval = null;
+			window.UI.isClockRunning = false;
+		}else{
+			// start the clock
+			console.log("starting clock");
+			window.UI.clockInterval = setInterval(window.UI.updateClock, 1000);
+			window.UI.isClockRunning = true;
+		}
+	}
+
+	UiHandle.prototype.updateClock = function updateClock(){
+		if(window.UI.clockSecs == 59){
+			window.UI.clockSecs = 00;
+			if(window.UI.clockMins == 59){
+				window.UI.clockMins = 00;
+				window.UI.clockHrs++;
+			}else{
+				window.UI.clockMins++;
+			}
+		}else{
+			window.UI.clockSecs++;
+		}
+		var clockSecStr = (window.UI.clockSecs < 10) ? "0"+window.UI.clockSecs : window.UI.clockSecs;
+		var clockMinStr = (window.UI.clockMins < 10) ? "0"+window.UI.clockMins : window.UI.clockMins;
+		var clockHrStr = (window.UI.clockHrs < 10) ? "0"+window.UI.clockHrs : window.UI.clockHrs;
+		
+		document.getElementById("timeSpentClockDigits").innerHTML = clockHrStr + ":" + clockMinStr + ":" + clockSecStr;
+	}
+	// ******** End DOM Updaters *********
+
+	// ---- begin pagination control toggle ----
+	UiHandle.prototype.showNextCommentsButton = function showNextCommentsButton(){
+		document.getElementById("nextPage").style.display = "inline-block";
+	}
+
+	UiHandle.prototype.hideNextCommentsButton = function hideNextCommentsButton(){
+		document.getElementById("nextPage").style.display = "none";
+	}
+
+	UiHandle.prototype.showPrevCommentsButton = function showPrevCommentsButton(){
+		document.getElementById("prevPage").style.display = "inline-block";
+	}
+
+	UiHandle.prototype.hidePrevCommentsButton = function hidePrevCommentsButton(){
+		document.getElementById("prevPage").style.display = "none";
+	}
+	// ---- end pagination control toggle
+
+} // end UiHandle class def
 
 // prototype objects for posting to API
 function Pin(){
