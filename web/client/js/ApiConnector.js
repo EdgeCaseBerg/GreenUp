@@ -689,8 +689,10 @@ function UiHandle(){
 		}
 
 		if (document.getElementById("topSlideDown").className.match("sliderDown")){
+			window.UI.isTopSliderUp = true;
 			document.getElementById("topSlideDown").className = "sliderUp";
 		}else{
+			window.UI.isTopSliderUp = false;
 			document.getElementById("topSlideDown").className = "sliderDown";
 		}
 	}
@@ -796,7 +798,7 @@ function UiHandle(){
 	UiHandle.prototype.navbarSlideDown = function navbarSlideDown(){
 		window.UI.isNavbarUp = false;
 		document.getElementById("navbar").style.top = "100%";
-		document.getElementById("hamburger").className = "hamburgerComments";
+		// document.getElementById("hamburger").className = "hamburgerComments";
 		// document.getElementById("hamburgerNest").innerHTML = "X";
 	}
 
