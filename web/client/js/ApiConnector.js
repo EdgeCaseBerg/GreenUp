@@ -1003,6 +1003,7 @@ function FCommment(){
 */
 document.addEventListener('DOMContentLoaded',function(){
 	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+	document.addEventListener("touchstart", function(){}, true);
 
 	window.ApiConnector = new ApiConnector();
 	window.UI = new UiHandle();
