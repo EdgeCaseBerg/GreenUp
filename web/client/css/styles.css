@@ -924,7 +924,7 @@ h1{
 }
 
 
-/*.hamburgerComments{
+.hamburgerComments{
     cursor:pointer;
     position:relative;
     font-size: 10px;
@@ -935,27 +935,27 @@ h1{
     border:solid 4px #eee;
     content: ["X"];
     padding:0.5em;
-}*/
+}
 
-/*.hamburgerComments{
-    /*float:right;*/
- /*   position: absolute;
+.hamburgerComments{
+    float:right;
+    position: absolute;
     top:0px;
     left:0px;
     top: 0.3em;
     left: 0.2em;
     cursor:pointer;
     color: #fff;
-    font-size: 35px;
+    font-size: 25px;
     font-weight: bold;
     display: inline-block;
     line-height: 0px;
-    padding: 11px 3px; */      
-/*}*/
+    padding: 3px 3px;       
+}
 
-/*.hamburgerComments:before {*/
-    /*content: "×";*/
-/*}*/
+.hamburgerComments:before {
+    content: "x";
+}
 
 
     .sliderUp{

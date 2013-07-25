@@ -686,9 +686,8 @@ function UiHandle(){
 	UiHandle.prototype.topSliderToggle = function topSliderToggle(){
 		if(!window.UI.isNavbarUp){
 			window.UI.navbarSlideUp();
-		}
-
-		if (document.getElementById("topSlideDown").className.match("sliderDown")){
+			document.getElementById("hamburger").className = "hamburger";
+		}else if (document.getElementById("topSlideDown").className.match("sliderDown")){
 			window.UI.isTopSliderUp = true;
 			document.getElementById("topSlideDown").className = "sliderUp";
 		}else{
@@ -798,7 +797,7 @@ function UiHandle(){
 	UiHandle.prototype.navbarSlideDown = function navbarSlideDown(){
 		window.UI.isNavbarUp = false;
 		document.getElementById("navbar").style.top = "100%";
-		// document.getElementById("hamburger").className = "hamburgerComments";
+		document.getElementById("hamburger").className = "hamburgerComments";
 		// document.getElementById("hamburgerNest").innerHTML = "X";
 	}
 
