@@ -600,6 +600,7 @@ function UiHandle(){
 	this.isMapLoaded = false;
 
 	this.isNavbarUp = true;
+	this.isTopSliderUp = true;
 
 	this.dialogSliderIsUp = false;
 
@@ -735,6 +736,9 @@ function UiHandle(){
 			}
 			if(window.UI.dialogSliderIsUp){
 				window.UI.dialogSliderDown();
+			}
+			if(!window.UI.isTopSliderUp){
+				window.UI.topSliderToggle();
 			}
 		}
 		container.className = "";
