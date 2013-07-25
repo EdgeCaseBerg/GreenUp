@@ -657,6 +657,10 @@ h1{
 
 
 /*    -------------------- messages ------- */
+#commentContainer{
+    height:100%;
+    padding-bottom:14%;
+}
 #bubbleContainer{
     width:90%;
     margin:auto;
@@ -750,7 +754,7 @@ h1{
     font-family:arial;
     font-size:2em;
     font-weight:bold;
-    padding:6px 4%;
+    padding:6px 2% 6px 2%;
     text-decoration:none;
     text-shadow:1px 1px 0px #ffffff;
 }.addCommentButton:hover {
@@ -876,8 +880,8 @@ h1{
     position: relative;
     top:97%;
     left:90%;
-    padding:5px;
-    border-radius: 11px;
+    padding:5px 3px 3px 2px;
+    border-radius: 11px 0px 0px 10px;
     background:green;
 }
 .hamburger {
