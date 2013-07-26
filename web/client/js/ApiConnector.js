@@ -241,18 +241,19 @@ function ApiConnector(){
 	ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(){
 	    if(window.logging){
 		        //server/addgriddata.php
+		        var jsonArray = [];
+		        console.log("Heatmap data to be pushed:")
 		    window.database.all(function(data){
-		    	//Make sure to not just send null data up or you'll get a 400 back
-		        if(data.length == 00){
-		        	data = "[]";
-		        }
-		        console.log("Heatmap data being PUT to "+BASE+heatmapURI+": ");
+		   		jsonArray.push(data[0].value);
+		   	});
+
+		    console.log(jsonArray);
 		        // zepto code
 		        $.ajax({
 			        type:'PUT',
 			        url: BASE + heatmapURI,
 			        dataType:"json",
-			        data:  data,
+			        data:  JSON.stringify(jsonArray),
 			        failure: function(errMsg){
 			        	// alert(errMsg);
 			        	console.log("Failed to PUT heatmap: "+errMsg);
@@ -262,11 +263,6 @@ function ApiConnector(){
 			        }
 			    });//Ajax
 			        
-			    //Remove all uploaded database records
-			    for(var i=1;i<data.length;i++){
-			        window.database.remove(i);
-			    }
-		    });
 		}
 	}
 
@@ -320,7 +316,7 @@ function GpsHandle(){
 		window.updateCounter = 0;
     	db = Lawnchair({name : 'db'}, function(store) {
         	window.database = store;
-        	window.GPS.loggingInterval = setInterval(function() {window.GPS.runUpdate()},30000);//update user location every 5 seconds
+        	window.GPS.loggingInterval = setInterval(function() {window.GPS.runUpdate()},3000);//update user location every 5 seconds
         	// instead of running 2 timers, we'll just set a counter and run the pushHeatmapData() on a multiple of... 
         	// ...the runUpdate() function
         	// setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
@@ -331,9 +327,9 @@ function GpsHandle(){
 	GpsHandle.prototype.runUpdate = function runUpdate(){
 		console.log("runUpdate");
 	    //Grab the geolocation data from the local machine
-	    if(window.updateCounter == 6){
+	    if(window.updateCounter == 2){
 	    	window.updateCounter = 0;
-	    	window.ApiConnector.pushHeatmapData(window.database);
+	    	window.ApiConnector.pushHeatmapData();
 	    }else{
 	    	// console.log("getting position data");
 	    	 if(navigator.geolocation){
@@ -352,15 +348,17 @@ function GpsHandle(){
 	}
 
 	GpsHandle.prototype.updateLocation = function updateLocation(position){
-		// console.log("updateLocation");
+		console.log("Update Location");
 		// console.log(position);
 	    if(window.logging){
 	        var datetime = new Date().getTime();//generate timestamp
 	        var location = {
-	                "latDegree" : position.coords.latitude,
-	                "lonDegree" : position.coords.longitude,
+	                "latDegrees" : position.coords.latitude,
+	                "lonDegrees" : position.coords.longitude,
 	                "secondsWorked" : datetime
 	        }
+	        console.log("database saved");
+	        console.log(location);
 	        window.database.save({value:location});//Save the record
 	    }
 	};
@@ -385,10 +383,10 @@ function GpsHandle(){
 
 	GpsHandle.prototype.stop = function stop(){
 		document.getElementById("startButton").className = "bigStartButton";
-    	window.ApiConnector.pushHeatmapData(window.database);
+    	window.ApiConnector.pushHeatmapData();
     	window.logging = false;
     	console.log("stopping GPS...");
-    	clearInterval(window.GPS.loogingInterval);
+    	clearInterval(window.GPS.loggingInterval);
     	window.UI.setBigButtonText("Start Cleaning");
 	}
     
