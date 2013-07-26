@@ -260,6 +260,7 @@ function ApiConnector(){
 			        }, 
 			        success: function(data){
 			        	console.log("PUT heatmap success: "+data);
+			        	// window.database.nuke();
 			        }
 			    });//Ajax
 			        
@@ -316,7 +317,7 @@ function GpsHandle(){
 		window.updateCounter = 0;
     	db = Lawnchair({name : 'db'}, function(store) {
         	window.database = store;
-        	window.GPS.loggingInterval = setInterval(function() {window.GPS.runUpdate()},3000);//update user location every 5 seconds
+        	window.GPS.loggingInterval = setInterval(function() {window.GPS.runUpdate()},30000);//update user location every 5 seconds
         	// instead of running 2 timers, we'll just set a counter and run the pushHeatmapData() on a multiple of... 
         	// ...the runUpdate() function
         	// setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
@@ -327,7 +328,7 @@ function GpsHandle(){
 	GpsHandle.prototype.runUpdate = function runUpdate(){
 		console.log("runUpdate");
 	    //Grab the geolocation data from the local machine
-	    if(window.updateCounter == 2){
+	    if(window.updateCounter == 5){
 	    	window.updateCounter = 0;
 	    	window.ApiConnector.pushHeatmapData();
 	    }else{
