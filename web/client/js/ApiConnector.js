@@ -124,16 +124,24 @@ function ApiConnector(){
 			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
 			but there is an implicit cast against undefined defined for double equals in javascript
 		*/
-		params = "?";
-		if(latDegrees != null)
+		var params = "";
+		if(latDegrees != null){
+			params = "?";
 			params += "latDegrees=" + latDegrees + "&";
-		if(latOffset != null)
+		}
+		if(latOffset != null){
+			params = "?";
 			params += "latOffset=" + latOffset + "&";
-		if(lonDegrees != null)
+		}
+		if(lonDegrees != null){
+			params = "?";
 			params += "lonDegrees" + lonDegrees + "&";
-		if(lonOffset != null)
+		}
+		if(lonOffset != null){
+			params = "?";
 			params += "lonOffset" + lonOffset + "&";
-
+		}
+		console.log("Preparing to pull heatmap data");
 		var URL = BASE+heatmapURI+params;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
 
@@ -469,14 +477,21 @@ function MapHandle(){
 	}
 
 	MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
+		console.log("Heatmap data to be applied to map: ");
+		console.log(data);
+		var dataObj = eval(data);
 		var heatmapData = [];
-		for(var ii; ii<data.length; ii){
-			heatmapData.push({location: new google.maps.LatLng(x[ii].latDegrees, x[ii].lonDegrees), weight: x[ii].secondsWorked});
+			// console.log(dataObj[ii].latDegrees);
+		for(var ii=0; ii<dataObj.length; ii++){
+			heatmapData.push({location: new google.maps.LatLng(dataObj[ii].latDegrees, dataObj[ii].lonDegrees), weight: dataObj[ii].secondsWorked});
+			
 		}
 
 // 			var heatmapData = [
 //          	{location: new google.maps.LatLng(44.4758, -73.3125), weight: 101.5}, 
 //          ];
+		console.log("Processed heatmap data:");
+		console.log(heatmapData);
 
   		if(heatmapData.length > 0){
 	        var pointArray = new google.maps.MVCArray(heatmapData);
@@ -889,6 +904,7 @@ function UiHandle(){
 
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
+		console.log("Heatmap data returned from api, preparing to apply data to map.");
 		window.MAP.applyHeatMap(data);
 	}
 
