@@ -642,6 +642,10 @@ function UiHandle(){
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
 	    document.getElementById("panel1SlideDownContent").style.display = "block";
 
+	    document.getElementById("navbarPullUpTab").addEventListener('mousedown', function(){
+	    	window.UI.navbarSlideUp();
+	    });
+
 	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
 
 	    document.getElementById("addCommentButton").addEventListener('mousedown', function(){
@@ -699,10 +703,7 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.topSliderToggle = function topSliderToggle(){
-		if(!window.UI.isNavbarUp){
-			window.UI.navbarSlideUp();
-			document.getElementById("hamburger").className = "hamburger";
-		}else if (document.getElementById("topSlideDown").className.match("sliderDown")){
+		if (document.getElementById("topSlideDown").className.match("sliderDown")){
 			window.UI.isTopSliderUp = true;
 			document.getElementById("topSlideDown").className = "sliderUp";
 		}else{
@@ -811,14 +812,12 @@ function UiHandle(){
 
 	UiHandle.prototype.navbarSlideDown = function navbarSlideDown(){
 		window.UI.isNavbarUp = false;
-		document.getElementById("navbar").style.top = "100%";
-		document.getElementById("hamburger").className = "hamburgerComments";
-		// document.getElementById("hamburgerNest").innerHTML = "X";
+		document.getElementById("navContainer").style.top = "100%";
 	}
 
 	UiHandle.prototype.navbarSlideUp = function navbarSlideUp(){
 		window.UI.isNavbarUp = true;
-		document.getElementById("navbar").style.top = "86%";
+		document.getElementById("navContainer").style.top = "86%";
 	}
 
 	// when the user chooses which type of marker to add to the map

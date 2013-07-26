@@ -230,11 +230,10 @@ a, a:hover, a:visited{
 }
 */
 
-#navbar{
-    -webkit-transition: all 0.7s ease-in-out;
-}
 
-.nav{
+
+#navContainer{
+    -webkit-transition: all 0.7s ease-in-out;
     position: fixed;
     top:86%;
     height:14%;
@@ -246,6 +245,19 @@ a, a:hover, a:visited{
     background: -webkit-gradient(linear, 0 0, 0 100%, from(#47d14e), to(#12690a));
     background: -moz-linear-gradient(top, #47d14e, #12690a);
 }
+
+#navbarPullUpTab{
+    background: url("../img/icons/pullUpArrow.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    width:100%;
+    height:8%;
+    position: fixed;
+    top:94%;
+    z-index:190;
+    cursor:pointer;
+}
+
 
 	.nav li{
 	   display:inline;
