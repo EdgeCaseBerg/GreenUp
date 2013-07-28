@@ -10,7 +10,7 @@ function ApiConnector(){
 
 
 	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	//var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 	// api URLs
@@ -695,7 +695,7 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.clearDialogSliderInputs = function clearDialogSliderInputs(){
-		document.getElementById("comment_type").value = "";
+		document.getElementById("comment_type").value = "FORUM";
 		document.getElementById("comment_message").value = "";
 		document.getElementById("input_purpose").value = "";
 		return false;
@@ -1032,7 +1032,7 @@ function Pin(){
 
 //We cannot call this Comment because it's reserved by javascript
 function FCommment(){
-	this.message ="";
+	this.message ="FORUM";
 	this.pin = null;
 	this.type = "";
 }
