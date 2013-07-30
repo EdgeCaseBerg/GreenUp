@@ -24,13 +24,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import com.xenon.greenup.HomeSectionFragment;
-import com.xenon.greenup.MapSectionFragment;
-import com.xenon.greenup.FeedSectionFragment;
+
+import com.xenon.greenup.api.APIServerInterface;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -160,7 +162,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     /**
      * A dummy fragment representing a section of the app, but that simply displays dummy text.
      */
-    public static class DummySectionFragment extends Fragment {
+    public static class DummySectionFragment extends Fragment implements OnClickListener {
 
         public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -171,7 +173,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             Bundle args = getArguments();
             ((TextView) rootView.findViewById(android.R.id.text1)).setText(
                     getString(R.string.dummy_section_text, args.getInt(ARG_SECTION_NUMBER)));
+            Button button = (Button)rootView.findViewById(R.id.testButton);
+            button.setOnClickListener(this);
             return rootView;
+        }
+        
+        public void onClick(View v) {
+        	Log.i("button","I was clicked!");
+        	APIServerInterface i = new APIServerInterface();
+        	i.testConnection();
         }
     }
 }
