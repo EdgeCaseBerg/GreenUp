@@ -13,14 +13,7 @@ function ApiConnector(){
 	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
-	// api URLs
-	var forumURI = "/comments?type=forum";
-	var needsURI = "/comments?type=help+needed";
-	var messagesURI = "/comments?type=general+message";
-	var trashURI = "/comments?type=trash+pickup";
-	var commentsURI = "/comments";
-	var heatmapURI = "/heatmap";
-	var pinsURI = "/pins";
+	// api URLs have been moved into each of the functions using them as per issue 46
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
@@ -69,6 +62,7 @@ function ApiConnector(){
 
 
 	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
+		var pinsURI = "/pins";
 		$.ajax({
 			type: "POST",
 			url: BASE+pinsURI,
@@ -126,6 +120,7 @@ function ApiConnector(){
 			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
 			but there is an implicit cast against undefined defined for double equals in javascript
 		*/
+		var heatmapURI = "/heatmap";
 		var params = "";
 		if(latDegrees != null){
 			params = "?";
@@ -150,6 +145,7 @@ function ApiConnector(){
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
+		var pinsURI = "/pins";
 		var URL = BASE+pinsURI;
 		//Clear the markers
 		for( var i =0 ; i < window.MAP.pickupMarkers.length; i++){
@@ -161,19 +157,24 @@ function ApiConnector(){
 
 	// by passing the url as an argument, we can use this method to get next pages
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
+		var forumURI = "/comments?type=forum";
+		var needsURI = "/comments?type=help+needed";
+		var messagesURI = "/comments?type=general+message";
+		var trashURI = "/comments?type=trash+pickup";
+
 		console.log("Pulling comment "+commentType+" data from: "+url);
 		var urlStr = "";
 		switch(commentType){
-			case "needs":
+			case "help needed":
 				urlStr = (url == null) ? BASE+needsURI : url;
 				this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
 				break;
-			case "messages":
+			case "general message":
 				urlStr =  (url == null) ? BASE+messagesURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
 				break;
-			case "forum":
-				urlStr =  (url == null) ? BASE+forumURI : url;
+			case "trash pickup":
+				urlStr =  (url == null) ? BASE+trashURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 			default:
@@ -185,6 +186,7 @@ function ApiConnector(){
 	} // end pullCommentData()
 
 	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
+		var commentsURI = "/comments";
 		console.log("json to push: "+jsonObj);
 		console.log("Push comment data to: "+BASE+commentsURI);
 		$.ajax({
@@ -246,32 +248,33 @@ function ApiConnector(){
 	//Uploads all local database entries to the Server
 	//Clears the local storage after upload
 	ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(){
+		var heatmapURI = "/heatmap";
 	    if(window.logging){
-		        //server/addgriddata.php
-		        var jsonArray = [];
-		        console.log("Heatmap data to be pushed:")
-		    window.database.all(function(data){
-		   		jsonArray.push(data[0].value);
-		   	});
+	        //server/addgriddata.php
+	        var jsonArray = [];
+	        console.log("Heatmap data to be pushed:")
+	    	window.database.all(function(data){
+	   			jsonArray.push(data[0].value);
+			});
 
-		    console.log(jsonArray);
-		        // zepto code
-		        $.ajax({
-			        type:'PUT',
-			        url: BASE + heatmapURI,
-			        dataType:"json",
-			        data:  JSON.stringify(jsonArray),
-			        failure: function(errMsg){
-			        	// alert(errMsg);
-			        	console.log("Failed to PUT heatmap: "+errMsg);
-			        }, 
-			        success: function(data){
-			        	console.log("PUT heatmap success: "+data);
-			        	// window.database.nuke();
-			        }
-			    });//Ajax
-			        
+			console.log(jsonArray);
 		}
+	
+		// zepto code
+		$.ajax({
+	    	type:'PUT',
+	    	url: BASE + heatmapURI,
+	    	dataType:"json",
+	    	data:  JSON.stringify(jsonArray),
+	    	failure: function(errMsg){
+		      	// alert(errMsg);
+	      		console.log("Failed to PUT heatmap: "+errMsg);
+	    	}, 
+	    	success: function(data){
+		      	console.log("PUT heatmap success: "+data);
+	       		// window.database.nuke();
+	    	}
+		});//Ajax	
 	}
 
 	
