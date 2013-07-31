@@ -77,8 +77,9 @@ function ApiConnector(){
 			dataType: "json",
 			// contentType: "application/json",
 			success: function(data){
-				console.log("INFO: Pin successfully sent")
-				window.ApiConnector.pullMarkerData();
+				console.log("INFO: Pin successfully sent");
+				//Becuase of the datastore's eventual consistency you must wait a brief moment for new data to be available.
+				setTimeout(function(){window.ApiConnector.pullMarkerData();},150);
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -550,7 +551,6 @@ function MapHandle(){
         	map: window.MAP.map,
         	icon: iconUrl
     	});
-
 		marker.setVisible(window.UI.isMarkerVisible);
     	window.MAP.pickupMarkers.push(marker);
 	}
@@ -845,11 +845,7 @@ function UiHandle(){
 		}
 
 		window.MAP.markerType = markerType;
-		var marker = new google.maps.Marker({
-        	position: window.MAP.markerEvent.latLng,
-        	map: window.MAP.map,
-        	icon: iconUrl
-    	});
+		
 
 		window.UI.hideMarkerTypeSelect();
 		window.UI.dialogSliderUp();
