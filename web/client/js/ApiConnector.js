@@ -15,8 +15,9 @@ function ApiConnector(){
 
 	// api URLs
 	var forumURI = "/comments?type=forum";
-	var needsURI = "/comments?type=needs";
-	var messagesURI = "/comments?type=message";
+	var needsURI = "/comments?type=help+needed";
+	var messagesURI = "/comments?type=general+message";
+	var trashURI = "/comments?type=trash+pickup";
 	var commentsURI = "/comments";
 	var heatmapURI = "/heatmap";
 	var pinsURI = "/pins";
