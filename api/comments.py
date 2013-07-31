@@ -17,8 +17,10 @@ class Comments(webapp2.RequestHandler):
 
 		#Check for optional parameters:
 		commentType = self.request.get("type")
+
 		if commentType:
 			#We have an optional parameter. Is it well formed?
+
 			if commentType.upper() in COMMENT_TYPES:
 				#Yes it is well formed and we may execute a datastore query for the comments
 				pass
