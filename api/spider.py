@@ -136,7 +136,7 @@ def validateErrorMessageReturned(comments_error_response):
 if __name__ == "__main__":
 	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapi.appspot.com/api'
-	baseURL = 'http://localhost:16084/api'
+	baseURL = 'http://localhost:30002/api'
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
@@ -165,7 +165,7 @@ if __name__ == "__main__":
 	validateErrorMessageReturned(tester.getJSON())
 
 	#Give it another bad value that it will be ok with (it doesn't care about negatives)
-	tester.followLink(endPoints['comments'],withData={'type' : 'needs', 'page' : -2})
+	tester.followLink(endPoints['comments'],withData={'type' : 'trash+pickup', 'page' : -2})
 	assert tester.getCode() == HTTP_OK
 	validateCommentsGETRequest(tester.getJSON())
 
