@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	//var BASE = "http://localhost:30002/api";
+	//var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 	// api URLs
@@ -149,6 +149,11 @@ function ApiConnector(){
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
 		var URL = BASE+pinsURI;
+		//Clear the markers
+		for( var i =0 ; i < window.MAP.pickupMarkers.length; i++){
+			window.MAP.pickupMarkers[i].setMap(null);
+		}
+		window.MAP.pickupMarkers = [];
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
 	}
 
@@ -546,6 +551,7 @@ function MapHandle(){
         	icon: iconUrl
     	});
 
+		marker.setVisible(window.UI.isMarkerVisible);
     	window.MAP.pickupMarkers.push(marker);
 	}
 
@@ -558,16 +564,15 @@ function MapHandle(){
 	MapHandle.prototype.toggleIcons = function toggleIcons(){
 		console.log("toggle icons: "+window.MAP.pickupMarkers.length);
 		if(window.UI.isMarkerVisible){
-			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[ii].setVisible(false);
-				window.UI.isMarkerVisible = false;
-			}
+			window.UI.isMarkerVisible = false;
 		}else{
-			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[ii].setVisible(true);
-				window.UI.isMarkerVisible = true;
-			}
+			window.UI.isMarkerVisible = true;
 		}
+		for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
+			console.log(ii);
+			window.MAP.pickupMarkers[ii].setVisible(window.UI.isMarkerVisible);		
+		}
+		console.log(window.MAP.pickupMarkers);
 	}
 
 	MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
@@ -907,15 +912,14 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
-		//console.log("marker response: "+data);
+		console.log("marker response: "+data);
 		var dataArr = eval("("+data+")");
 		//	var dataArr = data;
-
-            for(ii=0; ii<dataArr.length; ii++){
-                // var dataA = dataArr[ii].split(",");
-                window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
-                // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
-            }
+        for(ii=0; ii<dataArr.length; ii++){
+            // var dataA = dataArr[ii].split(",");
+            window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
+            // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
+        }
 
 	}
 
