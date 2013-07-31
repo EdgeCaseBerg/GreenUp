@@ -568,11 +568,9 @@ function MapHandle(){
 		}else{
 			window.UI.isMarkerVisible = true;
 		}
-		for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-			console.log(ii);
+		for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){	
 			window.MAP.pickupMarkers[ii].setVisible(window.UI.isMarkerVisible);		
 		}
-		console.log(window.MAP.pickupMarkers);
 	}
 
 	MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
@@ -845,8 +843,6 @@ function UiHandle(){
 		}
 
 		window.MAP.markerType = markerType;
-		
-
 		window.UI.hideMarkerTypeSelect();
 		window.UI.dialogSliderUp();
 		// (bug) here we need to prevent more map touches
