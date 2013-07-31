@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	//var BASE = "http://localhost:30002/api";
+	//var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 	// api URLs
@@ -77,8 +77,9 @@ function ApiConnector(){
 			dataType: "json",
 			// contentType: "application/json",
 			success: function(data){
-				console.log("INFO: Pin successfully sent")
-				window.ApiConnector.pullMarkerData();
+				console.log("INFO: Pin successfully sent");
+				//Becuase of the datastore's eventual consistency you must wait a brief moment for new data to be available.
+				setTimeout(function(){window.ApiConnector.pullMarkerData();},150);
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -149,6 +150,11 @@ function ApiConnector(){
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
 		var URL = BASE+pinsURI;
+		//Clear the markers
+		for( var i =0 ; i < window.MAP.pickupMarkers.length; i++){
+			window.MAP.pickupMarkers[i].setMap(null);
+		}
+		window.MAP.pickupMarkers = [];
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
 	}
 
@@ -545,7 +551,7 @@ function MapHandle(){
         	map: window.MAP.map,
         	icon: iconUrl
     	});
-
+		marker.setVisible(window.UI.isMarkerVisible);
     	window.MAP.pickupMarkers.push(marker);
 	}
 
@@ -558,15 +564,12 @@ function MapHandle(){
 	MapHandle.prototype.toggleIcons = function toggleIcons(){
 		console.log("toggle icons: "+window.MAP.pickupMarkers.length);
 		if(window.UI.isMarkerVisible){
-			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[ii].setVisible(false);
-				window.UI.isMarkerVisible = false;
-			}
+			window.UI.isMarkerVisible = false;
 		}else{
-			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[ii].setVisible(true);
-				window.UI.isMarkerVisible = true;
-			}
+			window.UI.isMarkerVisible = true;
+		}
+		for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){	
+			window.MAP.pickupMarkers[ii].setVisible(window.UI.isMarkerVisible);		
 		}
 	}
 
@@ -840,12 +843,6 @@ function UiHandle(){
 		}
 
 		window.MAP.markerType = markerType;
-		var marker = new google.maps.Marker({
-        	position: window.MAP.markerEvent.latLng,
-        	map: window.MAP.map,
-        	icon: iconUrl
-    	});
-
 		window.UI.hideMarkerTypeSelect();
 		window.UI.dialogSliderUp();
 		// (bug) here we need to prevent more map touches
@@ -907,15 +904,14 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
-		//console.log("marker response: "+data);
+		console.log("marker response: "+data);
 		var dataArr = eval("("+data+")");
 		//	var dataArr = data;
-
-            for(ii=0; ii<dataArr.length; ii++){
-                // var dataA = dataArr[ii].split(",");
-                window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
-                // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
-            }
+        for(ii=0; ii<dataArr.length; ii++){
+            // var dataA = dataArr[ii].split(",");
+            window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
+            // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
+        }
 
 	}
 
