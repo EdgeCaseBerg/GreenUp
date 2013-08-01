@@ -135,8 +135,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         		//TODO: Launch HomeSectionFragment
             //case 1:
         		//TODO: Launch MapSectionFragment
-        	//case 2:
+        	case 2:
         		//TODO: Launch FeedSectionFragment
+        		Fragment feed = new FeedSectionFragment();
+        		return feed;
         	default:
                 // The other sections of the app are dummy placeholders.
                 Fragment fragment = new DummySectionFragment();
