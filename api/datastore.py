@@ -162,7 +162,7 @@ class AbstractionLayer():
 		#Convert comments to simple dictionaries for the comments endpoint to use
 		dictComments = []
 		for comment in comments:
-			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin, 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
 		return dictComments
 
 	def submitComments(self, commentType, message, pin=None):
@@ -186,6 +186,7 @@ class AbstractionLayer():
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
+		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
@@ -259,6 +260,8 @@ def initialPage(typeFilter=None):
 	initialPageKey = 'greenup_comments_page_%s_%s' %(typeFilter,1)
 
 	results = querySet[0:20]
+	logging.info("Results query list after invalidation:")
+	logging.info(results)
 	# results = querySet.run(batch_size=20)
 
 	memcache.set(initialPageKey, serialize_entities(results))

@@ -58,7 +58,7 @@
                 <img src="img/greenup_logo.png" id="greenupLogo">
 
                 <div id="bodyText"> 
-                    <p><h3>Help keep Vermont green.</h3>Track your clean up progress.<br />See what areas need the 
+                    <p><h3>Help keep Vermont green.</h3>Track clean up progress.<br />See what areas need the 
                         most help.<br /> Find an area to drop off what you pick up.
                             <br />
                             <br />
@@ -66,12 +66,12 @@
                     </p>
 
                     <div id="timeSpentClock">
-                        01:23:45
+                        <span id="timeSpentClockDigits"></span>
                         <p class="clockDetail">time spent cleaning up</p>
                     </div>
 
 
-                    <div class="start" id="startButton">
+                    <div id="startButton" class="bigStartButton">
                         Start Cleaning Up
                     </div>
                 </div>
@@ -98,43 +98,21 @@
                         <div class="tile tile3" id="selectTrash">Trash</div>
                         <div class="tile tile4" id="cancel">Cancel</div>
                     </div>
-
-		        <!--     <div id="markerTypeDialogNest">
-		                <input type="button" value="Pickup point" id="selectPickup" />
-		                <input type="button" value="Comment point" id="selectComment" />
-		                <input type="button" value="Trash point" id="selectTrash" />
-                        <input type="button" value="Close" onclick="$('#markerTypeDialog').toggle();" />
-		            </div> -->
-		          <!--   <input type="button" value="Lots of Trash" onClick="addTrashMarker">
-		            <input type="button" value="Comment point" onClick="addCommentMarker"> -->
-		        <!-- </div> -->
 			</div>
-			<!-- <input type="button" value="panel left" id="pl2">
-			<input type="button" value="panel right" id="pr2"> -->
         </div>
 
 		<div class="panel" id="panel3">
-            <div id="bubbleContainer">
-                <div class="bubbleRight bubble">
-                    <div class="bubbleTime">1hr</div>
-                    Vivamus porta mollis eros quis adipiscing. Duis ullamcorper porttitor erat a elementum. 
+            <div id="commentContainer">
+                <div id="bubbleContainer">
                 </div>
-                <div class="bubbleLeft bubble">
-                    <div class="bubbleTime">15min</div>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum felis a mauris condimentum, in sollicitudin quam sodales.
-                </div>
-            </div>
-            <div class="addCommentNest">
-                <input type="hidden" id="commentTypeToBePosted" value="null" />
-                <input type="hidden" id="commentToBePosted" value="null" />
-                <div class="nextPrev commentButton" id="prevPage"><</div>
-                <div class="addCommentButton commentButton" id="addCommentButton">New Comment</div>
-                <div class="nextPrev commentButton" id="nextPage">></div>
-            </div>
 
-            <div id="moar">
-                
-                
+                <div class="addCommentNest">
+                    <input type="hidden" id="commentTypeToBePosted" value="null" />
+                    <input type="hidden" id="commentToBePosted" value="null" />
+                    <div class="nextPrev commentButton" id="prevPage"><</div>
+                    <div class="addCommentButton commentButton" id="addCommentButton">New Comment</div>
+                    <div class="nextPrev commentButton" id="nextPage">></div>
+                </div>
             </div>
 		</div>
 	</div>
@@ -147,21 +125,20 @@
             <div id="panel2SlideDownContent" class="panelSlideDownContent">
                 <div id="heatChoice" class="mapToggleContainer">
                     <div class="roundedTwo">
-                        <input type="checkbox" value="None" id="toggleHeat" class="checkboxUnder" name="check" checked />
+                        <input type="checkbox" value="None" id="toggleHeat" onchange="window.MAP.toggleHeatmap()" class="checkboxUnder" name="check" checked />
                         <label for="toggleHeat"></label>
                     </div>
                     <span>Heat Map</span>
                 </div>
                 <div id="markerChoice" class="mapToggleContainer">
                     <div class="roundedTwo">
-                        <input type="checkbox" value="None" id="toggleIcons" class="checkboxUnder" name="check" checked />
+                        <input type="checkbox" value="None" id="toggleIcons" onchange="window.MAP.toggleIcons()" class="checkboxUnder" name="check" checked />
                         <label for="toggleIcons"></label>
                     </div>
                     <span>Markers</span>
                 </div>
             </div>
             <div id="panel3SlideDownContent" class="panelSlideDownContent">
-                33333333333
             </div>
         </div>
 
@@ -178,21 +155,25 @@
     </div>
 
     <div id="dialogSlider">
-        <textarea id="dialogSliderTextarea" class="dialogSliderContents"></textarea>
-        <div class="dialogSliderContents" id="dialogSliderContents">
-            <input type="hidden" id="comment_type" value="forum" />
-            <input type="hidden" id="comment_message" value="null" />
-            <input type="hidden" id="input_purpose" value="0" />
-            <div class="dialogSliderButton dialogButtonOk"><div id="dialogCommentOk" class="buttonText">Ok</div></div>
-            <div class="dialogSliderButton dialogButtonCancel"><div id="dialogCommentCancel" class="buttonText">Cancel</div></div>
+        <div id="dialogSliderNest">
+            <textarea id="dialogSliderTextarea" class="dialogSliderContents" maxlength="140"></textarea>
+            <div class="dialogSliderContents" id="dialogSliderContents">
+                <input type="hidden" id="comment_type" value="forum" />
+                <input type="hidden" id="comment_message" value="null" />
+                <input type="hidden" id="input_purpose"/>
+                <div class="dialogSliderButton dialogButtonOk"><div id="dialogCommentOk" class="buttonText">Ok</div></div>
+                <div class="dialogSliderButton dialogButtonCancel"><div id="dialogCommentCancel" class="buttonText">Cancel</div></div>
+            </div>
         </div>
     </div>
-
-    <ul class="nav">
-        <li><a id="pan1">Home</a></li>
-        <li><a id="pan2">Maps</a></li>
-        <li><a id="pan3">Comments</a></li>
-    </ul>
+    <div id="navbarPullUpTab"></div>
+    <div id="navContainer">
+        <ul class="nav" id="navbar">
+            <li><a id="pan1">Home</a></li>
+            <li><a id="pan2">Maps</a></li>
+            <li><a id="pan3">Comments</a></li>
+        </ul>
+    </div>
 </body>
 
 </html>
