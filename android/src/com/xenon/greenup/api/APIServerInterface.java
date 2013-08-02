@@ -25,10 +25,24 @@ public class APIServerInterface {
 	
 	//Retrieves a page of comments from the server, the type and page number are optional
 	public CommentPage getComments(String type, int page) {
+		StringBuilder sb = new StringBuilder(BASE_URL + "/comments?");
+		sb.append("type=" + type + "&" + "page=" + page);
+		String url = sb.toString();
+		APIRequestTask request = new APIRequestTask(url);
+		request.execute();
+		String response;
+		try {
+			response = request.get();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			response = "Error";
+		}
+		Log.i("response",response);
 		return new CommentPage();
 	}
 	
-	//Submits a comment, the pin is optional.  Returns an integer status code (codes TBD)
+	//Submits a comment (POST), the pin is optional.  Returns an integer status code (codes TBD)
 	public int submitComments(String type, String message, int pin) {
 		return 0;
 	}
@@ -38,7 +52,7 @@ public class APIServerInterface {
 		return new Heatmap();
 	}
 	
-	//Submit a heatmap point
+	//Submit a heatmap point (PUT)
 	public int submitHeatmapPoint(float latDegrees, float lonDegrees, int secondsWorked){
 		return 0;
 	}
@@ -48,7 +62,7 @@ public class APIServerInterface {
 		return new PinList();
 	}
 	
-	//Submit a pin
+	//Submit a pin (POST)
 	public int submitPin(float latDegrees, float lonDegrees, String type, String message){
 		return 0;
 	}
@@ -76,19 +90,19 @@ public class APIServerInterface {
 		
 		private String url;
 		private String data;
-		private boolean isPOST;
+		private String method;
 		
 		//Constructor for GET requests
 		public APIRequestTask(String url) {
 			this.url = url;
-			this.isPOST = false;
+			this.method = "GET";
 		}
 		
-		//Constructor for POST requests
-		public APIRequestTask(String url,String data) {
+		//Constructor for POST and PUT requests
+		public APIRequestTask(String url,String method,String data) {
 			this.url = url;
 			this.data = data;
-			this.isPOST = true;
+			this.method = method;
 		}
 		
 		//Where the magic happens...
@@ -99,8 +113,9 @@ public class APIServerInterface {
 			try {
 				urlObject = new URL(url);
 				HttpURLConnection connection = (HttpURLConnection)urlObject.openConnection();
-				if (isPOST) {
-					connection.setDoOutput(isPOST);
+				connection.setRequestMethod(method);
+				if (method.equals("POST")) {
+					connection.setDoOutput(true);
 					int length = data.length();
 					connection.setFixedLengthStreamingMode(length);
 					OutputStream out = connection.getOutputStream();

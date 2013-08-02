@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.xenon.greenup.api.APIServerInterface;
+import com.xenon.greenup.api.CommentPage;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -181,7 +182,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public void onClick(View v) {
         	Log.i("button","I was clicked!");
         	APIServerInterface i = new APIServerInterface();
-        	i.testConnection();
+        	CommentPage p =  i.getComments("forum", 2);
         }
     }
 }
