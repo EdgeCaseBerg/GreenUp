@@ -70,7 +70,7 @@ class Heatmap(webapp2.RequestHandler):
 		#Check precision
 		if precision is not None and precision is not "":
 			try:
-				precision = abs(int(precision))
+				precision = abs((precision))
 				parameters += 1
 			except ValueError, e:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
@@ -90,8 +90,8 @@ class Heatmap(webapp2.RequestHandler):
 		#the choice of lon is arbitrary, either lat or lon offset would work here		
 		if lonOffset is not None and lonOffset is not "":
 			try:
-				lonOffset = abs(int(lonOffset))
-				latOffset = abs(int(latOffset))
+				lonOffset = abs((lonOffset))
+				latOffset = abs((latOffset))
 				parameters+=2
 				#We could check to see if the offsets cause us to go out of range for our queries, but really that's unneccesary and would cause unneccesary calculation on the clientside to deal making sure they're within range.
 			except ValueError, e:
@@ -205,6 +205,8 @@ class Heatmap(webapp2.RequestHandler):
 		self.response.set_status(HTTP_OK)
 		self.response.write('{"status": %i, "message" : "Successful submit" }' % api.HTTP_OK)
 
+	def post(self):
+		return self.put()
 		
 
 application = webapp2.WSGIApplication([
