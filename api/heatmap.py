@@ -90,8 +90,8 @@ class Heatmap(webapp2.RequestHandler):
 		#the choice of lon is arbitrary, either lat or lon offset would work here		
 		if lonOffset is not None and lonOffset is not "":
 			try:
-				lonOffset = abs((int(lonOffset)))
-				latOffset = abs((int(latOffset)))
+				lonOffset = abs((float(lonOffset)))
+				latOffset = abs((float(latOffset)))
 				parameters+=2
 				#We could check to see if the offsets cause us to go out of range for our queries, but really that's unneccesary and would cause unneccesary calculation on the clientside to deal making sure they're within range.
 			except ValueError, e:

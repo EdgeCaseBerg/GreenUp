@@ -224,6 +224,11 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_OK
 	validateHeatmapGETRequest(tester.getJSON())
 
+	#Good get request with decimal offset
+	tester.followLink(endPoints['heatmap'],withData={"latDegrees" : -25.4, "lonDegrees" : 43.2, "latOffset" : 4.2,"lonOffset" : 2.2})
+	assert tester.getCode() == HTTP_OK
+	validateHeatmapGETRequest(tester.getJSON())
+
 	#Get with JUST precision (like a get all, but for a given precision)
 	tester.followLink(endPoints['heatmap'],withData={"precision" : 4})
 	assert tester.getCode() == HTTP_OK
