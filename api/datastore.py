@@ -368,10 +368,10 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 	if latDegrees is None and lonDegrees is None:
 		#Code in calling function must handle parsing to JSON the data modelst 
 		toBeBucketSorted = toBeFiltered
-	elif latDegrees is None:
+	elif latDegrees is not None:
 		#No lonDegrees
 		toBeBucketSorted = toBeFiltered.filter('lat <', latDegrees + latOffset).filter('lat >', latDegrees - latOffset)
-	elif lonDegrees is None:
+	elif lonDegrees is not None:
 		#no latdegrees
 		toBeBucketSorted = toBeFiltered.filter('lon <', lonDegrees + lonOffset).filter('lon >', lonDegrees - lonOffset)
 	else:
