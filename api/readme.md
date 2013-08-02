@@ -72,7 +72,7 @@ URL: **/api/comments**
 <tr><th>name</th><th>type</th><th>description  </th></tr>
 </thead>
 <tbody>
-<tr><td>type</td><td>String </td><td> Can be either `forum`, `needs`, or `message` </td></tr>
+<tr><td>type</td><td>String </td><td> Can be either `forum`, `general message`, `trash pickup` or `help needed` </td></tr>
 <tr><td>page</td><td>unsigned Integer</td><td>Based on [RFC 5005], for use with pagination, a request for a page that does not exist will result in no comments being returned. A non-integer value for this parameter will result in a 422 HTTP status code. Paging begins at 1.</td></tr>
 </tbody>
 
@@ -88,14 +88,14 @@ No type specified will return all comments.
 {
     "comments" : [
         { 
-            "type" : "needs", 
+            "type" : "trash pickup", 
             "message" : "I need help with the trash on Colchester ave",
             "timestamp" : "2013-05-07 17:12:01",
             "pin" : 3,
             "id" : 4156
         },
         {
-            "type" : "needs",
+            "type" : "help needed",
             "message" : "There's a lot of trash on Pearl St, I could use some help!"
             "timestamp" : "1970-01-01 00:00:01",
             "pin" : None,
@@ -103,8 +103,8 @@ No type specified will return all comments.
         }
     ],
     "page" : {
-        "next" : "http://greenup.xenonapps.com/api/comments?type=needs&amp;page=3",
-        "previous" : "http://greenup.xenonapps.com/api/comments?type=needs&amp;page=1"
+        "next" : "http://greenup.xenonapps.com/api/comments?type=help+needed&amp;page=3",
+        "previous" : "http://greenup.xenonapps.com/api/comments?type=help+needed&amp;page=1"
     }
 }
 ```
@@ -125,10 +125,10 @@ URL: **/api/comments**
     </thead>
     <tbody>
         <tr>
-            <td> type </td><td>String </td><td> Can be either `forum`, `needs`, or `message` </td>
+            <td> type </td><td>String </td><td> Can be either `forum`, `help needed`, `trash pickup` or `general message` </td>
         </tr>
         <tr>
-            <td> message   </td><td> String </td><td> The message to associated with this comment </td>
+            <td> message   </td><td> String </td><td> The message to associated with this comment. Message length must not exceed 140 characters, and must also be non-empty. </td>
         </tr>
     </tbody>
 </table>
@@ -296,13 +296,13 @@ If no latitude or longitude are specified then all pins will be returned.
     {
         "latDegrees" : 24.53, 
         "lonDegrees" : 43.2, 
-        "type" : "message", 
+        "type" : "general message", 
         "message", "I need help with the trash on Colchester ave"
     },
     {
         "latDegrees" : 25.13, 
         "lonDegrees" : 41.2, 
-        "type" : "needs", 
+        "type" : "help needed", 
         "message", "There's a lot of trash on Pearl St, I could use some help!"
     }
 ]

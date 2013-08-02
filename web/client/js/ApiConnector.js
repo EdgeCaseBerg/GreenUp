@@ -9,19 +9,16 @@ function ApiConnector(){
 	var commentData = [];
 
 
+	//var BASE = "http://greenupapp.appspot.com/api";
 	var BASE = "http://localhost:30002/api";
+	this.BASE = BASE;
 
-	// api URLs
-	var forumURI = "/comments?type=forum";
-	var needsURI = "/comments?type=needs";
-	var messagesURI = "/comments?type=message";
-	var commentsUri = "/comments";
-	var heatmapURI = "/heatmap";
-	var pinsURI = "/pins";
+	// api URLs have been moved into each of the functions using them as per issue 46
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
 		// zepto
+		console.log(URL);
 		$.ajax({
 			type: QUERYTYPE,
 			url: URL,
@@ -32,7 +29,7 @@ function ApiConnector(){
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
-				// // alert("error: "+xhr.status);
+				// alert("error: "+xhr.status);
 				switch(xhr.status){
 					case 500:
 						// internal server error
@@ -65,6 +62,7 @@ function ApiConnector(){
 
 
 	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
+		var pinsURI = "/pins";
 		$.ajax({
 			type: "POST",
 			url: BASE+pinsURI,
@@ -74,8 +72,9 @@ function ApiConnector(){
 			dataType: "json",
 			// contentType: "application/json",
 			success: function(data){
-				console.log("INFO: Pin successfully sent")
-				window.ApiConnector.pullMarkerData();
+				console.log("INFO: Pin successfully sent");
+				//Becuase of the datastore's eventual consistency you must wait a brief moment for new data to be available.
+				setTimeout(function(){window.ApiConnector.pullMarkerData();},150);
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -121,53 +120,78 @@ function ApiConnector(){
 			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
 			but there is an implicit cast against undefined defined for double equals in javascript
 		*/
-		params = "?";
-		if(latDegrees != null)
+		var heatmapURI = "/heatmap";
+		var params = "";
+		if(latDegrees != null){
+			params = "?";
 			params += "latDegrees=" + latDegrees + "&";
-		if(latOffset != null)
+		}
+		if(latOffset != null){
+			params = "?";
 			params += "latOffset=" + latOffset + "&";
-		if(lonDegrees != null)
+		}
+		if(lonDegrees != null){
+			params = "?";
 			params += "lonDegrees" + lonDegrees + "&";
-		if(lonOffset != null)
+		}
+		if(lonOffset != null){
+			params = "?";
 			params += "lonOffset" + lonOffset + "&";
-
+		}
+		console.log("Preparing to pull heatmap data");
 		var URL = BASE+heatmapURI+params;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
 
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
+		var pinsURI = "/pins";
 		var URL = BASE+pinsURI;
+		//Clear the markers
+		for( var i =0 ; i < window.MAP.pickupMarkers.length; i++){
+			window.MAP.pickupMarkers[i].setMap(null);
+		}
+		window.MAP.pickupMarkers = [];
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
 	}
 
 	// by passing the url as an argument, we can use this method to get next pages
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
+		var forumURI = "/comments?type=forum";
+		var needsURI = "/comments?type=help+needed";
+		var messagesURI = "/comments?type=general+message";
+		var trashURI = "/comments?type=trash+pickup";
+
+		console.log("Pulling comment "+commentType+" data from: "+url);
 		var urlStr = "";
 		switch(commentType){
-			case "needs":
-				(url == null) ? (urlStr = BASE+needsURI) : (urlStr = url);
+			case "help needed":
+				urlStr = (url == null) ? BASE+needsURI : url;
 				this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
 				break;
-			case "messages":
-				(url == null) ? (urlStr = BASE+messagesURI) : (urlStr = url);
+			case "general message":
+				urlStr =  (url == null) ? BASE+messagesURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
 				break;
-			case "forum":
-				(url == null) ? (urlStr = BASE+forumURI) : (urlStr = url);
+			case "trash pickup":
+				urlStr =  (url == null) ? BASE+trashURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 			default:
-				(url == null) ? (urlStr = BASE+forumURI) : (urlStr = url);
+				commentType = "forum";
+				urlStr =  (url == null) ? BASE+forumURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 		}
 	} // end pullCommentData()
 
 	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
+		var commentsURI = "/comments";
+		console.log("json to push: "+jsonObj);
+		console.log("Push comment data to: "+BASE+commentsURI);
 		$.ajax({
 			type: "POST",
-			url: BASE+commentsUri,
+			url: BASE+commentsURI,
 			data: jsonObj,
     		cache: false,
 			// processData: false,
@@ -175,7 +199,7 @@ function ApiConnector(){
 			// contentType: "application/json",
 			success: function(data){
 				console.log("INFO: Comment successfully sent");
-				window.ApiConnector.pullCommentData(JSON.parse(jsonObj).type,null);
+				window.ApiConnector.pullCommentData(JSON.parse(jsonObj).type, null);
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -223,38 +247,34 @@ function ApiConnector(){
 
 	//Uploads all local database entries to the Server
 	//Clears the local storage after upload
-	ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(database){
+	ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(){
+		var heatmapURI = "/heatmap";
 	    if(window.logging){
-		        //server/addgriddata.php
-		    database.all(function(data){
-		    	console.log(data);
-		    	//Make sure to not just send null data up or you'll get a 400 back
-		        if(data.length == 00){
-		        	data = "[]";
-		        }
-		        console.log("data being PUT to "+BASE+heatmapURI+": ");
-		        console.log(data);
-		        // zepto code
-		        $.ajax({
-			        type:'PUT',
-			        url: BASE + heatmapURI,
-			        dataType:"json",
-			        data:  data,
-			        failure: function(errMsg){
-			        	// alert(errMsg);
-			        	console.log("Failed to PUT heatmap: "+errMsg);
-			        }, 
-			        success: function(data){
-			        	console.log("PUT heatmap success: "+data);
-			        }
-			    });//Ajax
-			        
-			    //Remove all uploaded database records
-			    for(var i=1;i<data.length;i++){
-			        database.remove(i);
-			    }
-		    });
+	        //server/addgriddata.php
+	        var jsonArray = [];
+	        console.log("Heatmap data to be pushed:")
+	    	window.database.all(function(data){
+	   			jsonArray.push(data[0].value);
+			});
+
+			console.log(jsonArray);
 		}
+	
+		// zepto code
+		$.ajax({
+	    	type:'PUT',
+	    	url: BASE + heatmapURI,
+	    	dataType:"json",
+	    	data:  JSON.stringify(jsonArray),
+	    	failure: function(errMsg){
+		      	// alert(errMsg);
+	      		console.log("Failed to PUT heatmap: "+errMsg);
+	    	}, 
+	    	success: function(data){
+		      	console.log("PUT heatmap success: "+data);
+	       		// window.database.nuke();
+	    	}
+		});//Ajax	
 	}
 
 	
@@ -296,335 +316,72 @@ function LoadingScreen(loadingDiv){
 	}
 } // end LoadingScreen class def
 
-// class for managing the UI
-function UiHandle(){
-	this.currentDisplay = 1;
-	this.isMarkerDisplayVisible = false;
-	this.MOUSEDOWN_TIME;
-	this.MOUSEUP_TIME;
-	this.isMarkerVisible = false;
-	this.isMapLoaded = false;
 
-    UiHandle.prototype.init = function init(){
-	    // controls the main panel movement
-	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
-	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
-	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
-
-	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
-	    	window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
-	    	window.UI.dialogSliderDown();
-	    });
-	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
-
-		// toggle map overlays
-		document.getElementById('toggleHeat').addEventListener('mousedown', function(){window.MAP.toggleHeatmap();});
-	   	document.getElementById('toggleIcons').addEventListener('mousedown', function(){window.MAP.toggleIcons();});
-
-		// for comment pagination
-	    this.commentsType = ""
-	    this.commentsNextPageUrl = "";
-	    this.commentsPrevPageUrl = "";
-	    // load the previous page
-	    document.getElementById("prevPage").addEventListener('mousedown', function(){
-	    	window.ApiConnector.pullCommentData(this.commentsType, this.commentsPrevPageUrl);
-		});
-		// load the previous page
-		document.getElementById("nextPage").addEventListener('mousedown', function(){
-			window.ApiConnector.pullCommentData(this.commentsType, this.commentsNextPageUrl);
-		});
-
-		//Bind buttons to functions for comments
-
-		//Bind submission of comment to an intercepting call from the handler
-		var theForm =document.getElementById('comment_submission_form');
-        if( theForm.attachEvent){
-            theForm.attachEvent("submit",window.UI.commentSubmission);
-        }else{
-            theForm.addEventListener("submit",window.UI.commentSubmission);
-        }
-		
-	}
-
-	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
-		document.getElementById("markerTypeDialog").style.display = "none";
-		window.UI.isMarkerDisplayVisible = false;
-	}
-
-	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
-		// add marker type selectors
-	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
-	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
-	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
-	    document.getElementById("cancel").addEventListener('mousedown', function(){
-	    	window.UI.hideMarkerTypeSelect();
-	    });
-		
-		document.getElementById("markerTypeDialog").style.display = "block";
-		window.UI.isMarkerDisplayVisible = true;
-	}
-
-	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
-		document.getElementById('bigButton').style.backgroundColor=colorHex;
-	}
-
-	UiHandle.prototype.setBigButtonText = function setBigButtonText(buttonText){
-		document.getElementById('bigButton').innerHTML = buttonText;
-	}
-
-	UiHandle.prototype.setMapLoaded = function setMapLoaded(){
-		window.MAP.isMapLoaded = true;
-		window.LS.hide();
-	}
-
-	// centers the appropriate panels
-	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
-		var container = document.getElementById("container");
-		container.className = "";
-		switch(displayNum){
-			case 0:
-				this.currentDisplay = 1;
-				container.className = "panel1Center";
-			break;
-			case 1:
-				this.currentDisplay = 2;
-				container.className = "panel2Center";
-			break;
-			case 2:
-				this.currentDisplay = 3;
-				container.className = "panel3Center";
-			break;
-			default:
-				this.currentDisplay = 1;
-				container.className = "panel1Center";
-		}
-	}
-
-	// The user presses the submit button on the comment submission screen
-	UiHandle.prototype.commentSubmission = function commentSubmission(e){
-		//Prevent DOM bubbling
-		if(e.preventDefault) e.preventDefault();
-
-		var comment = new FCommment();
-		comment.message = document.getElementById('comment_message').value;
-		comment.pin = null;
-		comment.type = document.getElementById('comment_type').value;
-
-		var serializedComment = JSON.stringify(comment);
-
-		window.ApiConnector.pushCommentData(serializedComment);
-
-		//Return false to stop normal form submission form occuring
-		return false;
-	}
-
-	// when the user chooses which type of marker to add to the map
-	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
-		// first we need to show the marker on the map
-		// var iconUrl = "img/icons/blueCircle.png";
-		var iconUrl = "";
-		switch(markerType){
-			case "comment":
-				iconUrl = "img/icons/orangeCircle.png";
-				break;
-			case "pickup":
-				iconUrl = "img/icons/blueCircle.png";
-				break;
-			case "trash":
-				iconUrl = "img/icons/greenCircle.png";
-				break;
-			default:
-				iconUrl = "img/icons/orangeCircle.png";
-				break;
-		}
-
-		window.MAP.markerType = markerType;
-		var marker = new google.maps.Marker({
-        	position: window.MAP.markerEvent.latLng,
-        	map: window.MAP.map,
-        	icon: iconUrl
-    	});
-
-		window.UI.hideMarkerTypeSelect();
-		window.UI.dialogSliderUp();
-		// (bug) here we need to prevent more map touches
-	}
-
-	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(){
-		document.getElementById("dialogSlider").style.top = "72%";
-		document.getElementById("dialogSlider").style.opacity = "1.0";
-		document.getElementById("dialogSliderTextarea").focus();
-
-	}
-
-	UiHandle.prototype.dialogSliderDown = function dialogSliderDown(){
-		document.getElementById("dialogSlider").style.top = "86%";
-		document.getElementById("dialogSlider").style.opacity = "0.0";
-	}
-
-	UiHandle.prototype.markerSelectUp = function markerSelectUp(){
-		// set the coords of the marker event
-
-	    MOUSEUP_TIME = new Date().getTime() / 1000;
-	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
-	        if(this.isMarkerDisplayVisible){
-	        	window.UI.hideMarkerTypeSelect();
-	        }else{
-	        	window.UI.showMarkerTypeSelect();
-	        }
-	        this.MOUSEDOWN_TIME =0;
-	        this.MOUSEDOWN_TIME =0;
-	    }else{
-	        this.MOUSEDOWN_TIME =0;
-	        this.MOUSEDOWN_TIME =0;
-	    }
-	}
-
-	UiHandle.prototype.markerSelectDown = function markerSelectDown(event){
-		// set the coords of the marker event
-	    window.MAP.markerEvent = event;
-	    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
-	}
-
-	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
-	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
-		console.log("Heatmap data: "+data);
-	}
-
-	UiHandle.prototype.updateMarker = function updateMarker(data){
-
-		//console.log("marker response: "+data);
-		var dataArr = eval("("+data+")");
-		//	var dataArr = data;
-
-            for(ii=0; ii<dataArr.length; ii++){
-                // var dataA = dataArr[ii].split(",");
-                window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
-                // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
-            }
-
-	}
-
-	UiHandle.prototype.updateMessages = function updateMessages(data){
-		window.UI.commentsNextPageUrl = data.page.next;
-		window.UI.commentsPrevPageUrl = data.page.previous;
-
-		var messagesContainer = document.getElementById("messagesContainer");
-		var messages = new Array();
-
-		(window.UI.commentsNextPageUrl != null) ? 
-			window.UI.showNextCommentsButton() : window.UI.hideNextCommentsButton();
-
-		(window.UI.commentsPrevPageUrl != null) ? 
-			window.UI.showPrevCommentsButton() : window.UI.hidePrevCommentsButton();
-
-		for(ii=0; ii<3; ii++){
-		// for(ii=0; ii<data.comments.length; ii++){
-			messages[ii] = document.createElement('div');
-			messages[ii].className = "messageListItem";
-			messages[ii].style.border = "1px solid red";
-			// create the div where the timestamp will display
-			var commentDateContainer = document.createElement('div');
-			commentDateContainer.className = "commentDateContainer";
-			// commentDateContainer.innerHTML = data.comments.timestamp;
-			commentDateContainer.innerHTML = "1970-01-01 00:00:01";
-			// create the div where the message content will be stored
-			var messageContentContainer = document.createElement('div');
-			messageContentContainer.className = "messageContentContainer";
-			// messageContentContainer.innerHTML = data.comments.message;
-			messageContentContainer.innerHTML = "sdfasdfasdfasdfadsfasdfadsfa";
-
-			messages[ii].appendChild(commentDateContainer);
-			messages[ii].appendChild(messageContentContainer);
-			messagesContainer.appendChild(messages[ii]);
-
-		}
-		// // alert(window.UI.commentsNextPageUrl);
-		console.log(data);
-	}
-
-	UiHandle.prototype.updateNeeds = function updateNeeds(data){
-		console.log(data);
-	}
-
-	UiHandle.prototype.updateForum = function updateForum(data){
-		console.log(data);
-	}
-
-	UiHandle.prototype.updateTest = function updateTest(data){
-		console.log(data);
-	}
-	// ******** End DOM Updaters *********
-
-	// ---- begin pagination control toggle ----
-	UiHandle.prototype.showNextCommentsButton = function showNextCommentsButton(){
-		document.getElementById("nextPage").style.display = "inline-block";
-	}
-
-	UiHandle.prototype.hideNextCommentsButton = function hideNextCommentsButton(){
-		document.getElementById("nextPage").style.display = "none";
-	}
-
-	UiHandle.prototype.showPrevCommentsButton = function showPrevCommentsButton(){
-		document.getElementById("prevPage").style.display = "inline-block";
-	}
-
-	UiHandle.prototype.hidePrevCommentsButton = function hidePrevCommentsButton(){
-		document.getElementById("prevPage").style.display = "none";
-	}
-	// ---- end pagination control toggle
-
-} // end UiHandle class def
 
 // class for managing all geolocation work
 function GpsHandle(){
 	
 	GpsHandle.prototype.initGps = function initGps(){
+		window.logging = true;
+		console.log("initGps");
+		window.updateCounter = 0;
     	db = Lawnchair({name : 'db'}, function(store) {
-        	lawnDB = store;
-        	setInterval(function() {window.GPS.runUpdate(store)},5000);//update user location every 5 seconds
+        	window.database = store;
+        	window.GPS.loggingInterval = setInterval(function() {window.GPS.runUpdate()},30000);//update user location every 5 seconds
         	// instead of running 2 timers, we'll just set a counter and run the pushHeatmapData() on a multiple of... 
         	// ...the runUpdate() function
-        	window.updateCounter = 0;
         	// setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
     	});
 	}
 
 	//Runs the update script:
-	GpsHandle.prototype.runUpdate = function runUpdate(database){
+	GpsHandle.prototype.runUpdate = function runUpdate(){
+		console.log("runUpdate");
 	    //Grab the geolocation data from the local machine
-	    if(window.updateCounter == 6){
+	    if(window.updateCounter == 5){
 	    	window.updateCounter = 0;
-	    	window.ApiConnector.pushHeatmapData(database);
+	    	window.ApiConnector.pushHeatmapData();
 	    }else{
-	    	window.updateCounter++;
+	    	// console.log("getting position data");
+	    	 if(navigator.geolocation){
+	    	 	var options = {timeout:29000};
+	    	 	navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	window.updateCounter++;
+	    	 }else{
+	    	 	console.log("Geolocation is not supported by this browser.");
+	    	 }
 	    }
-	    navigator.geolocation.getCurrentPosition(function(position) {
-	          window.GPS.updateLocation(database, position.coords.latitude, position.coords.longitude);
-	    });
 	}
 
-	GpsHandle.prototype.updateLocation = function updateLocation(database, latitude, longitude){
+	GpsHandle.prototype.gpsErrorHandler = function gpsErrorHandler(error){
+		console.log("Gps error: "); 
+		console.log(error);
+	}
+
+	GpsHandle.prototype.updateLocation = function updateLocation(position){
+		console.log("Update Location");
+		// console.log(position);
 	    if(window.logging){
 	        var datetime = new Date().getTime();//generate timestamp
 	        var location = {
-	                "latDegree" : latitude,
-	                "lonDegree" : longitude,
+	                "latDegrees" : position.coords.latitude,
+	                "lonDegrees" : position.coords.longitude,
 	                "secondsWorked" : datetime
 	        }
-	        database.save({value:location});//Save the record
+	        console.log("database saved");
+	        console.log(location);
+	        window.database.save({value:location});//Save the record
 	    }
 	};
 
 	GpsHandle.prototype.recenterMap = function recenterMap(lat, lon){
-    	console.log(lon);
     	var newcenter = new google.maps.LatLng(lat, lon);
         centerPoint = newcenter;
         map.panTo(newcenter);
 	}
 
 	GpsHandle.prototype.start = function start(){
-		window.UI.setBigButtonColor("#ff0000");
+		document.getElementById("startButton").className = "bigStopButton";
 		window.UI.setBigButtonText("Stop Cleaning");
 		window.logging = true;
     	this.initGps();
@@ -636,10 +393,11 @@ function GpsHandle(){
 
 
 	GpsHandle.prototype.stop = function stop(){
-    	window.ApiConnector.pushHeatmapData(lawnDB);
+		document.getElementById("startButton").className = "bigStartButton";
+    	window.ApiConnector.pushHeatmapData();
     	window.logging = false;
-    	console.log("stopping...");
-    	window.UI.setBigButtonColor("#00ff00");
+    	console.log("stopping GPS...");
+    	clearInterval(window.GPS.loggingInterval);
     	window.UI.setBigButtonText("Start Cleaning");
 	}
     
@@ -663,10 +421,20 @@ function MapHandle(){
 	    // define the initial location of our map
 	    centerPoint = new google.maps.LatLng(window.MAP.currentLat, window.MAP.currentLon); 
 	    var mapOptions = {
-		    zoom: window.MAP.currentZoom,
 		    center: centerPoint,
-		    mapTypeId: google.maps.MapTypeId.ROADMAP
+		    mapTypeId: google.maps.MapTypeId.ROADMAP, 
+		    mapTypeControl: true,
+   			mapTypeControlOptions: {
+      			position: google.maps.ControlPosition.TOP_CENTER,
+      			style: google.maps.MapTypeControlStyle.DEFAULT
+    		}, 
+    		zoom: window.MAP.currentZoom,
+    		streetViewControl: false
 		  };
+
+		  // google.maps.MapTypeControlOptions
+		  // google.maps.StreetViewControlOptions
+		  // google.maps.ZoomControlOptions
 
 		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 		  // for activating the loading screen while map loads
@@ -717,6 +485,40 @@ function MapHandle(){
 
 	}
 
+	MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
+		console.log("Heatmap data to be applied to map: ");
+		console.log(data);
+		var dataObj = eval(data);
+		var heatmapData = [];
+			// console.log(dataObj[ii].latDegrees);
+		for(var ii=0; ii<dataObj.length; ii++){
+			heatmapData.push({location: new google.maps.LatLng(dataObj[ii].latDegrees, dataObj[ii].lonDegrees), weight: dataObj[ii].secondsWorked});
+			
+		}
+
+// 			var heatmapData = [
+//          	{location: new google.maps.LatLng(44.4758, -73.3125), weight: 101.5}, 
+//          ];
+		console.log("Processed heatmap data:");
+		console.log(heatmapData);
+
+  		if(heatmapData.length > 0){
+	        var pointArray = new google.maps.MVCArray(heatmapData);
+
+			heatmap = new google.maps.visualization.HeatmapLayer({
+			    data: pointArray,
+			    dissipating: true, 
+			    radius: 5
+			});
+
+	  		heatmap.setMap(window.MAP.map);
+	  	}
+
+//   function toggleHeatmap() {
+//   heatmap.setMap(heatmap.getMap() ? null : map);
+// }
+	}
+
 	MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon){
 		// console.log("in addMarker()");
 		var pin = new Pin();
@@ -753,7 +555,7 @@ function MapHandle(){
         	map: window.MAP.map,
         	icon: iconUrl
     	});
-
+		marker.setVisible(window.UI.isMarkerVisible);
     	window.MAP.pickupMarkers.push(marker);
 	}
 
@@ -766,15 +568,12 @@ function MapHandle(){
 	MapHandle.prototype.toggleIcons = function toggleIcons(){
 		console.log("toggle icons: "+window.MAP.pickupMarkers.length);
 		if(window.UI.isMarkerVisible){
-			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[ii].setVisible(false);
-				window.UI.isMarkerVisible = false;
-			}
+			window.UI.isMarkerVisible = false;
 		}else{
-			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[ii].setVisible(true);
-				window.UI.isMarkerVisible = true;
-			}
+			window.UI.isMarkerVisible = true;
+		}
+		for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){	
+			window.MAP.pickupMarkers[ii].setVisible(window.UI.isMarkerVisible);		
 		}
 	}
 
@@ -812,6 +611,416 @@ function MapHandle(){
 
 } //end MapHandle
 
+// class for managing the UI
+function UiHandle(){
+	this.currentDisplay = 1;
+	this.isMarkerDisplayVisible = false;
+	this.MOUSEDOWN_TIME;
+	this.MOUSEUP_TIME;
+	this.isMarkerVisible = true;
+	this.isMapLoaded = false;
+
+	this.isNavbarUp = true;
+	this.isTopSliderUp = true;
+
+	this.dialogSliderIsUp = false;
+
+	this.isClockRunning = false;
+	this.clockHrs = 00;
+	this.clockMins = 00;
+	this.clockSecs = 00;
+
+	this.commentPurpose = -1;
+	this.MARKER = 1; 
+	this.COMMENT = 0;
+
+	// for comment pagination
+	this.commentsType = ""
+	this.commentsNextPageUrl = "";
+	this.commentsPrevPageUrl = "";
+
+    UiHandle.prototype.init = function init(){
+
+	    // controls the main panel movement
+	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
+	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
+	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
+	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
+	    document.getElementById("panel1SlideDownContent").style.display = "block";
+
+	    document.getElementById("navbarPullUpTab").addEventListener('mousedown', function(){
+	    	window.UI.navbarSlideUp();
+	    });
+
+	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
+
+	    document.getElementById("addCommentButton").addEventListener('mousedown', function(){
+	    	window.UI.commentPurpose = window.UI.COMMENT;
+	    	window.UI.dialogSliderUp();
+	    });
+
+	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
+	    	// prevent OK from being clicked if dialogSlider textarea is empty
+	    	if(document.getElementById("dialogSliderTextarea").value == ""){
+	    		alert("no message entered");
+	    	}else{
+		    	var userComment = document.getElementById("dialogSliderTextarea").value;
+		    	switch(window.UI.commentPurpose){
+		    		case window.UI.MARKER:
+		    			window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
+		    			window.UI.dialogSliderDown();
+		    			window.UI.clearDialogSliderInputs();
+		    			break;
+		    		case window.UI.COMMENT:
+		    			window.UI.commentSubmission();
+		    			window.UI.dialogSliderDown();
+		    			window.UI.clearDialogSliderInputs();
+		    			break;
+		    		default:
+		    			alert("no content type");
+		    			break;
+		    	}
+		    	document.getElementById("dialogSliderTextarea").value = ""
+		   		window.UI.dialogSliderDown();
+		    }
+	    });
+	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
+		
+	    // load the previous page
+	    document.getElementById("prevPage").addEventListener('mousedown', function(){
+	    	if(window.UI.commentsPrevPageUrl != null){
+	    		window.ApiConnector.pullCommentData("forum", window.UI.commentsPrevPageUrl);
+	    	}
+		});
+		// load the previous page
+		document.getElementById("nextPage").addEventListener('mousedown', function(){
+			if(window.UI.commentsNextPageUrl != null){
+				window.ApiConnector.pullCommentData("forum", window.UI.commentsNextPageUrl);
+			}
+		});
+		
+	}
+
+	UiHandle.prototype.clearDialogSliderInputs = function clearDialogSliderInputs(){
+		document.getElementById("comment_type").value = "FORUM";
+		document.getElementById("comment_message").value = "";
+		document.getElementById("input_purpose").value = "";
+		return false;
+	}
+
+	UiHandle.prototype.topSliderToggle = function topSliderToggle(){
+		if (document.getElementById("topSlideDown").className.match("sliderDown")){
+			window.UI.isTopSliderUp = true;
+			document.getElementById("topSlideDown").className = "sliderUp";
+		}else{
+			window.UI.isTopSliderUp = false;
+			document.getElementById("topSlideDown").className = "sliderDown";
+		}
+	}
+
+	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
+		document.getElementById("markerTypeDialog").style.display = "none";
+		window.UI.isMarkerDisplayVisible = false;
+	}
+
+	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
+		window.UI.commentPurpose = window.UI.MARKER;
+		// add marker type selectors
+	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
+	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
+	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
+	    document.getElementById("cancel").addEventListener('mousedown', function(){
+	    	window.UI.hideMarkerTypeSelect();
+	    });
+		
+		document.getElementById("markerTypeDialog").style.display = "block";
+		window.UI.isMarkerDisplayVisible = true;
+	}
+
+	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
+		document.getElementById('startButton').style.backgroundColor=colorHex;
+	}
+
+	UiHandle.prototype.setBigButtonText = function setBigButtonText(buttonText){
+		document.getElementById('startButton').innerHTML = buttonText;
+	}
+
+	UiHandle.prototype.setMapLoaded = function setMapLoaded(){
+		window.MAP.isMapLoaded = true;
+		window.LS.hide();
+	}
+
+	// centers the appropriate panels
+	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
+		var container = document.getElementById("container");
+		if(displayNum != window.UI.currentDisplay){
+			if(window.UI.isMarkerDisplayVisible){
+				window.UI.hideMarkerTypeSelect();
+			}
+			if(window.UI.dialogSliderIsUp){
+				window.UI.dialogSliderDown();
+			}
+			if(!window.UI.isTopSliderUp){
+				window.UI.topSliderToggle();
+			}
+		}
+		container.className = "";
+		switch(displayNum){
+			case 0:
+				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
+				container.className = "panel1Center";
+			break;
+			case 1:
+				this.currentDisplay = 2;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "block";
+				container.className = "panel2Center";
+			break;
+			case 2:
+				this.currentDisplay = 3;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "block";
+				this.navbarSlideDown();
+				container.className = "panel3Center";
+			break;
+			default:
+				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
+				container.className = "panel1Center";
+
+		}
+	}
+
+	// The user presses the submit button on the comment submission screen
+	UiHandle.prototype.commentSubmission = function commentSubmission(){
+
+		var comment = new FCommment();
+		comment.message = document.getElementById("dialogSliderTextarea").value;
+		comment.pin = null;
+		comment.type = document.getElementById("comment_type").value;
+		// comment.type = document.getElementById('comment_type').value;
+
+		var serializedComment = JSON.stringify(comment);
+		console.log(serializedComment);
+
+		window.ApiConnector.pushCommentData(serializedComment);
+
+		//Return false to stop normal form submission form occuring
+		return false;
+	}
+
+	UiHandle.prototype.navbarSlideDown = function navbarSlideDown(){
+		window.UI.isNavbarUp = false;
+		document.getElementById("navContainer").style.top = "100%";
+	}
+
+	UiHandle.prototype.navbarSlideUp = function navbarSlideUp(){
+		window.UI.isNavbarUp = true;
+		document.getElementById("navContainer").style.top = "86%";
+	}
+
+	// when the user chooses which type of marker to add to the map
+	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
+		// first we need to show the marker on the map
+		// var iconUrl = "img/icons/blueCircle.png";
+		var iconUrl = "";
+		switch(markerType){
+			case "comment":
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+			case "pickup":
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+			case "trash":
+				iconUrl = "img/icons/greenCircle.png";
+				break;
+			default:
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+		}
+
+		window.MAP.markerType = markerType;
+		window.UI.hideMarkerTypeSelect();
+		window.UI.dialogSliderUp();
+		// (bug) here we need to prevent more map touches
+	}
+
+	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(purpose){
+		window.UI.dialogSliderIsUp = true;
+		if(purpose == window.UI.COMMENT){
+			document.getElementById("input_purpose").value == window.UI.COMMENT;
+		}else{
+			google.maps.event.addListener(window.MAP.map, 'mousedown', function(e){
+				e.cancelBubble = true; 
+  				if (e.stopPropagation) e.stopPropagation(); 
+			});
+			document.getElementById("input_purpose").value == window.UI.MARKER;
+		}
+		document.getElementById("dialogSlider").style.top = "72%";
+		document.getElementById("dialogSlider").style.opacity = "1.0";
+		document.getElementById("dialogSliderTextarea").focus();
+
+	}
+
+	UiHandle.prototype.dialogSliderDown = function dialogSliderDown(){
+		window.UI.dialogSliderIsUp = false;
+		document.getElementById("dialogSlider").style.top = "86%";
+		document.getElementById("dialogSlider").style.opacity = "0.0";
+	}
+
+	UiHandle.prototype.markerSelectUp = function markerSelectUp(){
+		// set the coords of the marker event
+
+	    MOUSEUP_TIME = new Date().getTime() / 1000;
+	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
+	        if(this.isMarkerDisplayVisible){
+	        	window.UI.hideMarkerTypeSelect();
+	        }else{
+	        	window.UI.showMarkerTypeSelect();
+	        }
+	        this.MOUSEDOWN_TIME =0;
+	        this.MOUSEDOWN_TIME =0;
+	    }else{
+	        this.MOUSEDOWN_TIME =0;
+	        this.MOUSEDOWN_TIME =0;
+	    }
+	}
+
+	UiHandle.prototype.markerSelectDown = function markerSelectDown(event){
+		// set the coords of the marker event
+		if(!window.UI.dialogSliderIsUp){
+		    window.MAP.markerEvent = event;
+		    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
+		}
+	}
+
+	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
+	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
+		console.log("Heatmap data returned from api, preparing to apply data to map.");
+		window.MAP.applyHeatMap(data);
+	}
+
+	UiHandle.prototype.updateMarker = function updateMarker(data){
+		console.log("marker response: "+data);
+		var dataArr = eval("("+data+")");
+		//	var dataArr = data;
+        for(ii=0; ii<dataArr.length; ii++){
+            // var dataA = dataArr[ii].split(",");
+            window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
+            // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
+        }
+
+	}
+
+	UiHandle.prototype.updateNeeds = function updateNeeds(data){
+		console.log("UPDATE NEEDS DOES NOTHING");
+	}
+
+	UiHandle.prototype.updateForum = function updateForum(data){
+		console.log("In Update forum");
+		console.log("Comment data: "+data);
+		document.getElementById("bubbleContainer").innerHTML = "";
+		var dataObj = JSON.parse(data);
+		var comments = dataObj.comments;
+		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
+		// window.UI.commentsNextPageUrl = dataObj.page.next;
+		if(dataObj.page.next != null){
+			var nextArr = dataObj.page.next.split("xenonapps.com/api");
+			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
+		}else{
+			window.UI.commentsNextPageUrl = null;
+		}
+		if(dataObj.page.previous != null){
+			var prevArr = dataObj.page.previous.split("xenonapps.com/api");
+			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
+		}else{
+			window.UI.commentsPrevPageUrl = null;
+		}
+
+		for(var ii=0; ii<comments.length; ii++){
+				var div = document.createElement("div");
+				var timeDiv = document.createElement("div");
+				var messageContent = document.createElement("span");
+				messageContent.innerHTML = comments[ii]['message'];
+				timeDiv.innerHTML = comments[ii]['timestamp'];
+				timeDiv.className = "bubbleTime";
+				if(ii % 2 == 0){
+					div.className = "bubbleRight bubble"; 
+				}else{
+					div.className = "bubbleLeft bubble";
+				}
+				div.appendChild(timeDiv);
+				div.appendChild(messageContent);
+				document.getElementById("bubbleContainer").appendChild(div);
+		}
+	}
+
+	UiHandle.prototype.updateTest = function updateTest(data){
+		console.log(data);
+	}
+
+	UiHandle.prototype.toggleClockRun = function toggleClockRun(){
+		if(window.UI.isClockRunning){
+			// stop the clock
+			console.log("stopping clock");
+			clearInterval(window.UI.clockInterval);
+			window.UI.clockInterval = null;
+			window.UI.isClockRunning = false;
+		}else{
+			// start the clock
+			console.log("starting clock");
+			window.UI.clockInterval = setInterval(window.UI.updateClock, 1000);
+			window.UI.isClockRunning = true;
+		}
+	}
+
+	UiHandle.prototype.updateClock = function updateClock(){
+		if(window.UI.clockSecs == 59){
+			window.UI.clockSecs = 00;
+			if(window.UI.clockMins == 59){
+				window.UI.clockMins = 00;
+				window.UI.clockHrs++;
+			}else{
+				window.UI.clockMins++;
+			}
+		}else{
+			window.UI.clockSecs++;
+		}
+		var clockSecStr = (window.UI.clockSecs < 10) ? "0"+window.UI.clockSecs : window.UI.clockSecs;
+		var clockMinStr = (window.UI.clockMins < 10) ? "0"+window.UI.clockMins : window.UI.clockMins;
+		var clockHrStr = (window.UI.clockHrs < 10) ? "0"+window.UI.clockHrs : window.UI.clockHrs;
+		
+		document.getElementById("timeSpentClockDigits").innerHTML = clockHrStr + ":" + clockMinStr + ":" + clockSecStr;
+	}
+	// ******** End DOM Updaters *********
+
+	// ---- begin pagination control toggle ----
+	UiHandle.prototype.showNextCommentsButton = function showNextCommentsButton(){
+		document.getElementById("nextPage").style.display = "inline-block";
+	}
+
+	UiHandle.prototype.hideNextCommentsButton = function hideNextCommentsButton(){
+		document.getElementById("nextPage").style.display = "none";
+	}
+
+	UiHandle.prototype.showPrevCommentsButton = function showPrevCommentsButton(){
+		document.getElementById("prevPage").style.display = "inline-block";
+	}
+
+	UiHandle.prototype.hidePrevCommentsButton = function hidePrevCommentsButton(){
+		document.getElementById("prevPage").style.display = "none";
+	}
+	// ---- end pagination control toggle
+
+} // end UiHandle class def
+
 // prototype objects for posting to API
 function Pin(){
 	this.latDegrees; 
@@ -823,7 +1032,7 @@ function Pin(){
 
 //We cannot call this Comment because it's reserved by javascript
 function FCommment(){
-	this.message ="";
+	this.message ="FORUM";
 	this.pin = null;
 	this.type = "";
 }
@@ -835,6 +1044,7 @@ function FCommment(){
 */
 document.addEventListener('DOMContentLoaded',function(){
 	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+	document.addEventListener("touchstart", function(){}, true);
 
 	window.ApiConnector = new ApiConnector();
 	window.UI = new UiHandle();
@@ -845,15 +1055,17 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.MAP.initMap();
 	window.logging = false;
 
-	// window.ApiConnector.pullTestData();
+	window.ApiConnector.pullCommentData();
 	window.ApiConnector.pullMarkerData();
 	window.ApiConnector.pullHeatmapData();
 
-	document.getElementById("bigButton").addEventListener('mousedown', function(){
-		if(!window.logging){ 
+	document.getElementById("startButton").addEventListener('mousedown', function(){
+		if(!window.logging){
+			window.UI.toggleClockRun(); 
 			window.GPS.start();
 		}else{
 			window.GPS.stop();
+			window.UI.toggleClockRun();
 		}
 	});
 

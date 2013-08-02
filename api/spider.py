@@ -165,7 +165,7 @@ if __name__ == "__main__":
 	validateErrorMessageReturned(tester.getJSON())
 
 	#Give it another bad value that it will be ok with (it doesn't care about negatives)
-	tester.followLink(endPoints['comments'],withData={'type' : 'needs', 'page' : -2})
+	tester.followLink(endPoints['comments'],withData={'type' : 'trash+pickup', 'page' : -2})
 	assert tester.getCode() == HTTP_OK
 	validateCommentsGETRequest(tester.getJSON())
 
@@ -184,6 +184,16 @@ if __name__ == "__main__":
 	validateErrorMessageReturned(tester.getJSON())
 
 	tester.followLink(endPoints['comments'],withData={"type" : "meessage", "message" : "This is another test message", "pin" : "badpinval"},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#Send a POST request to the endpoint with an empty message
+	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : " "},httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	validateErrorMessageReturned(tester.getJSON())
+
+	#Send a POST request to the endpoint with more than 140 characters (145) in the message
+	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : "sfsdfsdlfhdslfhlksdfhlsdkfdsklfjldskjfkldsjflksdjflksdhfjsdkbgdsibosdihgfiosdhglkdshslkdhgioerhgoirenglsdkhgsdhgoierhgoirehglkfsdhgiofhgioshglks"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	validateErrorMessageReturned(tester.getJSON())
 
