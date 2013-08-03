@@ -157,34 +157,42 @@ function ApiConnector(){
 
 	// by passing the url as an argument, we can use this method to get next pages
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
-		var allCommentsUri = "/api/comments";
+		var urlStr = "";
+		if(url == null || url == "null"){
+			urlStr += "/api/comments";
+		}else{
+			urlStr += url;
+		}
+
+		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 		// var forumURI = "/comments?type=forum";
 		// var needsURI = "/comments?type=help+needed";
 		// var messagesURI = "/comments?type=general+message";
 		// var trashURI = "/comments?type=trash+pickup";
 
 		console.log("Pulling comment "+commentType+" data from: "+url);
-		// var urlStr = "";
-		var urlStr = allCommentsUri;
-		switch(commentType){
-			case "help needed":
-				// urlStr = (url == null) ? BASE+needsURI : url;
-				this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
-				break;
-			case "general message":
-				// urlStr =  (url == null) ? BASE+messagesURI : url;
-				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
-				break;
-			case "trash pickup":
-				// urlStr =  (url == null) ? BASE+trashURI : url;
-				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
-				break;
-			default:
-				commentType = "forum";
-				// urlStr =  (url == null) ? BASE+forumURI : url;
-				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
-				break;
-		}
+		// // var urlStr = "";
+		// // var urlStr = url;
+		// // alert(url);
+		// switch(commentType){
+		// 	case "help needed":
+		// 		// urlStr = (url == null) ? BASE+needsURI : url;
+		// 		this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
+		// 		break;
+		// 	case "general message":
+		// 		// urlStr =  (url == null) ? BASE+messagesURI : url;
+		// 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
+		// 		break;
+		// 	case "trash pickup":
+		// 		// urlStr =  (url == null) ? BASE+trashURI : url;
+		// 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
+		// 		break;
+		// 	default:
+		// 		commentType = "forum";
+		// 		// urlStr =  (url == null) ? BASE+forumURI : url;
+		// 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
+		// 		break;
+		// }
 	} // end pullCommentData()
 
 	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
@@ -622,6 +630,8 @@ function UiHandle(){
 	this.isMarkerVisible = true;
 	this.isMapLoaded = false;
 
+	this.scrollPosition = 0;
+
 	this.isNavbarUp = true;
 	this.isTopSliderUp = true;
 
@@ -701,10 +711,6 @@ function UiHandle(){
 		// 	}
 		// });
 
-		if(window.DEBUG){
-			
-		}
-
 		// document.body.addEventListener("scroll", window.UI.updateScroll, false);
 		// document.getElementById("commentContainer").onscroll = window.UI.updateScroll;
 
@@ -715,7 +721,12 @@ function UiHandle(){
 	UiHandle.prototype.updateScroll = function updateScroll(element){
 		// console.log("Scrolling");
 		// var offset = window.pageYOffset;
-		var offset = element.scrollTop
+		var offset = element.scrollTop - window.UI.scrollPosition;
+		if (offset > 90){
+			window.UI.scrollPosition += offset;
+			// alert(window.UI.commentsNextPageUrl);
+			window.ApiConnector.pullCommentData(null, window.UI.commentsNextPageUrl);
+		}
 		if(window.DEBUG){
 			var debugDiv = document.createElement("div");
 			debugDiv.className = "debugDiv";
@@ -726,7 +737,7 @@ function UiHandle(){
 			debugDiv.style.top = "30%";
 			debugDiv.style.border = "solid 1px #999";
 			debugDiv.style.zindex = "1111";
-			debugDiv.innerHTML = "offest: "+offset+"<br />element height: "+element.offsetHeight;
+			debugDiv.innerHTML = "offest: "+offset+"<br />element height: "+element.clientHeight+"<br />"+(new Date());
 			document.body.appendChild(debugDiv);
 		}
 	}
@@ -956,7 +967,7 @@ function UiHandle(){
 	UiHandle.prototype.updateForum = function updateForum(data){
 		console.log("In Update forum");
 		console.log("Comment data: "+data);
-		document.getElementById("bubbleContainer").innerHTML = "";
+		// document.getElementById("bubbleContainer").innerHTML = "";
 		var dataObj = JSON.parse(data);
 		var comments = dataObj.comments;
 		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
@@ -978,8 +989,19 @@ function UiHandle(){
 				var div = document.createElement("div");
 				var timeDiv = document.createElement("div");
 				var messageContent = document.createElement("span");
+				var currentDate = new Date();
+				var timezoneOffsetMillis = currentDate.getTimezoneOffset()*60*1000;
+				var messageDate = new Date(comments[ii]['timestamp']);
+				var diffMins = Math.round((((timezoneOffsetMillis + currentDate.getTime()) - messageDate.getTime())/1000)/60);
+				if(diffMins > 59){
+					var mins = (diffMins % 60);
+					var timeSinceMessage = ((diffMins - mins)/60)+"hrs, "+mins+"mins ago"; 
+				}else{
+					var timeSinceMessage = diffMins+"mins ago"; 
+				}
+				
 				messageContent.innerHTML = comments[ii]['message'];
-				timeDiv.innerHTML = comments[ii]['timestamp'];
+				timeDiv.innerHTML = timeSinceMessage;
 				timeDiv.className = "bubbleTime";
 				if(ii % 2 == 0){
 					div.className = "bubbleRight bubble"; 
@@ -1092,7 +1114,7 @@ document.addEventListener('DOMContentLoaded',function(){
 	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
 	document.addEventListener("touchstart", function(){}, true);
 
-	window.DEBUG = true;
+	window.DEBUG = false;
 
 	window.ApiConnector = new ApiConnector();
 	window.UI = new UiHandle();
