@@ -131,11 +131,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         @Override
         public Fragment getItem(int i)
         { 
-        	switch (i) {
-            //case 0:
+        	switch (3) {
+            case 0:
         		//TODO: Launch HomeSectionFragment
-            //case 1:
+        		Fragment home = new HomeSectionFragment();
+        		return home;
+            case 1:
         		//TODO: Launch MapSectionFragment
+        		Fragment map = new MapSectionFragment();
+        		return map;
         	case 2:
         		//TODO: Launch FeedSectionFragment
         		Fragment feed = new FeedSectionFragment();

@@ -2,26 +2,43 @@ package com.xenon.greenup.api;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.util.Log;
+
 public class CommentPage {
 	
-	private int pageNum;
 	private ArrayList<Comment> commentsList;
 	private String nextPage;
 	private String prevPage;
 	
 	
-	/**
-	 * @return the pageNum
-	 */
-	public int getPageNum() {
-		return pageNum;
+	public CommentPage(String jsonString) {
+		int i;
+		JSONObject object,pageInfo;
+		JSONArray comments;
+		try {
+			object = new JSONObject(jsonString);
+			pageInfo = object.getJSONObject("page");
+			this.prevPage = pageInfo.getString("previous");
+			this.nextPage = pageInfo.getString("next");
+			Log.i("prevPage",this.prevPage);
+			Log.i("nextPage",this.nextPage);
+			comments = object.getJSONArray("comments");
+			this.commentsList = new ArrayList<Comment>();
+			for (i = 0; i < comments.length(); i++){
+				this.commentsList.add(new Comment(comments.getString(i)));
+			}
+		}
+		catch (JSONException e){
+			e.printStackTrace();
+		}
+		
+		
 	}
-	/**
-	 * @param pageNum the pageNum to set
-	 */
-	public void setPageNum(int pageNum) {
-		this.pageNum = pageNum;
-	}
+	
 	/**
 	 * @return the commentsList
 	 */

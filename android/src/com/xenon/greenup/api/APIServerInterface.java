@@ -21,6 +21,7 @@ public class APIServerInterface {
 	
 	//TODO: Write private methods to parse and create JSON objects
 	//TODO: Make this handle different HTTP response codes properly beyond throwing an exception and exploding
+	//TODO: Make errors display a toast notification
 	
 	
 	//Retrieves a page of comments from the server, the type and page number are optional
@@ -39,7 +40,7 @@ public class APIServerInterface {
 			response = "Error";
 		}
 		Log.i("response",response);
-		return new CommentPage();
+		return new CommentPage(response);
 	}
 	
 	//Submits a comment (POST), the pin is optional.  Returns an integer status code (codes TBD)
