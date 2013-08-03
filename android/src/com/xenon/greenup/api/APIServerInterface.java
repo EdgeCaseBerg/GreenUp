@@ -28,18 +28,7 @@ public class APIServerInterface {
 	public CommentPage getComments(String type, int page) {
 		StringBuilder sb = new StringBuilder(BASE_URL + "/comments?");
 		sb.append("type=" + type + "&" + "page=" + page);
-		String url = sb.toString();
-		APIRequestTask request = new APIRequestTask(url);
-		request.execute();
-		String response;
-		try {
-			response = request.get();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			response = "Error";
-		}
-		Log.i("response",response);
+		String response = sendRequest(sb.toString());
 		return new CommentPage(response);
 	}
 	
@@ -49,8 +38,13 @@ public class APIServerInterface {
 	}
 	
 	//Get a list of heatmap points for the specified coordinates, all parameters are optional (??)
-	public Heatmap getHeatmap(float latDegress, float latOffset, float lonDegrees, float lonOffset, int precision){
-		return new Heatmap();
+	public Heatmap getHeatmap(float latDegrees, float latOffset, float lonDegrees, float lonOffset, int precision){
+		StringBuilder sb = new StringBuilder(BASE_URL + "/heatmap?");
+		//sb.append("latDegrees=" + latDegrees + "&latOffset=" + latOffset + "&");
+		//sb.append("lonDegrees=" + lonDegrees + "&lonOffset=" + lonOffset + "&");
+		//sb.append("precision=" + precision);
+		String response = sendRequest(sb.toString());
+		return new Heatmap(response);
 	}
 	
 	//Submit a heatmap point (PUT)
@@ -69,22 +63,23 @@ public class APIServerInterface {
 	}
 	
 	public int testConnection(){
-		String response;
-		APIRequestTask request = new APIRequestTask(BASE_URL);
+		sendRequest(BASE_URL);
+		return 0;
+	}
+	
+	private String sendRequest(String url) {
+		APIRequestTask request = new APIRequestTask(url);
 		request.execute();
+		String response;
 		try {
 			response = request.get();
 		}
-		catch (ExecutionException e) {
+		catch (Exception e) {
 			e.printStackTrace();
-			response = "Error";
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-			response = "Error";
+			response = "Error, see stack trace";
 		}
 		Log.i("response",response);
-		return 0;
+		return response;
 	}
 	
 	private class APIRequestTask extends AsyncTask<Void,Void,String>{

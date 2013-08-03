@@ -2,6 +2,11 @@ package com.xenon.greenup.api;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import android.util.Log;
+
 public class Heatmap {
 	
 	private float latDegrees;
@@ -11,6 +16,23 @@ public class Heatmap {
 	private int precision;
 	private ArrayList<HeatmapPoint> pointList;
 	
+	public Heatmap(String jsonString) {
+		int i;
+		JSONArray points;
+		try {
+			points = new JSONArray(jsonString);
+			this.pointList = new ArrayList<HeatmapPoint>();
+			for (i = 0; i < points.length(); i++){
+				this.pointList.add(new HeatmapPoint(points.getString(i)));
+				Log.i("lat",Double.toString(pointList.get(i).getLatDegree()));
+				Log.i("lon",Double.toString(pointList.get(i).getLonDegree()));
+				Log.i("time",Double.toString(pointList.get(i).getSecondsWorked()));
+			}
+		}
+		catch (JSONException e){
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * @return the latDegrees

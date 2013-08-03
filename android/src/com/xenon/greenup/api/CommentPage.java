@@ -35,8 +35,6 @@ public class CommentPage {
 		catch (JSONException e){
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	/**
