@@ -701,7 +701,6 @@ h1{
 
 .bubbleRight{
     margin-left:3%;
-    background: #FFDCAB;
 }
 
 .bubbleRight:after {
@@ -711,14 +710,12 @@ h1{
     right: 5%;
     border-style: solid;
     border-width: 15px 15px 0;
-    border-color: #FFDCAB transparent;
     display: block;
     width: 0;
     z-index: 1;
 }
 
 .bubbleLeft{
-    background: #ddd;
 }
 
 .bubbleLeft:after {
@@ -728,10 +725,29 @@ h1{
     left: 5%;
     border-style: solid;
     border-width: 15px 15px 0;
-    border-color: #ddd transparent;
     display: block;
     width: 0;
     z-index: 1;
+}
+
+.bubbleForum{
+    background: red;
+}
+
+.bubbleForum:after{
+    border-color: red transparent;  
+}
+.bubbleNeeds{
+    background: blue;
+}
+.bubbleNeeds:after{
+    border-color: blue transparent;
+}
+.bubbleMesage{
+    background:orange;
+}
+.bubbleMessage:after{
+    border-color: orange transparent;
 }
 
 #comment_submission_form{

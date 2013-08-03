@@ -43,7 +43,7 @@
 
 </head>
 
-<body>
+<body >
 	<!-- <div id="loading">
 		<img src="img/startup/ajax-loader.gif">
 	</div> -->
@@ -101,17 +101,9 @@
 			</div>
         </div>
 
-		<div class="panel" id="panel3">
+		<div class="panel" id="panel3" onscroll="window.UI.updateScroll(this)">
             <div id="commentContainer">
                 <div id="bubbleContainer">
-                </div>
-
-                <div class="addCommentNest">
-                    <input type="hidden" id="commentTypeToBePosted" value="null" />
-                    <input type="hidden" id="commentToBePosted" value="null" />
-                    <div class="nextPrev commentButton" id="prevPage"><</div>
-                    <div class="addCommentButton commentButton" id="addCommentButton">New Comment</div>
-                    <div class="nextPrev commentButton" id="nextPage">></div>
                 </div>
             </div>
 		</div>
@@ -139,6 +131,15 @@
                 </div>
             </div>
             <div id="panel3SlideDownContent" class="panelSlideDownContent">
+                <span class="topSliderContent">Comment Types:</span>
+                <ul>
+                    <li><input type="checkbox" id="toggleForumComments" />Forum</li>
+                    <li><input type="checkbox" id="toggleNeedsComments" />Needs</li>
+                    <li><input type="checkbox" id="toggleMessageComments" />Message</li>
+                    <li><div class="addCommentButton commentButton" id="addCommentButton">New Comment</div></li>
+                    <input type="hidden" id="commentTypeToBePosted" value="null" />
+                    <input type="hidden" id="commentToBePosted" value="null" />
+                </ul>
             </div>
         </div>
 

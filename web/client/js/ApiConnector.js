@@ -157,29 +157,31 @@ function ApiConnector(){
 
 	// by passing the url as an argument, we can use this method to get next pages
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
-		var forumURI = "/comments?type=forum";
-		var needsURI = "/comments?type=help+needed";
-		var messagesURI = "/comments?type=general+message";
-		var trashURI = "/comments?type=trash+pickup";
+		var allCommentsUri = "/api/comments";
+		// var forumURI = "/comments?type=forum";
+		// var needsURI = "/comments?type=help+needed";
+		// var messagesURI = "/comments?type=general+message";
+		// var trashURI = "/comments?type=trash+pickup";
 
 		console.log("Pulling comment "+commentType+" data from: "+url);
-		var urlStr = "";
+		// var urlStr = "";
+		var urlStr = allCommentsUri;
 		switch(commentType){
 			case "help needed":
-				urlStr = (url == null) ? BASE+needsURI : url;
+				// urlStr = (url == null) ? BASE+needsURI : url;
 				this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
 				break;
 			case "general message":
-				urlStr =  (url == null) ? BASE+messagesURI : url;
+				// urlStr =  (url == null) ? BASE+messagesURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
 				break;
 			case "trash pickup":
-				urlStr =  (url == null) ? BASE+trashURI : url;
+				// urlStr =  (url == null) ? BASE+trashURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 			default:
 				commentType = "forum";
-				urlStr =  (url == null) ? BASE+forumURI : url;
+				// urlStr =  (url == null) ? BASE+forumURI : url;
 				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
 				break;
 		}
@@ -687,18 +689,46 @@ function UiHandle(){
 	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
 		
 	    // load the previous page
-	    document.getElementById("prevPage").addEventListener('mousedown', function(){
-	    	if(window.UI.commentsPrevPageUrl != null){
-	    		window.ApiConnector.pullCommentData("forum", window.UI.commentsPrevPageUrl);
-	    	}
-		});
-		// load the previous page
-		document.getElementById("nextPage").addEventListener('mousedown', function(){
-			if(window.UI.commentsNextPageUrl != null){
-				window.ApiConnector.pullCommentData("forum", window.UI.commentsNextPageUrl);
-			}
-		});
+	 //    document.getElementById("prevPage").addEventListener('mousedown', function(){
+	 //    	if(window.UI.commentsPrevPageUrl != null){
+	 //    		window.ApiConnector.pullCommentData("forum", window.UI.commentsPrevPageUrl);
+	 //    	}
+		// });
+		// // load the previous page
+		// document.getElementById("nextPage").addEventListener('mousedown', function(){
+		// 	if(window.UI.commentsNextPageUrl != null){
+		// 		window.ApiConnector.pullCommentData("forum", window.UI.commentsNextPageUrl);
+		// 	}
+		// });
+
+		if(window.DEBUG){
+			
+		}
+
+		// document.body.addEventListener("scroll", window.UI.updateScroll, false);
+		// document.getElementById("commentContainer").onscroll = window.UI.updateScroll;
+
 		
+		
+	} // end init
+
+	UiHandle.prototype.updateScroll = function updateScroll(element){
+		// console.log("Scrolling");
+		// var offset = window.pageYOffset;
+		var offset = element.scrollTop
+		if(window.DEBUG){
+			var debugDiv = document.createElement("div");
+			debugDiv.className = "debugDiv";
+			debugDiv.style.height = "120px";
+			debugDiv.style.width = "100%";
+			debugDiv.style.background = "#eee";
+			debugDiv.style.position = "fixed";
+			debugDiv.style.top = "30%";
+			debugDiv.style.border = "solid 1px #999";
+			debugDiv.style.zindex = "1111";
+			debugDiv.innerHTML = "offest: "+offset+"<br />element height: "+element.offsetHeight;
+			document.body.appendChild(debugDiv);
+		}
 	}
 
 	UiHandle.prototype.clearDialogSliderInputs = function clearDialogSliderInputs(){
@@ -956,9 +986,25 @@ function UiHandle(){
 				}else{
 					div.className = "bubbleLeft bubble";
 				}
+
+				switch(comments[ii]['type']){
+					case 'forum':
+						div.className += " bubbleForum";
+					break;
+					case 'needs':
+						div.className += " bubbleNeeds";
+					break;
+					case 'message':
+						div.className += " bubbleMessage";
+					break;
+					default:
+						div.className += " bubbleForum";
+					break;
+				}
 				div.appendChild(timeDiv);
 				div.appendChild(messageContent);
 				document.getElementById("bubbleContainer").appendChild(div);
+
 		}
 	}
 
@@ -1045,6 +1091,8 @@ function FCommment(){
 document.addEventListener('DOMContentLoaded',function(){
 	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
 	document.addEventListener("touchstart", function(){}, true);
+
+	window.DEBUG = true;
 
 	window.ApiConnector = new ApiConnector();
 	window.UI = new UiHandle();
