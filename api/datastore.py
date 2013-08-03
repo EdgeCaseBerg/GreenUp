@@ -260,12 +260,9 @@ def initialPage(typeFilter=None):
 	initialPageKey = 'greenup_comments_page_%s_%s' %(typeFilter,1)
 
 	results = querySet[0:20]
-	logging.info("Results query list after invalidation:")
-	logging.info(results)
-	# results = querySet.run(batch_size=20)
-
+	# sort, newest to oldest
+	results = sorted(results, key=lambda comment: comment.timeSent, reverse=True)
 	memcache.set(initialPageKey, serialize_entities(results))
-	# entities = deserialize_entities(memcache.get("somekey"))
 
 	commentsCursor = querySet.cursor()
 	memcache.set(initialCursorKey, commentsCursor)
@@ -335,6 +332,8 @@ def paging(page=1,typeFilter=None):
 		results = results.run(limit=resultsPerPage)
 
 		items = [item for item in results]
+		# sort, newest to oldest
+		items = sorted(items, key=lambda comment: comment.timeSent, reverse=True)
 
 		# save updated cursor
 		commentsCursor = querySet.cursor()
@@ -350,6 +349,10 @@ def paging(page=1,typeFilter=None):
 	# print "did this instead, cause it was in the cache"
 	pageKey = "greenup_comments_page_%s_%s" %(typeFilter, page)
 	results = deserialize_entities(memcache.get(pageKey))
+	
+	# sort, newest to oldest
+	results = sorted(results, key=lambda comment: comment.timeSent, reverse=True)
+
 	return results
 
 

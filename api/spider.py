@@ -152,7 +152,14 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_OK
 	comments_response_to_get = tester.getJSON()
 	validateCommentsGETRequest(comments_response_to_get)
-	
+
+	#See if the comments are in reverse chronological order
+	tester.followLink(endPoints['comments'])
+	assert tester.getCode() == HTTP_OK
+	comments_response_to_get = tester.getJSON()
+	newlist = sorted(comments_response_to_get['comments'], key=lambda k: k['timestamp'], reverse=True) 
+	assert comments_response_to_get['comments'] == newlist
+
 	#Next attempt to submit responses and verify that they are what they should be
 	tester.followLink(endPoints['comments'],withData={'type' : 'forum', 'page' : 1})
 	assert tester.getCode() == HTTP_OK
