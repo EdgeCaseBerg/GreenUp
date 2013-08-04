@@ -47,7 +47,6 @@ Developers:
 - [Paul Kiripolsky]
 - [Evan Yandell]
 - [Phelan Vendeville]
-- [Anders Melen]
 
 Designers:
 ------------------
