@@ -98,12 +98,13 @@
                         <div class="tile tile3" id="selectTrash">Trash</div>
                         <div class="tile tile4" id="cancel">Cancel</div>
                     </div>
-			</div>
+			 </div>
         </div>
 
-		<div class="panel" id="panel3" onscroll="window.UI.updateScroll(this)">
+		<div class="panel" id="panel3" onscroll="window.Comments.updateScroll(this)">
             <div id="commentContainer">
                 <div id="bubbleContainer">
+                    <!-- comments populate here dynamically -->
                 </div>
             </div>
 		</div>
@@ -137,26 +138,26 @@
                     <ul>
                         <li>    
                             <div class="roundedTwo">
-                                <input type="checkbox" value="None" id="toggleForum" onchange="window.UI.toggleComments('forum')" class="checkboxUnder" name="check" checked />
+                                <input type="checkbox" value="None" id="toggleForum" onchange="window.Comments.toggleComments('forum')" class="checkboxUnder" name="check" checked />
                                 <label for="toggleForum"></label>
                             </div>
                             <span>Forum</span>
                         </li>
                         <li>
                             <div class="roundedTwo">
-                                <input type="checkbox" value="None" id="toggleNeeds" onchange="window.UI.toggleComments('needs')" class="checkboxUnder" name="check" checked />
+                                <input type="checkbox" value="None" id="toggleNeeds" onchange="window.Comments.toggleComments('needs')" class="checkboxUnder" name="check" checked />
                                 <label for="toggleNeeds"></label>
                             </div>
                             <span>Needs</span>
                         </li>
                         <li>
                             <div class="roundedTwo">
-                                <input type="checkbox" value="None" id="toggleMessages" onchange="window.UI.toggleComments('message')" class="checkboxUnder" name="check" checked />
+                                <input type="checkbox" value="None" id="toggleMessages" onchange="window.Comments.toggleComments('message')" class="checkboxUnder" name="check" checked />
                                 <label for="toggleMessages"></label>
                             </div>
                             <span>Messages</span>
                         </li>
-                        <li><div class="addCommentButton commentButton" id="addCommentButton">+ New Comment</div></li>
+                        <li><div class="addCommentButton commentButton" id="addCommentButton" onclick="window.UI.showMarkerTypeSelect('comment')">+ New Comment</div></li>
                         <input type="hidden" id="commentTypeToBePosted" value="null" />
                         <input type="hidden" id="commentToBePosted" value="null" />
                     </ul>

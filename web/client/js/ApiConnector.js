@@ -621,6 +621,93 @@ function MapHandle(){
 
 } //end MapHandle
 
+function CommentsHandle(){
+	this.scrollPosition = 0;
+
+	CommentsHandle.prototype.init = function init(){
+		// add the listener to our add comments button
+	} // end init()
+
+	// when the comments nest is scrolled to a position defined in index.html, more comments are added
+	CommentsHandle.prototype.updateScroll = function updateScroll(element){
+		// console.log("Scrolling");
+		// var offset = window.pageYOffset;
+		var offset = element.scrollTop - window.Comments.scrollPosition;
+		if (offset > 90){
+			window.Comments.scrollPosition += offset;
+			// alert(window.UI.commentsNextPageUrl);
+			window.ApiConnector.pullCommentData(null, window.UI.commentsNextPageUrl);
+		}
+	} // end updateScroll()
+
+	// when the comments checkboxes are toggled, this turns the comments on or off
+	CommentsHandle.prototype.toggleComments = function toggleComments(type){
+		switch(type){
+			case('forum'):
+				var bubbleNodeList = document.getElementsByClassName('bubbleForum');
+				if(document.getElementById("toggleForum").checked){
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "1";
+ 						bubbleNodeList[i].style.display = "block";
+					}
+				}else{
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "0";
+ 						bubbleNodeList[i].style.display = "none";
+					}
+				}
+			break;
+			case('needs'):
+				var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
+				if(document.getElementById("toggleNeeds").checked){
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "1";
+ 						bubbleNodeList[i].style.display = "block";
+					}
+				}else{
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "0";
+ 						bubbleNodeList[i].style.display = "none";
+					}
+				}
+			break;
+			case('message'):
+				var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
+				if(document.getElementById("toggleMessages").checked){
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "1";
+ 						bubbleNodeList[i].style.display = "block";
+					}
+				}else{
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "0";
+ 						bubbleNodeList[i].style.display = "none";
+					}
+				}
+			break;
+		}
+	} // end toggleComments()
+
+	//  The user presses the submit button on the comment submission screen
+	CommentsHandle.prototype.commentSubmission = function commentSubmission(commentType){
+
+		var comment = new FCommment();
+		comment.message = document.getElementById("dialogSliderTextarea").value;
+		comment.pin = null;
+		// comment.type = document.getElementById("comment_type").value;
+		comment.type = commentType;
+		// comment.type = document.getElementById('comment_type').value;
+
+		var serializedComment = JSON.stringify(comment);
+		console.log(serializedComment);
+
+		window.ApiConnector.pushCommentData(serializedComment);
+
+		//Return false to stop normal form submission form occuring
+		return false;
+	}
+}
+
 // class for managing the UI
 function UiHandle(){
 	this.currentDisplay = 1;
@@ -666,11 +753,6 @@ function UiHandle(){
 
 	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
 
-	    document.getElementById("addCommentButton").addEventListener('mousedown', function(){
-	    	window.UI.commentPurpose = window.UI.COMMENT;
-	    	window.UI.dialogSliderUp();
-	    });
-
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
 	    	// prevent OK from being clicked if dialogSlider textarea is empty
 	    	if(document.getElementById("dialogSliderTextarea").value == ""){
@@ -684,7 +766,7 @@ function UiHandle(){
 		    			window.UI.clearDialogSliderInputs();
 		    			break;
 		    		case window.UI.COMMENT:
-		    			window.UI.commentSubmission();
+		    			window.Comments.commentSubmission();
 		    			window.UI.dialogSliderDown();
 		    			window.UI.clearDialogSliderInputs();
 		    			break;
@@ -696,51 +778,9 @@ function UiHandle(){
 		   		window.UI.dialogSliderDown();
 		    }
 	    });
-	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});
-		
-	    // load the previous page
-	 //    document.getElementById("prevPage").addEventListener('mousedown', function(){
-	 //    	if(window.UI.commentsPrevPageUrl != null){
-	 //    		window.ApiConnector.pullCommentData("forum", window.UI.commentsPrevPageUrl);
-	 //    	}
-		// });
-		// // load the previous page
-		// document.getElementById("nextPage").addEventListener('mousedown', function(){
-		// 	if(window.UI.commentsNextPageUrl != null){
-		// 		window.ApiConnector.pullCommentData("forum", window.UI.commentsNextPageUrl);
-		// 	}
-		// });
-
-		// document.body.addEventListener("scroll", window.UI.updateScroll, false);
-		// document.getElementById("commentContainer").onscroll = window.UI.updateScroll;
-
-		
+	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});		
 		
 	} // end init
-
-	UiHandle.prototype.updateScroll = function updateScroll(element){
-		// console.log("Scrolling");
-		// var offset = window.pageYOffset;
-		var offset = element.scrollTop - window.UI.scrollPosition;
-		if (offset > 90){
-			window.UI.scrollPosition += offset;
-			// alert(window.UI.commentsNextPageUrl);
-			window.ApiConnector.pullCommentData(null, window.UI.commentsNextPageUrl);
-		}
-		if(window.DEBUG){
-			var debugDiv = document.createElement("div");
-			debugDiv.className = "debugDiv";
-			debugDiv.style.height = "120px";
-			debugDiv.style.width = "100%";
-			debugDiv.style.background = "#eee";
-			debugDiv.style.position = "fixed";
-			debugDiv.style.top = "30%";
-			debugDiv.style.border = "solid 1px #999";
-			debugDiv.style.zindex = "1111";
-			debugDiv.innerHTML = "offest: "+offset+"<br />element height: "+element.clientHeight+"<br />"+(new Date());
-			document.body.appendChild(debugDiv);
-		}
-	}
 
 	UiHandle.prototype.clearDialogSliderInputs = function clearDialogSliderInputs(){
 		document.getElementById("comment_type").value = "FORUM";
@@ -764,13 +804,24 @@ function UiHandle(){
 		window.UI.isMarkerDisplayVisible = false;
 	}
 
-	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
-		window.UI.commentPurpose = window.UI.MARKER;
-		// add marker type selectors
-	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
-	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
-	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
-	    document.getElementById("cancel").addEventListener('mousedown', function(){
+	// shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
+	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(purpose){
+		if(purpose == "comment"){
+			window.UI.topSliderToggle();
+			// add marker type selectors
+		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.Comments.commentSubmission("trash pickup")});
+		    document.getElementById("selectComment").addEventListener('mousedown', function(){window.Comments.commentSubmission("general message")});
+		    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.Comments.commentSubmission("help needed")});
+
+		}else{
+			window.UI.commentPurpose = window.UI.MARKER;
+			// add marker type selectors
+		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
+		    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
+		    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
+		}
+		
+		document.getElementById("cancel").addEventListener('mousedown', function(){
 	    	window.UI.hideMarkerTypeSelect();
 	    });
 		
@@ -778,20 +829,22 @@ function UiHandle(){
 		window.UI.isMarkerDisplayVisible = true;
 	}
 
+	// sets the color of the front page button
 	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
 		document.getElementById('startButton').style.backgroundColor=colorHex;
 	}
-
+	// sets the text of the front page start cleaning button
 	UiHandle.prototype.setBigButtonText = function setBigButtonText(buttonText){
 		document.getElementById('startButton').innerHTML = buttonText;
 	}
 
+	// called after the map has loaded, and hides the loading screen
 	UiHandle.prototype.setMapLoaded = function setMapLoaded(){
 		window.MAP.isMapLoaded = true;
 		window.LS.hide();
 	}
 
-	// centers the appropriate panels
+	// centers the appropriate panels (main display panels)
 	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
 		var container = document.getElementById("container");
 		if(displayNum != window.UI.currentDisplay){
@@ -839,29 +892,13 @@ function UiHandle(){
 		}
 	}
 
-	// The user presses the submit button on the comment submission screen
-	UiHandle.prototype.commentSubmission = function commentSubmission(){
-
-		var comment = new FCommment();
-		comment.message = document.getElementById("dialogSliderTextarea").value;
-		comment.pin = null;
-		comment.type = document.getElementById("comment_type").value;
-		// comment.type = document.getElementById('comment_type').value;
-
-		var serializedComment = JSON.stringify(comment);
-		console.log(serializedComment);
-
-		window.ApiConnector.pushCommentData(serializedComment);
-
-		//Return false to stop normal form submission form occuring
-		return false;
-	}
-
+	// drops the 3-button navbar down for more reading room
+	// currently only used on comments page
 	UiHandle.prototype.navbarSlideDown = function navbarSlideDown(){
 		window.UI.isNavbarUp = false;
 		document.getElementById("navContainer").style.top = "100%";
 	}
-
+	// raises the navbar 3-button ui 
 	UiHandle.prototype.navbarSlideUp = function navbarSlideUp(){
 		window.UI.isNavbarUp = true;
 		document.getElementById("navContainer").style.top = "86%";
@@ -893,54 +930,7 @@ function UiHandle(){
 		// (bug) here we need to prevent more map touches
 	}
 
-	// when the comments checkboxes are toggled, this turns the comments on or off
-	UiHandle.prototype.toggleComments = function toggleComments(type){
-		switch(type){
-			case('forum'):
-				var bubbleNodeList = document.getElementsByClassName('bubbleForum');
-				if(document.getElementById("toggleForum").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
-					}
-				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
-					}
-				}
-			break;
-			case('needs'):
-				var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
-				if(document.getElementById("toggleNeeds").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
-					}
-				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
-					}
-				}
-			break;
-			case('message'):
-				var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
-				if(document.getElementById("toggleMessages").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
-					}
-				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
-					}
-				}
-			break;
-		}
-	}
-
+	// text to get user input
 	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(purpose){
 		window.UI.dialogSliderIsUp = true;
 		if(purpose == window.UI.COMMENT){
@@ -1169,6 +1159,9 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.DEBUG = false;
 
 	window.ApiConnector = new ApiConnector();
+	
+	window.Comments = new CommentsHandle();
+
 	window.UI = new UiHandle();
 	window.UI.init();
 	window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
