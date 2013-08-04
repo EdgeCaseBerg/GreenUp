@@ -162,7 +162,7 @@ class AbstractionLayer():
 		#Convert comments to simple dictionaries for the comments endpoint to use
 		dictComments = []
 		for comment in comments:
-			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "0" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
 		return dictComments
 
 	def submitComments(self, commentType, message, pin=None):
@@ -385,6 +385,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 
 	#Now that we have all the items we want, bucket sort em with the precision
 	buckets = {}
+	highestVal = 0.0
 	for point in toBeBucketSorted:
 		if combined:
 			#filter on lon
@@ -393,12 +394,18 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 		key = "%.*f_%.*f" % (latOffset,point.lat,lonOffset,point.lon)
 		if key in buckets:
 			buckets[key]['secondsWorked'] += point.secondsWorked
+			if buckets[key]['secondsWorked'] > highestVal:
+				highestVal = buckets[key]['secondsWorked']
 		else:
 			buckets[key] = {'latDegrees' : float(round(point.lat,precision)), 'lonDegrees' : float(round(point.lon,precision)), 'secondsWorked' : point.secondsWorked}
+			if buckets[key]['secondsWorked'] > highestVal:
+				highestVal = buckets[key]['secondsWorked']
 	#Now send the buckets back as a list
 	#note that buckets.items() will give back tuples, which is not what we want
 	toReturn = []
 	for key,bucket in buckets.iteritems():
+		#normalize data
+		bucket['secondsWorked'] = float(bucket['secondsWorked'])/float(highestVal)
 		toReturn.append(bucket)
 	return toReturn
 

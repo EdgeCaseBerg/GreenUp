@@ -552,7 +552,7 @@ function MapHandle(){
 				iconUrl = "img/icons/greenCircle.png";
 				break;
 			default:
-				pin.type = "general message";
+				pin.type = "GENERAL MESSAGE";
 				iconUrl = "img/icons/orangeCircle.png";
 				break;
 		}
@@ -1015,13 +1015,13 @@ function UiHandle(){
 		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
 		// window.UI.commentsNextPageUrl = dataObj.page.next;
 		if(dataObj.page.next != null){
-			var nextArr = dataObj.page.next.split("xenonapps.com/api");
+			var nextArr = dataObj.page.next.split("greenupapp.appspot.com/api");
 			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
 		}else{
 			window.UI.commentsNextPageUrl = null;
 		}
 		if(dataObj.page.previous != null){
-			var prevArr = dataObj.page.previous.split("xenonapps.com/api");
+			var prevArr = dataObj.page.previous.split("greenupapp.appspot.com/api");
 			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
 		}else{
 			window.UI.commentsPrevPageUrl = null;
