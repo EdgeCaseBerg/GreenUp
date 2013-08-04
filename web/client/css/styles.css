@@ -360,7 +360,7 @@ a, a:hover, a:visited{
 }
 
 .mapToggleContainer{
-    font-size:3.0em;
+    font-size:2.0em;
     font-weight:bold;
     width:80%;
     margin:auto;
@@ -691,6 +691,8 @@ h1{
     text-align:center;
 }
 .bubble{
+    opacity: 1;
+    transition: opacity .25s ease-in-out;
     vertical-align: top;
     text-align:left;
     width: 90%;
@@ -749,7 +751,7 @@ h1{
 .bubbleNeeds:after{
     border-color: blue transparent;
 }
-.bubbleMesage{
+.bubbleMessage{
     background:orange;
 }
 .bubbleMessage:after{
@@ -792,7 +794,7 @@ h1{
     display:inline-block;
     color:#777777;
     font-family:arial;
-    font-size:2em;
+    font-size:1.5em;
     font-weight:bold;
     padding:6px 2% 6px 2%;
     text-decoration:none;
@@ -903,6 +905,7 @@ h1{
     width:100%;
 }
 .panelSlideDownContent{
+    position:relative;
     color:#000;
     width:96%;
     padding:0.5%;
@@ -912,6 +915,13 @@ h1{
     height:68%;
     background:#eee;
     display:none;
+}
+
+.slideDownNest{
+    position:absolute;
+    bottom:5px;
+    height:auto;
+    width:100%;
 }
 
 #hamburgerNest{
