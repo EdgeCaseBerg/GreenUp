@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 	// api URLs have been moved into each of the functions using them as per issue 46
@@ -767,9 +767,9 @@ function UiHandle(){
 	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
 		window.UI.commentPurpose = window.UI.MARKER;
 		// add marker type selectors
-	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
-	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
-	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
+	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
+	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
+	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
 	    document.getElementById("cancel").addEventListener('mousedown', function(){
 	    	window.UI.hideMarkerTypeSelect();
 	    });
