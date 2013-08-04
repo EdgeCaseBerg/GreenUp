@@ -115,31 +115,52 @@
                 1111111111
             </div>
             <div id="panel2SlideDownContent" class="panelSlideDownContent">
-                <div id="heatChoice" class="mapToggleContainer">
-                    <div class="roundedTwo">
-                        <input type="checkbox" value="None" id="toggleHeat" onchange="window.MAP.toggleHeatmap()" class="checkboxUnder" name="check" checked />
-                        <label for="toggleHeat"></label>
+                <div class="slideDownNest">
+                    <div id="heatChoice" class="mapToggleContainer">
+                        <div class="roundedTwo">
+                            <input type="checkbox" value="None" id="toggleHeat" onchange="window.MAP.toggleHeatmap()" class="checkboxUnder" name="check" checked />
+                            <label for="toggleHeat"></label>
+                        </div>
+                        <span>Heat Map</span>
                     </div>
-                    <span>Heat Map</span>
-                </div>
-                <div id="markerChoice" class="mapToggleContainer">
-                    <div class="roundedTwo">
-                        <input type="checkbox" value="None" id="toggleIcons" onchange="window.MAP.toggleIcons()" class="checkboxUnder" name="check" checked />
-                        <label for="toggleIcons"></label>
+                    <div id="markerChoice" class="mapToggleContainer">
+                        <div class="roundedTwo">
+                            <input type="checkbox" value="None" id="toggleIcons" onchange="window.MAP.toggleIcons()" class="checkboxUnder" name="check" checked />
+                            <label for="toggleIcons"></label>
+                        </div>
+                        <span>Markers</span>
                     </div>
-                    <span>Markers</span>
                 </div>
             </div>
             <div id="panel3SlideDownContent" class="panelSlideDownContent">
-                <span class="topSliderContent">Comment Types:</span>
-                <ul>
-                    <li><input type="checkbox" id="toggleForumComments" />Forum</li>
-                    <li><input type="checkbox" id="toggleNeedsComments" />Needs</li>
-                    <li><input type="checkbox" id="toggleMessageComments" />Message</li>
-                    <li><div class="addCommentButton commentButton" id="addCommentButton">New Comment</div></li>
-                    <input type="hidden" id="commentTypeToBePosted" value="null" />
-                    <input type="hidden" id="commentToBePosted" value="null" />
-                </ul>
+                <div class="slideDownNest">
+                    <ul>
+                        <li>    
+                            <div class="roundedTwo">
+                                <input type="checkbox" value="None" id="toggleForum" onchange="window.UI.toggleComments('forum')" class="checkboxUnder" name="check" checked />
+                                <label for="toggleForum"></label>
+                            </div>
+                            <span>Forum</span>
+                        </li>
+                        <li>
+                            <div class="roundedTwo">
+                                <input type="checkbox" value="None" id="toggleNeeds" onchange="window.UI.toggleComments('needs')" class="checkboxUnder" name="check" checked />
+                                <label for="toggleNeeds"></label>
+                            </div>
+                            <span>Needs</span>
+                        </li>
+                        <li>
+                            <div class="roundedTwo">
+                                <input type="checkbox" value="None" id="toggleMessages" onchange="window.UI.toggleComments('message')" class="checkboxUnder" name="check" checked />
+                                <label for="toggleMessages"></label>
+                            </div>
+                            <span>Messages</span>
+                        </li>
+                        <li><div class="addCommentButton commentButton" id="addCommentButton">+ New Comment</div></li>
+                        <input type="hidden" id="commentTypeToBePosted" value="null" />
+                        <input type="hidden" id="commentToBePosted" value="null" />
+                    </ul>
+                </div>
             </div>
         </div>
 

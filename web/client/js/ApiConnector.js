@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 	// api URLs have been moved into each of the functions using them as per issue 46
@@ -893,6 +893,54 @@ function UiHandle(){
 		// (bug) here we need to prevent more map touches
 	}
 
+	// when the comments checkboxes are toggled, this turns the comments on or off
+	UiHandle.prototype.toggleComments = function toggleComments(type){
+		switch(type){
+			case('forum'):
+				var bubbleNodeList = document.getElementsByClassName('bubbleForum');
+				if(document.getElementById("toggleForum").checked){
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "1";
+ 						bubbleNodeList[i].style.display = "block";
+					}
+				}else{
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "0";
+ 						bubbleNodeList[i].style.display = "none";
+					}
+				}
+			break;
+			case('needs'):
+				var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
+				if(document.getElementById("toggleNees").checked){
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "1";
+ 						bubbleNodeList[i].style.display = "block";
+					}
+				}else{
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "0";
+ 						bubbleNodeList[i].style.display = "none";
+					}
+				}
+			break;
+			case('message'):
+				var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
+				if(document.getElementById("toggleMessage").checked){
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "1";
+ 						bubbleNodeList[i].style.display = "block";
+					}
+				}else{
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "0";
+ 						bubbleNodeList[i].style.display = "none";
+					}
+				}
+			break;
+		}
+	}
+
 	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(purpose){
 		window.UI.dialogSliderIsUp = true;
 		if(purpose == window.UI.COMMENT){
@@ -1010,7 +1058,7 @@ function UiHandle(){
 				}
 
 				switch(comments[ii]['type']){
-					case 'forum':
+					case 'FORUM':
 						div.className += " bubbleForum";
 					break;
 					case 'needs':
