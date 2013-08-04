@@ -912,7 +912,7 @@ function UiHandle(){
 			break;
 			case('needs'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
-				if(document.getElementById("toggleNees").checked){
+				if(document.getElementById("toggleNeeds").checked){
 					for (var i = 0; i < bubbleNodeList.length; ++i) {
 						// bubbleNodeList[i].style.opacity = "1";
  						bubbleNodeList[i].style.display = "block";
@@ -926,7 +926,7 @@ function UiHandle(){
 			break;
 			case('message'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
-				if(document.getElementById("toggleMessage").checked){
+				if(document.getElementById("toggleMessages").checked){
 					for (var i = 0; i < bubbleNodeList.length; ++i) {
 						// bubbleNodeList[i].style.opacity = "1";
  						bubbleNodeList[i].style.display = "block";
@@ -952,7 +952,11 @@ function UiHandle(){
 			});
 			document.getElementById("input_purpose").value == window.UI.MARKER;
 		}
-		document.getElementById("dialogSlider").style.top = "72%";
+		if(window.UI.isNavbarUp){
+			document.getElementById("dialogSlider").style.top = "72%";
+		}else{
+			document.getElementById("dialogSlider").style.top = "80%";
+		}
 		document.getElementById("dialogSlider").style.opacity = "1.0";
 		document.getElementById("dialogSliderTextarea").focus();
 
