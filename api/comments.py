@@ -52,8 +52,8 @@ class Comments(webapp2.RequestHandler):
 			#There is no previous
 			pass
 		else:
-			previous = "%s%s%s%s%s%s%i" % (BASE_URL,CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType,'&page=',page -1)
-		next = "%s%s%s%s%s%s%i" % (BASE_URL,CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType,'&page=',page +1)
+			previous = "%s%s%s%s%s%s%i" % (BASE_URL,CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType.replace(' ','+'),'&page=',page -1)
+		next = "%s%s%s%s%s%s%i" % (BASE_URL,CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType.replace(' ','+'),'&page=',page +1)
 
 		#Get comments:
 		layer = AbstractionLayer().getComments(cType=commentType,page=page)
