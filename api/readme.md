@@ -326,7 +326,7 @@ URL: **/api/pins**
         <tr><td>latDegrees</td><td>float</td><td>The latitude coordinate of the pin in Decimal Degrees, values must range between -90.0 and 90.0</td></tr>
         <tr><td>lonDegrees</td><td>float</td><td>The longitude coordinate of the pin in Decimal Degrees, values must range between -180.0 and 180.0</td></tr>
         <tr><td> type </td><td>String </td><td> Can be either `general message`, `help needed`, or `trash pickup` </td></tr>
-        <tr><td>message</td><td>String</td><td>The message associated with this pin</td></tr>
+        <tr><td>message</td><td>String</td><td>The message associated with this pin. May not be empty or a semantic error will occur</td></tr>
     </tbody>
 </table>
 
@@ -352,5 +352,31 @@ URL: **/api/pins**
 ```
 
 If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
+
+
+###Error messages and codes
+
+####Error Codes
+The following error codes will be returned by the API for the given circumstances:
+(Note that possible causes is not a complete list)
+
+<table> 
+    <thead>
+        <tr><th>Code</th><th>Meaning</th><th>Possible Causes</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>400</td>
+            <td>Bad Request</td>
+            <td>Examples: The JSON you sent is invalid, the keys within a JSON object are wrong</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>Unprocessable Entry</td>
+            <td>The syntax of your query was correct, but the values of the key-value pairs of the json objects are out of bounds, or not acceptable in some way.</td>
+        </tr>
+    </tbody>
+</table>
+
 
 [RFC 5005]: http://www.ietf.org/rfc/rfc5005.txt

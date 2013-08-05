@@ -166,7 +166,11 @@ class Pins(webapp2.RequestHandler):
 			self.response.write('{"Error_Message" : "%s"}' % s.message)
 			return
 
-		#Don't know what to do about the message. perhaps just escape it or something I guess?
+		#Verify the message is not empty
+		if message.lstrip().rstrip() == '':
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write('{"Error_Message" : "Pin message may not be empty."}')
+			return
 
 		#Place the pin into the datastore
 		layer = AbstractionLayer()
