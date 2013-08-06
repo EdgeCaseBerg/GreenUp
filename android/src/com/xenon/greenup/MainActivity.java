@@ -33,7 +33,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.xenon.greenup.api.APIServerInterface;
-import com.xenon.greenup.api.Heatmap;
+import com.xenon.greenup.api.PinList;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -188,7 +188,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public void onClick(View v) {
         	Log.i("button","I was clicked!");
         	APIServerInterface i = new APIServerInterface();
-        	Heatmap m = i.getHeatmap(0, 0, 0, 0, 0);
+        	PinList l = i.getPins(0, 0, 0, 0);
         }
     }
 }

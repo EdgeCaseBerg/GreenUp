@@ -2,43 +2,66 @@ package com.xenon.greenup.api;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import android.util.Log;
+
 public class PinList {
 	
-	private float latDegrees;
-	private float latOffset;
-	private float lonDegrees;
-	private float lonOffset;
+	private double latDegrees;
+	private double latOffset;
+	private double lonDegrees;
+	private double lonOffset;
 	private ArrayList<Pin> pinList;
 	
+	public PinList(String jsonString) {
+		int i;
+		JSONArray pins;
+		try {
+			pins = new JSONArray(jsonString);
+			this.pinList = new ArrayList<Pin>();
+			for (i = 0; i < pins.length(); i++){
+				this.pinList.add(new Pin(pins.getString(i)));
+				Log.i("lat",Double.toString(pinList.get(i).getLatDegrees()));
+				Log.i("lon",Double.toString(pinList.get(i).getLonDegrees()));
+				Log.i("type",pinList.get(i).getType());
+				Log.i("message",pinList.get(i).getMessage());
+			}
+		}
+		catch (JSONException e){
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * @return the latDegrees
 	 */
-	public float getLatDegrees() {
+	public double getLatDegrees() {
 		return latDegrees;
 	}
 	/**
 	 * @param latDegrees the latDegrees to set
 	 */
-	public void setLatDegrees(float latDegrees) {
+	public void setLatDegrees(double latDegrees) {
 		this.latDegrees = latDegrees;
 	}
 	/**
 	 * @return the latOffset
 	 */
-	public float getLatOffset() {
+	public double getLatOffset() {
 		return latOffset;
 	}
 	/**
 	 * @param latOffset the latOffset to set
 	 */
-	public void setLatOffset(float latOffset) {
+	public void setLatOffset(double latOffset) {
 		this.latOffset = latOffset;
 	}
 	/**
 	 * @return the lonDegrees
 	 */
-	public float getLonDegrees() {
+	public double getLonDegrees() {
 		return lonDegrees;
 	}
 	/**
@@ -50,7 +73,7 @@ public class PinList {
 	/**
 	 * @return the lonOffset
 	 */
-	public float getLonOffset() {
+	public double getLonOffset() {
 		return lonOffset;
 	}
 	/**

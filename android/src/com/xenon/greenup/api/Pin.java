@@ -1,36 +1,51 @@
 package com.xenon.greenup.api;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Pin {
 	
-	private float latDegrees;
-	private float lonDegrees;
+	private double latDegrees;
+	private double lonDegrees;
 	private String type;
 	private String message;
 	
-	
+	public Pin(String jsonString) {
+		JSONObject object;
+		try {
+			object = new JSONObject(jsonString);
+			this.latDegrees = object.getDouble("latDegrees");
+			this.lonDegrees = object.getDouble("lonDegrees");
+			this.type = object.getString("type");
+			this.message = object.getString("message");
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * @return the latDegrees
 	 */
-	public float getLatDegrees() {
+	public double getLatDegrees() {
 		return latDegrees;
 	}
 	/**
 	 * @param latDegrees the latDegrees to set
 	 */
-	public void setLatDegrees(float latDegrees) {
+	public void setLatDegrees(double latDegrees) {
 		this.latDegrees = latDegrees;
 	}
 	/**
 	 * @return the lonDegrees
 	 */
-	public float getLonDegrees() {
+	public double getLonDegrees() {
 		return lonDegrees;
 	}
 	/**
 	 * @param lonDegrees the lonDegrees to set
 	 */
-	public void setLonDegrees(float lonDegrees) {
+	public void setLonDegrees(double lonDegrees) {
 		this.lonDegrees = lonDegrees;
 	}
 	/**

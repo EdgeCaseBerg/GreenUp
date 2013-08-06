@@ -9,10 +9,10 @@ import android.util.Log;
 
 public class Heatmap {
 	
-	private float latDegrees;
-	private float latOffset;
-	private float lonDegrees;
-	private float lonOffset;
+	private double latDegrees;
+	private double latOffset;
+	private double lonDegrees;
+	private double lonOffset;
 	private int precision;
 	private ArrayList<HeatmapPoint> pointList;
 	
@@ -37,7 +37,7 @@ public class Heatmap {
 	/**
 	 * @return the latDegrees
 	 */
-	public float getLatDegrees() {
+	public double getLatDegrees() {
 		return latDegrees;
 	}
 	/**
@@ -49,31 +49,31 @@ public class Heatmap {
 	/**
 	 * @return the latOffset
 	 */
-	public float getLatOffset() {
+	public double getLatOffset() {
 		return latOffset;
 	}
 	/**
 	 * @param latOffset the latOffset to set
 	 */
-	public void setLatOffset(float latOffset) {
+	public void setLatOffset(double latOffset) {
 		this.latOffset = latOffset;
 	}
 	/**
 	 * @return the lonDegrees
 	 */
-	public float getLonDegrees() {
+	public double getLonDegrees() {
 		return lonDegrees;
 	}
 	/**
 	 * @param lonDegrees the lonDegrees to set
 	 */
-	public void setLonDegrees(float lonDegrees) {
+	public void setLonDegrees(double lonDegrees) {
 		this.lonDegrees = lonDegrees;
 	}
 	/**
 	 * @return the lonOffset
 	 */
-	public float getLonOffset() {
+	public double getLonOffset() {
 		return lonOffset;
 	}
 	/**

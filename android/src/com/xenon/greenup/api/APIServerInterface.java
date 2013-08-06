@@ -54,7 +54,9 @@ public class APIServerInterface {
 	
 	//Get a list of pins, all parameters are optional
 	public PinList getPins(float latDegrees, float latOffset, float lonDegrees, float lonOffset){
-		return new PinList();
+		StringBuilder sb = new StringBuilder(BASE_URL + "/heatmap?");
+		String response = sendRequest(sb.toString());
+		return new PinList(response);
 	}
 	
 	//Submit a pin (POST)

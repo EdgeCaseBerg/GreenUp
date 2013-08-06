@@ -30,7 +30,7 @@ public class HeatmapPoint {
 	/**
 	 * @param latDegree the latDegree to set
 	 */
-	public void setLatDegree(float latDegree) {
+	public void setLatDegree(double latDegree) {
 		this.latDegrees = latDegree;
 	}
 	/**
@@ -42,7 +42,7 @@ public class HeatmapPoint {
 	/**
 	 * @param lonDegree the lonDegree to set
 	 */
-	public void setLonDegree(float lonDegree) {
+	public void setLonDegree(double lonDegree) {
 		this.lonDegrees = lonDegree;
 	}
 	/**
