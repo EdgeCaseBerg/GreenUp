@@ -19,9 +19,7 @@ public class APIServerInterface {
 	//The application will invoke methods defined here to perform 
 	// the various requests
 	
-	//TODO: Write private methods to parse and create JSON objects
-	//TODO: Make this handle different HTTP response codes properly beyond throwing an exception and exploding
-	//TODO: Make errors display a toast notification
+	//TODO: Make it display a toast notification when an exception is thrown
 	
 	
 	//Retrieves a page of comments from the server, the type and page number are optional
@@ -33,8 +31,12 @@ public class APIServerInterface {
 	}
 	
 	//Submits a comment (POST), the pin is optional.  Returns an integer status code (codes TBD)
-	public int submitComments(String type, String message, int pin) {
-		return 0;
+	public void submitComments(String type, String message, int pin) {
+		Comment newComment = new Comment(type, message, pin);
+		String data = newComment.toJSONString();
+		String url = new StringBuilder(BASE_URL + "/comments").toString();
+		String response = sendRequestWithData(url,"POST",data);
+		Log.i("response",response);
 	}
 	
 	//Get a list of heatmap points for the specified coordinates, all parameters are optional (??)
@@ -67,6 +69,21 @@ public class APIServerInterface {
 	public int testConnection(){
 		sendRequest(BASE_URL);
 		return 0;
+	}
+	
+	private String sendRequestWithData(String url, String method, String data) {
+		APIRequestTask request = new APIRequestTask(url,method,data);
+		request.execute();
+		String response;
+		try {
+			response = request.get();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			response = "Error, see stack trace";
+		}
+		Log.i("response",response);
+		return response;
 	}
 	
 	private String sendRequest(String url) {
@@ -112,7 +129,7 @@ public class APIServerInterface {
 				urlObject = new URL(url);
 				HttpURLConnection connection = (HttpURLConnection)urlObject.openConnection();
 				connection.setRequestMethod(method);
-				if (method.equals("POST")) {
+				if (data != null) {
 					connection.setDoOutput(true);
 					int length = data.length();
 					connection.setFixedLengthStreamingMode(length);

@@ -33,7 +33,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.xenon.greenup.api.APIServerInterface;
-import com.xenon.greenup.api.PinList;
+import com.xenon.greenup.api.CommentPage;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -188,7 +188,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public void onClick(View v) {
         	Log.i("button","I was clicked!");
         	APIServerInterface i = new APIServerInterface();
-        	PinList l = i.getPins(0, 0, 0, 0);
+        	CommentPage page = i.getComments("general message",1);
+        	//i.submitComments("general message","Android test please ignore",0);
         }
     }
 }
