@@ -33,7 +33,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.xenon.greenup.api.APIServerInterface;
-import com.xenon.greenup.api.CommentPage;
+import com.xenon.greenup.api.Heatmap;
+import com.xenon.greenup.api.HeatmapPoint;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -188,8 +189,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public void onClick(View v) {
         	Log.i("button","I was clicked!");
         	APIServerInterface i = new APIServerInterface();
-        	CommentPage page = i.getComments("general message",1);
-        	//i.submitComments("general message","Android test please ignore",0);
+        	//CommentPage page = i.getComments("general message",1);
+        	Heatmap h = new Heatmap();
+        	h.add(new HeatmapPoint(24.53,43.2,120));
+        	i.updateHeatmap(h);
         }
     }
 }

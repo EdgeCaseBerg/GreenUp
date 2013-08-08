@@ -20,6 +20,7 @@ public class APIServerInterface {
 	// the various requests
 	
 	//TODO: Make it display a toast notification when an exception is thrown
+	//TODO: Clean up logging output
 	
 	
 	//Retrieves a page of comments from the server, the type and page number are optional
@@ -33,7 +34,7 @@ public class APIServerInterface {
 	//Submits a comment (POST), the pin is optional.  Returns an integer status code (codes TBD)
 	public void submitComments(String type, String message, int pin) {
 		Comment newComment = new Comment(type, message, pin);
-		String data = newComment.toJSONString();
+		String data = newComment.toJSON().toString();
 		String url = new StringBuilder(BASE_URL + "/comments").toString();
 		String response = sendRequestWithData(url,"POST",data);
 		Log.i("response",response);
@@ -50,8 +51,11 @@ public class APIServerInterface {
 	}
 	
 	//Submit a heatmap point (PUT)
-	public int submitHeatmapPoint(float latDegrees, float lonDegrees, int secondsWorked){
-		return 0;
+	public void updateHeatmap(Heatmap h){
+		String data = h.toJSON().toString();
+		String url = new StringBuilder(BASE_URL + "/heatmap").toString();
+		String response = sendRequestWithData(url,"PUT",data);
+		Log.i("response",response);
 	}
 	
 	//Get a list of pins, all parameters are optional

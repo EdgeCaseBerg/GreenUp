@@ -96,7 +96,7 @@ public class Comment {
 		this.pin = pin;
 	}
 	
-	public String toJSONString() {
+	public JSONObject toJSON() {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("type",this.type);
@@ -104,13 +104,11 @@ public class Comment {
 			if (this.pin != 0)
 				json.put("pin",this.pin);
 			Log.i("newComment",json.toString());
-			return json.toString();
+			return json;
 		}
 		catch (JSONException e) {
 			e.printStackTrace();
-			return "";
+			return json;
 		}
 	}
-	
-	
 }

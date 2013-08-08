@@ -4,16 +4,14 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
 public class Heatmap {
 	
-	private double latDegrees;
-	private double latOffset;
-	private double lonDegrees;
-	private double lonOffset;
-	private int precision;
+	//TODO: Maybe just have this extend ArrayList?
+	
 	private ArrayList<HeatmapPoint> pointList;
 	
 	public Heatmap(String jsonString) {
@@ -34,78 +32,24 @@ public class Heatmap {
 		}
 	}
 	
-	/**
-	 * @return the latDegrees
-	 */
-	public double getLatDegrees() {
-		return latDegrees;
-	}
-	/**
-	 * @param latDegrees the latDegrees to set
-	 */
-	public void setLatDegrees(float latDegrees) {
-		this.latDegrees = latDegrees;
-	}
-	/**
-	 * @return the latOffset
-	 */
-	public double getLatOffset() {
-		return latOffset;
-	}
-	/**
-	 * @param latOffset the latOffset to set
-	 */
-	public void setLatOffset(double latOffset) {
-		this.latOffset = latOffset;
-	}
-	/**
-	 * @return the lonDegrees
-	 */
-	public double getLonDegrees() {
-		return lonDegrees;
-	}
-	/**
-	 * @param lonDegrees the lonDegrees to set
-	 */
-	public void setLonDegrees(double lonDegrees) {
-		this.lonDegrees = lonDegrees;
-	}
-	/**
-	 * @return the lonOffset
-	 */
-	public double getLonOffset() {
-		return lonOffset;
-	}
-	/**
-	 * @param lonOffset the lonOffset to set
-	 */
-	public void setLonOffset(float lonOffset) {
-		this.lonOffset = lonOffset;
-	}
-	/**
-	 * @return the precision
-	 */
-	public int getPrecision() {
-		return precision;
-	}
-	/**
-	 * @param precision the precision to set
-	 */
-	public void setPrecision(int precision) {
-		this.precision = precision;
-	}
-	/**
-	 * @return the pointList
-	 */
-	public ArrayList<HeatmapPoint> getPointList() {
-		return pointList;
-	}
-	/**
-	 * @param pointList the pointList to set
-	 */
-	public void setPointList(ArrayList<HeatmapPoint> pointList) {
-		this.pointList = pointList;
+	public Heatmap() {
+		this.pointList = new ArrayList<HeatmapPoint>();
 	}
 	
+	public void add(HeatmapPoint point) {
+		pointList.add(point);
+	}
 	
+	public HeatmapPoint get(int i) {
+		return pointList.get(i);
+	}
+	
+	public JSONArray toJSON() {
+		JSONArray list = new JSONArray();
+		for (int i = 0; i < pointList.size(); i++) {
+			list.put(pointList.get(i).toJSON());
+		}
+		Log.i("pointList",list.toString());
+		return list;
+	}
 }
