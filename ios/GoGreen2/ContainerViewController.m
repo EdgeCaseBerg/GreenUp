@@ -42,7 +42,7 @@ static ContainerViewController* theContainerView = nil;
 -(void)viewDidLoad
 {
     //Initilize the view
-    self.theView = [[ContainerView alloc] initWithFrame:CGRectMake(20, 0,320, 460)];
+    self.theView = [[ContainerView alloc] initWithFrame:CGRectMake(20, 0, 320, 460)];
     self.view = self.theView;
     
     //Views
@@ -59,7 +59,7 @@ static ContainerViewController* theContainerView = nil;
     }
     
     //Menu
-    self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 200)];
+    self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171)];
     [self.view addSubview:self.theMenuView];
     
     //TabBar

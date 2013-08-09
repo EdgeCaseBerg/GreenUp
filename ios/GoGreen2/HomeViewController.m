@@ -21,7 +21,7 @@
     if (self)
     {
         // Custom initialization
-        UILabel *mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 110, 260, 70)];
+        UILabel *mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 180, 260, 70)];
         [mainLabel setNumberOfLines:4];
         [mainLabel setBackgroundColor:[UIColor clearColor]];
         [mainLabel setTextColor:[UIColor blackColor]];
@@ -30,7 +30,7 @@
         [mainLabel setText:@"Track your clean up progres\nSee what areas need the most help\nFind an area to drop off what you pick up"];
         [self.view addSubview:mainLabel];
         
-        self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 200, 260, 60)];
+        self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 250, 260, 60)];
         [self.timeLabel setText:@"00:00:00"];
         [self.timeLabel setFont:[self.timeLabel.font fontWithSize:25]];
         [self.timeLabel setBackgroundColor:[UIColor clearColor]];
@@ -39,8 +39,8 @@
         [self.view addSubview:self.timeLabel];
         
         self.cleanUpToggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.cleanUpToggleButton setFrame:CGRectMake(30, 260, 260, 100)];
-        [self.cleanUpToggleButton setBackgroundImage:[UIImage imageNamed:@"cleanUpButton.png"] forState:UIControlStateNormal];
+        [self.cleanUpToggleButton setFrame:CGRectMake(30, 320, 260, 45)];
+        [self.cleanUpToggleButton setBackgroundImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
         [self.cleanUpToggleButton setTitle:@"Start Cleaning" forState:UIControlStateNormal];
         [self.cleanUpToggleButton addTarget:self action:@selector(toggleCleanUp:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.cleanUpToggleButton];
