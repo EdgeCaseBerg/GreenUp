@@ -18,10 +18,6 @@ from datetime import date
 
 from constants import *
 
-# TYPES_AVAILABLE = ['General Message', 'Help Needed', 'Trash Pickup']
-MEMCACHED_WRITE_KEY = "write_key"
-STALE_CACHE_LIMIT = 20
-
 class Campaign(db.Model):
 	pass
 
@@ -168,7 +164,9 @@ class AbstractionLayer():
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
 		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
-		updateCachedWrite(MEMCACHED_WRITE_KEY)
+		#Clear the memcache then recreate the initial page.
+		memcache.flush_all()
+		initialPage()
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
 		return heatmapFiltering(latDegrees,lonDegrees,latOffset,lonOffset,precision)
@@ -225,30 +223,6 @@ def getCachedData(key):
 		return None
 
 	return result
-
-def updateCachedWrite(key):
-	'''
-		Check and see if a key has been created in memecached to store the number of writes.
-		If it has, increment the amount of writes corresponding to that key, and check that number against some constant X.
-		If the number of writes exceeds X, then flush the cache and repopulate it (if it doesn't, then do nothing).
-
-		If the key hasn't been created, create it and update the writes saved to 1.
-	'''
-	result = getCachedData(key)
-
-	if(not result):
-		setCachedData(key, 1)
-		return True
-
-	result = int(result)
-	if(result+1 > STALE_CACHE_LIMIT):
-		# flush, then repopulate the cache with the first page of comment data from the datastore
-		logging.info("20 writes exceeded, resetting cache. Total writes == " + str(result+1))
-		memcache.flush_all()
-		initialPage()
-		setCachedData(key, 1)
-	else:
-		setCachedData(key, result+1)
 
 def initialPage(typeFilter=None):
 	'''
