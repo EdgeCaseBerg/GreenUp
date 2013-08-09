@@ -168,8 +168,8 @@ class AbstractionLayer():
 		memcache.flush_all()
 		initialPage()
 
-	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None):
-		return heatmapFiltering(latDegrees,lonDegrees,latOffset,lonOffset,precision)
+	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None,raw=False):
+		return heatmapFiltering(latDegrees,lonDegrees,latOffset,lonOffset,precision,raw)
 
 	def updateHeatmap(self, heatmapList):
 		# datastore write
@@ -330,7 +330,7 @@ def paging(page=1,typeFilter=None):
 	return results
 
 
-def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,precision=DEFAULT_ROUNDING_PRECISION):
+def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,precision=DEFAULT_ROUNDING_PRECISION,raw=False):
 	#Make sure offsets are set to default if not specified (consider putting in constants)
 	if latOffset is None:
 		latOffset = 1
@@ -379,7 +379,8 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 	toReturn = []
 	for key,bucket in buckets.iteritems():
 		#normalize data
-		bucket['secondsWorked'] = float(bucket['secondsWorked'])/float(highestVal)
+		if not raw:
+			bucket['secondsWorked'] = float(bucket['secondsWorked'])/float(highestVal)
 		toReturn.append(bucket)
 	return toReturn
 

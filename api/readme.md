@@ -186,6 +186,7 @@ URL: **/api/heatmap**
         <tr><td>lonDegrees</td><td>float</td><td>The longitude boundary of the grid of points to retrieve, only values between -180.0 and 180.0  will be accepted.</td></tr>
         <tr><td>lonOffset</td><td>unsigned float</td><td>Offset to add to the longitude point to create a bounding rectangle on the points retrieved.</td></tr>
         <tr><td>precision</td><td>unsigned integer</td><td>The integer precision for rounding degrees. It is recommended to leave this blank unless you know what you're doing.</td></tr>
+        <tr><td>raw</td><td>boolean string</td><td>Whether to return secondsWorked from heatmap as a absolute or normalized value. Defaults to normalized, pass raw=true to retrieve absolute secondsWorked</td></tr>
     </tbody>
 </table>
 
