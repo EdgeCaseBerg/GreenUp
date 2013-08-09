@@ -16,8 +16,11 @@
 
 package com.xenon.greenup;
 
+import java.io.IOException;
+
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -30,6 +33,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xenon.greenup.api.APIServerInterface;
@@ -66,6 +71,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         // Specify that we will be displaying tabs in the action bar.
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        
+        try {
+			actionBar.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("BottomMenu.svg"), null));
+			Log.i("load","Loaded BottomMenu.svg without incident");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
@@ -86,12 +99,36 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             // Create a tab with text corresponding to the page title defined by the adapter.
             // Also specify this Activity object, which implements the TabListener interface, as the
             // listener for when this tab is selected.
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(_AppSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
+        	ActionBar.Tab tabToAdd = actionBar.newTab();
+        	//Safe operations
+        	tabToAdd.setText(_AppSectionsPagerAdapter.getPageTitle(i))
+            		.setTabListener(this);
+        	//Unsafe operations
+        	String iconToLoad;
+        	switch(i){
+        		case 0:
+        		case 1:
+        		case 2:
+        			iconToLoad = "Comments.svg";
+        			break;
+        		default:
+        			iconToLoad = "";
+        			break;
+        	}
+        	try {
+        		ImageView iv = new ImageView(null, null);
+        		iv.setBackground(Drawable.createFromStream(getAssets().open("Comments.svg"), null));
+				tabToAdd.setCustomView(iv);
+				Log.i("load","Load " + iconToLoad + "without incident");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+            actionBar.addTab(tabToAdd);
+            
         }
-    }
+        
+        actionBar.show();
+    }	
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
@@ -191,4 +228,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         	Heatmap m = i.getHeatmap(0, 0, 0, 0, 0);
         }
     }
+    
+    
 }
