@@ -110,6 +110,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         // Specify that the Home/Up button should not be enabled, since there is no hierarchical parent.
         actionBar.setHomeButtonEnabled(false);
+        //Set the stacked background otherwise we get the gross dark gray color under the icon
+        actionBar.setStackedBackgroundDrawable(getResources().getDrawable(R.drawable.bottom_menu));
+        
 
         // Specify that we will be displaying tabs in the action bar.
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -146,6 +149,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         	
         	tabToAdd.setTabListener(this);
         	tabToAdd.setIcon(getRegularIcon(i));
+        	
     
             actionBar.addTab(tabToAdd);
             
