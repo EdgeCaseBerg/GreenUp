@@ -20,6 +20,8 @@ import java.io.IOException;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.graphics.Shader.TileMode;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -107,23 +109,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
-
+        
         // Specify that the Home/Up button should not be enabled, since there is no hierarchical parent.
         actionBar.setHomeButtonEnabled(false);
         //Set the stacked background otherwise we get the gross dark gray color under the icon
-        actionBar.setStackedBackgroundDrawable(getResources().getDrawable(R.drawable.bottom_menu));
+        BitmapDrawable background = (BitmapDrawable)getResources().getDrawable(R.drawable.bottom_menu);
+        background.setTileModeXY(TileMode.REPEAT,TileMode.REPEAT);
+        actionBar.setStackedBackgroundDrawable(background);
         
 
         // Specify that we will be displaying tabs in the action bar.
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        
-        try {
-			actionBar.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("BottomMenu.svg"), null));
-			Log.i("load","Loaded BottomMenu.svg without incident");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        actionBar.setIcon(R.drawable.bottom_menu);
 
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
@@ -149,7 +146,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         	
         	tabToAdd.setTabListener(this);
         	tabToAdd.setIcon(getRegularIcon(i));
-        	
     
             actionBar.addTab(tabToAdd);
             
