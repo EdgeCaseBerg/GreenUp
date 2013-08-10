@@ -3,6 +3,8 @@ package com.xenon.greenup.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class Comment {
 	
 	private int id;
@@ -25,6 +27,12 @@ public class Comment {
 		catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public Comment(String type, String message, int pin) {
+		this.type = type;
+		this.message = message;
+		this.pin = pin;
 	}
 	
 	/**
@@ -88,5 +96,19 @@ public class Comment {
 		this.pin = pin;
 	}
 	
-	
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("type",this.type);
+			json.put("message",this.message);
+			if (this.pin != 0)
+				json.put("pin",this.pin);
+			Log.i("newComment",json.toString());
+			return json;
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+			return json;
+		}
+	}
 }

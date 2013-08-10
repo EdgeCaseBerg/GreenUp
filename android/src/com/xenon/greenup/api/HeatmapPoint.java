@@ -3,6 +3,8 @@ package com.xenon.greenup.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class HeatmapPoint {
 	private double latDegrees;
 	private double lonDegrees;
@@ -21,6 +23,12 @@ public class HeatmapPoint {
 		}
 	}
 	
+	public HeatmapPoint(double latDegrees, double lonDegrees, int secondsWorked) {
+		this.latDegrees = latDegrees;
+		this.lonDegrees = lonDegrees;
+		this.secondsWorked = secondsWorked;
+	}
+	
 	/**
 	 * @return the latDegree
 	 */
@@ -30,7 +38,7 @@ public class HeatmapPoint {
 	/**
 	 * @param latDegree the latDegree to set
 	 */
-	public void setLatDegree(float latDegree) {
+	public void setLatDegree(double latDegree) {
 		this.latDegrees = latDegree;
 	}
 	/**
@@ -42,7 +50,7 @@ public class HeatmapPoint {
 	/**
 	 * @param lonDegree the lonDegree to set
 	 */
-	public void setLonDegree(float lonDegree) {
+	public void setLonDegree(double lonDegree) {
 		this.lonDegrees = lonDegree;
 	}
 	/**
@@ -57,7 +65,18 @@ public class HeatmapPoint {
 	public void setSecondsWorked(int secondsWorked) {
 		this.secondsWorked = secondsWorked;
 	}
-	
-	
-	
+	public JSONObject toJSON() {
+	JSONObject json = new JSONObject();
+		try {
+			json.put("latDegrees",this.latDegrees);
+			json.put("lonDegrees",this.lonDegrees);
+			json.put("secondsWorked",this.secondsWorked);
+			Log.i("newPoint",json.toString());
+			return json;
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+			return json;
+		}
+	}
 }
