@@ -7,6 +7,7 @@
 import urllib2
 import json
 import logging
+import types
 import numbers
 
 from constants import *
@@ -99,6 +100,29 @@ def validateHeatmapGETRequest(heatmap_response_to_get):
 			assert isinstance(value,numbers.Number)
 	return True
 
+def validateHeatmapGETRawFalseRequest(heatmap_response_to_get):
+	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked']
+	for gridzone in heatmap_response_to_get:
+		for key,value in gridzone.iteritems():
+			assert key in heatmap_response_keys
+			assert isinstance(value,numbers.Number)
+			if key=="secondsWorked":
+				assert value <= 1.0
+	return True
+
+def validateHeatmapGETRawTrueRequest(heatmap_response_to_get):
+	#Assert validity of syntax
+	valid = False
+	if(validateHeatmapGETRequest(heatmap_response_to_get)):
+		for gridzone in heatmap_response_to_get:
+			for key,value in gridzone.iteritems():
+				#We have to assert that all the values are floats for secondsWorked and they're not all under 1,
+				if key=="secondsWorked":
+					valid = valid or value > 1.0
+	assert valid == True
+	return True
+
+
 def validateHeatmapPUTRequest(heatmap_response_to_put):
 	assert heatmap_response_to_put is not None
 	assert 'status' in heatmap_response_to_put
@@ -136,7 +160,7 @@ def validateErrorMessageReturned(comments_error_response):
 if __name__ == "__main__":
 	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapp.appspot.com/api'
-	#baseURL = 'http://localhost:30002/api'
+	baseURL = 'http://localhost:30002/api'
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
@@ -151,7 +175,7 @@ if __name__ == "__main__":
 	tester.followLink(endPoints['comments'])
 	assert tester.getCode() == HTTP_OK
 	comments_response_to_get = tester.getJSON()
-	validateCommentsGETRequest(comments_response_to_get)
+	assert validateCommentsGETRequest(comments_response_to_get) is True
 
 	#See if the comments are in reverse chronological order
 	tester.followLink(endPoints['comments'])
@@ -164,120 +188,127 @@ if __name__ == "__main__":
 	tester.followLink(endPoints['comments'],withData={'type' : 'forum', 'page' : 1})
 	assert tester.getCode() == HTTP_OK
 	comments_response_to_get = tester.getJSON()
-	validateCommentsGETRequest(comments_response_to_get)
+	assert validateCommentsGETRequest(comments_response_to_get) is True
 
 	#Give it something it should have a problem with:
 	tester.followLink(endPoints['comments'],withData={'type' : 'badvalue'})
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Give it another bad value that it will be ok with (it doesn't care about negatives)
 	tester.followLink(endPoints['comments'],withData={'type' : 'trash+pickup', 'page' : -2})
 	assert tester.getCode() == HTTP_OK
-	validateCommentsGETRequest(tester.getJSON())
+	assert validateCommentsGETRequest(tester.getJSON()) is True
 
 	#Send a POST request to the endpoint with appropriate data
 	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : "This is a test message"},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
-	validateCommentsPOSTRequest(tester.getJSON())
+	assert validateCommentsPOSTRequest(tester.getJSON()) is True
 
 	#Send a bad POST request 
 	tester.followLink(endPoints['comments'],withData={"type" : "crap", "message" : "This is another test message"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['comments'],withData={"type" : None, "message" : None },httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['comments'],withData={"type" : "meessage", "message" : "This is another test message", "pin" : "badpinval"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Send a POST request to the endpoint with an empty message
 	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : " "},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Send a POST request to the endpoint with more than 140 characters (145) in the message
 	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : "sfsdfsdlfhdslfhlksdfhlsdkfdsklfjldskjfkldsjflksdjflksdhfjsdkbgdsibosdihgfiosdhglkdshslkdhgioerhgoirenglsdkhgsdhgoierhgoirehglkfsdhgiofhgioshglks"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	print "Comments Endpoint Passed all asserted tests"
 
 	#Default GET + no parameters
 	tester.followLink(endPoints['heatmap'])
 	assert tester.getCode() == HTTP_OK
-	validateHeatmapGETRequest(tester.getJSON())
+	assert validateHeatmapGETRawFalseRequest(tester.getJSON()) is True
 
 	#Default GET + bad latDegrees parameter
 	tester.followLink(endPoints['heatmap'],withData={"latDegrees" : 91})
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#GET with bad lonDegrees
 	tester.followLink(endPoints['heatmap'],withData={"lonDegrees" : 291})
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#get with bad offset (only one given)
 	tester.followLink(endPoints['heatmap'],withData={"latDegrees" : 1.2, "lonDegrees" : 4.5, "lonOffset" : 6})
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Good get request with parameters
 	tester.followLink(endPoints['heatmap'],withData={"latDegrees" : -25.4, "lonDegrees" : 43.2, "latOffset" : 4,"lonOffset" : 2})
 	assert tester.getCode() == HTTP_OK
-	validateHeatmapGETRequest(tester.getJSON())
+	assert validateHeatmapGETRawFalseRequest(tester.getJSON()) is True
 
 	#Good get request with decimal offset
 	tester.followLink(endPoints['heatmap'],withData={"latDegrees" : -25.4, "lonDegrees" : 43.2, "latOffset" : 4.2,"lonOffset" : 2.2})
 	assert tester.getCode() == HTTP_OK
-	validateHeatmapGETRequest(tester.getJSON())
+	assert validateHeatmapGETRawFalseRequest(tester.getJSON()) is True
 
 	#Get with JUST precision (like a get all, but for a given precision)
 	tester.followLink(endPoints['heatmap'],withData={"precision" : 4})
 	assert tester.getCode() == HTTP_OK
-	validateHeatmapGETRequest(tester.getJSON())
+	assert validateHeatmapGETRawFalseRequest(tester.getJSON()) is True
 
 	#PUT requests to server checking
 	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_OK
-	validateHeatmapPUTRequest(tester.getJSON())
+	assert validateHeatmapPUTRequest(tester.getJSON()) is True
 
 	#Bad PUT request
 	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : -231, "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())	
+	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
 	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : None, "lonDegrees" : None, "secondsWorked" : None}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())	
+	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
 	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : -31, "lonDegrees" : -92, "secondsWorked" : 45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())	
+	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
 	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 32, "secondsWorked" : -45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())	
+	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
 	tester.followLink(endPoints['heatmap'],withData=[{ "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())	
+	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
-	tester.followLink(endPoints['heatmap'],withData=[{ "latDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
+	tester.followLink(endPoints['heatmap'],withData=[{ "latDegrees" : 32, "secondsWorked" : 25}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())	
+	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
 	tester.followLink(endPoints['heatmap'],withData=[{ "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())	
+	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
 	tester.followLink(endPoints['heatmap'],withData=[{ "lonDegrees" : 32, "latDegrees" : 4}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())	
+	assert validateErrorMessageReturned(tester.getJSON())	 is True
+
+	#Test the rawness of the heatmap by this point we have enough seconsdWorked stored to have over 1.
+	tester.followLink(endPoints['heatmap'],withData={"raw" : "True"},httpMethod="GET")
+	assert validateHeatmapGETRawTrueRequest(tester.getJSON()) == True
+	assert tester.getCode() == HTTP_OK
+
+
 
 	print "Heatmap endpoint Passed all assertion tests"
 
@@ -289,99 +320,99 @@ if __name__ == "__main__":
 	#Default GET
 	tester.followLink(endPoints['pins'])
 	assert tester.getCode() == HTTP_OK
-	validatePINSGetRequest(tester.getJSON())
+	assert validatePINSGetRequest(tester.getJSON()) is True
 
 	#Get with parameters
 	#Default GET + bad latDegrees parameter
 	tester.followLink(endPoints['pins'],withData={"latDegrees" : 191})
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#GET with bad lonDegrees
 	tester.followLink(endPoints['pins'],withData={"lonDegrees" : 91})
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#get with bad offset (only one given)
 	tester.followLink(endPoints['pins'],withData={"latDegrees" : 1.2, "lonDegrees" : 4.5, "lonOffset" : 6})
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 
 	#Good get request with parameters
 	tester.followLink(endPoints['pins'],withData={"latDegrees" : -25.4, "lonDegrees" : 43.2, "latOffset" : 4,"lonOffset" : 2})
 	assert tester.getCode() == HTTP_OK
-	validatePINSGetRequest(tester.getJSON())
+	assert validatePINSGetRequest(tester.getJSON()) is True
 
 	#Get with JUST precision (like a get all, but for a given precision)
 	tester.followLink(endPoints['pins'],withData={"precision" : 4})
 	assert tester.getCode() == HTTP_OK
-	validatePINSGetRequest(tester.getJSON())
+	assert validatePINSGetRequest(tester.getJSON()) is True
 
 
 	#Test the POST
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
-	validatePinsPOSTRequest(tester.getJSON())
+	assert validatePinsPOSTRequest(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "help needed", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 25, 'type' : "help needed", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
-	validatePinsPOSTRequest(tester.getJSON())
+	assert validatePinsPOSTRequest(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "general message", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
-	validatePinsPOSTRequest(tester.getJSON())
+	assert validatePinsPOSTRequest(tester.getJSON()) is True
 
 	#Test the POSt with missing keys
 	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'latDegrees' : 2, 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'type' : "trash pickup", 'latDegrees' : 2},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Test the POST with keys but bad data
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : -240, 'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 150, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : 440, 'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Because of pythons dynamic typing this is ok
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : "40", 'lonDegrees' : "50", 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
-	validatePinsPOSTRequest(tester.getJSON())
+	assert validatePinsPOSTRequest(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trashickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trash pickup", 'messsage' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	tester.followLink(endPoints['pins'],withData={'latDegrees' : None, 'lonDegrees' : None, 'type' : None, 'message' : None},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
-	validateErrorMessageReturned(tester.getJSON())
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	print "Pins endpoint passed all assertion tests"
 

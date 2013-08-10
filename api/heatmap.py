@@ -22,6 +22,13 @@ class Heatmap(webapp2.RequestHandler):
 		latOffset = self.request.get("latOffset")
 		lonOffset = self.request.get("lonOffset")
 		precision = self.request.get("precision")
+		raw = self.request.get("raw")
+
+		renderRaw = False
+		if raw is not None:
+			if raw.upper().__eq__('TRUE'):
+				renderRaw = True
+		
 		
 		#validate parameters
 		if latDegrees is not None and latDegrees is not "":
@@ -106,7 +113,7 @@ class Heatmap(webapp2.RequestHandler):
 		#If no parameters are specified we'll return everything we have for them
 		response = []
 		layer = AbstractionLayer()
-		response = layer.getHeatmap(latDegrees,latOffset,lonDegrees,lonOffset, precision)
+		response = layer.getHeatmap(latDegrees,latOffset,lonDegrees,lonOffset, precision,renderRaw)
 
 		#By this point we have a response and we simply have to send it back
 		self.response.set_status(HTTP_OK)
