@@ -355,29 +355,10 @@ URL: **/api/pins**
 If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
 
 
-###Error messages and codes
+##Error messages and codes
 
 ####Error Codes
-The following error codes will be returned by the API for the given circumstances:
-(Note that possible causes is not a complete list)
-
-<table> 
-    <thead>
-        <tr><th>Code</th><th>Meaning</th><th>Possible Causes</th></tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>400</td>
-            <td>Bad Request</td>
-            <td>Examples: The JSON you sent is invalid, the keys within a JSON object are wrong</td>
-        </tr>
-        <tr>
-            <td>422</td>
-            <td>Unprocessable Entry</td>
-            <td>The syntax of your query was correct, but the values of the key-value pairs of the json objects are out of bounds, or not acceptable in some way.</td>
-        </tr>
-    </tbody>
-</table>
+The error codes returned by the API are either of HTTP Code 400 for a bad request (typically a syntax error or problem with the form of the JSON sent.) or a 422 for an unprocessable entry (the JSON is valid but the values or keys are invalid in some way).
 
 ###Error messages by Endpoint
 
