@@ -57,6 +57,46 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * time.
      */
     ViewPager _ViewPager;
+    
+    private int getRegularIcon(int index){
+    	switch(index){
+		case 1:
+			return R.drawable.map;
+		case 2:
+			return R.drawable.comments;
+		case 0:
+		default:
+			//We'll just default to this random thing
+			return R.drawable.home;
+    	}
+    }
+    
+    private int getActiveIcon(int index){
+    	switch(index){
+		case 1:
+			return R.drawable.map_active;
+		case 2:
+			return R.drawable.comments_active;	
+		case 0:
+		default:
+			return R.drawable.home_active;
+    	}
+    }
+    
+    private void setIconActive(int iconToActivate){
+    	final ActionBar actionBar = getActionBar();
+    	final ActionBar.Tab tab = actionBar.getTabAt(iconToActivate);
+    	
+    	tab.setIcon(getActiveIcon(iconToActivate));
+    	//Set the other tabs to inactive
+    	for(int i=0; i < this._AppSectionsPagerAdapter.getCount(); i++){
+    		if(i != iconToActivate){
+    			actionBar.getTabAt(i).setIcon(getRegularIcon(i));
+    		}
+    	}
+    	
+    	
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +133,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 // We can also use ActionBar.Tab#select() to do this if we have a reference to the
                 // Tab.
                 actionBar.setSelectedNavigationItem(position);
+                setIconActive(position);
             }
         });
 
@@ -102,29 +143,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             // Also specify this Activity object, which implements the TabListener interface, as the
             // listener for when this tab is selected.
         	ActionBar.Tab tabToAdd = actionBar.newTab();
-        	//Safe operations
+        	
         	tabToAdd.setTabListener(this);
-        	//Unsafe operations
-        	int iconToLoad;
-        	switch(i){
-        		case 0:
-        			iconToLoad = R.drawable.home;
-        			break;
-        		case 1:
-        			iconToLoad = R.drawable.map;
-        			break;
-        		case 2:
-        			iconToLoad = R.drawable.comments;
-        			break;
-        		default:
-        			iconToLoad = R.drawable.ic_launcher;
-        			break;
-        	}
-        	tabToAdd.setIcon(iconToLoad);
+        	tabToAdd.setIcon(getRegularIcon(i));
     
             actionBar.addTab(tabToAdd);
             
         }
+        //Set the home page as active since we'll start there:
+        this.setIconActive(0);
+        
         //Setting the display to custom will push the action bar to the top
         //which gives us more real estate
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
