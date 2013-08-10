@@ -40,7 +40,17 @@ When the API has difficulty processing any request it will return an error messa
 ```
 The value of the `Error_Message` field will be an informative message that will help you troubleshoot your malformed request. 
 
-###Get API Information
+--------------------
+
+Extending the API
+--------------------
+
+If you extend the API at all, it is important to update `spider.py` to test the functionality. If the spider cannot finish all of its assertion tests the API should not be released.
+
+
+---------------------
+Get API Information
+---------------------
 
 Method: **GET**
 
@@ -607,6 +617,8 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
         </tr>
     </tbody>
 </table>
+
+
 
 
 
