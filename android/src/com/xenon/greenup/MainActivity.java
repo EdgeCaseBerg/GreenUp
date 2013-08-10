@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xenon.greenup.api.APIServerInterface;
@@ -102,32 +103,31 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             // listener for when this tab is selected.
         	ActionBar.Tab tabToAdd = actionBar.newTab();
         	//Safe operations
-        	tabToAdd.setText(_AppSectionsPagerAdapter.getPageTitle(i))
-            		.setTabListener(this);
+        	tabToAdd.setTabListener(this);
         	//Unsafe operations
-        	String iconToLoad;
+        	int iconToLoad;
         	switch(i){
         		case 0:
+        			iconToLoad = R.drawable.home;
+        			break;
         		case 1:
+        			iconToLoad = R.drawable.map;
+        			break;
         		case 2:
-        			iconToLoad = "Comments.svg";
+        			iconToLoad = R.drawable.comments;
         			break;
         		default:
-        			iconToLoad = "";
+        			iconToLoad = R.drawable.ic_launcher;
         			break;
         	}
-        	try {
-        		ImageView iv = new ImageView(null, null);
-        		iv.setBackground(Drawable.createFromStream(getAssets().open("Comments.svg"), null));
-				tabToAdd.setCustomView(iv);
-				Log.i("load","Load " + iconToLoad + "without incident");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+        	tabToAdd.setIcon(iconToLoad);
+    
             actionBar.addTab(tabToAdd);
             
         }
-        
+        //Setting the display to custom will push the action bar to the top
+        //which gives us more real estate
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.show();
     }	
 
