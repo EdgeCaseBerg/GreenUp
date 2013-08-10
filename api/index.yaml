@@ -15,3 +15,13 @@ indexes:
   - name: commentType
   - name: timeSent
     direction: desc
+
+- kind: GridPoints
+  ancestor: yes
+  properties:
+  - name: lat
+
+- kind: Pins
+  ancestor: yes
+  properties:
+  - name: lat
