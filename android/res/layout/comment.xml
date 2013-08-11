@@ -8,6 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0px"
+        android:layout_marginTop="0px"
         android:src="@drawable/bubble_blue_top" >
     </ImageView>
     
@@ -30,13 +31,12 @@
         android:textSize="10sp"
         />
     -->
-    
-    
     <ImageView
         android:id="@+id/comment_grid_bottom"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-         android:layout_marginTop="0px"
+        android:layout_width="fill_parent"
+        android:layout_marginBottom="0px"
+        android:layout_marginTop="0px"
         android:src="@drawable/bubble_blue_bottom" >
     </ImageView>
         
