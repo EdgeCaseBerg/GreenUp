@@ -54,6 +54,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      */
     ViewPager _ViewPager;
     
+    /**
+     * getRegularIcon returns the resource id of the icon image for the actionbar tabs.
+     * @param index
+     * @return The drawable resource id of the image.
+     */
     private int getRegularIcon(int index){
     	switch(index){
 		case 1:
@@ -67,6 +72,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	}
     }
     
+    /**
+     * getActiveIcon returns the resource id of the icon image for an active actionbar tab
+     * @param index
+     * @return The drawable resource id of the active icon
+     */
     private int getActiveIcon(int index){
     	switch(index){
 		case 1:
@@ -79,6 +89,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	}
     }
     
+    /**
+     * sets the actionbar tab icon at position iconToActivate to active.
+     * @param iconToActivate The position of the ActionBar.Tab that will be activated
+     */
     private void setIconActive(int iconToActivate){
     	final ActionBar actionBar = getActionBar();
     	final ActionBar.Tab tab = actionBar.getTabAt(iconToActivate);
