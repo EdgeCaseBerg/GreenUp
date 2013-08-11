@@ -206,7 +206,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         @Override
         public Fragment getItem(int i)
         { 
-        	switch (3) {
+        	switch (i) {
             case 0:
         		//TODO: Launch HomeSectionFragment
         		Fragment home = new HomeSectionFragment();
