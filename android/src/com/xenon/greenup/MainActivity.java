@@ -16,13 +16,10 @@
 
 package com.xenon.greenup;
 
-import java.io.IOException;
-
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -35,9 +32,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xenon.greenup.api.APIServerInterface;
@@ -112,6 +106,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         
         // Specify that the Home/Up button should not be enabled, since there is no hierarchical parent.
         actionBar.setHomeButtonEnabled(false);
+        
         //Set the stacked background otherwise we get the gross dark gray color under the icon
         BitmapDrawable background = (BitmapDrawable)getResources().getDrawable(R.drawable.bottom_menu);
         background.setTileModeXY(TileMode.REPEAT,TileMode.REPEAT);
