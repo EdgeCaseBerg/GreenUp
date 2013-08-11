@@ -4,6 +4,8 @@
 #rsvg-convert installed for this to work.
 #On debian systems: sudo apt-get install librsvg2-bin
 
+#You also need to install imagemagick for the convert function to generate the mirrored images with flop
+
 #values for dpi set according to http://developer.android.com/guide/practices/screens_support.html
 
 #For xhdpi
@@ -17,6 +19,7 @@ rsvg-convert -o ../android/res/drawable-xhdpi/home_active.png home_active.svg --
 rsvg-convert -o ../android/res/drawable-xhdpi/bubble_blue_top.png bubble_blue_top.svg --dpi-x 960 --dpi-y 720
 rsvg-convert -o ../android/res/drawable-xhdpi/bubble_blue_center.png bubble_blue_center.svg --dpi-x 960 --dpi-y 720
 rsvg-convert -o ../android/res/drawable-xhdpi/bubble_blue_bottom.png bubble_blue_bottom.svg --dpi-x 960 --dpi-y 720
+rsvg-convert -o ../android/res/drawable-xhdpi/bubble_blue_bottom_reverse.png bubble_blue_bottom_reverse.svg --dpi-x 960 --dpi-y 720
 
 #For the hdpi: 
 rsvg-convert -o ../android/res/drawable-hdpi/comments.png comments.svg --dpi-x 640 --dpi-y 480
@@ -29,7 +32,7 @@ rsvg-convert -o ../android/res/drawable-hdpi/home_active.png home_active.svg --d
 rsvg-convert -o ../android/res/drawable-hdpi/bubble_blue_top.png bubble_blue_top.svg --dpi-x 640 --dpi-y 480
 rsvg-convert -o ../android/res/drawable-hdpi/bubble_blue_center.png bubble_blue_center.svg --dpi-x 640 --dpi-y 480
 rsvg-convert -o ../android/res/drawable-hdpi/bubble_blue_bottom.png bubble_blue_bottom.svg --dpi-x 640 --dpi-y 480
-
+rsvg-convert -o ../android/res/drawable-hdpi/bubble_blue_bottom_reverse.png bubble_blue_bottom_reverse.svg --dpi-x 640 --dpi-y 480
 
 #For the mdpi
 rsvg-convert -o ../android/res/drawable-mdpi/comments.png comments.svg -d 470 -p 320
@@ -42,6 +45,7 @@ rsvg-convert -o ../android/res/drawable-mdpi/home_active.png home_active.svg -d 
 rsvg-convert -o ../android/res/drawable-mdpi/bubble_blue_top.png bubble_blue_top.svg -d 470 -p 320
 rsvg-convert -o ../android/res/drawable-mdpi/bubble_blue_center.png bubble_blue_center.svg -d 470 -p 320
 rsvg-convert -o ../android/res/drawable-mdpi/bubble_blue_bottom.png bubble_blue_bottom.svg -d 470 -p 320
+rsvg-convert -o ../android/res/drawable-mdpi/bubble_blue_bottom_reverse.png bubble_blue_bottom_reverse.svg -d 470 -p 320
 
 
 #For the ldpi
@@ -55,7 +59,7 @@ rsvg-convert -o ../android/res/drawable-ldpi/home_active.png home_active.svg -d 
 rsvg-convert -o ../android/res/drawable-ldpi/bubble_blue_top.png bubble_blue_top.svg -d 426 -p 320
 rsvg-convert -o ../android/res/drawable-ldpi/bubble_blue_center.png bubble_blue_center.svg -d 426 -p 320
 rsvg-convert -o ../android/res/drawable-ldpi/bubble_blue_bottom.png bubble_blue_bottom.svg -d 426 -p 320
-
+rsvg-convert -o ../android/res/drawable-ldpi/bubble_blue_bottom_reverse.png bubble_blue_bottom_reverse.svg -d 426 -p 320
 
 
 

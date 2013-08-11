@@ -8,8 +8,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0px"
-        android:layout_marginTop="0px"
-        android:src="@drawable/bubble_blue_top" >
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" >
     </ImageView>
     
     <TextView 
@@ -18,8 +19,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0px"
         android:layout_marginBottom="0px"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:textSize="15sp"
         android:drawable="@drawable/bubble_blue_center" 
+        android:tileMode="repeat"
         />
     <!--  We do not need this. We want to set the icon for the textview above to be the center
     	background image, and we can just set the end of the text with a \nTimestamp
@@ -35,9 +39,10 @@
         android:id="@+id/comment_grid_bottom"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_marginBottom="0px"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="0px"
-        android:src="@drawable/bubble_blue_bottom" >
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
     </ImageView>
         
 </LinearLayout>

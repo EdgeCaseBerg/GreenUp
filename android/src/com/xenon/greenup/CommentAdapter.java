@@ -6,6 +6,7 @@ package com.xenon.greenup;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.graphics.Matrix;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,14 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 		return new int[]{R.drawable.bubble_blue_top, R.drawable.bubble_blue_center,R.drawable.bubble_blue_bottom};
 	}
 	
+	private int getReverseOf(int resource){
+		switch(resource){
+		case R.drawable.bubble_blue_bottom:
+		default:
+			return R.drawable.bubble_blue_bottom_reverse;
+		}
+	}
+	
 	@Override
 	  public View getView(int position, View convertView, ViewGroup parent) {
 	    View rowView = convertView;
@@ -71,15 +80,18 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 
 	    ViewHolder holder = (ViewHolder) rowView.getTag();
 	    Comment comment= comments.get(position);
-	    //TODO check for Nullpointers
 	    holder.text.setText(comment.getMessage());
 	   
 	    //Use the type of the comment to determine what color it shall be
 	    int [] topCenterBottomResourceIds = getResourceByType(comment.getType());
 
 	    holder.top.setBackgroundResource(topCenterBottomResourceIds[0]);
-	    holder.text.setBackgroundResource((topCenterBottomResourceIds[1]));
-	    holder.bottom.setBackgroundResource(topCenterBottomResourceIds[2]);
+	    //holder.text.setBackgroundResource((topCenterBottomResourceIds[1]));
+	    if(position % 2 == 0) {  
+	    	holder.bottom.setBackgroundResource(getReverseOf(topCenterBottomResourceIds[2]));
+	    } else {
+	    	holder.bottom.setBackgroundResource(topCenterBottomResourceIds[2]);
+	    }
 	    
 	    
 	    return rowView;
