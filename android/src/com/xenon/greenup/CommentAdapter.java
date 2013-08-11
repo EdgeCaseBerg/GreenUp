@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.graphics.Matrix;
+import android.graphics.Shader.TileMode;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +88,11 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    int [] topCenterBottomResourceIds = getResourceByType(comment.getType());
 
 	    holder.top.setBackgroundResource(topCenterBottomResourceIds[0]);
-	    //holder.text.setBackgroundResource((topCenterBottomResourceIds[1]));
+	    //Tile the center background
+	    BitmapDrawable background = (BitmapDrawable)this.context.getResources().getDrawable(topCenterBottomResourceIds[1]);
+        background.setTileModeXY(TileMode.REPEAT,TileMode.REPEAT);
+        holder.text.setBackground(background);
+	    //holder.text.setBackgroundResource(();
 	    if(position % 2 == 0) {  
 	    	holder.bottom.setBackgroundResource(getReverseOf(topCenterBottomResourceIds[2]));
 	    } else {

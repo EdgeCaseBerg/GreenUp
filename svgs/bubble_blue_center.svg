@@ -15,15 +15,15 @@
    x="0px"
    y="0px"
    width="342.76001"
-   height="0.451015"
-   viewBox="0 0 342.76 0.45101498"
+   height="1.6889043"
+   viewBox="0 0 342.76 1.6889042"
    enable-background="new 0 0 381.6 156.24"
    xml:space="preserve"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="bubble_blue_center.svg"><metadata
    id="metadata9"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
    id="defs7" /><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
@@ -42,15 +42,15 @@
    fit-margin-right="0"
    fit-margin-bottom="0"
    inkscape:zoom="12.1174"
-   inkscape:cx="6.3682527"
-   inkscape:cy="0.8758537"
+   inkscape:cx="162.44134"
+   inkscape:cy="0.8758554"
    inkscape:window-x="0"
    inkscape:window-y="0"
    inkscape:window-maximized="0"
    inkscape:current-layer="Layer_1" />
 <g
    id="rDpTor_1_"
-   transform="translate(-19.4272,-79.963085)">
+   transform="matrix(1,0,0,3.7446744,-19.4272,-299.43572)">
 	
 		<image
    overflow="visible"
