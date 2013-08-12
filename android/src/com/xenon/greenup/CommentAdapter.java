@@ -3,12 +3,19 @@
  */
 package com.xenon.greenup;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import android.app.Activity;
 import android.graphics.Matrix;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,8 +88,53 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    }
 
 	    ViewHolder holder = (ViewHolder) rowView.getTag();
+	    
 	    Comment comment= comments.get(position);
-	    holder.text.setText(comment.getMessage());
+	    
+	    StringBuilder sb = new StringBuilder();
+	    sb.append(comment.getMessage());
+	    sb.append( System.getProperty("line.separator"));
+	    //Determine the twitter-esk stamp
+	    SimpleDateFormat sdf = new SimpleDateFormat("E LLL d kk:mm:ss yyyy",Locale.US);
+	    //The app engines timestamps are GMT
+	    sdf.setTimeZone(TimeZone.getTimeZone("GMT+4"));
+	    Date fromStamp = null;
+	    try {
+			fromStamp = sdf.parse(comment.getTimestamp());
+		} catch (ParseException e) {
+			// TODO handle the  bad parse of the date?
+			e.printStackTrace();
+		}
+	    //Get the difference
+	    String difference; 
+	    if(fromStamp != null) {
+	    	long timeDiffInMilli = abs(new Date().getTime() -  fromStamp.getTime());
+	    	Log.i("time",""+timeDiffInMilli);
+	    	
+	    	long daysAgo = timeDiffInMilli/86400000;
+	    	long hoursAgo = ((timeDiffInMilli/(1000*60*60)) % 24);
+	    	long minutesAgo = (long) (timeDiffInMilli/(1000*60)) % 60;
+    		long secondsAgo = (long) (timeDiffInMilli/1000) % 60;
+    		Log.i("time", "Hours ago: "+hoursAgo);
+    		Log.i("time", "Minutes ago: " + minutesAgo);
+    	
+    		if(daysAgo > 0) {
+	    		difference = String.format(Locale.US,"%d days ago",daysAgo);
+	    	} else if(hoursAgo > 0){
+	    		if (hoursAgo == 1) {
+	    			difference = String.format(Locale.US,"%d hour, %d minutes ago", hoursAgo,minutesAgo);
+	    		} else {
+	    			difference = String.format(Locale.US,"%d hours, %d minutes ago", hoursAgo,minutesAgo);
+	    		}
+	    	} else {
+	    		difference = String.format(Locale.US, "%d minutes and %d seconds ago",minutesAgo,secondsAgo);
+	    	}
+	    }else{
+	    	//For a default if we can't figure it out we'll just give em the timestamp
+	    	difference = comment.getTimestamp();
+	    }	    
+	    sb.append(difference);
+	    holder.text.setText(sb.toString());
 	   
 	    //Use the type of the comment to determine what color it shall be
 	    int [] topCenterBottomResourceIds = getResourceByType(comment.getType());
@@ -102,5 +154,12 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    
 	    return rowView;
 	  }
+
+	private long abs(long l) {
+		if(l < 0){
+			return l*-1;
+		}
+		return l;
+	}
 	
 }
