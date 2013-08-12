@@ -23,7 +23,7 @@ public class FeedSectionFragment extends ListFragment {
 	
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-		CommentPage cp = api.getComments("FORUM",lastPageLoaded );
+		CommentPage cp = api.getComments(null,lastPageLoaded );
 		this.comments = cp.getCommentsList();
 		//Set the adapter
 		Activity currentActivity = getActivity();

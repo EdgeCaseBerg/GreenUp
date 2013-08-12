@@ -25,8 +25,17 @@ public class APIServerInterface {
 	
 	//Retrieves a page of comments from the server, the type and page number are optional
 	public CommentPage getComments(String type, int page) {
+		if(type == null || type.equals(""))
+			return this.getAllComments(page);
 		StringBuilder sb = new StringBuilder(BASE_URL + "/comments?");
 		sb.append("type=" + type + "&" + "page=" + page);
+		String response = sendRequest(sb.toString());
+		return new CommentPage(response);
+	}
+	
+	//Retrieves a page of comments with no regard for the type
+	public CommentPage getAllComments(int page){
+		StringBuilder sb = new StringBuilder(); sb.append(BASE_URL).append("/comments?").append("page=").append(page);
 		String response = sendRequest(sb.toString());
 		return new CommentPage(response);
 	}
