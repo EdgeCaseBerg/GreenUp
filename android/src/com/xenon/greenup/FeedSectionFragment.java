@@ -8,6 +8,7 @@ import com.xenon.greenup.api.CommentPage;
 
 import android.support.v4.app.ListFragment;
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,9 @@ public class FeedSectionFragment extends ListFragment {
 		//If we have no internet then we will get nothing back from the api
 		if(this.comments == null)
 			this.comments = new ArrayList<Comment>(60);
-		setListAdapter(new CommentAdapter(currentActivity,this.comments));
+		//should do this or the work for it asynchronously
+		//setListAdapter(new CommentAdapter(currentActivity,this.comments));
+		new ASYNCLoadTask(this,currentActivity,this.comments).execute();
 	}
 	
     @Override
@@ -39,5 +42,26 @@ public class FeedSectionFragment extends ListFragment {
     	
         return inflater.inflate(R.layout.feed, container, false);
     }
+    
+private class ASYNCLoadTask extends AsyncTask<Void,Void,Integer>{
+		
+		private final Activity act;
+		private final ArrayList<Comment> cmts;
+		private final FeedSectionFragment fsf;
+		
+		//Constructor for GET requests
+		public ASYNCLoadTask(FeedSectionFragment fsf, Activity a, ArrayList<Comment> c) {
+			//apparently I've jumped back to 1982 when variable length matters
+			this.act = a;
+			this.cmts = c;
+			this.fsf = fsf;
+		}
+		
+		@Override
+		protected Integer doInBackground(Void...voids) {
+			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
+			return 0;
+		}
+	}
 
 }
