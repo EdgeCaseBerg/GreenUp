@@ -57,10 +57,10 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 			return new int[]{R.drawable.bubble_blue_top, R.drawable.bubble_blue_center,R.drawable.bubble_blue_bottom};
 		}
 		if("GENERAL MESSAGE".equalsIgnoreCase(typeOfComment)){
-			return new int[]{R.drawable.bubble_blue_top, R.drawable.bubble_blue_center,R.drawable.bubble_blue_bottom};
+			return new int[]{R.drawable.bubble_green_top, R.drawable.bubble_green_center,R.drawable.bubble_green_bottom};
 		}
 		if("TRASH PICKUP".equalsIgnoreCase(typeOfComment)){
-			return new int[]{R.drawable.bubble_blue_top, R.drawable.bubble_blue_center,R.drawable.bubble_blue_bottom};
+			return new int[]{R.drawable.bubble_orange_top, R.drawable.bubble_orange_center,R.drawable.bubble_orange_bottom};
 		}
 		//Default/Help needed
 		return new int[]{R.drawable.bubble_blue_top, R.drawable.bubble_blue_center,R.drawable.bubble_blue_bottom};
@@ -68,6 +68,10 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	
 	private int getReverseOf(int resource){
 		switch(resource){
+		case R.drawable.bubble_orange_bottom:
+			return R.drawable.bubble_orange_bottom_reverse;
+		case R.drawable.bubble_green_bottom:
+			return R.drawable.bubble_green_bottom_reverse;
 		case R.drawable.bubble_blue_bottom:
 		default:
 			return R.drawable.bubble_blue_bottom_reverse;
