@@ -104,7 +104,10 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    sdf.setTimeZone(TimeZone.getTimeZone("GMT+4"));
 	    Date fromStamp = null;
 	    try {
-			fromStamp = sdf.parse(comment.getTimestamp());
+	    	String ts = comment.getTimestamp();
+	    	//Make sure that we have a timestamp or we'll have an NPE
+	    	if(ts != null)
+	    		fromStamp = sdf.parse(ts);
 		} catch (ParseException e) {
 			// TODO handle the  bad parse of the date?
 			e.printStackTrace();
@@ -135,7 +138,8 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    	}
 	    }else{
 	    	//For a default if we can't figure it out we'll just give em the timestamp
-	    	difference = comment.getTimestamp();
+	    	//Also check for null in the case one was never set above
+	    	difference = comment.getTimestamp() == null ? "" : comment.getTimestamp();
 	    }	    
 	    sb.append(difference);
 	    holder.text.setText(sb.toString());
