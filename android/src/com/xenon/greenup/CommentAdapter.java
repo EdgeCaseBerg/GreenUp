@@ -116,14 +116,11 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    String difference; 
 	    if(fromStamp != null) {
 	    	long timeDiffInMilli = abs(new Date().getTime() -  fromStamp.getTime());
-	    	Log.i("time",""+timeDiffInMilli);
 	    	
 	    	long daysAgo = timeDiffInMilli/86400000;
 	    	long hoursAgo = ((timeDiffInMilli/(1000*60*60)) % 24);
 	    	long minutesAgo = (long) (timeDiffInMilli/(1000*60)) % 60;
     		long secondsAgo = (long) (timeDiffInMilli/1000) % 60;
-    		Log.i("time", "Hours ago: "+hoursAgo);
-    		Log.i("time", "Minutes ago: " + minutesAgo);
     	
     		if(daysAgo > 0) {
 	    		difference = String.format(Locale.US,"%d days ago",daysAgo);
@@ -164,10 +161,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	  }
 
 	private long abs(long l) {
-		if(l < 0){
-			return l*-1;
-		}
-		return l;
+		return l < 0 ? l*-1L : l;
 	}
 	
 }

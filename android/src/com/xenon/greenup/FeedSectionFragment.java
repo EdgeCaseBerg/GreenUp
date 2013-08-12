@@ -33,24 +33,31 @@ public class FeedSectionFragment extends ListFragment {
 			this.comments = new ArrayList<Comment>(60);
 		
 		//Do feed rendering async or else it will take orders of magnitude longer to render
-		new ASYNCLoadTask(this,currentActivity,this.comments).execute();
+		new AsyncCommentLoadTask(this,currentActivity,this.comments).execute();
 	}
 	
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-        Bundle savedInstanceState) {
-    	
+    /**
+     * Called when the android needs to create the view, simply inflates the layout
+     */
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.feed, container, false);
     }
     
-private class ASYNCLoadTask extends AsyncTask<Void,Void,Integer>{
+	private class AsyncCommentLoadTask extends AsyncTask<Void,Void,Void>{
 		
 		private final Activity act;
 		private final ArrayList<Comment> cmts;
 		private final FeedSectionFragment fsf;
 		
-		//Constructor for GET requests
-		public ASYNCLoadTask(FeedSectionFragment fsf, Activity a, ArrayList<Comment> c) {
+		/**
+		 * AsyncCommentLoadTask is the default constructor to create an asynchronous task
+		 * to load the arrayadapter as well as render the view for the comment feed. 
+		 * @param fsf An instance of the FeedSectionFragment that the adapter to load from belongs to
+		 * @param a The activity which is running the FeedSectionFragment instance
+		 * @param c The list of comments which we will bind to an arrayadapter that will populate the feeds view
+		 */
+		public AsyncCommentLoadTask(FeedSectionFragment fsf, Activity a, ArrayList<Comment> c) {
 			//apparently I've jumped back to 1982 when variable length matters
 			this.act = a;
 			this.cmts = c;
@@ -58,9 +65,20 @@ private class ASYNCLoadTask extends AsyncTask<Void,Void,Integer>{
 		}
 		
 		@Override
-		protected Integer doInBackground(Void...voids) {
+		/**
+		 * The actual task to execute when this class is created and execute() is called. 
+		 * Sets the list adapter of the FeedSectionFragment to be a CommentAdapter loaded with
+		 * the activity stored within the class at construction time with the comments
+		 * passed at construction time.
+		 */
+		protected Void doInBackground(Void...voids) {
 			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
-			return 0;
+			//Java makes no sense. It requires the capital version of Void because there simply
+			//must be something returned and you have to java's bastard children, the wrapper 
+			//types instead of primitives because it's an async task. But yet, the primitive
+			//keyword null is apparent a Void type (although returning void is wrong). 
+			//sense, this makes none.
+			return null;
 		}
 	}
 
