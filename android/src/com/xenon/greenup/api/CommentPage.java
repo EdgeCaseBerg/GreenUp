@@ -33,6 +33,7 @@ public class CommentPage {
 			}
 		}
 		catch (JSONException e){
+			//No internet causes the string returned to be invalid
 			e.printStackTrace();
 		}
 	}

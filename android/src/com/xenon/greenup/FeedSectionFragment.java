@@ -27,6 +27,9 @@ public class FeedSectionFragment extends ListFragment {
 		this.comments = cp.getCommentsList();
 		//Set the adapter
 		Activity currentActivity = getActivity();
+		//If we have no internet then we will get nothing back from the api
+		if(this.comments == null)
+			this.comments = new ArrayList<Comment>(60);
 		setListAdapter(new CommentAdapter(currentActivity,this.comments));
 	}
 	
