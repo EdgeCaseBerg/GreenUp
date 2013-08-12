@@ -31,8 +31,8 @@ public class FeedSectionFragment extends ListFragment {
 		//If we have no internet then we will get nothing back from the api
 		if(this.comments == null)
 			this.comments = new ArrayList<Comment>(60);
-		//should do this or the work for it asynchronously
-		//setListAdapter(new CommentAdapter(currentActivity,this.comments));
+		
+		//Do feed rendering async or else it will take orders of magnitude longer to render
 		new ASYNCLoadTask(this,currentActivity,this.comments).execute();
 	}
 	
