@@ -42,11 +42,13 @@ Developers:
 - [Joshua Dickerson]
 - [Collin Dewitt]
 - [Scott MacEwan]
+- [Anders Melen]
 - [Justin Adams]
 - [Danielle Steimke]
 - [Paul Kiripolsky]
 - [Evan Yandell]
 - [Phelan Vendeville]
+
 
 Designers:
 ------------------
@@ -73,4 +75,4 @@ License:
 [Linux]: http://askubuntu.com/questions/123553/how-to-install-google-appengine/126687#126687
 [Windows or Mac]: https://developers.google.com/appengine/docs/python/gettingstartedpython27/devenvironment
 [Paul Kiripolsky]: https://github.com/kiripaul
-
+[Anders Melen]: https://github.com/popwarfour
