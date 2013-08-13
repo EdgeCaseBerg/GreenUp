@@ -122,6 +122,7 @@
         [self.locationManager stopUpdatingLocation];
         //Home
         [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setTitle:@"Start Cleaning" forState:UIControlStateNormal];
+        [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setBackgroundImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
     }
     else
     {
@@ -134,6 +135,7 @@
         
         //Home
         [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setTitle:@"Stop Cleaning" forState:UIControlStateNormal];
+        [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setBackgroundImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
     }
 }
 
@@ -180,13 +182,14 @@
         HeatMapPoint *mapPoint = [[HeatMapPoint alloc] init];
         mapPoint.lat = location.coordinate.latitude;
         mapPoint.lon = location.coordinate.longitude;
-        mapPoint.secWorked = 5;
+        mapPoint.secWorked = 1;
         [self.gatheredMapPoints addObject:mapPoint];
         [self.gatheredMapPointsQueue addObject:mapPoint];
         
         //Update With Server        
-        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+        //[self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
         [self pushHeatMapDataToServer];
+        [self updateHeatMapOverlay];
         
          //Update Map Location
          MKCoordinateRegion region;
@@ -197,6 +200,7 @@
          region.center = location.coordinate;
          [self.mapView setRegion:region animated:TRUE];
          [self.mapView regionThatFits:region];
+        
     }
 }
 
@@ -209,7 +213,7 @@
     {
         for(HeatMapPoint *point in self.gatheredMapPointsQueue)
         {
-            NSURL *url = [NSURL URLWithString:@"http://greenupapp.appspot.com/api/heatmap"];
+            NSURL *url = [NSURL URLWithString:@"http://localhost:30002/api/heatmap"];
             
             NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"secondsWorked", nil];
             NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%f",point.lat], [NSString stringWithFormat:@"%f",point.lon], [NSString stringWithFormat:@"%f",10.1], nil];
@@ -263,7 +267,7 @@
 }
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
 {
-    NSURL *url = [NSURL URLWithString:@"http://greenupapp.appspot.com/api/heatmap"];
+    NSURL *url = [NSURL URLWithString:@"http://localhost:30002/api/heatmap"];
     
     NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
     NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:location.center.latitude], [NSNumber numberWithFloat:location.center.longitude], [NSNumber numberWithFloat:span.latitudeDelta], [NSNumber numberWithFloat:span.longitudeDelta], nil];
@@ -279,7 +283,7 @@
     [FSNConnection withUrl:url
                     method:FSNRequestMethodGET
                    headers:nil
-                parameters:parameters
+                parameters:nil
                 parseBlock:^id(FSNConnection *c, NSError **error)
      {
          FSNParseBlock parseBlock = c.parseBlock;
