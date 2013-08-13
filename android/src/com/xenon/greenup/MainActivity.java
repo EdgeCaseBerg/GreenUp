@@ -123,7 +123,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         
         //Set the stacked background otherwise we get the gross dark gray color under the icon
         BitmapDrawable background = (BitmapDrawable)getResources().getDrawable(R.drawable.bottom_menu);
-        background.setTileModeXY(TileMode.REPEAT,TileMode.REPEAT);
+        background.setTileModeXY(TileMode.REPEAT,TileMode.MIRROR);
         actionBar.setStackedBackgroundDrawable(background);
         
 

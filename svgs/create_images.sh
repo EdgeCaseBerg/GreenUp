@@ -28,6 +28,8 @@ rsvg-convert -o ../android/res/drawable-xhdpi/bubble_orange_top.png bubble_orang
 rsvg-convert -o ../android/res/drawable-xhdpi/bubble_orange_center.png bubble_orange_center.svg --dpi-x 960 --dpi-y 720
 rsvg-convert -o ../android/res/drawable-xhdpi/bubble_orange_bottom.png bubble_orange_bottom.svg --dpi-x 960 --dpi-y 720
 rsvg-convert -o ../android/res/drawable-xhdpi/bubble_orange_bottom_reverse.png bubble_orange_bottom_reverse.svg --dpi-x 960 --dpi-y 720
+rsvg-convert -o ../android/res/drawable-xhdpi/top_bar.png top_bar.svg --dpi-x 960 --dpi-y 720
+rsvg-convert -o ../android/res/drawable-xhdpi/hamburger_icon.png hamburger_icon.svg --dpi-x 960 --dpi-y 720
 
 #For the hdpi: 
 rsvg-convert -o ../android/res/drawable-hdpi/comments.png comments.svg --dpi-x 640 --dpi-y 480
@@ -49,6 +51,8 @@ rsvg-convert -o ../android/res/drawable-hdpi/bubble_orange_top.png bubble_orange
 rsvg-convert -o ../android/res/drawable-hdpi/bubble_orange_center.png bubble_orange_center.svg --dpi-x 640 --dpi-y 480
 rsvg-convert -o ../android/res/drawable-hdpi/bubble_orange_bottom.png bubble_orange_bottom.svg --dpi-x 640 --dpi-y 480
 rsvg-convert -o ../android/res/drawable-hdpi/bubble_orange_bottom_reverse.png bubble_orange_bottom_reverse.svg --dpi-x 640 --dpi-y 480
+rsvg-convert -o ../android/res/drawable-hdpi/top_bar.png top_bar.svg --dpi-x 640 --dpi-y 480
+rsvg-convert -o ../android/res/drawable-hdpi/hamburger_icon.png hamburger_icon.svg --dpi-x 640 --dpi-y 480
 
 
 #For the mdpi
@@ -71,6 +75,8 @@ rsvg-convert -o ../android/res/drawable-mdpi/bubble_orange_top.png bubble_orange
 rsvg-convert -o ../android/res/drawable-mdpi/bubble_orange_center.png bubble_orange_center.svg -d 470 -p 320
 rsvg-convert -o ../android/res/drawable-mdpi/bubble_orange_bottom.png bubble_orange_bottom.svg -d 470 -p 320
 rsvg-convert -o ../android/res/drawable-mdpi/bubble_orange_bottom_reverse.png bubble_orange_bottom_reverse.svg -d 470 -p 320
+rsvg-convert -o ../android/res/drawable-mdpi/top_bar.png top_bar.svg -d 470 -p 320
+rsvg-convert -o ../android/res/drawable-mdpi/hamburger_icon.png top_bar.svg -d 470 -p 320
 
 #For the ldpi
 rsvg-convert -o ../android/res/drawable-ldpi/comments.png comments.svg -d 426 -p 320
@@ -92,6 +98,8 @@ rsvg-convert -o ../android/res/drawable-ldpi/bubble_orange_top.png bubble_orange
 rsvg-convert -o ../android/res/drawable-ldpi/bubble_orange_center.png bubble_orange_center.svg -d 426 -p 320
 rsvg-convert -o ../android/res/drawable-ldpi/bubble_orange_bottom.png bubble_orange_bottom.svg -d 426 -p 320
 rsvg-convert -o ../android/res/drawable-ldpi/bubble_orange_bottom_reverse.png bubble_orange_bottom_reverse.svg -d 426 -p 320
+rsvg-convert -o ../android/res/drawable-ldpi/top_bar.png top_bar.svg -d 426 -p 320
+rsvg-convert -o ../android/res/drawable-ldpi/hamburger_icon.png hamburger_icon.svg -d 426 -p 320
 
 
 
