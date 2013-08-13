@@ -5,10 +5,6 @@
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 5a1501a4775febfcafea4f6ec63fca97204a5a91
       http://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
@@ -16,73 +12,9 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
-
+  -->     
 <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
-<<<<<<< HEAD
 
-    <TextView
-        android:id="@+id/title_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp"
-        android:text="@string/title_text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="37dp" >
-
-        <Button
-            android:id="@+id/home_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="14dp"
-            android:text="@string/home_button"
-            android:textAlignment="center" />
-
-        <Button
-            android:id="@+id/comments_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:minWidth="70dp"
-            android:text="@string/comments_button"
-            android:textAlignment="center" />
-
-        <Button
-            android:id="@+id/maps_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="@string/maps_button"
-            android:textAlignment="center" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/welcome_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
-        android:text="@string/welcome_text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-</RelativeLayout>
-=======
->>>>>>> 5a1501a4775febfcafea4f6ec63fca97204a5a91
