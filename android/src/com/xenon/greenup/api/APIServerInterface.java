@@ -25,8 +25,17 @@ public class APIServerInterface {
 	
 	//Retrieves a page of comments from the server, the type and page number are optional
 	public CommentPage getComments(String type, int page) {
+		if(type == null || type.equals(""))
+			return this.getAllComments(page);
 		StringBuilder sb = new StringBuilder(BASE_URL + "/comments?");
 		sb.append("type=" + type + "&" + "page=" + page);
+		String response = sendRequest(sb.toString());
+		return new CommentPage(response);
+	}
+	
+	//Retrieves a page of comments with no regard for the type
+	public CommentPage getAllComments(int page){
+		StringBuilder sb = new StringBuilder(); sb.append(BASE_URL).append("/comments?").append("page=").append(page);
 		String response = sendRequest(sb.toString());
 		return new CommentPage(response);
 	}
@@ -43,9 +52,16 @@ public class APIServerInterface {
 	//Get a list of heatmap points for the specified coordinates, all parameters are optional (??)
 	public Heatmap getHeatmap(float latDegrees, float latOffset, float lonDegrees, float lonOffset, int precision){
 		StringBuilder sb = new StringBuilder(BASE_URL + "/heatmap?");
-		//sb.append("latDegrees=" + latDegrees + "&latOffset=" + latOffset + "&");
-		//sb.append("lonDegrees=" + lonDegrees + "&lonOffset=" + lonOffset + "&");
-		//sb.append("precision=" + precision);
+		
+		//Wrapper class casting is neccesary to compare to null (damn java)
+		if((Float)latDegrees != null) { sb.append(("latDegrees=")).append(latDegrees); }
+		if((Float)latOffset != null)  { sb.append("&latOffset=").append(latOffset); }
+		if((Float)lonDegrees != null) { sb.append("&lonDegrees=").append(lonDegrees); }
+		if((Float)lonOffset != null)  { sb.append("&lonOffset=").append(lonOffset); }
+		if((Integer)precision != null)  { sb.append("&precision=").append(precision); }
+		//If my oneline if's offend you feel free to change them. If Java was a good language and supported
+		//free standing ternary statements I would have used those. But no, it demands an assignment.
+		
 		String response = sendRequest(sb.toString());
 		return new Heatmap(response);
 	}
@@ -61,6 +77,12 @@ public class APIServerInterface {
 	//Get a list of pins, all parameters are optional
 	public PinList getPins(float latDegrees, float latOffset, float lonDegrees, float lonOffset){
 		StringBuilder sb = new StringBuilder(BASE_URL + "/pins?");
+		//Wrapper class casting is neccesary to compare to null (Java is silly like that)
+		if((Float)latDegrees != null) { sb.append(("latDegrees=")).append(latDegrees); }
+		if((Float)latOffset != null)  { sb.append("&latOffset=").append(latOffset); }
+		if((Float)lonDegrees != null) { sb.append("&lonDegrees=").append(lonDegrees); }
+		if((Float)lonOffset != null)  { sb.append("&lonOffset=").append(lonOffset); }
+		
 		String response = sendRequest(sb.toString());
 		return new PinList(response);
 	}
