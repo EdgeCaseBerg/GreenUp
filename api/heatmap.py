@@ -22,6 +22,13 @@ class Heatmap(webapp2.RequestHandler):
 		latOffset = self.request.get("latOffset")
 		lonOffset = self.request.get("lonOffset")
 		precision = self.request.get("precision")
+		raw = self.request.get("raw")
+
+		renderRaw = False
+		if raw is not None:
+			if raw.upper().__eq__('TRUE'):
+				renderRaw = True
+		
 		
 		#validate parameters
 		if latDegrees is not None and latDegrees is not "":
@@ -30,8 +37,8 @@ class Heatmap(webapp2.RequestHandler):
 				float(latDegrees)
 				#check range
 				latDegrees = float(latDegrees)
-				if latDegrees < -180.0 or latDegrees > 180.0:
-					raise SemanticError("latDegrees must be within the range of -180.0 and 180.0")
+				if latDegrees < -90.0 or latDegrees > 90.0:
+					raise SemanticError("latDegrees must be within the range of -90.0 and 90.0")
 				if latDegrees == "":
 					latDegrees = None
 				parameters+= 1
@@ -53,7 +60,7 @@ class Heatmap(webapp2.RequestHandler):
 				float(lonDegrees)
 				#check range
 				lonDegrees = float(lonDegrees)
-				if lonDegrees < -90.0 or lonDegrees > 90.0:
+				if lonDegrees < -180.0 or lonDegrees > 180.0:
 					raise SemanticError("lonDegrees must be within the range of -180.0 and 180.0")
 				parameters+=1
 			except ValueError, v:
@@ -70,7 +77,7 @@ class Heatmap(webapp2.RequestHandler):
 		#Check precision
 		if precision is not None and precision is not "":
 			try:
-				precision = abs(int(precision))
+				precision = abs((int(precision)))
 				parameters += 1
 			except ValueError, e:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
@@ -90,8 +97,8 @@ class Heatmap(webapp2.RequestHandler):
 		#the choice of lon is arbitrary, either lat or lon offset would work here		
 		if lonOffset is not None and lonOffset is not "":
 			try:
-				lonOffset = abs(int(lonOffset))
-				latOffset = abs(int(latOffset))
+				lonOffset = abs((float(lonOffset)))
+				latOffset = abs((float(latOffset)))
 				parameters+=2
 				#We could check to see if the offsets cause us to go out of range for our queries, but really that's unneccesary and would cause unneccesary calculation on the clientside to deal making sure they're within range.
 			except ValueError, e:
@@ -106,7 +113,7 @@ class Heatmap(webapp2.RequestHandler):
 		#If no parameters are specified we'll return everything we have for them
 		response = []
 		layer = AbstractionLayer()
-		response = layer.getHeatmap(latDegrees,latOffset,lonDegrees,lonOffset, precision)
+		response = layer.getHeatmap(latDegrees,latOffset,lonDegrees,lonOffset, precision,renderRaw)
 
 		#By this point we have a response and we simply have to send it back
 		self.response.set_status(HTTP_OK)
@@ -189,8 +196,14 @@ class Heatmap(webapp2.RequestHandler):
 				return
 
 			#All required parameters are here and validated.
-			#Add it to the list of points to be added
-			points.append(info[i])
+			#Add it to the list of points to be added, checking the previous point to see if it is the same
+			if (info[i-1]['latDegrees'] == info[i]['latDegrees']) and (info[i-1]['lonDegrees'] == info[i]['lonDegrees']):
+				if len(points) > 0:
+					points[-1]['secondsWorked'] += secondsWorked
+				else:
+					points.append(info[i])
+			else:
+				points.append(info[i])
 
 		#Add all points to datastore
 		layer = AbstractionLayer()
@@ -199,6 +212,8 @@ class Heatmap(webapp2.RequestHandler):
 		self.response.set_status(HTTP_OK)
 		self.response.write('{"status": %i, "message" : "Successful submit" }' % api.HTTP_OK)
 
+	def post(self):
+		return self.put()
 		
 
 application = webapp2.WSGIApplication([

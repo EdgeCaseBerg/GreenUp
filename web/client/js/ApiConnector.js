@@ -8,28 +8,28 @@ function ApiConnector(){
 	var markerData = []; 
 	var commentData = [];
 
-	var BASE = "http://localhost/GreenUp/web/api_proxy/proxy.php?";
-	// var BASE = "http://greenup.xenonapps.com/api";
 
-	// api URLs
-	var forumURI = "comments?type=forum";
-	var needsURI = "comments?type=needs";
-	var messagesURI = "comments?type=message";
-	var heatmapURI = "heatmap?";
-	var pinsURI = "pins";
+	var BASE = "http://greenupapp.appspot.com/api";
+	// var BASE = "http://localhost:30002/api";
+	this.BASE = BASE;
+
+	// api URLs have been moved into each of the functions using them as per issue 46
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
 		// zepto
+		console.log(URL);
 		$.ajax({
 			type: QUERYTYPE,
 			url: URL,
 			dataType: DATATYPE,
 			success: function(data){
+				console.log("Pull API Data: SUCCESS");
+				// console.log(data);
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
-				// // alert("error: "+xhr.status);
+				// alert("error: "+xhr.status);
 				switch(xhr.status){
 					case 500:
 						// internal server error
@@ -48,6 +48,9 @@ function ApiConnector(){
 					case 422:
 						console.log("Error: api response = 422");
 						break;
+					case 200:
+						console.log("Pull API data: 200");
+						break;
 					default:
 						// alert("Error Contacting API: "+xhr.status);
 						break;
@@ -56,18 +59,22 @@ function ApiConnector(){
 		});
 	} // end pullApiData
 
-	ApiConnector.prototype.pushApiData = function pushApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
-	}
+
 
 	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
+		var pinsURI = "/pins";
 		$.ajax({
 			type: "POST",
 			url: BASE+pinsURI,
 			data: jsonObj,
+    		cache: false,
+			// processData: false,
 			dataType: "json",
+			// contentType: "application/json",
 			success: function(data){
-				console.log("INFO: Pin successfully sent")
-				CALLBACK(data);
+				console.log("INFO: Pin successfully sent");
+				//Becuase of the datastore's eventual consistency you must wait a brief moment for new data to be available.
+				setTimeout(function(){window.ApiConnector.pullMarkerData();},150);
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -109,37 +116,135 @@ function ApiConnector(){
 
 	// ********** specific data pullers *************
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
-		var URL = BASE+heatmapURI+"lstDegrees="+latDegrees+"&latOffset="+latOffset+"&lonDegrees="+lonDegrees+"&lonOffset="+lonOffset;
+		/*
+			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
+			but there is an implicit cast against undefined defined for double equals in javascript
+		*/
+		var heatmapURI = "/heatmap";
+		var params = "";
+		if(latDegrees != null){
+			params = "?";
+			params += "latDegrees=" + latDegrees + "&";
+		}
+		if(latOffset != null){
+			params = "?";
+			params += "latOffset=" + latOffset + "&";
+		}
+		if(lonDegrees != null){
+			params = "?";
+			params += "lonDegrees" + lonDegrees + "&";
+		}
+		if(lonOffset != null){
+			params = "?";
+			params += "lonOffset" + lonOffset + "&";
+		}
+		console.log("Preparing to pull heatmap data");
+		var URL = BASE+heatmapURI+params;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
+
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
-		var URL = BASE+heatmapURI;
+		var pinsURI = "/pins";
+		var URL = BASE+pinsURI;
+		//Clear the markers
+		for( var i =0 ; i < window.MAP.pickupMarkers.length; i++){
+			window.MAP.pickupMarkers[i].setMap(null);
+		}
+		window.MAP.pickupMarkers = [];
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
 	}
 
 	// by passing the url as an argument, we can use this method to get next pages
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
 		var urlStr = "";
-		switch(commentType){
-			case "needs":
-				(url == null) ? (urlStr = BASE+needsURI) : (urlStr = url);
-				this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
-				break;
-			case "messages":
-				(url == null) ? (urlStr = BASE+messagesURI) : (urlStr = url);
-				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
-				break;
-			case "forum":
-				(url == null) ? (urlStr = BASE+forumURI) : (urlStr = url);
-				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
-				break;
-			default:
-				(url == null) ? (urlStr = BASE+forumURI) : (urlStr = url);
-				this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
-				break;
+		if(url == null || url == "null"){
+			urlStr += "/api/comments";
+		}else{
+			urlStr += url;
 		}
+
+		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
+		// var forumURI = "/comments?type=forum";
+		// var needsURI = "/comments?type=help+needed";
+		// var messagesURI = "/comments?type=general+message";
+		// var trashURI = "/comments?type=trash+pickup";
+
+		console.log("Pulling comment "+commentType+" data from: "+url);
+		// // var urlStr = "";
+		// // var urlStr = url;
+		// // alert(url);
+		// switch(commentType){
+		// 	case "help needed":
+		// 		// urlStr = (url == null) ? BASE+needsURI : url;
+		// 		this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
+		// 		break;
+		// 	case "general message":
+		// 		// urlStr =  (url == null) ? BASE+messagesURI : url;
+		// 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
+		// 		break;
+		// 	case "trash pickup":
+		// 		// urlStr =  (url == null) ? BASE+trashURI : url;
+		// 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
+		// 		break;
+		// 	default:
+		// 		commentType = "forum";
+		// 		// urlStr =  (url == null) ? BASE+forumURI : url;
+		// 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
+		// 		break;
+		// }
 	} // end pullCommentData()
+
+	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
+		var commentsURI = "/comments";
+		console.log("json to push: "+jsonObj);
+		console.log("Push comment data to: "+BASE+commentsURI);
+		$.ajax({
+			type: "POST",
+			url: BASE+commentsURI,
+			data: jsonObj,
+    		cache: false,
+			// processData: false,
+			dataType: "json",
+			// contentType: "application/json",
+			success: function(data){
+				console.log("INFO: Comment successfully sent");
+				window.ApiConnector.pullCommentData(JSON.parse(jsonObj).type, null);
+			},
+			error: function(xhr, errorType, error){
+				// // alert("error: "+xhr.status);
+				switch(xhr.status){
+					case 500:
+						// internal server error
+						// consider leaving app
+						console.log("Error: api response = 500");
+						break;
+					case 503:
+						console.log("Service Unavailable");
+						break;
+
+					case 404:
+						// not found, stop trying
+						// consider leaving app
+						console.log('Error: api response = 404');
+						break;
+					case 400:
+						// bad request
+						console.log("Error: api response = 400");
+						break;
+					case 422:
+						console.log("Error: api response = 422");
+						break;
+					case 200:
+						console.log("Request successful");
+						break;
+					default:
+						// alert("Error Contacting API: "+xhr.status);
+						break;
+				}
+			}
+		});
+	}
 
 	ApiConnector.prototype.pullTestData = function pullTestData(){
 		this.pullApiData(BASE, "JSON", "GET", window.UI.updateTest);
@@ -152,28 +257,34 @@ function ApiConnector(){
 
 	//Uploads all local database entries to the Server
 	//Clears the local storage after upload
-	ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(database){
+	ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(){
+		var heatmapURI = "/heatmap";
 	    if(window.logging){
-		        //server/addgriddata.php
-		    database.all(function(data){
-		        console.log(data);
-		        // zepto code
-		        $.ajax({
-			        type:'POST',
-			        url: '../server/addGridData.php',
-			        dataType:"json",
-			        data: {data : data},
-			        failure: function(errMsg){
-			        	// alert(errMsg);
-			        }
-			    });//Ajax
-			        
-			            //Remove all uploaded database records
-			    for(var i=1;i<data.length;i++){
-			        database.remove(i);
-			    }
-		    });
+	        //server/addgriddata.php
+	        var jsonArray = [];
+	        console.log("Heatmap data to be pushed:")
+	    	window.database.all(function(data){
+	   			jsonArray.push(data[0].value);
+			});
+
+			console.log(jsonArray);
 		}
+	
+		// zepto code
+		$.ajax({
+	    	type:'PUT',
+	    	url: BASE + heatmapURI,
+	    	dataType:"json",
+	    	data:  JSON.stringify(jsonArray),
+	    	failure: function(errMsg){
+		      	// alert(errMsg);
+	      		console.log("Failed to PUT heatmap: "+errMsg);
+	    	}, 
+	    	success: function(data){
+		      	console.log("PUT heatmap success: "+data);
+	       		// window.database.nuke();
+	    	}
+		});//Ajax	
 	}
 
 	
@@ -215,129 +326,647 @@ function LoadingScreen(loadingDiv){
 	}
 } // end LoadingScreen class def
 
+
+
+// class for managing all geolocation work
+function GpsHandle(){
+	
+	GpsHandle.prototype.initGps = function initGps(){
+		window.logging = true;
+		console.log("initGps");
+		window.updateCounter = 0;
+    	db = Lawnchair({name : 'db'}, function(store) {
+        	window.database = store;
+        	window.GPS.loggingInterval = setInterval(function() {window.GPS.runUpdate()},30000);//update user location every 5 seconds
+        	// instead of running 2 timers, we'll just set a counter and run the pushHeatmapData() on a multiple of... 
+        	// ...the runUpdate() function
+        	// setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
+    	});
+	}
+
+	//Runs the update script:
+	GpsHandle.prototype.runUpdate = function runUpdate(){
+		console.log("runUpdate");
+	    //Grab the geolocation data from the local machine
+	    if(window.updateCounter == 5){
+	    	window.updateCounter = 0;
+	    	window.ApiConnector.pushHeatmapData();
+	    }else{
+	    	// console.log("getting position data");
+	    	 if(navigator.geolocation){
+	    	 	var options = {timeout:29000};
+	    	 	navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	window.updateCounter++;
+	    	 }else{
+	    	 	console.log("Geolocation is not supported by this browser.");
+	    	 }
+	    }
+	}
+
+	GpsHandle.prototype.gpsErrorHandler = function gpsErrorHandler(error){
+		console.log("Gps error: "); 
+		console.log(error);
+	}
+
+	GpsHandle.prototype.updateLocation = function updateLocation(position){
+		console.log("Update Location");
+		// console.log(position);
+	    if(window.logging){
+	        var datetime = new Date().getTime();//generate timestamp
+	        var location = {
+	                "latDegrees" : position.coords.latitude,
+	                "lonDegrees" : position.coords.longitude,
+	                "secondsWorked" : datetime
+	        }
+	        console.log("database saved");
+	        console.log(location);
+	        window.database.save({value:location});//Save the record
+	    }
+	};
+
+	GpsHandle.prototype.recenterMap = function recenterMap(lat, lon){
+    	var newcenter = new google.maps.LatLng(lat, lon);
+        centerPoint = newcenter;
+        map.panTo(newcenter);
+	}
+
+	GpsHandle.prototype.start = function start(){
+		document.getElementById("startButton").className = "bigStopButton";
+		window.UI.setBigButtonText("Stop Cleaning");
+		window.logging = true;
+    	this.initGps();
+    	console.log("initializing GPS...");
+		navigator.geolocation.getCurrentPosition(function(p){
+        	window.MAP.updateMap(p.coords.latitude, p.coords.longitude, 10);
+     	});
+    }
+
+
+	GpsHandle.prototype.stop = function stop(){
+		document.getElementById("startButton").className = "bigStartButton";
+    	window.ApiConnector.pushHeatmapData();
+    	window.logging = false;
+    	console.log("stopping GPS...");
+    	clearInterval(window.GPS.loggingInterval);
+    	window.UI.setBigButtonText("Start Cleaning");
+	}
+    
+} // end GpsHandle class def
+
+
+// class for managing all Map work
+function MapHandle(){
+	// BTV coords
+	this.currentLat = 44.476621500000000; 
+	this.currentLon = -73.209998100000000;
+	this.currentZoom = 10;
+	this.markerEvent;
+	this.markerType;
+	this.map;
+	this.pickupMarkers = [];
+	// fire up our google map
+	MapHandle.prototype.initMap = function initMap(){
+		window.LS.setLoadingText("Please wait while the map loads");
+		window.LS.show();
+	    // define the initial location of our map
+	    centerPoint = new google.maps.LatLng(window.MAP.currentLat, window.MAP.currentLon); 
+	    var mapOptions = {
+		    center: centerPoint,
+		    mapTypeId: google.maps.MapTypeId.ROADMAP, 
+		    mapTypeControl: true,
+   			mapTypeControlOptions: {
+      			position: google.maps.ControlPosition.TOP_CENTER,
+      			style: google.maps.MapTypeControlStyle.DEFAULT
+    		}, 
+    		zoom: window.MAP.currentZoom,
+    		streetViewControl: false
+		  };
+
+		  // google.maps.MapTypeControlOptions
+		  // google.maps.StreetViewControlOptions
+		  // google.maps.ZoomControlOptions
+
+		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+		  // for activating the loading screen while map loads
+		  google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
+		  google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
+		  google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
+		  // our comment selector initializers
+		  // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
+		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.markerSelectDown);
+		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
+	}
+
+	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message){
+		// console.log("in addMarker()");
+		var pin = new Pin();
+		pin.message = message;
+		pin.type = window.MAP.markerType;
+		// pin.latDegrees = lat;
+		// pin.lonDegrees = lon;
+
+		var iconUrl; 
+		switch(window.MAP.markerType){
+			case "comment":
+				pin.type = "general message";
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+			case "pickup":
+				pin.type = "help needed";
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+			case "trash":
+				pin.type = "trash pickup";
+				iconUrl = "img/icons/greenCircle.png";
+				break;
+			default:
+				pin.type = "general message";
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+		}
+	
+		var eventLatLng = window.MAP.markerEvent;
+		// console.log(eventLatLng.latLng);
+		pin.latDegrees = eventLatLng.latLng.jb;
+		pin.lonDegrees = eventLatLng.latLng.kb;
+		var serializedPin = JSON.stringify(pin);
+		console.log(serializedPin);
+    	window.ApiConnector.pushNewPin(serializedPin);
+
+	}
+
+	MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
+		console.log("Heatmap data to be applied to map: ");
+		console.log(data);
+		var dataObj = eval(data);
+		var heatmapData = [];
+			// console.log(dataObj[ii].latDegrees);
+		for(var ii=0; ii<dataObj.length; ii++){
+			heatmapData.push({location: new google.maps.LatLng(dataObj[ii].latDegrees, dataObj[ii].lonDegrees), weight: dataObj[ii].secondsWorked});
+			
+		}
+
+// 			var heatmapData = [
+//          	{location: new google.maps.LatLng(44.4758, -73.3125), weight: 101.5}, 
+//          ];
+		console.log("Processed heatmap data:");
+		console.log(heatmapData);
+
+  		if(heatmapData.length > 0){
+	        var pointArray = new google.maps.MVCArray(heatmapData);
+
+			heatmap = new google.maps.visualization.HeatmapLayer({
+			    data: pointArray,
+			    dissipating: true, 
+			    radius: 5
+			});
+
+	  		heatmap.setMap(window.MAP.map);
+	  	}
+
+//   function toggleHeatmap() {
+//   heatmap.setMap(heatmap.getMap() ? null : map);
+// }
+	}
+
+	MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon){
+		// console.log("in addMarker()");
+		var pin = new Pin();
+		pin.message = message;
+		pin.type = markerType;
+		pin.latDegrees = lat;
+		pin.lonDegrees = lon;
+
+		var iconUrl; 
+		switch(markerType){
+			case "GENERAL MESSAGE":
+				pin.type = "GENERAL MESSAGE";
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+			case "HELP NEEDED":
+				pin.type = "HELP NEEDED";
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+			case "TRASH PICKUP":
+				pin.type = "TRASH PICKUP";
+				iconUrl = "img/icons/greenCircle.png";
+				break;
+			default:
+				pin.type = "GENERAL MESSAGE";
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+		}
+
+		// test "bad type" response
+		// pin.type = "bullshit";
+
+		 var marker = new google.maps.Marker({
+        	position: new google.maps.LatLng(pin.latDegrees, pin.lonDegrees),
+        	map: window.MAP.map,
+        	icon: iconUrl
+    	});
+		marker.setVisible(window.UI.isMarkerVisible);
+    	window.MAP.pickupMarkers.push(marker);
+	}
+
+	MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
+			window.UI.isMapLoaded = false;
+		    var newcenter = new google.maps.LatLng(lat, lon);
+        	window.MAP.map.panTo(newcenter);
+	}
+
+	MapHandle.prototype.toggleIcons = function toggleIcons(){
+		console.log("toggle icons: "+window.MAP.pickupMarkers.length);
+		if(window.UI.isMarkerVisible){
+			window.UI.isMarkerVisible = false;
+		}else{
+			window.UI.isMarkerVisible = true;
+		}
+		for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){	
+			window.MAP.pickupMarkers[ii].setVisible(window.UI.isMarkerVisible);		
+		}
+	}
+
+	MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
+
+	}
+
+	MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){
+		this.currentLat = CurrentLat;
+	}
+
+	MapHandle.prototype.setCurrentLon = function setCurrentLon(CurrentLon){
+		this.currentLon = CurrentLon;
+	}
+
+	MapHandle.prototype.setCurrentZoom = function setCurrentZoom(CurrentZoom){
+		this.currentZoom = CurrentZoom;
+	}
+
+	MapHandle.prototype.setMarkerEvent = function setMarkerEvent(event){
+		this.markerEvent = event;
+	}
+
+	MapHandle.prototype.getCurrentLat = function getCurrentLat(){
+		return currentLat;
+	}
+
+	MapHandle.prototype.getCurrentLon = function getCurrentLon(){
+		return this.currentLon;
+	}
+
+	MapHandle.prototype.getCurrentZoom = function getCurrentZoom(){
+		return this.currentZoom;
+	}
+
+} //end MapHandle
+
+function CommentsHandle(){
+	this.scrollPosition = 0;
+
+	CommentsHandle.prototype.init = function init(){
+		// add the listener to our add comments button
+	} // end init()
+
+	// when the comments nest is scrolled to a position defined in index.html, more comments are added
+	CommentsHandle.prototype.updateScroll = function updateScroll(element){
+		// console.log("Scrolling");
+		// var offset = window.pageYOffset;
+		var offset = element.scrollTop - window.Comments.scrollPosition;
+		if (offset > 90){
+			window.Comments.scrollPosition += offset;
+			// alert(window.UI.commentsNextPageUrl);
+			window.ApiConnector.pullCommentData(null, window.UI.commentsNextPageUrl);
+		}
+	} // end updateScroll()
+
+	// when the comments checkboxes are toggled, this turns the comments on or off
+	CommentsHandle.prototype.toggleComments = function toggleComments(type){
+		switch(type){
+			case('forum'):
+				var bubbleNodeList = document.getElementsByClassName('bubbleForum');
+				if(document.getElementById("toggleForum").checked){
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "1";
+ 						bubbleNodeList[i].style.display = "block";
+					}
+				}else{
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "0";
+ 						bubbleNodeList[i].style.display = "none";
+					}
+				}
+			break;
+			case('needs'):
+				var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
+				if(document.getElementById("toggleNeeds").checked){
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "1";
+ 						bubbleNodeList[i].style.display = "block";
+					}
+				}else{
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "0";
+ 						bubbleNodeList[i].style.display = "none";
+					}
+				}
+			break;
+			case('message'):
+				var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
+				if(document.getElementById("toggleMessages").checked){
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "1";
+ 						bubbleNodeList[i].style.display = "block";
+					}
+				}else{
+					for (var i = 0; i < bubbleNodeList.length; ++i) {
+						// bubbleNodeList[i].style.opacity = "0";
+ 						bubbleNodeList[i].style.display = "none";
+					}
+				}
+			break;
+		}
+	} // end toggleComments()
+
+	//  The user presses the submit button on the comment submission screen
+	CommentsHandle.prototype.commentSubmission = function commentSubmission(commentType){
+
+		var comment = new FCommment();
+		comment.message = document.getElementById("dialogSliderTextarea").value;
+		comment.pin = null;
+		// comment.type = document.getElementById("comment_type").value;
+		comment.type = commentType;
+		// comment.type = document.getElementById('comment_type').value;
+
+		var serializedComment = JSON.stringify(comment);
+		console.log(serializedComment);
+
+		window.ApiConnector.pushCommentData(serializedComment);
+
+		//Return false to stop normal form submission form occuring
+		return false;
+	}
+}
+
 // class for managing the UI
 function UiHandle(){
 	this.currentDisplay = 1;
 	this.isMarkerDisplayVisible = false;
 	this.MOUSEDOWN_TIME;
 	this.MOUSEUP_TIME;
-	this.markerDisplay;
-	this.isMarkerVisible = false;
+	this.isMarkerVisible = true;
 	this.isMapLoaded = false;
 
+	this.scrollPosition = 0;
+
+	this.isNavbarUp = true;
+	this.isTopSliderUp = true;
+
+	this.dialogSliderIsUp = false;
+
+	this.isClockRunning = false;
+	this.clockHrs = 00;
+	this.clockMins = 00;
+	this.clockSecs = 00;
+
+	this.commentPurpose = -1;
+	this.MARKER = 1; 
+	this.COMMENT = 0;
+
+	// for comment pagination
+	this.commentsType = ""
+	this.commentsNextPageUrl = "";
+	this.commentsPrevPageUrl = "";
+
     UiHandle.prototype.init = function init(){
+
 	    // controls the main panel movement
+	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
+	    document.getElementById("panel1SlideDownContent").style.display = "block";
 
-	    // marker type selectors
-	    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("pickup")});
-	    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("comment")});
-	    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash")});
+	    document.getElementById("navbarPullUpTab").addEventListener('mousedown', function(){
+	    	window.UI.navbarSlideUp();
+	    });
+
+	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
 
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
-	    	window.UI.dialogSliderDown();
+	    	// prevent OK from being clicked if dialogSlider textarea is empty
+	    	if(document.getElementById("dialogSliderTextarea").value == ""){
+	    		alert("no message entered");
+	    	}else{
+		    	var userComment = document.getElementById("dialogSliderTextarea").value;
+		    	switch(window.UI.commentPurpose){
+		    		case window.UI.MARKER:
+		    			window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
+		    			window.UI.dialogSliderDown();
+		    			window.UI.clearDialogSliderInputs();
+		    			break;
+		    		case window.UI.COMMENT:
+		    			window.Comments.commentSubmission();
+		    			window.UI.dialogSliderDown();
+		    			window.UI.clearDialogSliderInputs();
+		    			break;
+		    		default:
+		    			alert("no content type");
+		    			break;
+		    	}
+		    	document.getElementById("dialogSliderTextarea").value = ""
+		   		window.UI.dialogSliderDown();
+		    }
 	    });
+	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});		
+		
+	} // end init
 
-	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){
-	    	window.UI.dialogSliderDown();
-	    });
-
-		this.markerDisplay = document.getElementById("markerTypeDialog");
-
-		// toggle map overlays
-		window.UI.toggleHeat = document.getElementById('toggleHeat');
-	    window.UI.toggleIcons = document.getElementById('toggleIcons');
-
-	    // for comment pagination
-	    this.commentsType = ""
-	    this.commentsNextPageUrl = "";
-	    this.commentsPrevPageUrl = "";
-	    document.getElementById("prevPage").addEventListener('mousedown', function(){
-			// load the previous page
-			window.ApiConnector.pullCommentData(this.commentsType, this.commentsPrevPageUrl);
-		});
-		document.getElementById("nextPage").addEventListener('mousedown', function(){
-			// load the previous page
-			window.ApiConnector.pullCommentData(this.commentsType, this.commentsNextPageUrl);
-		});
+	UiHandle.prototype.clearDialogSliderInputs = function clearDialogSliderInputs(){
+		document.getElementById("comment_type").value = "FORUM";
+		document.getElementById("comment_message").value = "";
+		document.getElementById("input_purpose").value = "";
+		return false;
 	}
 
+	UiHandle.prototype.topSliderToggle = function topSliderToggle(){
+		if (document.getElementById("topSlideDown").className.match("sliderDown")){
+			window.UI.isTopSliderUp = true;
+			document.getElementById("topSlideDown").className = "sliderUp";
+		}else{
+			window.UI.isTopSliderUp = false;
+			document.getElementById("topSlideDown").className = "sliderDown";
+		}
+	}
 
+	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
+		document.getElementById("markerTypeDialog").style.display = "none";
+		window.UI.isMarkerDisplayVisible = false;
+	}
 
+	// shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
+	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(purpose){
+		if(purpose == "comment"){
+			window.UI.topSliderToggle();
+			// add marker type selectors
+		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.Comments.commentSubmission("trash pickup")});
+		    document.getElementById("selectComment").addEventListener('mousedown', function(){window.Comments.commentSubmission("general message")});
+		    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.Comments.commentSubmission("help needed")});
+
+		}else{
+			window.UI.commentPurpose = window.UI.MARKER;
+			// add marker type selectors
+		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
+		    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
+		    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
+		}
+		
+		document.getElementById("cancel").addEventListener('mousedown', function(){
+	    	window.UI.hideMarkerTypeSelect();
+	    });
+		
+		document.getElementById("markerTypeDialog").style.display = "block";
+		window.UI.isMarkerDisplayVisible = true;
+	}
+
+	// sets the color of the front page button
 	UiHandle.prototype.setBigButtonColor = function setBigButtonColor(colorHex){
-		document.getElementById('bigButton').style.backgroundColor=colorHex;
+		document.getElementById('startButton').style.backgroundColor=colorHex;
 	}
-
+	// sets the text of the front page start cleaning button
 	UiHandle.prototype.setBigButtonText = function setBigButtonText(buttonText){
-		document.getElementById('bigButton').innerHTML = buttonText;
+		document.getElementById('startButton').innerHTML = buttonText;
 	}
 
+	// called after the map has loaded, and hides the loading screen
 	UiHandle.prototype.setMapLoaded = function setMapLoaded(){
 		window.MAP.isMapLoaded = true;
 		window.LS.hide();
 	}
 
-	// centers the appropriate panels
+	// centers the appropriate panels (main display panels)
 	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
 		var container = document.getElementById("container");
+		if(displayNum != window.UI.currentDisplay){
+			if(window.UI.isMarkerDisplayVisible){
+				window.UI.hideMarkerTypeSelect();
+			}
+			if(window.UI.dialogSliderIsUp){
+				window.UI.dialogSliderDown();
+			}
+			if(!window.UI.isTopSliderUp){
+				window.UI.topSliderToggle();
+			}
+		}
 		container.className = "";
 		switch(displayNum){
 			case 0:
 				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
 				container.className = "panel1Center";
 			break;
 			case 1:
 				this.currentDisplay = 2;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "block";
 				container.className = "panel2Center";
 			break;
 			case 2:
 				this.currentDisplay = 3;
+				document.getElementById("panel1SlideDownContent").style.display = "none";
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "block";
+				this.navbarSlideDown();
 				container.className = "panel3Center";
 			break;
 			default:
 				this.currentDisplay = 1;
+				document.getElementById("panel2SlideDownContent").style.display = "none";
+				document.getElementById("panel3SlideDownContent").style.display = "none";
+				document.getElementById("panel1SlideDownContent").style.display = "block";
 				container.className = "panel1Center";
+
 		}
 	}
 
+	// drops the 3-button navbar down for more reading room
+	// currently only used on comments page
+	UiHandle.prototype.navbarSlideDown = function navbarSlideDown(){
+		window.UI.isNavbarUp = false;
+		document.getElementById("navContainer").style.top = "100%";
+	}
+	// raises the navbar 3-button ui 
+	UiHandle.prototype.navbarSlideUp = function navbarSlideUp(){
+		window.UI.isNavbarUp = true;
+		document.getElementById("navContainer").style.top = "86%";
+	}
 
 	// when the user chooses which type of marker to add to the map
 	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
-		// (bug) need to get the message input from the user
-		var message = "DEFAULT MESSAGE TEXT"; 
-		// here we add the appropriate marker to the map
-		window.MAP.addMarker(markerType, message);
-		window.UI.markerDisplay.style.display = "none";
-		window.UI.isMarkerDisplayVisible = false;
+		// first we need to show the marker on the map
+		// var iconUrl = "img/icons/blueCircle.png";
+		var iconUrl = "";
+		switch(markerType){
+			case "comment":
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+			case "pickup":
+				iconUrl = "img/icons/blueCircle.png";
+				break;
+			case "trash":
+				iconUrl = "img/icons/greenCircle.png";
+				break;
+			default:
+				iconUrl = "img/icons/orangeCircle.png";
+				break;
+		}
+
+		window.MAP.markerType = markerType;
+		window.UI.hideMarkerTypeSelect();
 		window.UI.dialogSliderUp();
 		// (bug) here we need to prevent more map touches
 	}
 
-	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(){
-		document.getElementById("dialogSlider").style.top = "72%";
+	// text to get user input
+	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(purpose){
+		window.UI.dialogSliderIsUp = true;
+		if(purpose == window.UI.COMMENT){
+			document.getElementById("input_purpose").value == window.UI.COMMENT;
+		}else{
+			google.maps.event.addListener(window.MAP.map, 'mousedown', function(e){
+				e.cancelBubble = true; 
+  				if (e.stopPropagation) e.stopPropagation(); 
+			});
+			document.getElementById("input_purpose").value == window.UI.MARKER;
+		}
+		if(window.UI.isNavbarUp){
+			document.getElementById("dialogSlider").style.top = "72%";
+		}else{
+			document.getElementById("dialogSlider").style.top = "80%";
+		}
 		document.getElementById("dialogSlider").style.opacity = "1.0";
 		document.getElementById("dialogSliderTextarea").focus();
 
 	}
 
 	UiHandle.prototype.dialogSliderDown = function dialogSliderDown(){
+		window.UI.dialogSliderIsUp = false;
 		document.getElementById("dialogSlider").style.top = "86%";
 		document.getElementById("dialogSlider").style.opacity = "0.0";
 	}
 
-	UiHandle.prototype.markerSelectUp = function markerSelectUp(event){
+	UiHandle.prototype.markerSelectUp = function markerSelectUp(){
 		// set the coords of the marker event
-		window.MAP.markerEvent = event;
+
 	    MOUSEUP_TIME = new Date().getTime() / 1000;
 	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
 	        if(this.isMarkerDisplayVisible){
-	        	window.UI.markerDisplay.style.display = "none";
-	        	window.UI.isMarkerDisplayVisible = false;
+	        	window.UI.hideMarkerTypeSelect();
 	        }else{
-	        	window.UI.markerDisplay.style.display = "block";
-	        	window.UI.isMarkerDisplayVisible = true;
+	        	window.UI.showMarkerTypeSelect();
 	        }
 	        this.MOUSEDOWN_TIME =0;
 	        this.MOUSEDOWN_TIME =0;
@@ -349,67 +978,136 @@ function UiHandle(){
 
 	UiHandle.prototype.markerSelectDown = function markerSelectDown(event){
 		// set the coords of the marker event
-	    window.MAP.markerEvent = event;
-	    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
+		if(!window.UI.dialogSliderIsUp){
+		    window.MAP.markerEvent = event;
+		    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
+		}
 	}
 
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
-		console.log(data);
+		console.log("Heatmap data returned from api, preparing to apply data to map.");
+		window.MAP.applyHeatMap(data);
 	}
 
 	UiHandle.prototype.updateMarker = function updateMarker(data){
-		console.log(data);
-	}
+		console.log("marker response: "+data);
+		var dataArr = eval("("+data+")");
+		//	var dataArr = data;
+        for(ii=0; ii<dataArr.length; ii++){
+            // var dataA = dataArr[ii].split(",");
+            window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
+            // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
+        }
 
-	UiHandle.prototype.updateMessages = function updateMessages(data){
-		window.UI.commentsNextPageUrl = data.page.next;
-		window.UI.commentsPrevPageUrl = data.page.previous;
-
-		var messagesContainer = document.getElementById("messagesContainer");
-		var messages = new Array();
-
-		(window.UI.commentsNextPageUrl != null) ? 
-			window.UI.showNextCommentsButton() : window.UI.hideNextCommentsButton();
-
-		(window.UI.commentsPrevPageUrl != null) ? 
-			window.UI.showPrevCommentsButton() : window.UI.hidePrevCommentsButton();
-
-		for(ii=0; ii<3; ii++){
-		// for(ii=0; ii<data.comments.length; ii++){
-			messages[ii] = document.createElement('div');
-			messages[ii].className = "messageListItem";
-			messages[ii].style.border = "1px solid red";
-			// create the div where the timestamp will display
-			var commentDateContainer = document.createElement('div');
-			commentDateContainer.className = "commentDateContainer";
-			// commentDateContainer.innerHTML = data.comments.timestamp;
-			commentDateContainer.innerHTML = "1970-01-01 00:00:01";
-			// create the div where the message content will be stored
-			var messageContentContainer = document.createElement('div');
-			messageContentContainer.className = "messageContentContainer";
-			// messageContentContainer.innerHTML = data.comments.message;
-			messageContentContainer.innerHTML = "sdfasdfasdfasdfadsfasdfadsfa";
-
-			messages[ii].appendChild(commentDateContainer);
-			messages[ii].appendChild(messageContentContainer);
-			messagesContainer.appendChild(messages[ii]);
-
-		}
-		// // alert(window.UI.commentsNextPageUrl);
-		console.log(data);
 	}
 
 	UiHandle.prototype.updateNeeds = function updateNeeds(data){
-		console.log(data);
+		console.log("UPDATE NEEDS DOES NOTHING");
 	}
 
 	UiHandle.prototype.updateForum = function updateForum(data){
-		console.log(data);
+		console.log("In Update forum");
+		console.log("Comment data: "+data);
+		// document.getElementById("bubbleContainer").innerHTML = "";
+		var dataObj = JSON.parse(data);
+		var comments = dataObj.comments;
+		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
+		// window.UI.commentsNextPageUrl = dataObj.page.next;
+		if(dataObj.page.next != null){
+			var nextArr = dataObj.page.next.split("greenupapp.appspot.com/api");
+			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
+		}else{
+			window.UI.commentsNextPageUrl = null;
+		}
+		if(dataObj.page.previous != null){
+			var prevArr = dataObj.page.previous.split("greenupapp.appspot.com/api");
+			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
+		}else{
+			window.UI.commentsPrevPageUrl = null;
+		}
+
+		for(var ii=0; ii<comments.length; ii++){
+				var div = document.createElement("div");
+				var timeDiv = document.createElement("div");
+				var messageContent = document.createElement("span");
+				var currentDate = new Date();
+				var timezoneOffsetMillis = currentDate.getTimezoneOffset()*60*1000;
+				var messageDate = new Date(comments[ii]['timestamp']);
+				var diffMins = Math.round((((timezoneOffsetMillis + currentDate.getTime()) - messageDate.getTime())/1000)/60);
+				if(diffMins > 59){
+					var mins = (diffMins % 60);
+					var timeSinceMessage = ((diffMins - mins)/60)+"hrs, "+mins+"mins ago"; 
+				}else{
+					var timeSinceMessage = diffMins+"mins ago"; 
+				}
+				
+				messageContent.innerHTML = comments[ii]['message'];
+				timeDiv.innerHTML = timeSinceMessage;
+				timeDiv.className = "bubbleTime";
+				if(ii % 2 == 0){
+					div.className = "bubbleRight bubble"; 
+				}else{
+					div.className = "bubbleLeft bubble";
+				}
+
+				switch(comments[ii]['type']){
+					case 'FORUM':
+						div.className += " bubbleForum";
+					break;
+					case 'needs':
+						div.className += " bubbleNeeds";
+					break;
+					case 'message':
+						div.className += " bubbleMessage";
+					break;
+					default:
+						div.className += " bubbleForum";
+					break;
+				}
+				div.appendChild(timeDiv);
+				div.appendChild(messageContent);
+				document.getElementById("bubbleContainer").appendChild(div);
+
+		}
 	}
 
 	UiHandle.prototype.updateTest = function updateTest(data){
 		console.log(data);
+	}
+
+	UiHandle.prototype.toggleClockRun = function toggleClockRun(){
+		if(window.UI.isClockRunning){
+			// stop the clock
+			console.log("stopping clock");
+			clearInterval(window.UI.clockInterval);
+			window.UI.clockInterval = null;
+			window.UI.isClockRunning = false;
+		}else{
+			// start the clock
+			console.log("starting clock");
+			window.UI.clockInterval = setInterval(window.UI.updateClock, 1000);
+			window.UI.isClockRunning = true;
+		}
+	}
+
+	UiHandle.prototype.updateClock = function updateClock(){
+		if(window.UI.clockSecs == 59){
+			window.UI.clockSecs = 00;
+			if(window.UI.clockMins == 59){
+				window.UI.clockMins = 00;
+				window.UI.clockHrs++;
+			}else{
+				window.UI.clockMins++;
+			}
+		}else{
+			window.UI.clockSecs++;
+		}
+		var clockSecStr = (window.UI.clockSecs < 10) ? "0"+window.UI.clockSecs : window.UI.clockSecs;
+		var clockMinStr = (window.UI.clockMins < 10) ? "0"+window.UI.clockMins : window.UI.clockMins;
+		var clockHrStr = (window.UI.clockHrs < 10) ? "0"+window.UI.clockHrs : window.UI.clockHrs;
+		
+		document.getElementById("timeSpentClockDigits").innerHTML = clockHrStr + ":" + clockMinStr + ":" + clockSecStr;
 	}
 	// ******** End DOM Updaters *********
 
@@ -433,188 +1131,6 @@ function UiHandle(){
 
 } // end UiHandle class def
 
-// class for managing all geolocation work
-function GpsHandle(){
-	
-	GpsHandle.prototype.initGps = function initGps(){
-    	db = Lawnchair({name : 'db'}, function(store) {
-        	lawnDB = store;
-        	setInterval(function() {window.GPS.runUpdate(store)},5000);//update user location every 5 seconds
-        	setInterval(function() {window.ApiConnector.pushHeatmapData(store)},3000);//upload locations to the server every 30 seconds
-    	});
-	}
-
-	//Runs the update script:
-	GpsHandle.prototype.runUpdate = function runUpdate(database){
-	    //Grab the geolocation data from the local machine
-	    navigator.geolocation.getCurrentPosition(function(position) {
-	          window.GPS.updateLocation(database, position.coords.latitude, position.coords.longitude);
-	    });
-	}
-
-	GpsHandle.prototype.updateLocation = function updateLocation(database, latitude, longitude){
-	    if(window.logging){
-	        var datetime = new Date().getTime();//generate timestamp
-	        var location = {
-	                "latitude" : latitude,
-	                "longitude" : longitude,
-	                "datetime" : datetime,
-	        }
-	        database.save({value:location});//Save the record
-	    }
-	};
-
-	GpsHandle.prototype.recenterMap = function recenterMap(lat, lon){
-    	console.log(lon);
-    	var newcenter = new google.maps.LatLng(lat, lon);
-        centerPoint = newcenter;
-        map.panTo(newcenter);
-	}
-
-	GpsHandle.prototype.start = function start(){
-		window.UI.setBigButtonColor("#ff0000");
-		window.UI.setBigButtonText("Stop Cleaning");
-		window.logging = true;
-    	this.initGps();
-    	console.log("initializing GPS...");
-		navigator.geolocation.getCurrentPosition(function(p){
-        	window.MAP.updateMap(p.coords.latitude, p.coords.longitude, 10);
-     	});
-    }
-
-
-	GpsHandle.prototype.stop = function stop(){
-    	window.ApiConnector.pushHeatmapData(lawnDB);
-    	window.logging = false;
-    	console.log("stopping...");
-    	window.UI.setBigButtonColor("#00ff00");
-    	window.UI.setBigButtonText("Start Cleaning");
-	}
-    
-} // end GpsHandle class def
-
-
-// class for managing all Map work
-function MapHandle(){
-	// BTV coords
-	this.currentLat = 44.476621500000000; 
-	this.currentLon = -73.209998100000000;
-	this.currentZoom = 10;
-	this.markerEvent;
-	this.map;
-	this.pickupMarkers = [];
-	// fire up our google map
-	MapHandle.prototype.initMap = function initMap(){
-		window.LS.setLoadingText("Please wait while the map loads");
-		window.LS.show();
-	    // define the initial location of our map
-	    centerPoint = new google.maps.LatLng(window.MAP.currentLat, window.MAP.currentLon); 
-	    var mapOptions = {
-		    zoom: window.MAP.currentZoom,
-		    center: centerPoint,
-		    mapTypeId: google.maps.MapTypeId.ROADMAP
-		  };
-
-		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-		  // for activating the loading screen while map loads
-		  google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
-		  google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
-		  google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
-		  // our comment selector initializers
-		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.markerSelectDown);
-		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
-	}
-
-	MapHandle.prototype.addMarker = function addMarker(markerType, message){
-		var pin = new Pin();
-		pin.message = message;
-		var iconUrl; 
-		switch(markerType){
-			case "comment":
-				pin.type = "general message";
-				iconUrl = "img/icons/blueCircle.png";
-				break;
-			case "pickup":
-				pin.type = "help needed";
-				iconUrl = "img/icons/greenCircle.png";
-				break;
-			case "trash":
-				pin.type = "trash pickup";
-				iconUrl = "img/icons/redCircle.png";
-				break;
-			default:
-				pin.type = "general message";
-				iconUrl = "img/icons/blueCircle.png";
-				break;
-		}
-
-		// test "bad type" response
-		// pin.type = "bullshit";
-
-		 var marker = new google.maps.Marker({
-        	position: this.markerEvent.latLng,
-        	map: window.MAP.map,
-        	icon: iconUrl
-    	});
-
-		pin.latDegrees = marker.getPosition().lat();
-		pin.lonDegrees = marker.getPosition().lng();
-		var serializedPin = JSON.stringify(pin);
-		// // alert(serializedPin);
-
-    	window.MAP.pickupMarkers.push(marker);
-    	window.ApiConnector.pushNewPin(serializedPin);
-
-	}
-
-	MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
-			window.UI.isMapLoaded = false;
-		    var newcenter = new google.maps.LatLng(lat, lon);
-        	window.MAP.map.panTo(newcenter);
-	}
-
-	MapHandle.prototype.toggleIcons = function toggleIcons(){
-		if(window.UI.isMarkerVisible){
-			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[i].setVisible(false);
-			}
-		}else{
-			for(var ii=0; ii<window.MAP.pickupMarkers.length; ii++){
-				window.MAP.pickupMarkers[i].setVisible(true);
-			}
-		}
-	}
-
-	MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
-
-	}
-
-	MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){
-		this.currentLat = CurrentLat;
-	}
-
-	MapHandle.prototype.setCurrentLon = function setCurrentLon(CurrentLon){
-		this.currentLon = CurrentLon;
-	}
-
-	MapHandle.prototype.setCurrentZoom = function setCurrentZoom(CurrentZoom){
-		this.currentZoom = CurrentZoom;
-	}
-
-	MapHandle.prototype.getCurrentLat = function getCurrentLat(){
-		return currentLat;
-	}
-
-	MapHandle.prototype.getCurrentLon = function getCurrentLon(){
-		return this.currentLon;
-	}
-
-	MapHandle.prototype.getCurrentZoom = function getCurrentZoom(){
-		return this.currentZoom;
-	}
-
-} //end MapHandle
-
 // prototype objects for posting to API
 function Pin(){
 	this.latDegrees; 
@@ -624,14 +1140,28 @@ function Pin(){
 }
 
 
+//We cannot call this Comment because it's reserved by javascript
+function FCommment(){
+	this.message ="FORUM";
+	this.pin = null;
+	this.type = "";
+}
+
+
 /**
 * This is where all the action begins (once content is loaded)
 * @author Josh
 */
 document.addEventListener('DOMContentLoaded',function(){
 	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
+	document.addEventListener("touchstart", function(){}, true);
+
+	window.DEBUG = false;
 
 	window.ApiConnector = new ApiConnector();
+	
+	window.Comments = new CommentsHandle();
+
 	window.UI = new UiHandle();
 	window.UI.init();
 	window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
@@ -640,13 +1170,17 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.MAP.initMap();
 	window.logging = false;
 
-	window.ApiConnector.pullTestData();
+	window.ApiConnector.pullCommentData();
+	window.ApiConnector.pullMarkerData();
+	window.ApiConnector.pullHeatmapData();
 
-	document.getElementById("bigButton").addEventListener('mousedown', function(){
-		if(!window.logging){ 
+	document.getElementById("startButton").addEventListener('mousedown', function(){
+		if(!window.logging){
+			window.UI.toggleClockRun(); 
 			window.GPS.start();
 		}else{
 			window.GPS.stop();
+			window.UI.toggleClockRun();
 		}
 	});
 
