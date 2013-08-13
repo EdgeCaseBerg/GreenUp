@@ -4,6 +4,16 @@ runtime: python27
 api_version: 1
 threadsafe: false
 
+skip_files: 
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^android/.*
+- ^ios/.*
+- ^svgs/.*
+
 handlers:
 - url: /favicon.ico
   static_files: api/favicon.ico
