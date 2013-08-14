@@ -187,8 +187,8 @@
         [self.gatheredMapPointsQueue addObject:mapPoint];
         
         //Update With Server        
-        //[self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        [self pushHeatMapDataToServer];
+        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+        //[self pushHeatMapDataToServer];
         [self updateHeatMapOverlay];
         
          //Update Map Location
@@ -307,7 +307,7 @@
            completionBlock:^(FSNConnection *c)
      {
          //UPDATE HEAT MAP OVERLAY
-         [self updateHeatMapOverlay];
+         //[self updateHeatMapOverlay];
 
          
          //NSLog(@"complete: %@\n\nerror: %@\n\n", c, c.error);
