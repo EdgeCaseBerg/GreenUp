@@ -18,17 +18,25 @@ package com.xenon.greenup;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Intent;
+import android.graphics.Shader.TileMode;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.xenon.greenup.api.APIServerInterface;
+import com.xenon.greenup.api.Heatmap;
+import com.xenon.greenup.api.HeatmapPoint;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -45,6 +53,60 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * time.
      */
     ViewPager _ViewPager;
+    
+    /**
+     * getRegularIcon returns the resource id of the icon image for the actionbar tabs.
+     * @param index
+     * @return The drawable resource id of the image.
+     */
+    private int getRegularIcon(int index){
+    	switch(index){
+		case 1:
+			return R.drawable.map;
+		case 2:
+			return R.drawable.comments;
+		case 0:
+		default:
+			//We'll just default to this random thing
+			return R.drawable.home;
+    	}
+    }
+    
+    /**
+     * getActiveIcon returns the resource id of the icon image for an active actionbar tab
+     * @param index
+     * @return The drawable resource id of the active icon
+     */
+    private int getActiveIcon(int index){
+    	switch(index){
+		case 1:
+			return R.drawable.map_active;
+		case 2:
+			return R.drawable.comments_active;	
+		case 0:
+		default:
+			return R.drawable.home_active;
+    	}
+    }
+    
+    /**
+     * sets the actionbar tab icon at position iconToActivate to active.
+     * @param iconToActivate The position of the ActionBar.Tab that will be activated
+     */
+    private void setIconActive(int iconToActivate){
+    	final ActionBar actionBar = getActionBar();
+    	final ActionBar.Tab tab = actionBar.getTabAt(iconToActivate);
+    	
+    	tab.setIcon(getActiveIcon(iconToActivate));
+    	//Set the other tabs to inactive
+    	for(int i=0; i < this._AppSectionsPagerAdapter.getCount(); i++){
+    		if(i != iconToActivate){
+    			actionBar.getTabAt(i).setIcon(getRegularIcon(i));
+    		}
+    	}
+    	
+    	
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,12 +117,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
-
+        
         // Specify that the Home/Up button should not be enabled, since there is no hierarchical parent.
         actionBar.setHomeButtonEnabled(false);
+        
+        //Set the stacked background otherwise we get the gross dark gray color under the icon
+        BitmapDrawable background = (BitmapDrawable)getResources().getDrawable(R.drawable.bottom_menu);
+        background.setTileModeXY(TileMode.REPEAT,TileMode.REPEAT);
+        actionBar.setStackedBackgroundDrawable(background);
+        
 
         // Specify that we will be displaying tabs in the action bar.
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setIcon(R.drawable.bottom_menu);
 
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
@@ -73,6 +142,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 // We can also use ActionBar.Tab#select() to do this if we have a reference to the
                 // Tab.
                 actionBar.setSelectedNavigationItem(position);
+                setIconActive(position);
             }
         });
 
@@ -81,12 +151,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             // Create a tab with text corresponding to the page title defined by the adapter.
             // Also specify this Activity object, which implements the TabListener interface, as the
             // listener for when this tab is selected.
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(_AppSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
+        	ActionBar.Tab tabToAdd = actionBar.newTab();
+        	
+        	tabToAdd.setTabListener(this);
+        	tabToAdd.setIcon(getRegularIcon(i));
+    
+            actionBar.addTab(tabToAdd);
+            
         }
-    }
+        //Set the home page as active since we'll start there:
+        this.setIconActive(0);
+        
+        //Setting the display to custom will push the action bar to the top
+        //which gives us more real estate
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.show();
+    }	
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
@@ -128,11 +208,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         { 
         	switch (i) {
             case 0:
-                // The first section of the app is the most interesting -- it offers
-                // a launchpad into the other demonstrations in this example application.
-                // return new LaunchpadSectionFragment();
-
-            default:
+        		//TODO: Launch HomeSectionFragment
+        		Fragment home = new HomeSectionFragment();
+        		return home;
+            case 1:
+        		//TODO: Launch MapSectionFragment
+        		Fragment map = new MapSectionFragment();
+        		return map;
+        	case 2:
+        		//TODO: Launch FeedSectionFragment
+        		Fragment feed = new FeedSectionFragment();
+        		return feed;
+        	default:
                 // The other sections of the app are dummy placeholders.
                 Fragment fragment = new DummySectionFragment();
                 Bundle args = new Bundle();
@@ -153,22 +240,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
     }
     
-    public static class MapSectionFragment extends Fragment {
-    	//TODO: Create Map Fragment
-    }
-    
-    public static class HomeSectionFragment extends Fragment {
-    	//TODO: Create Home Fragment
-    }
-    
-    public static class FeedSectionFragment extends Fragment {
-    	//TODO: Create Feed Fragment
-    }
 
     /**
      * A dummy fragment representing a section of the app, but that simply displays dummy text.
      */
-    public static class DummySectionFragment extends Fragment {
+    public static class DummySectionFragment extends Fragment implements OnClickListener {
 
         public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -179,7 +255,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             Bundle args = getArguments();
             ((TextView) rootView.findViewById(android.R.id.text1)).setText(
                     getString(R.string.dummy_section_text, args.getInt(ARG_SECTION_NUMBER)));
+            Button button = (Button)rootView.findViewById(R.id.testButton);
+            button.setOnClickListener(this);
             return rootView;
         }
+        
+        public void onClick(View v) {
+        	Log.i("button","I was clicked!");
+        	APIServerInterface i = new APIServerInterface();
+        	//CommentPage page = i.getComments("general message",1);
+        	Heatmap h = new Heatmap();
+        	h.add(new HeatmapPoint(24.53,43.2,120));
+        	i.updateHeatmap(h);
+        }
     }
+    
+    
 }
