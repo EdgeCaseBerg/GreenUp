@@ -5,15 +5,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class APIServerInterface {
+public final class APIServerInterface {
 	
 	
-	private final String BASE_URL = "https://greenupapp.appspot.com/api";
+	private static final String BASE_URL = "https://greenupapp.appspot.com/api";
 	
 	//Class to serve as the main interface to the API server
 	//The application will invoke methods defined here to perform 
@@ -22,11 +21,13 @@ public class APIServerInterface {
 	//TODO: Make it display a toast notification when an exception is thrown
 	//TODO: Clean up logging output
 	
+	//this isn't strictly necessary, but it'll prevent the class from being instantiated
+	private APIServerInterface(){};
 	
 	//Retrieves a page of comments from the server, the type and page number are optional
-	public CommentPage getComments(String type, int page) {
+	public static CommentPage getComments(String type, int page) {
 		if(type == null || type.equals(""))
-			return this.getAllComments(page);
+			return getAllComments(page);
 		StringBuilder sb = new StringBuilder(BASE_URL + "/comments?");
 		sb.append("type=" + type + "&" + "page=" + page);
 		String response = sendRequest(sb.toString());
@@ -34,23 +35,22 @@ public class APIServerInterface {
 	}
 	
 	//Retrieves a page of comments with no regard for the type
-	public CommentPage getAllComments(int page){
+	public static CommentPage getAllComments(int page){
 		StringBuilder sb = new StringBuilder(); sb.append(BASE_URL).append("/comments?").append("page=").append(page);
 		String response = sendRequest(sb.toString());
 		return new CommentPage(response);
 	}
 	
 	//Submits a comment (POST), the pin is optional.  Returns an integer status code (codes TBD)
-	public void submitComments(String type, String message, int pin) {
+	public static void submitComments(String type, String message, int pin) {
 		Comment newComment = new Comment(type, message, pin);
 		String data = newComment.toJSON().toString();
 		String url = new StringBuilder(BASE_URL + "/comments").toString();
-		String response = sendRequestWithData(url,"POST",data);
-		Log.i("response",response);
+		sendRequestWithData(url,"POST",data);
 	}
 	
 	//Get a list of heatmap points for the specified coordinates, all parameters are optional (??)
-	public Heatmap getHeatmap(float latDegrees, float latOffset, float lonDegrees, float lonOffset, int precision){
+	public static Heatmap getHeatmap(float latDegrees, float latOffset, float lonDegrees, float lonOffset, int precision){
 		StringBuilder sb = new StringBuilder(BASE_URL + "/heatmap?");
 		
 		//Wrapper class casting is neccesary to compare to null (damn java)
@@ -67,15 +67,14 @@ public class APIServerInterface {
 	}
 	
 	//Submit a heatmap point (PUT)
-	public void updateHeatmap(Heatmap h){
+	public static void updateHeatmap(Heatmap h){
 		String data = h.toJSON().toString();
 		String url = new StringBuilder(BASE_URL + "/heatmap").toString();
-		String response = sendRequestWithData(url,"PUT",data);
-		Log.i("response",response);
+		sendRequestWithData(url,"PUT",data);
 	}
 	
 	//Get a list of pins, all parameters are optional
-	public PinList getPins(float latDegrees, float latOffset, float lonDegrees, float lonOffset){
+	public static PinList getPins(float latDegrees, float latOffset, float lonDegrees, float lonOffset){
 		StringBuilder sb = new StringBuilder(BASE_URL + "/pins?");
 		//Wrapper class casting is neccesary to compare to null (Java is silly like that)
 		if((Float)latDegrees != null) { sb.append(("latDegrees=")).append(latDegrees); }
@@ -88,16 +87,19 @@ public class APIServerInterface {
 	}
 	
 	//Submit a pin (POST)
-	public int submitPin(float latDegrees, float lonDegrees, String type, String message){
-		return 0;
+	public static void submitPin(float latDegrees, float lonDegrees, String type, String message){
+		Pin pin = new Pin(latDegrees,lonDegrees,type,message);
+		String data = pin.toJSON().toString();
+		String url = new StringBuilder(BASE_URL + "/pins").toString();
+		sendRequestWithData(url,"PUT",data);		
 	}
 	
-	public int testConnection(){
+	public static int testConnection(){
 		sendRequest(BASE_URL);
 		return 0;
 	}
 	
-	private String sendRequestWithData(String url, String method, String data) {
+	private static void sendRequestWithData(String url, String method, String data) {
 		APIRequestTask request = new APIRequestTask(url,method,data);
 		request.execute();
 		String response;
@@ -109,10 +111,9 @@ public class APIServerInterface {
 			response = "Error, see stack trace";
 		}
 		Log.i("response",response);
-		return response;
 	}
 	
-	private String sendRequest(String url) {
+	private static String sendRequest(String url) {
 		APIRequestTask request = new APIRequestTask(url);
 		request.execute();
 		String response;
@@ -127,7 +128,7 @@ public class APIServerInterface {
 		return response;
 	}
 	
-	private class APIRequestTask extends AsyncTask<Void,Void,String>{
+	private static class APIRequestTask extends AsyncTask<Void,Void,String>{
 		
 		private String url;
 		private String data;
@@ -178,12 +179,4 @@ public class APIServerInterface {
 			return response;
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }

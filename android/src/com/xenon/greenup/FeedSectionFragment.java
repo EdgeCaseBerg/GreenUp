@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 public class FeedSectionFragment extends ListFragment {
-	private final APIServerInterface api = new APIServerInterface();
 	private int lastPageLoaded = 1;
 	private ArrayList<Comment> comments = new ArrayList<Comment>(60); // Default to having enough space for 3 spaces
 	
@@ -30,7 +29,7 @@ public class FeedSectionFragment extends ListFragment {
 	
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-		CommentPage cp = api.getComments(null,lastPageLoaded );
+		CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
 		this.comments = cp.getCommentsList();
 		//Set the adapter
 		Activity currentActivity = getActivity();
