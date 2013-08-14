@@ -46,8 +46,7 @@ public final class APIServerInterface {
 		Comment newComment = new Comment(type, message, pin);
 		String data = newComment.toJSON().toString();
 		String url = new StringBuilder(BASE_URL + "/comments").toString();
-		String response = sendRequestWithData(url,"POST",data);
-		Log.i("response",response);
+		sendRequestWithData(url,"POST",data);
 	}
 	
 	//Get a list of heatmap points for the specified coordinates, all parameters are optional (??)
@@ -71,8 +70,7 @@ public final class APIServerInterface {
 	public static void updateHeatmap(Heatmap h){
 		String data = h.toJSON().toString();
 		String url = new StringBuilder(BASE_URL + "/heatmap").toString();
-		String response = sendRequestWithData(url,"PUT",data);
-		Log.i("response",response);
+		sendRequestWithData(url,"PUT",data);
 	}
 	
 	//Get a list of pins, all parameters are optional
@@ -89,8 +87,11 @@ public final class APIServerInterface {
 	}
 	
 	//Submit a pin (POST)
-	public static int submitPin(float latDegrees, float lonDegrees, String type, String message){
-		return 0;
+	public static void submitPin(float latDegrees, float lonDegrees, String type, String message){
+		Pin pin = new Pin(latDegrees,lonDegrees,type,message);
+		String data = pin.toJSON().toString();
+		String url = new StringBuilder(BASE_URL + "/pins").toString();
+		sendRequestWithData(url,"PUT",data);		
 	}
 	
 	public static int testConnection(){
@@ -98,7 +99,7 @@ public final class APIServerInterface {
 		return 0;
 	}
 	
-	private static String sendRequestWithData(String url, String method, String data) {
+	private static void sendRequestWithData(String url, String method, String data) {
 		APIRequestTask request = new APIRequestTask(url,method,data);
 		request.execute();
 		String response;
@@ -110,7 +111,6 @@ public final class APIServerInterface {
 			response = "Error, see stack trace";
 		}
 		Log.i("response",response);
-		return response;
 	}
 	
 	private static String sendRequest(String url) {
