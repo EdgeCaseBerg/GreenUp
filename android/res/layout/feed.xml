@@ -4,12 +4,15 @@
     android:layout_height="fill_parent"
     android:layout_gravity="top"
     android:gravity="top"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:id="@+id/feed_ll">
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
+    
+ 
 
 </LinearLayout>
