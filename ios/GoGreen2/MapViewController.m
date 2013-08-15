@@ -10,8 +10,9 @@
 #import "ContainerViewController.h"
 #import "FSNConnection.h"
 #import "HeatMapPoint.h"
+#import "NSArray+Primitive.h"
 
-#define UPLOAD_QUEUE_LENGTH 5
+#define UPLOAD_QUEUE_LENGTH 1
 
 @interface MapViewController ()
 
@@ -188,7 +189,7 @@
         
         //Update With Server        
         [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        //[self pushHeatMapDataToServer];
+        [self pushHeatMapDataToServer];
         [self updateHeatMapOverlay];
         
          //Update Map Location
@@ -213,20 +214,27 @@
     {
         for(HeatMapPoint *point in self.gatheredMapPointsQueue)
         {
-            NSURL *url = [NSURL URLWithString:@"http://localhost:30002/api/heatmap"];
+            NSURL *url = [NSURL URLWithString:HEAT_MAP_URL];
             
             NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"secondsWorked", nil];
-            NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%f",point.lat], [NSString stringWithFormat:@"%f",point.lon], [NSString stringWithFormat:@"%f",10.1], nil];
-            NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+            NSMutableArray *objects = [[NSMutableArray alloc] init];
+            [objects addFloat:point.lat];
+            [objects addFloat:point.lon];
+            [objects addFloat:point.secWorked];
             
             NSLog(@"PUSHING - Lat: %f", point.lat);
             NSLog(@"PUSHING - Lon: %f", point.lon);
+            
+            NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+            
+            NSArray *allCalls = [NSArray arrayWithObject:parameters];
+            NSDictionary *par = [[NSDictionary alloc] initWithObjects:allCalls forKeys:[NSArray arrayWithObject:@"1"]];
             
             FSNConnection *connection =
             [FSNConnection withUrl:url
                             method:FSNRequestMethodPOST
                            headers:nil
-                        parameters:parameters
+                        parameters:par
                         parseBlock:^id(FSNConnection *c, NSError **error)
              {
                  NSDictionary *d = [c.responseData dictionaryFromJSONWithError:error];
@@ -235,7 +243,8 @@
                      return nil;
                  }
                  
-                 
+                 NSLog(@"%d", c.response.statusCode);
+                 NSLog(@"%@",c.parameters);
                  if (c.response.statusCode == 422)
                  {
                      NSString *error = [d objectForKey:@"Error_Message"];
@@ -244,8 +253,7 @@
                      //There is an error, so flag as overdue and dont clear the queue
                      self.pushOverdue = TRUE;
                  }
-                 
-                 
+                                  
                  return nil;
              }
                    completionBlock:^(FSNConnection *c)
@@ -267,7 +275,7 @@
 }
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
 {
-    NSURL *url = [NSURL URLWithString:@"http://localhost:30002/api/heatmap"];
+    NSURL *url = [NSURL URLWithString:HEAT_MAP_URL];
     
     NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
     NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:location.center.latitude], [NSNumber numberWithFloat:location.center.longitude], [NSNumber numberWithFloat:span.latitudeDelta], [NSNumber numberWithFloat:span.longitudeDelta], nil];
@@ -309,7 +317,6 @@
          //UPDATE HEAT MAP OVERLAY
          //[self updateHeatMapOverlay];
 
-         
          //NSLog(@"complete: %@\n\nerror: %@\n\n", c, c.error);
          //NSDictionary *parse = c.parseResult;
      }

@@ -21,12 +21,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "398217146.79122"
+         timestampString = "398226040.191851"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "190"
-         endingLineNumber = "190"
-         landmarkName = "-locationManager:didUpdateLocations:"
+         startingLineNumber = "248"
+         endingLineNumber = "248"
+         landmarkName = "-pushHeatMapDataToServer"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -8,6 +8,7 @@
 
 #import "MessageViewController.h"
 #import "FSNConnection.h"
+#import "ContainerViewController.h"
 
 @interface MessageViewController ()
 
@@ -54,7 +55,7 @@
 
 -(void)getMessages
 {
-    NSURL *url = [NSURL URLWithString:@"http://greenupapp.appspot.com/api/comments"];
+    NSURL *url = [NSURL URLWithString:COMMENTS_URL];
     
     FSNConnection *connection =
     [FSNConnection withUrl:url

@@ -16,6 +16,8 @@
 #define HOME_VIEW 0
 #define Map_VIEW 1
 #define MESSAGE_VIEW 2
+#define HEAT_MAP_URL @"http://localhost:30002/api/heatmap"
+#define COMMENTS_URL @"http://localhost:30002/api/comments"
 
 typedef void (^VoidBlock)(void);
 
