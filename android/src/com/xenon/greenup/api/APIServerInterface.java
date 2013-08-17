@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -28,6 +29,12 @@ public final class APIServerInterface {
 	public static CommentPage getComments(String type, int page) {
 		if(type == null || type.equals(""))
 			return getAllComments(page);
+		try {
+			type = URLEncoder.encode(type, "UTF-8");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		StringBuilder sb = new StringBuilder(BASE_URL + "/comments?");
 		sb.append("type=" + type + "&" + "page=" + page);
 		String response = sendRequest(sb.toString());
