@@ -23,6 +23,7 @@ import android.widget.TextView.OnEditorActionListener;
 public class FeedSectionFragment extends ListFragment {
 	private int lastPageLoaded = 1;
 	private ArrayList<Comment> comments = new ArrayList<Comment>(60); // Default to having enough space for 3 spaces
+	private EditText editText;
 	
 	public FeedSectionFragment(){
 	}
@@ -47,13 +48,14 @@ public class FeedSectionFragment extends ListFragment {
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	View rootView = inflater.inflate(R.layout.feed, container, false);
-    	EditText editText =  (EditText)rootView.findViewById(R.id.text_entry_comments);
+    	editText =  (EditText)rootView.findViewById(R.id.text_entry_comments);
     	editText.setOnEditorActionListener(new OnEditorActionListener() {
     	    @Override
     	    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
     	        boolean handled = false;
     	        if (actionId == EditorInfo.IME_ACTION_SEND) {
     	            Log.i("text","i send!");
+    	            APIServerInterface.submitComments("forum", editText.getText().toString(), 0);
     	            handled = true;
     	        }
     	        return handled;
