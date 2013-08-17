@@ -10,14 +10,20 @@ import android.support.v4.app.ListFragment;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 public class FeedSectionFragment extends ListFragment {
 	private int lastPageLoaded = 1;
-	private ArrayList<Comment> comments = new ArrayList<Comment>(60); // Default to having enough space for 3 spaces  
-
+	private ArrayList<Comment> comments = new ArrayList<Comment>(60); // Default to having enough space for 3 spaces
+	
 	public FeedSectionFragment(){
 	}
 	
@@ -40,7 +46,20 @@ public class FeedSectionFragment extends ListFragment {
      * Called when the android needs to create the view, simply inflates the layout
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.feed, container, false);
+    	View rootView = inflater.inflate(R.layout.feed, container, false);
+    	EditText editText =  (EditText)rootView.findViewById(R.id.text_entry_comments);
+    	editText.setOnEditorActionListener(new OnEditorActionListener() {
+    	    @Override
+    	    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+    	        boolean handled = false;
+    	        if (actionId == EditorInfo.IME_ACTION_SEND) {
+    	            Log.i("text","i send!");
+    	            handled = true;
+    	        }
+    	        return handled;
+    	    }
+    	});
+       	return rootView;
     }
     
 	private class AsyncCommentLoadTask extends AsyncTask<Void,Void,Void>{

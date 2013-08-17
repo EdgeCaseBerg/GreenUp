@@ -33,7 +33,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Heatmap;
 import com.xenon.greenup.api.HeatmapPoint;
@@ -166,6 +165,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         //which gives us more real estate
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.show();
+     
     }	
 
     @Override
