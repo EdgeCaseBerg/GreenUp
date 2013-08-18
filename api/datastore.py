@@ -9,13 +9,11 @@
 
 from google.appengine.ext import db
 from handlerBase import *
-from google.appengine.api import memcache # import memcache
+from google.appengine.api import memcache
 from google.appengine.datastore import entity_pb
-
-import logging 
-
+import logging
+import hashlib
 from datetime import date
-
 from constants import *
 
 class Campaign(db.Model):
@@ -136,6 +134,26 @@ class GridPoints(Greenup):
 	def get_all_delayed(cls):
 		return GridPoints.all().ancestor(GridPoints.app_key())
 
+class DebugReports(Greenup):
+
+	errorMessage = db.StringProperty()
+	debugInfo = db.StringProperty()
+	timestamp = db.DateTimeProperty(auto_now_add = True)
+	authhash = db.StringProperty(required = True)
+
+	@classmethod 
+	def by_id(cls, debugId):
+		return DebugReports.get_by_id(debugId, parent=app_key())
+
+	@classmethod
+	def by_error(cls, errorMessage):
+		errors = DebugReports.all().ancestor(DebugReports.app_key()).filter('errorMessage =', errorMessage).get()	
+		return ct 
+
+	@classmethod
+	def get_all(cls):
+		return DebugReports.all().ancestor(DebugReports.app_key())
+
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
 '''
@@ -179,6 +197,26 @@ class AbstractionLayer():
 		# datastore write
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
+
+	def submitDebug(self, errorMessage, debugInfo):
+		# submit information about a bug
+		authhash = hashlib.sha256(errorMessage + debugInfo).hexdigest()
+		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash).put()
+
+	def getDebug(self, debugId=None, error=None):
+		# retrieve information about a bug by id, error, or get them all
+		# add JSON Formatting to the returns such that {  "errror_message" : "Stack trace or debugging information here", "id":id, "time":timestamp } 
+		if debugId:
+			return DebugReports.by_id(debugId) 
+		elif error:
+			return DebugReports.by_error(error)
+
+		return DebugReports.get_all()
+
+
+	def deleteDebug(self):
+		# remove a bug from the datastore
+		pass
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
@@ -421,6 +459,7 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 		return "Something bad happened"
 
 def pinFormatter(dbPins):
+	# properly format pins in json and return
 	pins = []
 	for pin in dbPins:		
 		pins.append( {  'latDegrees' : pin.lat,
@@ -429,3 +468,11 @@ def pinFormatter(dbPins):
 						'message'	 : pin.message }
 					)
 	return pins
+def debugFormatter(dbBugs):
+	# properly format bugs in json and return
+	bugs = []
+	for bug in dbBugs:
+		bugs.append({   'errorMessage' : bug.errorMessage,
+						'debugInfo'    : bug.debugInfo,
+						'timestamp'    : bug.timestamp })
+	return bugs
