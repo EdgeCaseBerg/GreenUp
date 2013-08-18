@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="bubble_yellow_top.svg">
+   sodipodi:docname="bubble_green_center.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -24,11 +24,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="244.80421"
-     inkscape:cy="689.22215"
+     inkscape:zoom="11.2"
+     inkscape:cx="87.880122"
+     inkscape:cy="722.32385"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g4080-5-1"
      showgrid="false"
      inkscape:window-width="1366"
      inkscape:window-height="718"
@@ -52,29 +52,32 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       transform="translate(2.5516113e-7,-319.99999)"
-       id="g4084-8"
+       id="g4514"
+       transform="matrix(-1,0,0,1,487.20309,-30)"
        style="fill:#008000">
       <g
-         transform="matrix(1.005924,0,0,0.67305553,-0.49052059,158.44254)"
-         id="g4080-5"
+         transform="matrix(1,0,0,-1,-11.48864,603.16898)"
+         inkscape:label="Layer 1"
+         id="layer1-6"
          style="fill:#008000">
-        <rect
-           style="fill:#008000;stroke:none"
-           id="rect4056-53"
-           width="339.53302"
-           height="9.8443241"
-           x="84.309052"
-           y="484.61606"
-           ry="4.9221621" />
-        <rect
-           style="fill:#008000;stroke:none"
-           id="rect4056-5-5"
-           width="339.53302"
-           height="6.8138666"
-           x="84.309052"
-           y="488.61606"
-           ry="0" />
+        <g
+           transform="translate(0,-239.99999)"
+           id="g4084-8-8"
+           style="fill:#008000">
+          <g
+             transform="matrix(1.005924,0,0,0.67305553,-0.49052059,158.44254)"
+             id="g4080-5-1"
+             style="fill:#008000">
+            <rect
+               style="fill:#ffcc00;stroke:none"
+               id="rect4056-5-5-4"
+               width="339.53302"
+               height="6.8138666"
+               x="84.309052"
+               y="488.61606"
+               ry="0" />
+          </g>
+        </g>
       </g>
     </g>
   </g>
