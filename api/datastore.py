@@ -207,12 +207,14 @@ class AbstractionLayer():
 		# retrieve information about a bug by id, error, or get them all
 		# add JSON Formatting to the returns such that {  "errror_message" : "Stack trace or debugging information here", "id":id, "time":timestamp } 
 		if debugId:
-			return DebugReports.by_id(debugId) 
+			bugs = DebugReports.by_id(debugId) 
+			return debugFormatter(bugs)
 		elif error:
-			return DebugReports.by_error(error)
+			bugs = DebugReports.by_error(error)
+			return debugFormatter(bugs)
 
-		return DebugReports.get_all()
-
+		bugs = DebugReports.get_all()
+		return debugFormatter(bugs)
 
 	def deleteDebug(self):
 		# remove a bug from the datastore
