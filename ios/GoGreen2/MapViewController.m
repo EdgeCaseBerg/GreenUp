@@ -8,7 +8,6 @@
 
 #import "MapViewController.h"
 #import "ContainerViewController.h"
-//#import "FSNConnection.h"
 #import "greenhttp.h"
 #import "HeatMapPoint.h"
 #import "NSArray+Primitive.h"
@@ -231,46 +230,28 @@
             NSArray *allCalls = [NSArray arrayWithObject:parameters];
             NSDictionary *par = [[NSDictionary alloc] initWithObjects:allCalls forKeys:[NSArray arrayWithObject:@"1"]];
             
-            FSNConnection *connection =
-            [FSNConnection withUrl:url
-                            method:FSNRequestMethodPOST
-                           headers:nil
-                        parameters:par
-                        parseBlock:^id(FSNConnection *c, NSError **error)
-             {
-                 NSDictionary *d = [c.responseData dictionaryFromJSONWithError:error];
-                 if(!d)
-                 {
-                     return nil;
-                 }
-                 
-                 NSLog(@"%d", c.response.statusCode);
-                 NSLog(@"%@",c.parameters);
-                 if (c.response.statusCode == 422)
-                 {
-                     NSString *error = [d objectForKey:@"Error_Message"];
-                     NSLog(@"%@", error);
-                     
-                     //There is an error, so flag as overdue and dont clear the queue
-                     self.pushOverdue = TRUE;
-                 }
-                                  
-                 return nil;
-             }
-                   completionBlock:^(FSNConnection *c)
-             {
-                 NSLog(@"complete: %@\n\nerror: %@\n\n", c, c.error);
-                 
-                 //push completed sucsessfuly so mark as not overdue anymore and reset the queue
-                 self.pushOverdue = FALSE;
-                 [self.gatheredMapPointsQueue removeAllObjects];
-             }
-                     progressBlock:^(FSNConnection *c)
-             {
-                 NSLog(@"progress: %@: %.2f/%.2f", c, c.uploadProgress, c.downloadProgress);
-             }];
+            //Parse NSDictionary to JSON
+            NSError *error;
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:par
+                                options:0
+                                error:&error];
+
+            NSString *jsonString;
+            if (! jsonData) {
+                NSLog(@"Got an error: %@", error);
+            } else {
+                NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            }
             
-            [connection start];
+            char *payload=[jsonString UTF8String];
+            
+            //Perform a POST
+            NSString *hostString = [url absoluteString];
+            char *host=[hostString UTF8String];
+            char *request = gh_build_put_query(host, "/api/heatmap", payload);
+            char *charPointer = gh_make_request(request, host, 80);
+            NSLog(@"response was: %s", charPointer);
+            free(charPointer);
         }
     }
 }
@@ -288,45 +269,13 @@
     NSLog(@"Span-Lon: %f", span.longitudeDelta);
     NSLog(@"Span-Lat: %f", span.latitudeDelta);
     
-    FSNConnection *connection =
-    [FSNConnection withUrl:url
-                    method:FSNRequestMethodGET
-                   headers:nil
-                parameters:nil
-                parseBlock:^id(FSNConnection *c, NSError **error)
-     {
-         FSNParseBlock parseBlock = c.parseBlock;
-         
-         //Clear old points
-         [self.downloadedMapPoints removeAllObjects];
-         
-         //Add new points
-         NSArray *heatMapDictionaries = [c.responseData arrayFromJSONWithError:error];
-         for(NSDictionary *heatMapPoint in heatMapDictionaries)
-         {
-             HeatMapPoint *point = [[HeatMapPoint alloc] init];
-             point.lat = [[heatMapPoint objectForKey:@"latDegrees"] doubleValue];
-             point.lon = [[heatMapPoint objectForKey:@"lonDegrees"] doubleValue];
-             point.secWorked = [[heatMapPoint objectForKey:@"secondsWorked"] doubleValue];
-             [self.downloadedMapPoints addObject:point];
-         }
-         
-         return nil;
-     }
-           completionBlock:^(FSNConnection *c)
-     {
-         //UPDATE HEAT MAP OVERLAY
-         //[self updateHeatMapOverlay];
-
-         //NSLog(@"complete: %@\n\nerror: %@\n\n", c, c.error);
-         //NSDictionary *parse = c.parseResult;
-     }
-             progressBlock:^(FSNConnection *c)
-     {
-         //NSLog(@"progress: %@: %.2f/%.2f", c, c.uploadProgress, c.downloadProgress);
-     }];
-    
-    [connection start];
+    //Perform a GET
+    NSString *hostString = [url absoluteString];
+    char *host=[hostString UTF8String];
+    char * request = gh_build_get_query(host, "/api/heatmap");
+    char *charPointer = gh_make_request(request, host, 80);
+    NSLog(@"response was: %s", charPointer);
+    free(charPointer);
 }
 
 
