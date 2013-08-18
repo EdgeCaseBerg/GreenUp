@@ -14,9 +14,61 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="bubble_yellow_top.svg">
+   sodipodi:docname="bubble_orange_top.svg">
   <defs
-     id="defs4" />
+     id="defs4">
+    <filter
+       height="1.1212511"
+       y="-0.060625553"
+       width="1.2186669"
+       x="-0.10933346"
+       id="filter3872-8-6-1"
+       inkscape:collect="always"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3874-8-8-3"
+         stdDeviation="1.6552478"
+         inkscape:collect="always" />
+    </filter>
+    <filter
+       height="1.1212511"
+       y="-0.060625553"
+       width="1.2186669"
+       x="-0.10933346"
+       id="filter3872-8-6"
+       inkscape:collect="always"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3874-8-8"
+         stdDeviation="1.6552478"
+         inkscape:collect="always" />
+    </filter>
+    <filter
+       height="1.1212511"
+       y="-0.060625553"
+       width="1.2186669"
+       x="-0.10933346"
+       id="filter3872-8"
+       inkscape:collect="always"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3874-8"
+         stdDeviation="1.6552478"
+         inkscape:collect="always" />
+    </filter>
+    <filter
+       height="1.1212511"
+       y="-0.060625553"
+       width="1.2186669"
+       x="-0.10933346"
+       id="filter3872"
+       inkscape:collect="always">
+      <feGaussianBlur
+         id="feGaussianBlur3874"
+         stdDeviation="1.6552478"
+         inkscape:collect="always" />
+    </filter>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -52,24 +104,24 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       transform="translate(2.5516113e-7,-319.99999)"
-       id="g4084-8"
-       style="fill:#008000">
+       id="g4084"
+       style="fill:#ffcc00"
+       transform="translate(0,-160)">
       <g
          transform="matrix(1.005924,0,0,0.67305553,-0.49052059,158.44254)"
-         id="g4080-5"
-         style="fill:#008000">
+         id="g4080"
+         style="fill:#ffcc00">
         <rect
-           style="fill:#008000;stroke:none"
-           id="rect4056-53"
+           style="fill:#ffcc00;stroke:none"
+           id="rect4056"
            width="339.53302"
            height="9.8443241"
            x="84.309052"
            y="484.61606"
            ry="4.9221621" />
         <rect
-           style="fill:#008000;stroke:none"
-           id="rect4056-5-5"
+           style="fill:#ffcc00;stroke:none"
+           id="rect4056-5"
            width="339.53302"
            height="6.8138666"
            x="84.309052"

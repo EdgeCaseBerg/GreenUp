@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="bubble_yellow_top.svg">
+   sodipodi:docname="bubble_red_top.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="244.80421"
-     inkscape:cy="689.22215"
+     inkscape:zoom="1.4"
+     inkscape:cx="246.0531"
+     inkscape:cy="709.44844"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -52,29 +52,44 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       transform="translate(2.5516113e-7,-319.99999)"
-       id="g4084-8"
-       style="fill:#008000">
+       id="g4514"
+       transform="translate(0,-40)">
+      <path
+         sodipodi:nodetypes="cccc"
+         inkscape:connector-curvature="0"
+         id="rect4450"
+         d="m 361.78573,354.86219 c 0,0 35.30083,-7.2056 42.5,-0.17857 -9.05083,8.99132 2.14285,18.92858 2.14285,18.92858 -11.3326,-4.91339 -26.42857,-9.09744 -44.64285,-18.75001 z"
+         style="fill:#aa0000;stroke:none" />
       <g
-         transform="matrix(1.005924,0,0,0.67305553,-0.49052059,158.44254)"
-         id="g4080-5"
-         style="fill:#008000">
-        <rect
-           style="fill:#008000;stroke:none"
-           id="rect4056-53"
-           width="339.53302"
-           height="9.8443241"
-           x="84.309052"
-           y="484.61606"
-           ry="4.9221621" />
-        <rect
-           style="fill:#008000;stroke:none"
-           id="rect4056-5-5"
-           width="339.53302"
-           height="6.8138666"
-           x="84.309052"
-           y="488.61606"
-           ry="0" />
+         transform="matrix(1,0,0,-1,-11.48864,603.16898)"
+         inkscape:label="Layer 1"
+         id="layer1-6">
+        <g
+           transform="translate(0,-239.99999)"
+           id="g4084-8-8"
+           style="fill:#aa0000">
+          <g
+             transform="matrix(1.005924,0,0,0.67305553,-0.49052059,158.44254)"
+             id="g4080-5-1"
+             style="fill:#aa0000">
+            <rect
+               style="fill:#aa0000;stroke:none"
+               id="rect4056-53-8"
+               width="339.53302"
+               height="9.8443241"
+               x="84.309052"
+               y="484.61606"
+               ry="4.9221621" />
+            <rect
+               style="fill:#aa0000;stroke:none"
+               id="rect4056-5-5-4"
+               width="339.53302"
+               height="6.8138666"
+               x="84.309052"
+               y="488.61606"
+               ry="0" />
+          </g>
+        </g>
       </g>
     </g>
   </g>
