@@ -364,6 +364,98 @@ URL: **/api/pins**
 
 If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
 
+----------------------------
+
+###Retrieve log messages
+
+Method: **GET**
+
+URL: **/api/debug**
+
+####Optional Parameters
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>since</td><td>timestamp</td><td>All messages retrieved will have a timestamp greater than this value</td></tr>
+        <tr><td>hash</td><td>String</td><td>Used to get a single message that has the same hash value.</td></tr>
+        <tr><td>page</td><td>unsigned Integer</td><td>Based on [RFC 5005], for use with pagination, a request for a page that does not exist will result in no debug messages being returned. A non-integer value for this parameter will result in a 422 HTTP status code. Paging begins at 1.</td></tr>
+    </tbody>
+</table>
+
+####Example Request
+`http://greenup.xenonapps.com/api/debug`
+
+####Response
+```
+{
+    "status" : 200,
+    "messages" : [
+        {
+            "message" : "Null pointer exception on line 42 in badcontroller.java",
+            "stackTrace" : " stack trace: ..."
+            "timestamp" : "2013-05-08 00:00:01",
+            "hash" : "aed60d05a1bd3f7633a6464a7a9b4eab5a9c13a185f47cb651e6b4130ce09dfa"
+        },
+        {
+            "message" : "Problem resolving up address of server. stack trace: ...",
+            "stackTrace" : " stack trace: ..."
+            "timestamp" : "2014-03-11 00:00:01",
+            "hash" : "6f3d78c8ca1d63645015d6fa2d975902348d585f954efd0e8ecca4f362c697d9"  
+        }
+    ]
+}
+```
+
+###Post log message
+
+Method: **POST**
+
+URL: **/api/debug**
+
+####Required POST data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>message</td><td>String</td><td>A custom message detailing origin of the error and any information that may assist with debugging the problem</td></tr>
+        <tr><td>stackTrace</td><td>String</td><td>The programmatic stack trace of the failure</td></tr>
+        <tr><td>origin</td><td>String</td><td>Unique information from a client device that allows deletion of a log message by the client</td></tr>
+    </tbody>
+</table>
+
+####Response
+```
+{ 
+ "status" : 200, 
+ "message" : "Successful submit",
+}
+```
+
+###Delete log message
+
+Method: **DELETE**
+
+URL: **/api/debug**
+
+####Required DELETE data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>origin</td><td>String</td><td>The unique id identifying a client device.</td></tr>
+        <tr><td>hash</td><td>String</td><td>The identifying id for a submitted debug message (can be found through get)</td></tr>
+    </tbody>
+</table>
+
+Debug messages can also be deleted by developers through the use of a master key. Or through direct access to the database. This master key should not be stored in a public place.
+
+
+
+-------------------------------
 
 ##Error messages and codes
 
@@ -619,7 +711,36 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
 </table>
 
 
-
+#### Debug
+<table> 
+    <thead>
+        <tr><th>Code</th><th>Message</th><th>Causes</th></tr>
+    </thead>
+    <tr>
+        <td colspan="3" style="text-align: center;">GET Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td colspan="3">TO DO</td>
+        </tr>
+    </tbody>
+    <tr>
+        <td colspan="3" style="text-align: center;">POST Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td colspan="3">TO DO</td>
+        </tr>
+    </tbody>
+    <tr>
+        <td colspan="3" style="text-align: center;">DELETE Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td colspan="3">TO DO</td>
+        </tr>
+    </tbody>
+</table>
 
 
 [RFC 5005]: http://www.ietf.org/rfc/rfc5005.txt

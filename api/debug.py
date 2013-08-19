@@ -16,7 +16,7 @@ class Debug(webapp2.RequestHandler):
 		self.response.set_status(HTTP_OK,"")
 
 		
-		response=""
+		response="{\"status_code\" : \"%s\", \"messages\" :  []}"
 
 		#Send out the response
 		self.response.set_status(HTTP_OK,"")
