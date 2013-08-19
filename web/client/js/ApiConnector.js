@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 	// api URLs have been moved into each of the functions using them as per issue 46
@@ -481,7 +481,7 @@ function MapHandle(){
 				break;
 			default:
 				pin.type = "general message";
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "icons/blueCircle.png";
 				break;
 		}
 	
@@ -740,6 +740,9 @@ function UiHandle(){
 
     UiHandle.prototype.init = function init(){
 
+    	// top slider dropdown
+    	document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
+
 	    // controls the main panel movement
 	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
@@ -751,8 +754,7 @@ function UiHandle(){
 	    	window.UI.navbarSlideUp();
 	    });
 
-	    document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
-
+	    // the text input that slides up from the bottom
 	    document.getElementById("dialogCommentOk").addEventListener('mousedown', function(){
 	    	// prevent OK from being clicked if dialogSlider textarea is empty
 	    	if(document.getElementById("dialogSliderTextarea").value == ""){
@@ -778,6 +780,7 @@ function UiHandle(){
 		   		window.UI.dialogSliderDown();
 		    }
 	    });
+	    // cancel button
 	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});		
 		
 	} // end init
@@ -796,6 +799,22 @@ function UiHandle(){
 		}else{
 			window.UI.isTopSliderUp = false;
 			document.getElementById("topSlideDown").className = "sliderDown";
+		}
+	}
+
+	// start or stop the UI clock 
+	UiHandle.prototype.toggleClockRun = function toggleClockRun(){
+		if(window.UI.isClockRunning){
+			// stop the clock
+			console.log("stopping clock");
+			clearInterval(window.UI.clockInterval);
+			window.UI.clockInterval = null;
+			window.UI.isClockRunning = false;
+		}else{
+			// start the clock
+			console.log("starting clock");
+			window.UI.clockInterval = setInterval(window.UI.updateClock, 1000);
+			window.UI.isClockRunning = true;
 		}
 	}
 
@@ -906,17 +925,18 @@ function UiHandle(){
 
 	// when the user chooses which type of marker to add to the map
 	UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
+		console.log(markerType);
 		// first we need to show the marker on the map
 		// var iconUrl = "img/icons/blueCircle.png";
 		var iconUrl = "";
 		switch(markerType){
-			case "comment":
+			case "forum":
 				iconUrl = "img/icons/orangeCircle.png";
 				break;
-			case "pickup":
+			case "trash pickup":
 				iconUrl = "img/icons/blueCircle.png";
 				break;
-			case "trash":
+			case "help needed":
 				iconUrl = "img/icons/greenCircle.png";
 				break;
 			default:
@@ -926,7 +946,7 @@ function UiHandle(){
 
 		window.MAP.markerType = markerType;
 		window.UI.hideMarkerTypeSelect();
-		window.UI.dialogSliderUp();
+		window.UI.dialogSliderUp(null);
 		// (bug) here we need to prevent more map touches
 	}
 
@@ -952,12 +972,14 @@ function UiHandle(){
 
 	}
 
+	// hide the user text input dialog
 	UiHandle.prototype.dialogSliderDown = function dialogSliderDown(){
 		window.UI.dialogSliderIsUp = false;
 		document.getElementById("dialogSlider").style.top = "86%";
 		document.getElementById("dialogSlider").style.opacity = "0.0";
 	}
 
+	// show the marker type select dialog
 	UiHandle.prototype.markerSelectUp = function markerSelectUp(){
 		// set the coords of the marker event
 
@@ -1006,9 +1028,10 @@ function UiHandle(){
 		console.log("UPDATE NEEDS DOES NOTHING");
 	}
 
+	// data is passed from the api connector to here to update the forum.
 	UiHandle.prototype.updateForum = function updateForum(data){
 		console.log("In Update forum");
-		console.log("Comment data: "+data);
+		// console.log("Comment data: "+data);
 		// document.getElementById("bubbleContainer").innerHTML = "";
 		var dataObj = JSON.parse(data);
 		var comments = dataObj.comments;
@@ -1072,25 +1095,8 @@ function UiHandle(){
 		}
 	}
 
-	UiHandle.prototype.updateTest = function updateTest(data){
-		console.log(data);
-	}
 
-	UiHandle.prototype.toggleClockRun = function toggleClockRun(){
-		if(window.UI.isClockRunning){
-			// stop the clock
-			console.log("stopping clock");
-			clearInterval(window.UI.clockInterval);
-			window.UI.clockInterval = null;
-			window.UI.isClockRunning = false;
-		}else{
-			// start the clock
-			console.log("starting clock");
-			window.UI.clockInterval = setInterval(window.UI.updateClock, 1000);
-			window.UI.isClockRunning = true;
-		}
-	}
-
+	// updates the clock over time
 	UiHandle.prototype.updateClock = function updateClock(){
 		if(window.UI.clockSecs == 59){
 			window.UI.clockSecs = 00;
@@ -1111,7 +1117,7 @@ function UiHandle(){
 	}
 	// ******** End DOM Updaters *********
 
-	// ---- begin pagination control toggle ----
+	// ---- begin COMMENT pagination control toggle ----
 	UiHandle.prototype.showNextCommentsButton = function showNextCommentsButton(){
 		document.getElementById("nextPage").style.display = "inline-block";
 	}
@@ -1127,7 +1133,13 @@ function UiHandle(){
 	UiHandle.prototype.hidePrevCommentsButton = function hidePrevCommentsButton(){
 		document.getElementById("prevPage").style.display = "none";
 	}
-	// ---- end pagination control toggle
+	// ---- end COMMENT pagination control toggle
+
+
+	// mock callback function for logging data that would ordinarily hit one of the UI updates
+	UiHandle.prototype. = function updateTest(data){
+		console.log(data);
+	}
 
 } // end UiHandle class def
 
@@ -1147,33 +1159,49 @@ function FCommment(){
 	this.type = "";
 }
 
+function INPUT_TYPE(){
+	this.NONE  = -1;
+	this.PIN = 0;
+	this.COMMENT = 1;
+}
+
 
 /**
 * This is where all the action begins (once content is loaded)
 * @author Josh
 */
 document.addEventListener('DOMContentLoaded',function(){
+	window.DEBUG = false;
+	// are we currently logging GPS data?
+	window.logging = false;
+
+
+	// what type of user content are we taking in
+	window.CURRENT_USER_INPUT_TYPE = -1;
+
+	// dealing with touch ui shit
 	document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
 	document.addEventListener("touchstart", function(){}, true);
 
-	window.DEBUG = false;
-
+	// instansiate the api
 	window.ApiConnector = new ApiConnector();
-	
+	// instansiate the forum
 	window.Comments = new CommentsHandle();
-
+	// instansiate /initialize the UI controls
 	window.UI = new UiHandle();
 	window.UI.init();
+	//	instansiate the loading screen dialog 
 	window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
+	// fire up the GPS logger
 	window.GPS = new GpsHandle();
+	// build out the google map
 	window.MAP = new MapHandle();
 	window.MAP.initMap();
-	window.logging = false;
-
+	// grab our comments, map markers, and heatmap data
 	window.ApiConnector.pullCommentData();
 	window.ApiConnector.pullMarkerData();
 	window.ApiConnector.pullHeatmapData();
-
+	// wait for the user to click the big start/stop button
 	document.getElementById("startButton").addEventListener('mousedown', function(){
 		if(!window.logging){
 			window.UI.toggleClockRun(); 
