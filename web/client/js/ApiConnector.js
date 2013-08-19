@@ -63,6 +63,7 @@ function ApiConnector(){
 
 
 	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
+		console.log(jsonObj);
 		var pinsURI = "/pins";
 		$.ajax({
 			type: "POST",
@@ -431,13 +432,16 @@ function MapHandle(){
 		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.mapTouchUp);
 	}
 
-	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message){
+	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message, lat, lon){
 		// console.log("in addMarker()");
+		console.log("message");
 
 		var pin = new Pin();
 		pin.message = message;
 		pin.type = window.MAP.markerType;
 		alert(pin.type);
+		
+		// heres the issue (bug)
 		// pin.latDegrees = lat;
 		// pin.lonDegrees = lon;
 
@@ -465,6 +469,7 @@ function MapHandle(){
 		// console.log(eventLatLng.latLng);
 		pin.latDegrees = eventLatLng.latLng.jb;
 		pin.lonDegrees = eventLatLng.latLng.kb;
+
 		var serializedPin = JSON.stringify(pin);
 		console.log(serializedPin);
     	window.ApiConnector.pushNewPin(serializedPin);
@@ -916,7 +921,7 @@ function UiHandle(){
 
 		window.MAP.markerType = markerType;
 
-		console.log(window.MAP.markerEvent);
+		// console.log(window.MAP.markerEvent);
 
 		var marker = new google.maps.Marker({
         	position: new google.maps.LatLng(window.MAP.markerEvent.latLng.mb, window.MAP.markerEvent.latLng.nb),
