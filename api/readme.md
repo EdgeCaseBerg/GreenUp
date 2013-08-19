@@ -426,6 +426,9 @@ URL: **/api/debug**
     </tbody>
 </table>
 
+####Example Request
+`http://greenup.xenonapps.com/api/debug`
+
 ####Message Body
 ```
 {
@@ -462,7 +465,16 @@ URL: **/api/debug**
 
 Debug messages can also be deleted by developers through the use of a master key. Or through direct access to the database. This master key should not be stored in a public place.
 
+####Example Request
+`http://greenup.xenonapps.com/api/debug/?origin=6f3d78c8ca1d63645015d6fa2d975902348d585f954efd0e8ecca4f362c697d9&hash=aed60d05a1bd3f7633a6464a7a9b4eab5a9c13a185f47cb651e6b4130ce09dfa`
 
+####Response
+```
+{ 
+ "status" : 200, 
+ "message" : "Successful deletion",
+}
+```
 
 -------------------------------
 
