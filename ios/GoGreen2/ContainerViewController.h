@@ -16,6 +16,10 @@
 #define HOME_VIEW 0
 #define Map_VIEW 1
 #define MESSAGE_VIEW 2
+#define API_PORT 30002
+#define BASE_URL @"localhost"
+//#define BASE_URL @"greenupapp.appspot.com/"
+
 #define HEAT_MAP_URL @"http://localhost:30002/api/heatmap"
 #define COMMENTS_URL @"http://localhost:30002/api/comments"
 
@@ -45,5 +49,6 @@ typedef void (^VoidBlock)(void);
 -(void)hideAllButtHomeView;
 -(void)hideAllButtMapView;
 -(void)hideAllButtMessageView;
+-(char *)getIPFromHost:(NSString *)host;
 
 @end

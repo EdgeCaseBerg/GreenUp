@@ -188,7 +188,7 @@
         [self.gatheredMapPointsQueue addObject:mapPoint];
         
         //Update With Server        
-        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+        //[self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
         [self pushHeatMapDataToServer];
         [self updateHeatMapOverlay];
         
@@ -237,20 +237,26 @@
                                 error:&error];
 
             NSString *jsonString;
-            if (! jsonData) {
+            if (! jsonData)
+            {
                 NSLog(@"Got an error: %@", error);
-            } else {
-                NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            }
+            else
+            {
+                jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
             }
             
             char *payload=[jsonString UTF8String];
             
             //Perform a POST
-            NSString *hostString = [url absoluteString];
-            char *host=[hostString UTF8String];
-            char *request = gh_build_put_query(host, "/api/heatmap", payload);
-            char *charPointer = gh_make_request(request, host, 80);
+            //NSString *hostString = [url absoluteString];
+            //char *host=[hostString UTF8String];
+       
+            char *request = gh_build_put_query([BASE_URL UTF8String], "/api/heatmap", payload);
+            char *charPointer = gh_make_request(request, [BASE_URL UTF8String], "127.0.0.1", API_PORT);
             NSLog(@"response was: %s", charPointer);
+            
+            //always call free
             free(charPointer);
         }
     }
@@ -270,11 +276,14 @@
     NSLog(@"Span-Lat: %f", span.latitudeDelta);
     
     //Perform a GET
-    NSString *hostString = [url absoluteString];
-    char *host=[hostString UTF8String];
-    char * request = gh_build_get_query(host, "/api/heatmap");
-    char *charPointer = gh_make_request(request, host, 80);
+    //NSString *hostString = [url absoluteString];
+    //char *host=[hostString UTF8String];
+   
+    char * request = gh_build_get_query([BASE_URL UTF8String], "/api/heatmap");
+    char *charPointer = gh_make_request(request, [BASE_URL UTF8String], "127.0.0.1", API_PORT);
     NSLog(@"response was: %s", charPointer);
+    
+    //Aways call free
     free(charPointer);
 }
 
