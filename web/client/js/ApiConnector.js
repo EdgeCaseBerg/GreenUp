@@ -433,23 +433,25 @@ function MapHandle(){
 
 	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message){
 		// console.log("in addMarker()");
+
 		var pin = new Pin();
 		pin.message = message;
 		pin.type = window.MAP.markerType;
+		alert(pin.type);
 		// pin.latDegrees = lat;
 		// pin.lonDegrees = lon;
 
 		var iconUrl; 
 		switch(window.MAP.markerType){
-			case "comment":
+			case "general message":
 				pin.type = "general message";
 				iconUrl = "img/icons/orangeCircle.png";
 				break;
-			case "pickup":
+			case "help needed":
 				pin.type = "help needed";
 				iconUrl = "img/icons/blueCircle.png";
 				break;
-			case "trash":
+			case "trash pickup":
 				pin.type = "trash pickup";
 				iconUrl = "img/icons/greenCircle.png";
 				break;
@@ -795,12 +797,14 @@ function UiHandle(){
 		if(window.CURRENT_USER_INPUT_TYPE == window.INPUT_TYPE.COMMENT){
 			window.UI.topSliderToggle();
 			// add marker type selectors
+			alert("comment");
 		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.Comments.commentSubmission("trash pickup")});
 		    document.getElementById("selectComment").addEventListener('mousedown', function(){window.Comments.commentSubmission("general message")});
 		    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.Comments.commentSubmission("help needed")});
 
 		}else{
 			// add marker type selectors
+			alert("marker");
 		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
 		    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
 		    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
@@ -911,7 +915,21 @@ function UiHandle(){
 		}
 
 		window.MAP.markerType = markerType;
+
+		console.log(window.MAP.markerEvent);
+
+		var marker = new google.maps.Marker({
+        	position: new google.maps.LatLng(window.MAP.markerEvent.latLng.mb, window.MAP.markerEvent.latLng.nb),
+        	map: window.MAP.map,
+        	icon: iconUrl
+    	});
+		marker.setVisible(window.UI.isMarkerVisible);
+    	window.MAP.pickupMarkers.push(marker);
+
+
+
 		window.UI.hideMarkerTypeSelect();
+		window.CURRENT_USER_INPUT_TYPE = INPUT_TYPE.MARKER;
 		window.UI.showTextInput();
 		// (bug) here we need to prevent more map touches
 	}
