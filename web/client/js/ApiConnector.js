@@ -13,6 +13,7 @@ function ApiConnector(){
 	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
+
 	// api URLs have been moved into each of the functions using them as per issue 46
 
 	// performs the ajax call to get our data
@@ -165,34 +166,6 @@ function ApiConnector(){
 		}
 
 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
-		// var forumURI = "/comments?type=forum";
-		// var needsURI = "/comments?type=help+needed";
-		// var messagesURI = "/comments?type=general+message";
-		// var trashURI = "/comments?type=trash+pickup";
-
-		console.log("Pulling comment "+commentType+" data from: "+url);
-		// // var urlStr = "";
-		// // var urlStr = url;
-		// // alert(url);
-		// switch(commentType){
-		// 	case "help needed":
-		// 		// urlStr = (url == null) ? BASE+needsURI : url;
-		// 		this.pullApiData(urlStr, "JSON", "GET", window.UI.updateNeeds);
-		// 		break;
-		// 	case "general message":
-		// 		// urlStr =  (url == null) ? BASE+messagesURI : url;
-		// 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateMessages);
-		// 		break;
-		// 	case "trash pickup":
-		// 		// urlStr =  (url == null) ? BASE+trashURI : url;
-		// 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
-		// 		break;
-		// 	default:
-		// 		commentType = "forum";
-		// 		// urlStr =  (url == null) ? BASE+forumURI : url;
-		// 		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
-		// 		break;
-		// }
 	} // end pullCommentData()
 
 	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
@@ -452,9 +425,10 @@ function MapHandle(){
 		  google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
 		  google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
 		  // our comment selector initializers
+
 		  // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
-		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.markerSelectDown);
-		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.markerSelectUp);
+		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.mapTouchDown);
+		  google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.mapTouchUp);
 	}
 
 	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message){
@@ -506,9 +480,6 @@ function MapHandle(){
 			
 		}
 
-// 			var heatmapData = [
-//          	{location: new google.maps.LatLng(44.4758, -73.3125), weight: 101.5}, 
-//          ];
 		console.log("Processed heatmap data:");
 		console.log(heatmapData);
 
@@ -523,10 +494,6 @@ function MapHandle(){
 
 	  		heatmap.setMap(window.MAP.map);
 	  	}
-
-//   function toggleHeatmap() {
-//   heatmap.setMap(heatmap.getMap() ? null : map);
-// }
 	}
 
 	MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon){
@@ -722,7 +689,7 @@ function UiHandle(){
 	this.isNavbarUp = true;
 	this.isTopSliderUp = true;
 
-	this.dialogSliderIsUp = false;
+	this.textInputIsVisible = false;
 
 	this.isClockRunning = false;
 	this.clockHrs = 00;
@@ -761,31 +728,31 @@ function UiHandle(){
 	    		alert("no message entered");
 	    	}else{
 		    	var userComment = document.getElementById("dialogSliderTextarea").value;
-		    	switch(window.UI.commentPurpose){
-		    		case window.UI.MARKER:
+		    	switch(window.CURRENT_USER_INPUT_TYPE){
+		    		case window.INPUT_TYPE.MARKER:
 		    			window.MAP.addMarkerFromUi(document.getElementById("dialogSliderTextarea").value);
-		    			window.UI.dialogSliderDown();
-		    			window.UI.clearDialogSliderInputs();
+		    			window.UI.hideTextInput();
+		    			window.UI.clearTextInput();
 		    			break;
-		    		case window.UI.COMMENT:
+		    		case window.INPUT_TYPE.COMMENT:
 		    			window.Comments.commentSubmission();
-		    			window.UI.dialogSliderDown();
-		    			window.UI.clearDialogSliderInputs();
+		    			window.UI.hideTextInput();
+		    			window.UI.clearTextInput();
 		    			break;
 		    		default:
 		    			alert("no content type");
 		    			break;
 		    	}
 		    	document.getElementById("dialogSliderTextarea").value = ""
-		   		window.UI.dialogSliderDown();
+		   		window.UI.hideTextInput();
 		    }
 	    });
 	    // cancel button
-	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.dialogSliderDown();});		
+	    document.getElementById("dialogCommentCancel").addEventListener('mousedown', function(){window.UI.hideTextInput();});		
 		
 	} // end init
 
-	UiHandle.prototype.clearDialogSliderInputs = function clearDialogSliderInputs(){
+	UiHandle.prototype.clearTextInput = function clearTextInput(){
 		document.getElementById("comment_type").value = "FORUM";
 		document.getElementById("comment_message").value = "";
 		document.getElementById("input_purpose").value = "";
@@ -824,8 +791,8 @@ function UiHandle(){
 	}
 
 	// shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
-	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(purpose){
-		if(purpose == "comment"){
+	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
+		if(window.CURRENT_USER_INPUT_TYPE == window.INPUT_TYPE.COMMENT){
 			window.UI.topSliderToggle();
 			// add marker type selectors
 		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.Comments.commentSubmission("trash pickup")});
@@ -833,7 +800,6 @@ function UiHandle(){
 		    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.Comments.commentSubmission("help needed")});
 
 		}else{
-			window.UI.commentPurpose = window.UI.MARKER;
 			// add marker type selectors
 		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
 		    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
@@ -870,8 +836,8 @@ function UiHandle(){
 			if(window.UI.isMarkerDisplayVisible){
 				window.UI.hideMarkerTypeSelect();
 			}
-			if(window.UI.dialogSliderIsUp){
-				window.UI.dialogSliderDown();
+			if(window.UI.textInputIsVisible){
+				window.UI.hideTextInput();
 			}
 			if(!window.UI.isTopSliderUp){
 				window.UI.topSliderToggle();
@@ -946,14 +912,14 @@ function UiHandle(){
 
 		window.MAP.markerType = markerType;
 		window.UI.hideMarkerTypeSelect();
-		window.UI.dialogSliderUp(null);
+		window.UI.showTextInput();
 		// (bug) here we need to prevent more map touches
 	}
 
 	// text to get user input
-	UiHandle.prototype.dialogSliderUp = function dialogSliderUp(purpose){
-		window.UI.dialogSliderIsUp = true;
-		if(purpose == window.UI.COMMENT){
+	UiHandle.prototype.showTextInput = function showTextInput(){
+		window.UI.textInputIsVisible = true;
+		if(window.CURRENT_USER_INPUT_TYPE == window.INPUT_TYPE.COMMENT){
 			document.getElementById("input_purpose").value == window.UI.COMMENT;
 		}else{
 			google.maps.event.addListener(window.MAP.map, 'mousedown', function(e){
@@ -962,6 +928,8 @@ function UiHandle(){
 			});
 			document.getElementById("input_purpose").value == window.UI.MARKER;
 		}
+
+
 		if(window.UI.isNavbarUp){
 			document.getElementById("dialogSlider").style.top = "72%";
 		}else{
@@ -973,23 +941,27 @@ function UiHandle(){
 	}
 
 	// hide the user text input dialog
-	UiHandle.prototype.dialogSliderDown = function dialogSliderDown(){
-		window.UI.dialogSliderIsUp = false;
+	UiHandle.prototype.hideTextInput = function hideTextInput(){
+		window.UI.textInputIsVisible = false;
 		document.getElementById("dialogSlider").style.top = "86%";
 		document.getElementById("dialogSlider").style.opacity = "0.0";
 	}
 
 	// show the marker type select dialog
-	UiHandle.prototype.markerSelectUp = function markerSelectUp(){
+	UiHandle.prototype.mapTouchUp = function mapTouchUp(){
 		// set the coords of the marker event
-
 	    MOUSEUP_TIME = new Date().getTime() / 1000;
+	    // if it was a short touch
 	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
+	    	// check if the marker select menu is showing and toggle appropriately
 	        if(this.isMarkerDisplayVisible){
+	        	window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.MARKER;
 	        	window.UI.hideMarkerTypeSelect();
 	        }else{
+	        	window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.MARKER;
 	        	window.UI.showMarkerTypeSelect();
 	        }
+
 	        this.MOUSEDOWN_TIME =0;
 	        this.MOUSEDOWN_TIME =0;
 	    }else{
@@ -998,9 +970,10 @@ function UiHandle(){
 	    }
 	}
 
-	UiHandle.prototype.markerSelectDown = function markerSelectDown(event){
+	// track how long the user's finger was toucking to determine click while allowing map to be usable (touch-scroll)
+	UiHandle.prototype.mapTouchDown = function mapTouchDown(event){
 		// set the coords of the marker event
-		if(!window.UI.dialogSliderIsUp){
+		if(!window.UI.textInputIsVisible){
 		    window.MAP.markerEvent = event;
 		    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
 		}
@@ -1012,20 +985,14 @@ function UiHandle(){
 		window.MAP.applyHeatMap(data);
 	}
 
+	// markers coming from the apiconnector comes here to be added to the UI
 	UiHandle.prototype.updateMarker = function updateMarker(data){
 		console.log("marker response: "+data);
 		var dataArr = eval("("+data+")");
-		//	var dataArr = data;
         for(ii=0; ii<dataArr.length; ii++){
-            // var dataA = dataArr[ii].split(",");
             window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
-            // heatmapData.push({location: new google.maps.LatLng(dataArr[ii][0], dataArr[ii][1]), weight: dataArr[ii][2]});
         }
 
-	}
-
-	UiHandle.prototype.updateNeeds = function updateNeeds(data){
-		console.log("UPDATE NEEDS DOES NOTHING");
 	}
 
 	// data is passed from the api connector to here to update the forum.
@@ -1137,7 +1104,7 @@ function UiHandle(){
 
 
 	// mock callback function for logging data that would ordinarily hit one of the UI updates
-	UiHandle.prototype. = function updateTest(data){
+	UiHandle.prototype.updateTest = function updateTest(data){
 		console.log(data);
 	}
 
@@ -1162,6 +1129,7 @@ function FCommment(){
 function INPUT_TYPE(){
 	this.NONE  = -1;
 	this.PIN = 0;
+	this.MARKER = 0;
 	this.COMMENT = 1;
 }
 
@@ -1171,6 +1139,7 @@ function INPUT_TYPE(){
 * @author Josh
 */
 document.addEventListener('DOMContentLoaded',function(){
+	window.INPUT_TYPE = new INPUT_TYPE();
 	window.DEBUG = false;
 	// are we currently logging GPS data?
 	window.logging = false;
