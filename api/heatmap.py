@@ -45,11 +45,11 @@ class Heatmap(webapp2.RequestHandler):
 			except ValueError, v:
 				#Syntactic error
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "latDegrees parameter must be numeric"}')
+				self.response.write('{"status_code" : %i,"Error_Message" : "latDegrees parameter must be numeric"}' % HTTP_REQUEST_SYNTAX_PROBLEM)
 				return
 			except SemanticError, s:
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
-				self.response.write('{"Error_Message" : "%s"}' % s.message)
+				self.response.write('{"status_code" : %i, "Error_Message" : "%s"}' % (HTTP_REQUEST_SEMANTICS_PROBLEM,s.message))
 				return
 		else:
 			latDegrees = None
@@ -65,11 +65,11 @@ class Heatmap(webapp2.RequestHandler):
 				parameters+=1
 			except ValueError, v:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "%s" }' % "lonDegrees parameter must be numeric")
+				self.response.write('{"status_code" : %i, "Error_Message" : "%s" }' % (HTTP_REQUEST_SYNTAX_PROBLEM,"lonDegrees parameter must be numeric"))
 				return
 			except SemanticError, s:
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
-				self.response.write('{ "Error_Message" : "%s" }' % s.message)
+				self.response.write('{"status_code" : %i, "Error_Message" : "%s" }' % (HTTP_REQUEST_SEMANTICS_PROBLEM , s.message))
 				return
 		else:
 			lonDegrees = None
@@ -81,7 +81,7 @@ class Heatmap(webapp2.RequestHandler):
 				parameters += 1
 			except ValueError, e:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "Precision value must be a numeric integer" '  )
+				self.response.write('{"status_code" : %i, "Error_Message" : "Precision value must be a numeric integer" ' % HTTP_REQUEST_SYNTAX_PROBLEM )
 				return
 		else:
 			precision = DEFAULT_ROUNDING_PRECISION		
@@ -91,7 +91,7 @@ class Heatmap(webapp2.RequestHandler):
 		#It'd be great if python had XOR for objects instead of just bitwise ^
 		if (lonOffset and not latOffset) or (latOffset and not lonOffset):
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "%s"}' % "Both lonOffset and latOffset must be present if either is used")
+			self.response.write('{"status_code" : %i, "Error_Message" : "%s"}' % (HTTP_REQUEST_SEMANTICS_PROBLEM ,"Both lonOffset and latOffset must be present if either is used"))
 			return
 
 		#the choice of lon is arbitrary, either lat or lon offset would work here		
@@ -103,7 +103,7 @@ class Heatmap(webapp2.RequestHandler):
 				#We could check to see if the offsets cause us to go out of range for our queries, but really that's unneccesary and would cause unneccesary calculation on the clientside to deal making sure they're within range.
 			except ValueError, e:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "Offsets defined must both be integers" }')
+				self.response.write('{"status_code" : %i, "Error_Message" : "Offsets defined must both be integers" }' % HTTP_REQUEST_SYNTAX_PROBLEM)
 				return
 		else:
 			#default
@@ -126,7 +126,7 @@ class Heatmap(webapp2.RequestHandler):
 		except Exception, e:
 			#The request body is malformed. 
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM,"")
-			self.response.write('{"Error_Message" : "Request body is malformed"}')
+			self.response.write('{"status_code" : %i, "Error_Message" : "Request body is malformed"}' % HTTP_REQUEST_SYNTAX_PROBLEM)
 			#Don't allow execution to proceed any further than this
 			return
 		info = json.loads(self.request.body)
@@ -142,7 +142,7 @@ class Heatmap(webapp2.RequestHandler):
 			except Exception, e:
 				#Request does not have proper keys
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM,"")
-				self.response.write('{"Error_Message" : "Required keys not present in request"}')
+				self.response.write('{"status_code" : %i, "Error_Message" : "Required keys not present in request"}' % HTTP_REQUEST_SYNTAX_PROBLEM)
 				return
 			
 
@@ -153,7 +153,7 @@ class Heatmap(webapp2.RequestHandler):
 
 			if latDegrees is None or lonDegrees is None or secondsWorked is None:
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-				self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
+				self.response.write('{"status_code" : %i, "Error_Message" : "Cannot accept null data for required parameters" }' % HTTP_REQUEST_SEMANTICS_PROBLEM)
 				return
 
 			try:
@@ -162,11 +162,11 @@ class Heatmap(webapp2.RequestHandler):
 					raise SemanticError("latDegrees must be within the range of -180.0 and 180.0")
 			except ValueError, e:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "latDegrees parameter must be numeric" }')
+				self.response.write('{"status_code" : %i, "Error_Message" : "latDegrees parameter must be numeric" }' % HTTP_REQUEST_SYNTAX_PROBLEM)
 				return
 			except SemanticError, s:
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-				self.response.write('{"Error_Message" : "%s" } ' % s.message)
+				self.response.write('{"status_code" : %i, "Error_Message" : "%s" } ' % (HTTP_REQUEST_SEMANTICS_PROBLEM,s.message))
 				return
 
 			try:
@@ -175,11 +175,11 @@ class Heatmap(webapp2.RequestHandler):
 					raise SemanticError("Longitude degrees must be within the range of -90 to 90 degree")
 			except ValueError, e:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "lonDegrees parameter must be numeric" }')
+				self.response.write('{"status_code" : %i, "Error_Message" : "lonDegrees parameter must be numeric" }' % HTTP_REQUEST_SYNTAX_PROBLEM)
 				return
 			except SemanticError, s:
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-				self.response.write('{"Error_Message" : "%s"  }' % s.message)
+				self.response.write('{"status_code" : %i,"Error_Message" : "%s"  }' % (HTTP_REQUEST_SEMANTICS_PROBLEM,s.message))
 				return
 
 			try:
@@ -188,11 +188,11 @@ class Heatmap(webapp2.RequestHandler):
 					raise SemanticError("Seconds worked must be a non negative unsigned integer value")
 			except ValueError, e:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "Seconds worked must be an unsigned integer value" }')
+				self.response.write('{"status_code" : %i, "Error_Message" : "Seconds worked must be an unsigned integer value" }' % HTTP_REQUEST_SYNTAX_PROBLEM)
 				return
 			except SemanticError, s:
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-				self.response.write('{"Error_Message" : "%s"  }' % s.message)
+				self.response.write('{"status_code" : %i, "Error_Message" : "%s"  }' % (HTTP_REQUEST_SEMANTICS_PROBLEM,s.message))
 				return
 
 			#All required parameters are here and validated.
@@ -210,7 +210,7 @@ class Heatmap(webapp2.RequestHandler):
 		layer.updateHeatmap(points)
 
 		self.response.set_status(HTTP_OK)
-		self.response.write('{"status": %i, "message" : "Successful submit" }' % api.HTTP_OK)
+		self.response.write('{"status_code": %i, "message" : "Successful submit" }' % HTTP_OK)
 
 	def post(self):
 		return self.put()

@@ -93,7 +93,7 @@ def validateCommentsPOSTRequest(comments_response_to_post):
 	return True
 
 def validateHeatmapGETRequest(heatmap_response_to_get):
-	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked']
+	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked','status_code']
 	for gridzone in heatmap_response_to_get:
 		for key,value in gridzone.iteritems():
 			assert key in heatmap_response_keys
@@ -101,7 +101,7 @@ def validateHeatmapGETRequest(heatmap_response_to_get):
 	return True
 
 def validateHeatmapGETRawFalseRequest(heatmap_response_to_get):
-	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked']
+	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked','status_code']
 	for gridzone in heatmap_response_to_get:
 		for key,value in gridzone.iteritems():
 			assert key in heatmap_response_keys
@@ -125,9 +125,9 @@ def validateHeatmapGETRawTrueRequest(heatmap_response_to_get):
 
 def validateHeatmapPUTRequest(heatmap_response_to_put):
 	assert heatmap_response_to_put is not None
-	assert 'status' in heatmap_response_to_put
+	assert 'status_code' in heatmap_response_to_put
 	assert 'message' in heatmap_response_to_put
-	assert heatmap_response_to_put['status'] == 200
+	assert heatmap_response_to_put['status_code'] == 200
 	assert heatmap_response_to_put['message'] == "Successful submit"
 	return True
 
