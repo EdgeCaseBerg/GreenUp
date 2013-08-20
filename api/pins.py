@@ -96,7 +96,6 @@ class Pins(webapp2.RequestHandler):
 		#Return data
 		response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset)
 		#By this point we have a response and we simply have to send it back
-		logging.info(response)
 		self.response.set_status(HTTP_OK)
 		self.response.write(json.dumps({'status_code' : HTTP_OK, 'pins' : response}))
 
