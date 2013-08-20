@@ -93,32 +93,51 @@ def validateCommentsPOSTRequest(comments_response_to_post):
 	return True
 
 def validateHeatmapGETRequest(heatmap_response_to_get):
-	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked','status_code']
-	for gridzone in heatmap_response_to_get:
-		for key,value in gridzone.iteritems():
-			assert key in heatmap_response_keys
-			assert isinstance(value,numbers.Number)
+	heatmap_response_keys = ['grid','status_code']
+	heatmap_response_inner_keys = ['latDegrees','lonDegrees','secondsWorked']
+	for out_key,out_val in heatmap_response_to_get.iteritems():
+		assert out_key in heatmap_response_keys
+		if out_key == "status_code":
+			assert out_val == 200
+		if out_key == "grid":
+			for gridzone in heatmap_response_to_get['grid']:
+				for key,value in gridzone.iteritems():
+					assert key in heatmap_response_inner_keys
+					assert isinstance(value,numbers.Number)
 	return True
 
 def validateHeatmapGETRawFalseRequest(heatmap_response_to_get):
-	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked','status_code']
-	for gridzone in heatmap_response_to_get:
-		for key,value in gridzone.iteritems():
-			assert key in heatmap_response_keys
-			assert isinstance(value,numbers.Number)
-			if key=="secondsWorked":
-				assert value <= 1.0
+	heatmap_response_keys = ['grid','status_code']
+	heatmap_response_inner_keys = ['latDegrees','lonDegrees','secondsWorked']
+	for out_key,out_val in heatmap_response_to_get.iteritems():
+		if out_key == "grid":
+			for gridzone in out_val:
+				for key,value in gridzone.iteritems():
+					assert key in heatmap_response_inner_keys
+					assert isinstance(value,numbers.Number)
+					if key=="secondsWorked":
+						assert value <= 1.0
+		if out_key == "status_code":
+			assert out_val == 200
 	return True
 
 def validateHeatmapGETRawTrueRequest(heatmap_response_to_get):
+	heatmap_response_keys = ['grid','status_code']
+	heatmap_response_inner_keys = ['latDegrees','lonDegrees','secondsWorked']
 	#Assert validity of syntax
 	valid = False
 	if(validateHeatmapGETRequest(heatmap_response_to_get)):
-		for gridzone in heatmap_response_to_get:
-			for key,value in gridzone.iteritems():
-				#We have to assert that all the values are floats for secondsWorked and they're not all under 1,
-				if key=="secondsWorked":
-					valid = valid or value > 1.0
+		for out_key,out_val in heatmap_response_to_get.iteritems():
+			assert out_key in heatmap_response_keys
+			if out_key == "grid":
+				for gridzone in out_val:
+					for key,value in gridzone.iteritems():
+						assert key in heatmap_response_inner_keys
+						#We have to assert that all the values are floats for secondsWorked and they're not all under 1,
+						if key=="secondsWorked":
+							valid = valid or value > 1.0
+			if out_key == "status_code":
+				assert out_val == 200
 	assert valid == True
 	return True
 

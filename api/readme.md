@@ -209,18 +209,21 @@ If the request only specifies the offset then the API will return an error messa
 
 ####Response
 ```
-[
-    {
-        "latDegrees" : 24.53, 
-        "lonDegrees" : 43.2, 
-        "secondsWorked" : 120
-    },
-    {
-        "latDegrees" : 25.13, 
-        "lonDegrees" : 41.2, 
-        "secondsWorked" : 133
-    }
-]
+{
+    "status_code" : 200,
+    "grid" : [
+        {
+            "latDegrees" : 24.53, 
+            "lonDegrees" : 43.2, 
+            "secondsWorked" : 120
+        },
+        {
+            "latDegrees" : 25.13, 
+            "lonDegrees" : 41.2, 
+            "secondsWorked" : 133
+        }
+    ]
+}
 ```
 
 ---------------------------

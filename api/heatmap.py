@@ -117,7 +117,7 @@ class Heatmap(webapp2.RequestHandler):
 
 		#By this point we have a response and we simply have to send it back
 		self.response.set_status(HTTP_OK)
-		self.response.write(json.dumps(response))	
+		self.response.write(json.dumps({'status_code' : HTTP_OK, 'grid' : response}))	
 
 	def put(self):
 		#Check for the existence of required parameters
