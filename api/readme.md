@@ -306,20 +306,23 @@ If no latitude or longitude are specified then all pins will be returned.
 
 ####Response
 ```
-[
-    {
-        "latDegrees" : 24.53, 
-        "lonDegrees" : 43.2, 
-        "type" : "general message", 
-        "message", "I need help with the trash on Colchester ave"
-    },
-    {
-        "latDegrees" : 25.13, 
-        "lonDegrees" : 41.2, 
-        "type" : "help needed", 
-        "message", "There's a lot of trash on Pearl St, I could use some help!"
-    }
-]
+{
+    "status_code" : 200,
+    "pins" : [
+        {
+            "latDegrees" : 24.53, 
+            "lonDegrees" : 43.2, 
+            "type" : "general message", 
+            "message", "I need help with the trash on Colchester ave"
+        },
+        {
+            "latDegrees" : 25.13, 
+            "lonDegrees" : 41.2, 
+            "type" : "help needed", 
+            "message", "There's a lot of trash on Pearl St, I could use some help!"
+        }
+    ]
+}
 ```
 
 

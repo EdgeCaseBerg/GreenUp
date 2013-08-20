@@ -151,22 +151,28 @@ def validateHeatmapPUTRequest(heatmap_response_to_put):
 	return True
 
 def validatePINSGetRequest(pins_response_to_get):
-	pins_response_keys = ['latDegrees','lonDegrees','type','message']
+	pins_response_keys = ['status_code', 'pins']
+	pins_response_inner_keys = ['latDegrees','lonDegrees','type','message']
 	assert pins_response_to_get is not None
-	for pin in pins_response_to_get:
-		for key,value in pin.iteritems():
-			assert key in pins_response_keys
-			if key in ['latDegrees','lonDegrees']:
-				assert isinstance(value,numbers.Number)
-			else:
-				assert isinstance(value,basestring)
+	for out_key,out_val in pins_response_to_get.iteritems():
+		assert out_key in pins_response_keys
+		if out_key == "status_code":
+			assert out_val == 200
+		if out_key == "pins":
+			for pin in out_val:
+				for key,value in pin.iteritems():
+					assert key in pins_response_inner_keys
+					if key in ['latDegrees','lonDegrees']:
+						assert isinstance(value,numbers.Number)
+					else:
+						assert isinstance(value,basestring)
 	return True
 
 def validatePinsPOSTRequest(pins_response_to_post):
 	assert pins_response_to_post is not None
-	assert 'status' in pins_response_to_post
+	assert 'status_code' in pins_response_to_post
 	assert 'message' in pins_response_to_post
-	assert pins_response_to_post['status'] == 200
+	assert pins_response_to_post['status_code'] == 200
 	assert pins_response_to_post['message'] == "Successful submit"
 	return True
 
@@ -285,7 +291,11 @@ if __name__ == "__main__":
 	assert validateHeatmapGETRawFalseRequest(tester.getJSON()) is True
 
 	#PUT requests to server checking
-	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 32, "secondsWorked" : 25}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_OK
+	assert validateHeatmapPUTRequest(tester.getJSON()) is True
+
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 12, "secondsWorked" : 45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_OK
 	assert validateHeatmapPUTRequest(tester.getJSON()) is True
 
