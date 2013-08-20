@@ -68,7 +68,7 @@ class Spider(object):
 
 def validateCommentsGETRequest(comments_response_to_get):
 	#define filters
-	comment_response_keys = ['comments','page']
+	comment_response_keys = ['comments','page','status_code']
 	comment_response_inner_keys = {'comments' : ['type','message','timestamp','pin','id'],
 									'page' : ['next','previous']
 	}
@@ -86,9 +86,9 @@ def validateCommentsGETRequest(comments_response_to_get):
 
 def validateCommentsPOSTRequest(comments_response_to_post):
 	assert comments_response_to_post is not None
-	assert 'status' in comments_response_to_post
+	assert 'status_code' in comments_response_to_post
 	assert 'message' in comments_response_to_post
-	assert comments_response_to_post['status'] == 200
+	assert comments_response_to_post['status_code'] == 200
 	assert comments_response_to_post['message'] == "Successfuly submitted new comment"
 	return True
 
