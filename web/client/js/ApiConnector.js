@@ -600,6 +600,7 @@ function MapHandle(){
 
 function CommentsHandle(){
 	this.scrollPosition = 0;
+	this.commentType;
 
 	CommentsHandle.prototype.init = function init(){
 		// add the listener to our add comments button
@@ -666,10 +667,11 @@ function CommentsHandle(){
 	} // end toggleComments()
 
 	//  The user presses the submit button on the comment submission screen
-	CommentsHandle.prototype.commentSubmission = function commentSubmission(commentType){
+	CommentsHandle.prototype.commentSubmission = function commentSubmission(commentType, commentMessage){
+
 
 		var comment = new FCommment();
-		comment.message = document.getElementById("dialogSliderTextarea").value;
+		comment.message = commentMessage;
 		comment.pin = null;
 		// comment.type = document.getElementById("comment_type").value;
 		comment.type = commentType;
@@ -745,7 +747,8 @@ function UiHandle(){
 		    			window.UI.clearTextInput();
 		    			break;
 		    		case window.INPUT_TYPE.COMMENT:
-		    			window.Comments.commentSubmission();
+
+		    			window.Comments.commentSubmission(window.Comments.commentType, userComment);
 		    			window.UI.hideTextInput();
 		    			window.UI.clearTextInput();
 		    			break;
@@ -753,7 +756,7 @@ function UiHandle(){
 		    			alert("no content type");
 		    			break;
 		    	}
-		    	document.getElementById("dialogSliderTextarea").value = ""
+		    	document.getElementById("dialogSliderTextarea").value = "";
 		   		window.UI.hideTextInput();
 		    }
 	    });
@@ -801,18 +804,35 @@ function UiHandle(){
 	}
 
 	// shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
-	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
+	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(type){
+		if(type = "comment"){
+			window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.COMMENT;	
+		}
 		if(window.CURRENT_USER_INPUT_TYPE == window.INPUT_TYPE.COMMENT){
 			window.UI.topSliderToggle();
 			// add marker type selectors
-			alert("comment");
-		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.Comments.commentSubmission("trash pickup")});
-		    document.getElementById("selectComment").addEventListener('mousedown', function(){window.Comments.commentSubmission("general message")});
-		    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.Comments.commentSubmission("help needed")});
+			// alert("comment");
+			document.getElementById("markerTypeDialog").className = "markerTypePanel3";
+		    document.getElementById("selectPickup").addEventListener('mousedown', function(){
+		    	window.Comments.commentType = "trash pickup";
+		    	window.UI.hideMarkerTypeSelect();
+		    	window.UI.showTextInput();
+		    });
+		    document.getElementById("selectComment").addEventListener('mousedown', function(){
+		    	window.Comments.commentType = "general message";
+		    	window.UI.hideMarkerTypeSelect();
+		    	window.UI.showTextInput();
+		    });
+		    document.getElementById("selectTrash").addEventListener('mousedown', function(){
+		    	window.Comments.commentType = "help needed";
+		    	window.UI.hideMarkerTypeSelect();
+		    	window.UI.showTextInput();
+		    });
 
 		}else{
 			// add marker type selectors
-			alert("marker");
+			// alert("marker");
+			document.getElementById("markerTypeDialog").className = "markerTypePanel2";
 		    document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
 		    document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
 		    document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
@@ -945,6 +965,8 @@ function UiHandle(){
 	// text to get user input
 	UiHandle.prototype.showTextInput = function showTextInput(){
 		window.UI.textInputIsVisible = true;
+		console.log("window.CURRENT_USER_INPUT_TYPE: "+window.CURRENT_USER_INPUT_TYPE);
+		console.log("window.UI.COMMENT: "+window.UI.COMMENT);
 		if(window.CURRENT_USER_INPUT_TYPE == window.INPUT_TYPE.COMMENT){
 			document.getElementById("input_purpose").value == window.UI.COMMENT;
 		}else{
