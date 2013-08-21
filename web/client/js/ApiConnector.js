@@ -1157,6 +1157,13 @@ function INPUT_TYPE(){
 	this.COMMENT = 1;
 }
 
+// logger for reporting problems to the server
+function ClientLogger(){
+	ClientLogger.prototype.logEvent = function logEvent(eventString){
+
+	}
+}
+
 
 /**
 * This is where all the action begins (once content is loaded)
