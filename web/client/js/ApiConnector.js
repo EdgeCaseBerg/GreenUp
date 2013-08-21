@@ -439,7 +439,7 @@ function MapHandle(){
 		var pin = new Pin();
 		pin.message = message;
 		pin.type = window.MAP.markerType;
-		alert(pin.type);
+		// alert(pin.type);
 		
 		// heres the issue (bug)
 		// pin.latDegrees = lat;
@@ -466,9 +466,10 @@ function MapHandle(){
 		}
 	
 		var eventLatLng = window.MAP.markerEvent;
-		// console.log(eventLatLng.latLng);
-		pin.latDegrees = eventLatLng.latLng.jb;
-		pin.lonDegrees = eventLatLng.latLng.kb;
+		console.log(eventLatLng.latLng);
+		pin.latDegrees = eventLatLng.latLng.mb;
+		pin.lonDegrees = eventLatLng.latLng.nb;
+		alert(pin.latDegrees);
 
 		var serializedPin = JSON.stringify(pin);
 		console.log(serializedPin);
