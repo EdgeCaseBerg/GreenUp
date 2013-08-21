@@ -62,6 +62,7 @@ URL: **/api**
 ####Response:
 ```no-highlight
 {
+    "status_code" : 200,
     "version" : 1.00,
     "Credit" : "Powered by Xenon Apps",
 }
@@ -96,6 +97,7 @@ No type specified will return all comments.
 ####Response:
 ```no-highlight
 {
+    "status_code" : 200,
     "comments" : [
         { 
             "type" : "trash pickup", 
@@ -171,7 +173,7 @@ If the post data is malformed, the server will return a `400 bad request` respon
 ####Response:
 ```
 { 
- "status" : 200, 
+ "status_code" : 200, 
  "message" : "Succesfully submited new comment",
 }
 ```
@@ -270,7 +272,7 @@ If the request is malformed the server will return an error code of `400 bad req
 ####Response
 ```
 { 
- "status" : 200, 
+ "status_code" : 200, 
  "message" : "Successful submit",
 }
 ```
@@ -363,7 +365,7 @@ URL: **/api/pins**
 ####Response
 ```
 { 
- "status" : 200, 
+ "status_code" : 200, 
  "message" : "Successful submit",
 }
 ```
