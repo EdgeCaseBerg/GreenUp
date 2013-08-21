@@ -76,7 +76,7 @@ function ApiConnector(){
 			success: function(data){
 				console.log("INFO: Pin successfully sent");
 				//Becuase of the datastore's eventual consistency you must wait a brief moment for new data to be available.
-				setTimeout(function(){window.ApiConnector.pullMarkerData();},150);
+				setTimeout(function(){window.ApiConnector.pullMarkerData();},1500);
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -84,29 +84,30 @@ function ApiConnector(){
 					case 500:
 						// internal server error
 						// consider leaving app
-						console.log("Error: api response = 500");
+						window.LOGGER.logEvent("Error: api response = 500", "ApiConnector: pushNewPin()");
+
 						break;
 					case 503:
-						console.log("Service Unavailable");
+						window.LOGGER.logEvent("Service Unavailable");
 						break;
 
 					case 404:
 						// not found, stop trying
 						// consider leaving app
-						console.log('Error: api response = 404');
+						window.LOGGER.logEvent('Error: api response = 404', "ApiConnector: pushNewPin()");
 						break;
 					case 400:
 						// bad request
-						console.log("Error: api response = 400");
+						window.LOGGER.logEvent("Error: api response = 400", "ApiConnector: pushNewPin()");
 						break;
 					case 422:
-						console.log("Error: api response = 422");
+						window.LOGGER.logEvent("Error: api response = 422", "ApiConnector: pushNewPin()");
 						break;
 					case 200:
 						console.log("Request successful");
 						break;
 					default:
-						// alert("Error Contacting API: "+xhr.status);
+						window.LOGGER.logEvent("Unknown Error Code", "ApiConnector: pushNewPin()");
 						break;
 				}
 			}
@@ -1159,8 +1160,8 @@ function INPUT_TYPE(){
 
 // logger for reporting problems to the server
 function ClientLogger(){
-	ClientLogger.prototype.logEvent = function logEvent(eventString){
-
+	ClientLogger.prototype.logEvent = function logEvent(eventString, methodNameString){
+		console.log(methodNameString, eventString);
 	}
 }
 
@@ -1170,6 +1171,7 @@ function ClientLogger(){
 * @author Josh
 */
 document.addEventListener('DOMContentLoaded',function(){
+	window.LOGGER = new ClientLogger();
 	window.INPUT_TYPE = new INPUT_TYPE();
 	window.DEBUG = false;
 	// are we currently logging GPS data?
