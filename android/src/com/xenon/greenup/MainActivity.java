@@ -16,8 +16,13 @@
 
 package com.xenon.greenup;
 
+import java.util.ArrayList;
+
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -39,13 +44,7 @@ import com.xenon.greenup.api.HeatmapPoint;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
-     * three primary sections of the app. We use a {@link android.support.v4.app.FragmentPagerAdapter}
-     * derivative, which will keep every loaded fragment in memory. If this becomes too memory
-     * intensive, it may be best to switch to a {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    AppSectionsPagerAdapter _AppSectionsPagerAdapter;
+    TabsAdapter mTabsAdapter;
 
     /**
      * The {@link ViewPager} that will display the three primary sections of the app, one at a
@@ -98,7 +97,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	
     	tab.setIcon(getActiveIcon(iconToActivate));
     	//Set the other tabs to inactive
-    	for(int i=0; i < this._AppSectionsPagerAdapter.getCount(); i++){
+    	for(int i=0; i <  3; i++){
     		if(i != iconToActivate){
     			actionBar.getTabAt(i).setIcon(getRegularIcon(i));
     		}
@@ -110,9 +109,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Create the adapter that will return a fragment for each of the three primary sections of the app.
-        _AppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
@@ -133,7 +129,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
         _ViewPager = (ViewPager) findViewById(R.id.pager);
-        _ViewPager.setAdapter(_AppSectionsPagerAdapter);
+        _ViewPager.setAdapter(mTabsAdapter);
         _ViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -145,8 +141,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             }
         });
 
+        mTabsAdapter = new TabsAdapter(this, _ViewPager);
+        
         // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < _AppSectionsPagerAdapter.getCount(); i++) {
+        for (int i = 0; i <  3; i++) {
             // Create a tab with text corresponding to the page title defined by the adapter.
             // Also specify this Activity object, which implements the TabListener interface, as the
             // listener for when this tab is selected.
@@ -156,6 +154,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         	tabToAdd.setIcon(getRegularIcon(i));
     
             actionBar.addTab(tabToAdd);
+            mTabsAdapter.addTab(tabToAdd,Fragment.class, null);
             
         }
         //Set the home page as active since we'll start there:
@@ -181,66 +180,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
-     * sections of the app.
-     */
-    public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public AppSectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-        
-        /*
-         * @see android.support.v4.app.FragmentPagerAdapter#getItem(int)
-         * 
-         * This is where the heavy lifting is done for the Swipe navigation. 
-         * The case statement builds A fragment and gives it a navigation ID.
-         * That ID is its place in the navigation from left to right
-         * 
-         * For now, we are just displaying 3 dummy fragments.
-         * These will be replaced with the Section fragments defined below
-         * 
-         */
-        @Override
-        public Fragment getItem(int i)
-        { 
-        	Log.i("switch",""+i);
-        	switch (i) {
-            case 0:
-        		//TODO: Launch HomeSectionFragment
-        		Fragment home = new HomeSectionFragment();
-        		return home;
-            case 1:
-        		//TODO: Launch MapSectionFragment
-        		Fragment map = new MapSectionFragment();
-        		return map;
-        	case 2:
-        		//TODO: Launch FeedSectionFragment
-        		Fragment feed = new FeedSectionFragment();
-        		return feed;
-        	default:
-                // The other sections of the app are dummy placeholders.
-                Fragment fragment = new DummySectionFragment();
-                Bundle args = new Bundle();
-                args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
-                fragment.setArguments(args);
-                return fragment;
-        	}
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Section " + (position + 1);
-        }
-    }
-    
 
     /**
      * A dummy fragment representing a section of the app, but that simply displays dummy text.
@@ -270,5 +209,99 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
     }
     
+    public static class TabsAdapter extends FragmentPagerAdapter
+    implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+private final Context mContext;
+private final ActionBar mActionBar;
+private final ViewPager mViewPager;
+private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+
+static final class TabInfo {
+    private final Class<?> clss;
+    private final Bundle args;
+
+    TabInfo(Class<?> _class, Bundle _args) {
+        clss = _class;
+        args = _args;
+    }
+}
+
+public TabsAdapter(FragmentActivity activity, ViewPager pager) {
+    super(activity.getSupportFragmentManager());
+    mContext = activity;
+    mActionBar = activity.getActionBar();
+    mViewPager = pager;
+    mViewPager.setAdapter(this);
+    mViewPager.setOnPageChangeListener(this);
+}
+
+public void addTab(ActionBar.Tab tab, Class<?> clss, Bundle args) {
+    TabInfo info = new TabInfo(clss, args);
+    tab.setTag(info);
+    tab.setTabListener(this);
+    mTabs.add(info);
+    mActionBar.addTab(tab);
+    notifyDataSetChanged();
+}
+
+@Override
+public int getCount() {
+    return mTabs.size();
+}
+
+@Override
+public Fragment getItem(int position) {
+    TabInfo info = mTabs.get(position);
+    switch (position) {
+    case 0:
+		//TODO: Launch HomeSectionFragment
+		Fragment home = new HomeSectionFragment();
+		return home;
+    case 1:
+		//TODO: Launch MapSectionFragment
+		Fragment map = new MapSectionFragment();
+		return map;
+	case 2:
+		//TODO: Launch FeedSectionFragment
+		//Fragment feed = new FeedSectionFragment();
+	    return Fragment.instantiate(mContext, FeedSectionFragment.class.getName(), info.args);
+	default:
+        // The other sections of the app are dummy placeholders.
+	}
+    return Fragment.instantiate(mContext, info.clss.getName(), info.args);
+}
+
+@Override
+public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+}
+
+@Override
+public void onPageSelected(int position) {
+    mActionBar.setSelectedNavigationItem(position);
+}
+
+@Override
+public void onPageScrollStateChanged(int state) {
+}
+
+@Override
+public void onTabSelected(Tab tab, FragmentTransaction ft) {
+    Object tag = tab.getTag();
+    for (int i=0; i<mTabs.size(); i++) {
+        if (mTabs.get(i) == tag) {
+            mViewPager.setCurrentItem(i);
+        }
+    }
     
+}
+
+@Override
+public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+}
+
+@Override
+public void onTabReselected(Tab tab, FragmentTransaction ft) {
+}
+    
+    }
 }
