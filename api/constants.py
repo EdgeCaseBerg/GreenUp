@@ -15,8 +15,11 @@ DEFAULT_ROUNDING_PRECISION = 6
 PIN_TYPES = ('GENERAL MESSAGE', 'HELP NEEDED', 'TRASH PICKUP')
 COMMENT_TYPES = ('FORUM', 'GENERAL MESSAGE','','HELP NEEDED', 'TRASH PICKUP')
 COMMENTS_RESOURCE_PATH = "/comments"
+DEBUG_RESOURCE_PATH = "/debug"
 
-
+""" String format of error messages """
+ERROR_STR = '{"Error_Message" : "%s"}'
+SINCE_TIME_FORMAT = "%Y-%m-%d-%H:%M"
 
 """ Error to throw on a sematic error in a request """
 class SemanticError(Exception):

@@ -378,8 +378,8 @@ URL: **/api/debug**
         <tr><th>name</th><th>type</th><th>description</th></tr>
     </thead>
     <tbody>
-        <tr><td>since</td><td>timestamp</td><td>All messages retrieved will have a timestamp greater than this value</td></tr>
-        <tr><td>hash</td><td>String</td><td>Used to get a single message that has the same hash value.</td></tr>
+        <tr><td>since</td><td>timestamp</td><td>All messages retrieved will have a timestamp greater than this value. Should be in the format of: "YYYY-mm-dd-HH:MM" in military time for "HH:MM"</td></tr>
+        <tr><td>hash</td><td>String</td><td>Used to get a single message that has the same hash value. Cannot be used in conjunction with page</td></tr>
         <tr><td>page</td><td>unsigned Integer</td><td>Based on [RFC 5005], for use with pagination, a request for a page that does not exist will result in no debug messages being returned. A non-integer value for this parameter will result in a 422 HTTP status code. Paging begins at 1.</td></tr>
     </tbody>
 </table>
@@ -395,13 +395,13 @@ URL: **/api/debug**
         {
             "message" : "Null pointer exception on line 42 in badcontroller.java",
             "stackTrace" : " stack trace: ..."
-            "timestamp" : "2013-05-08 00:00:01",
+            "timestamp" : "2013-05-08-00:00",
             "hash" : "aed60d05a1bd3f7633a6464a7a9b4eab5a9c13a185f47cb651e6b4130ce09dfa"
         },
         {
             "message" : "Problem resolving up address of server. stack trace: ...",
             "stackTrace" : " stack trace: ..."
-            "timestamp" : "2014-03-11 00:00:01",
+            "timestamp" : "2014-03-11-15:11",
             "hash" : "6f3d78c8ca1d63645015d6fa2d975902348d585f954efd0e8ecca4f362c697d9"  
         }
     ]
@@ -739,6 +739,21 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
     </thead>
     <tr>
         <td colspan="3" style="text-align: center;">GET Requests</td>
+    </tr>
+    <tr>
+        <td>422</td>
+        <td>Page and hash parameters are mutually exclusive</td>
+        <td>You can only send either hash or page as a parameter to the end point. Not both at the same time.</td>
+    </tr>
+    <tr>
+        <td>422</td>
+        <td>Non-integer page value not allowed</td>
+        <td>The value given or page was not an integer</td>
+    </tr>
+    <tr>
+        <td>400</td>
+        <td>The since datetime format could not be parsed. Please use YYYY-mm-dd-HH:MM with military time.</td>
+        <td>The since parameter sent in the query string was not a valid timestamp. You must use the format specified in the error message. An example would be: "2013-08-21-15:30"</td>
     </tr>
     <tbody>
         <tr>
