@@ -737,27 +737,24 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
     <thead>
         <tr><th>Code</th><th>Message</th><th>Causes</th></tr>
     </thead>
-    <tr>
-        <td colspan="3" style="text-align: center;">GET Requests</td>
-    </tr>
-    <tr>
-        <td>422</td>
-        <td>Page and hash parameters are mutually exclusive</td>
-        <td>You can only send either hash or page as a parameter to the end point. Not both at the same time.</td>
-    </tr>
-    <tr>
-        <td>422</td>
-        <td>Non-integer page value not allowed</td>
-        <td>The value given or page was not an integer</td>
-    </tr>
-    <tr>
-        <td>400</td>
-        <td>The since datetime format could not be parsed. Please use YYYY-mm-dd-HH:MM with military time.</td>
-        <td>The since parameter sent in the query string was not a valid timestamp. You must use the format specified in the error message. An example would be: "2013-08-21-15:30"</td>
-    </tr>
     <tbody>
         <tr>
-            <td colspan="3">TO DO</td>
+            <td colspan="3" style="text-align: center;">GET Requests</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>Page and hash parameters are mutually exclusive</td>
+            <td>You can only send either hash or page as a parameter to the end point. Not both at the same time.</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>Non-integer page value not allowed</td>
+            <td>The value given or page was not an integer</td>
+        </tr>
+        <tr>
+            <td>400</td>
+            <td>The since datetime format could not be parsed. Please use YYYY-mm-dd-HH:MM with military time.</td>
+            <td>The since parameter sent in the query string was not a valid timestamp. You must use the format specified in the error message. An example would be: "2013-08-21-15:30"</td>
         </tr>
     </tbody>
     <tr>
@@ -765,7 +762,29 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
     </tr>
     <tbody>
         <tr>
-            <td colspan="3">TO DO</td>
+            <td>400</td>
+            <td>Request body is malformed</td>
+            <td>The JSON submitted to the endpoint was invalid</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>Required keys not present in request</td>
+            <td>The required keys specified in the API documentation were not present</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>debug message may not be empty</td>
+            <td>The debug message sent to the server was empty</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>stack trace may not be empty</td>
+            <td>The stack trace sent to the server was empty</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>origin identifier may not be empty</td>
+            <td>The origin argument sent to the server was empty.</td>
         </tr>
     </tbody>
     <tr>

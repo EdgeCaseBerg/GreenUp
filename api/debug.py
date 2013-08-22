@@ -70,7 +70,7 @@ class Debug(webapp2.RequestHandler):
 
 		
 		prevPage = page -1 if page != 1 else 1
-		response={"status_code" : "%s" % status_code, "messages" :  messages "page" : { "next" : "%s%s%s?page=%i&since=%s"% (BASE_URL,CONTEXT_PATH,DEBUG_RESOURCE_PATH,page+1,since.strftime(SINCE_TIME_FORMAT)), "previous" : "%s%s%s?page=%i&since=%s"%(BASE_URL,CONTEXT_PATH,DEBUG_RESOURCE_PATH,prevPage,since.strftime(SINCE_TIME_FORMAT))}}
+		response={"status_code" : "%s" % status_code, "messages" :  messages, "page" : { "next" : "%s%s%s?page=%i&since=%s" % (BASE_URL, CONTEXT_PATH, DEBUG_RESOURCE_PATH, page+1, since.strftime(SINCE_TIME_FORMAT)), "previous" : "%s%s%s?page=%i&since=%s" % (BASE_URL, CONTEXT_PATH, DEBUG_RESOURCE_PATH, prevPage, since.strftime(SINCE_TIME_FORMAT))}}
 
 		#Send out the response
 		self.response.set_status(HTTP_OK,"")
@@ -92,7 +92,9 @@ class Debug(webapp2.RequestHandler):
 
 		#Request is well formed, but does it hold the proper semantic meaning for us? (all keys present)
 		try:
-			info['Error_Message']
+			info['message']
+			info['stackTrace']
+			info['origin']
 		except Exception, e:
 			#The request body lacks proper keys
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
@@ -100,8 +102,30 @@ class Debug(webapp2.RequestHandler):
 			return
 
 		#Do things here
+		message = info['message'] if info['message'] is not None else ""
+		stackTrace = info['stackTrace'] if info['message'] is not None else ""
+		origin = info['origin'] if info['message'] is not None else ""
 
-		self.response.write('{ "status" : %i, "message" : "Successfuly submitted new comment" }' % HTTP_OK)
+		#Validate that there is something to accept here
+		if len(message.strip(" ")) == 0:
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % "debug message may not be empty")
+			return
+
+		if len(stackTrace.strip(" ")) == 0:
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % "stack trace may not be empty")
+			return
+
+		if len(origin.strip(" ")) == 0:
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % "origin identifier may not be empty")
+			return
+
+		#All arguments validated pass off to abstraction handler
+		pass
+
+		self.response.write('{ "status_code" : %i , "message" : "Successfuly submitted new debug report. Thanks!" }' % HTTP_OK)
 
 		
 
