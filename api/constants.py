@@ -1,8 +1,10 @@
 """ Constants for use in response codes declared here """
 HTTP_NOT_IMPLEMENTED = 503
 HTTP_OK = 200
+HTTP_DELETED = 204
 HTTP_REQUEST_SEMANTICS_PROBLEM = 422
 HTTP_REQUEST_SYNTAX_PROBLEM = 400
+HTTP_NOT_FOUND = 404
 
 """ Constants for domain name and fully qualified http urls"""
 BASE_URL = "http://greenupapp.appspot.com"

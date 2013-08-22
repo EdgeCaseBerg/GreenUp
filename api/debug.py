@@ -53,15 +53,14 @@ class Debug(webapp2.RequestHandler):
 		if since is not None and since != "":
 			try:
 				since = datetime.datetime.strptime(since, SINCE_TIME_FORMAT)
-				logging.info(since)
 			except ValueError, ve:
 				#Messed up your time format. syntax error 
-				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
+				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM,"")
 				self.response.write(ERROR_STR % "The since datetime format could not be parsed. Please use YYYY-mm-dd-HH:MM with military time.")
 				return
 		else:
 			#Since is nothing
-			since = ""
+			since = datetime.datetime.now()
 
 
 		#If we've made it this far it means we have a page and possibly a time to filter with
@@ -128,8 +127,8 @@ class Debug(webapp2.RequestHandler):
 		self.response.write('{ "status_code" : %i , "message" : "Successfuly submitted new debug report. Thanks!" }' % HTTP_OK)
 
 	def delete(self):
-		status_code = HTTP_OK
-		self.response.set_status(HTTP_OK)
+		status_code = HTTP_DELETED
+		self.response.set_status(status_code)
 
 		msgHash = self.request.get("hash") 
 		origin  = self.request.get("origin")

@@ -402,7 +402,7 @@ URL: **/api/debug**
             "message" : "Problem resolving up address of server. stack trace: ...",
             "stackTrace" : " stack trace: ..."
             "timestamp" : "2014-03-11-15:11",
-            "hash" : "6f3d78c8ca1d63645015d6fa2d975902348d585f954efd0e8ecca4f362c697d9"  
+            "hash" : "6f3d78c8ca1d63645015d6fa2ld975902348d585f954efd0e8ecca4f362c697d9"  
         }
     ]
 }
@@ -442,7 +442,7 @@ URL: **/api/debug**
 ```
 { 
  "status" : 200, 
- "message" : "Successful submit",
+ "message" : "Successful submit"
 }
 ```
 
@@ -471,7 +471,7 @@ Debug messages can also be deleted by developers through the use of a master key
 ####Response
 ```
 { 
- "status" : 200, 
+ "status" : 204, 
  "message" : "Successful deletion",
 }
 ```
