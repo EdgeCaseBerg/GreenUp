@@ -127,6 +127,33 @@ class Debug(webapp2.RequestHandler):
 
 		self.response.write('{ "status_code" : %i , "message" : "Successfuly submitted new debug report. Thanks!" }' % HTTP_OK)
 
+	def delete(self):
+		status_code = HTTP_OK
+		self.response.set_status(HTTP_OK)
+
+		msgHash = self.request.get("hash") 
+		origin  = self.request.get("origin")
+
+		msgHash = msgHash if msgHash is not None and msgHash != "" else None
+		origin = origin if origin is not None and origin != "" else None
+
+		if msgHash is None or origin is None:
+			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write(ERROR_STR % ('Both hash and origin parameters are required'))
+			return
+
+		#Pass along to data store and get either 404 or 200.
+		#The datastore should return some flag value (like None)
+		#if it can't find the message to delete.
+		#It would be nice to be able to just do something like:
+		#status_code,response = abstractionLayer.functionForDelete(hash,origin)
+		#Then check the status_code to determine what to do
+
+		status_code, response = (status_code,"Successful deletion")
+
+
+		self.response.write('{"status_code" : %i , "message" : %s}' % (status_code,response))
+
 		
 
 application = webapp2.WSGIApplication([

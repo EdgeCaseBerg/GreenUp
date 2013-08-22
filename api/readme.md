@@ -792,7 +792,9 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
     </tr>
     <tbody>
         <tr>
-            <td colspan="3">TO DO</td>
+            <td>400</td>
+            <td>Both hash and origin parameters are required</td>
+            <td>You must send non-empty values for both hash and origin parameters</td>
         </tr>
     </tbody>
 </table>
