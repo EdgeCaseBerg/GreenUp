@@ -470,11 +470,10 @@ Debug messages can also be deleted by developers through the use of a master key
 
 ####Response
 ```
-{ 
- "status" : 204, 
- "message" : "Successful deletion",
-}
+
 ```
+
+Note that by design response code 204 returns no content. So this is the only endpoint that does not follow the pattern of the other endpoints returning json status codes. This endpoint does not return a json object. It is the only one that does so.
 
 -------------------------------
 

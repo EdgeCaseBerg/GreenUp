@@ -128,7 +128,6 @@ class Debug(webapp2.RequestHandler):
 
 	def delete(self):
 		status_code = HTTP_DELETED
-		self.response.set_status(status_code)
 
 		msgHash = self.request.get("hash") 
 		origin  = self.request.get("origin")
@@ -150,8 +149,8 @@ class Debug(webapp2.RequestHandler):
 
 		status_code, response = (status_code,"Successful deletion")
 
-
-		self.response.write('{"status_code" : %i , "message" : %s}' % (status_code,response))
+		self.response.set_status(status_code)
+		self.response.write('{"status_code" : %i , "message" : "%s"}' % (status_code,response))
 
 		
 

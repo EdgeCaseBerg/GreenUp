@@ -43,8 +43,10 @@ class Spider(object):
 				gets = gets + key +"=" + str(value) +"&"
 			request = urllib2.Request(link + gets)
 
+
 		request.add_header('Content-Type', 'application/json')
 		request.get_method = lambda: httpMethod
+
 		self.spiderlink  = opener.open(request)
 
 	def getCode(self):
@@ -68,6 +70,14 @@ class Spider(object):
 				print e
 				print raw
 				pass
+
+	def getRaw(self):
+		if self.spiderlink:
+			raw = ""
+			raw = self.spiderlink.read() 
+			if raw == "":
+				raw = None
+			return raw
 			
 
 
@@ -200,12 +210,7 @@ def validateDebugPOSTRequest(debugs_response_to_post):
 	return True
 
 def validateDebugDELETERequest(debugs_response_to_delete):
-	assert debugs_response_to_delete is not None
-	debug_expected_keys = ['status_code', 'message']
-	for key,val in debugs_response_to_delete.iteritems():
-		assert key in debug_expected_keys
-		if key == "status_code":
-			assert val == HTTP_DELETED
+	assert debugs_response_to_delete is None
 	return True
 
 
@@ -550,14 +555,24 @@ if __name__ == "__main__":
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Test the deletion validations
-	# tester.followLink(endPoints['debug'],withData={'hash' : 'Test message', 'origin' : 'spider-test' },httpMethod="DELETE")
-	# assert tester.getCode() == HTTP_DELETED
-	# assert validateDebugDELETERequest(tester.getJSON()) is True
+	tester.followLink(endPoints['debug'],withData={'hash' : 'Test+message', 'origin' : 'spider-test' },httpMethod="DELETE")
+	assert tester.getCode() == HTTP_DELETED
+	assert validateDebugDELETERequest(tester.getRaw()) is True
 
 	# #test the trying to delete again will give 404
 	# tester.followLink(endPoints['debug'],withData={'hash' : 'Test message', 'origin' : 'spider-test' },httpMethod="DELETE")
 	# assert tester.getCode() == HTTP_NOT_FOUND #CANT DO THIS UNTIL WE HAVE ABSTRACTION layer done
 	# assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#Test that the two parameters are required
+	tester.followLink(endPoints['debug'],withData={'origin' : 'spider-test' },httpMethod="DELETE")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	tester.followLink(endPoints['debug'],withData={'hash' : 'xkj45tr99sder' },httpMethod="DELETE")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+	
 
 
 
