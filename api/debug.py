@@ -60,12 +60,15 @@ class Debug(webapp2.RequestHandler):
 				return
 		else:
 			#Since is nothing
-			since = datetime.datetime.now()
+			since = datetime.datetime(2013,1,1)
 
 
 		#If we've made it this far it means we have a page and possibly a time to filter with
 		#Pass that down to the abstraction layer and let it return the messages to us
-		messages = []
+		layer = AbstractionLayer()
+		messages = layer.getDebug(None,None,since=since,page=page)
+
+
 
 		
 		prevPage = page -1 if page != 1 else 1
@@ -122,7 +125,8 @@ class Debug(webapp2.RequestHandler):
 			return
 
 		#All arguments validated pass off to abstraction handler
-		pass
+		layer = AbstractionLayer()
+		layer.submitDebug(message, stackTrace,origin)
 
 		self.response.write('{ "status_code" : %i , "message" : "Successfuly submitted new debug report. Thanks!" }' % HTTP_OK)
 
