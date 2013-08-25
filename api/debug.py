@@ -151,7 +151,9 @@ class Debug(webapp2.RequestHandler):
 		#status_code,response = abstractionLayer.functionForDelete(hash,origin)
 		#Then check the status_code to determine what to do
 
-		status_code, response = (status_code,"Successful deletion")
+		layer = AbstractionLayer()
+
+		status_code, response = layer.deleteDebug(origin,msgHash)
 
 		self.response.set_status(status_code)
 		self.response.write('{"status_code" : %i , "message" : "%s"}' % (status_code,response))

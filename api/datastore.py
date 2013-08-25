@@ -158,7 +158,7 @@ class DebugReports(Greenup):
 
 	@classmethod
 	def by_hash(cls,theHash):
-		return DebugReports.all().ancestor(DebugReports.app_key()).filter('authhash =',authhash).get()		
+		return DebugReports.all().ancestor(DebugReports.app_key()).filter('authhash =',theHash).get()		
 
 	@classmethod
 	def get_all(cls):
@@ -233,9 +233,20 @@ class AbstractionLayer():
 		logging.info(bugs)
 		return debugFormatter(bugs)	
 
-	def deleteDebug(self):
-		# remove a bug from the datastore
-		pass
+	def deleteDebug(self,origin,theHash):
+		# remove a bug from the datastore (if only we could remove all the bugs from the datastore! )
+		debugReport = DebugReports.by_hash(theHash)
+		msg = "Succesful Deletion"
+		if debugReport is None:
+			stat = HTTP_NOT_FOUND
+		else:
+			if debugReport.origin == origin:
+				logging.info("yes")
+				stat = HTTP_DELETED
+			else:
+				stat = HTTP_NOT_FOUND
+		return stat,msg
+
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
