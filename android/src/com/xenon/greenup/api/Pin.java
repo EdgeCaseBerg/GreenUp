@@ -3,6 +3,8 @@ package com.xenon.greenup.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class Pin {
 	
 	private double latDegrees;
@@ -22,6 +24,13 @@ public class Pin {
 		catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public Pin(float latDegrees, float lonDegrees, String type, String message) {
+		this.latDegrees = latDegrees;
+		this.lonDegrees = lonDegrees;
+		this.type = type;
+		this.message = message;
 	}
 	
 	/**
@@ -73,5 +82,19 @@ public class Pin {
 		this.message = message;
 	}
 	
-	
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("latDegrees",this.latDegrees);
+			json.put("lonDegrees",this.lonDegrees);
+			json.put("type", this.type);
+			json.put("message",this.message);
+			Log.i("newPin",json.toString());
+			return json;
+		}
+		catch (JSONException e) {
+			e.printStackTrace();
+			return json;
+		}
+	}
 }

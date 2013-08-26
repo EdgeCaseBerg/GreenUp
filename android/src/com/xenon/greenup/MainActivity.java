@@ -33,7 +33,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Heatmap;
 import com.xenon.greenup.api.HeatmapPoint;
@@ -123,7 +122,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         
         //Set the stacked background otherwise we get the gross dark gray color under the icon
         BitmapDrawable background = (BitmapDrawable)getResources().getDrawable(R.drawable.bottom_menu);
-        background.setTileModeXY(TileMode.REPEAT,TileMode.REPEAT);
+        background.setTileModeXY(TileMode.REPEAT,TileMode.MIRROR);
         actionBar.setStackedBackgroundDrawable(background);
         
 
@@ -166,6 +165,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         //which gives us more real estate
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.show();
+     
     }	
 
     @Override
@@ -206,6 +206,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         @Override
         public Fragment getItem(int i)
         { 
+        	Log.i("switch",""+i);
         	switch (i) {
             case 0:
         		//TODO: Launch HomeSectionFragment
@@ -262,11 +263,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         
         public void onClick(View v) {
         	Log.i("button","I was clicked!");
-        	APIServerInterface i = new APIServerInterface();
         	//CommentPage page = i.getComments("general message",1);
         	Heatmap h = new Heatmap();
         	h.add(new HeatmapPoint(24.53,43.2,120));
-        	i.updateHeatmap(h);
+        	APIServerInterface.updateHeatmap(h);
         }
     }
     

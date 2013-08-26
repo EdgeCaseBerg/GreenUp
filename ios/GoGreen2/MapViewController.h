@@ -13,6 +13,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "HeatMap.h"
 #import "HeatMapView.h"
+#import "BDHost.h"
 
 @interface MapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate>
 

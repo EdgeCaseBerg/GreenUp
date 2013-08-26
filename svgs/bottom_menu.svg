@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -10,96 +10,59 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448819"
-   height="1052.3622047"
-   id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="bubble_red_center.svg">
-  <defs
-     id="defs4">
-    <linearGradient
-       id="linearGradient5145">
-      <stop
-         style="stop-color:#3f9659;stop-opacity:1;"
-         offset="0"
-         id="stop5147" />
-      <stop
-         id="stop5153"
-         offset="0.82029229"
-         style="stop-color:#307e64;stop-opacity:1;" />
-      <stop
-         style="stop-color:#3b926d;stop-opacity:1;"
-         offset="1"
-         id="stop5149" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient5145"
-       id="linearGradient5151"
-       x1="-455.47745"
-       y1="-472.01215"
-       x2="-455.56674"
-       y2="-494.86929"
-       gradientUnits="userSpaceOnUse" />
-  </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="11.2"
-     inkscape:cx="62.792389"
-     inkscape:cy="722.32385"
-     inkscape:document-units="px"
-     inkscape:current-layer="g4084-8-8"
-     showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="718"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1" />
-  <metadata
-     id="metadata7">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1">
-    <g
-       id="g4514"
-       transform="matrix(-1,0,0,1,487.20309,-30)"
-       style="fill:#008000">
-      <g
-         transform="matrix(1,0,0,-1,-11.48864,603.16898)"
-         inkscape:label="Layer 1"
-         id="layer1-6"
-         style="fill:#008000">
-        <g
-           transform="translate(0,-239.99999)"
-           id="g4084-8-8"
-           style="fill:#008000">
-          <rect
-             style="fill:url(#linearGradient5151);stroke:none;fill-opacity:1"
-             id="rect5143"
-             width="2.7678571"
-             height="23.125013"
-             x="-456.9953"
-             y="-494.82465"
-             transform="scale(-1,-1)" />
-        </g>
-      </g>
-    </g>
-  </g>
-</svg>
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="36"
+   height="311"
+   viewBox="0 0 36 310.99999"
+   enable-background="new 0 0 10.667 53"
+   xml:space="preserve"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="bottom_menu.svg"><metadata
+   id="metadata9"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs7" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="753"
+   inkscape:window-height="480"
+   id="namedview5"
+   showgrid="false"
+   fit-margin-top="0"
+   fit-margin-left="0"
+   fit-margin-right="0"
+   fit-margin-bottom="0"
+   inkscape:zoom="0.78715661"
+   inkscape:cx="270.17469"
+   inkscape:cy="170.30022"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="Layer_1" />
+
+<image
+   y="-3.6970532e-06"
+   x="2.8421709e-14"
+   id="image3929"
+   xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAE3CAYAAADCNeMZAAAABHNCSVQICAgIfAhkiAAAAe9JREFU
+eJzt3TFOw0AUANGY7DmgCFKOxU04C2dMqijEoV6KTLlTzDvB6NvW98pEbF8/38+DyNvqgP8KIgWR
+cb1eVzdMxuVyWd0w0V2ygoguaNzv99UNk7Hv++qGyXg8HqsbJrp7qCCiCxrH43F1w0Q3oYJIQcS3
+y55P1cHVNyHdPVQQ0QWNbdtWN0x0EyqI6IK6qUkTIgWRgsi43W6rGya6CRVEdEGtDtKESEGkIFIQ
+KYgURAoiBZGCSEGkIFIQKYgURAoiBZGCSEGkIFIQKYgURAoiBZGCiC5I98e5ugkVRAoiBZGCSEGk
+IFIQKYgURHqnJgWRgoguaBx67F8riBREWq6kIKILGq6fmSgn5HrqfRMqiBRECiIFkYLIOMh2WSdX
+UhApiHRyJQURXZDu5KoL0l2ygkhBRBfUciUFEV2Q7qBonJBrRLoJFUQKIgWRgkhBRBfUOzUpiBRE
+CiIFkYLI+N37h2ovFUQKIrqgXmFJQaQgUhApiBREdEEtV1IQ0QXpvrn2iZMURAoiBZGCSEGk5Up0
+l6wgUhApiBRECiK6X7607YnuHiqIFEQKIgWRgoguqOVKCiK6oD5xkoJIQcR3ctUF2Y7SunuoIKIL
+armSgkhBRBfUY08KIgWRgkhBRBc0zh+fqxsm4/x+Wt0w+QPQpVlrUA40lQAAAABJRU5ErkJggg==
+"
+   height="311"
+   width="36" /></svg>

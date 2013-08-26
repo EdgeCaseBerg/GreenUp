@@ -138,7 +138,8 @@ class DebugReports(Greenup):
 
 	errorMessage = db.StringProperty()
 	debugInfo = db.StringProperty()
-	timestamp = db.DateTimeProperty(auto_now_add = True)
+	timeSent = db.DateTimeProperty(auto_now_add = True)
+	origin = db.StringProperty(required = True)
 	authhash = db.StringProperty(required = True)
 
 	@classmethod 
@@ -146,13 +147,28 @@ class DebugReports(Greenup):
 		return DebugReports.get_by_id(debugId, parent=app_key())
 
 	@classmethod
-	def by_error(cls, errorMessage):
-		errors = DebugReports.all().ancestor(DebugReports.app_key()).filter('errorMessage =', errorMessage).get()	
+	def by_origin(cls, origin):
+		errors = DebugReports.all().ancestor(DebugReports.app_key()).filter('origin =', origin).get()	
 		return ct 
 
 	@classmethod
+	def since(cls,timeSent):
+		#gets delayed. call get on it
+		return DebugReports.all().ancestor(DebugReports.app_key()).filter('timeSent >',timeSent)
+
+	@classmethod
+	def by_hash(cls,theHash):
+		return DebugReports.all().ancestor(DebugReports.app_key()).filter('authhash =',theHash).get()		
+
+	@classmethod
 	def get_all(cls):
+		return DebugReports.all().ancestor(DebugReports.app_key()).get()
+
+	@classmethod
+	def get_all_delayed(cls):
 		return DebugReports.all().ancestor(DebugReports.app_key())
+
+
 
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
@@ -178,7 +194,7 @@ class AbstractionLayer():
 		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
 		#Clear the memcache then recreate the initial page.
 		memcache.flush_all()
-		initialPage()
+		initialPage(None,"comment")
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None,raw=False):
 		return heatmapFiltering(latDegrees,lonDegrees,latOffset,lonOffset,precision,raw)
@@ -198,25 +214,37 @@ class AbstractionLayer():
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
 
-	def submitDebug(self, errorMessage, debugInfo):
+	def submitDebug(self, errorMessage, debugInfo,origin):
 		# submit information about a bug
 		authhash = hashlib.sha256(errorMessage + debugInfo).hexdigest()
-		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash).put()
+		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin).put()
+		memcache.flush_all()
 
-	def getDebug(self, debugId=None, error=None):
-		# retrieve information about a bug by id, error, or get them all
+	def getDebug(self, debugId=None, theHash=None,since=None,page=1):
+		# retrieve information about a bug by id, hash, or get them all with optional since time
 		# add JSON Formatting to the returns such that {  "errror_message" : "Stack trace or debugging information here", "id":id, "time":timestamp } 
 		if debugId:
-			return DebugReports.by_id(debugId) 
-		elif error:
-			return DebugReports.by_error(error)
+			bugs = DebugReports.by_id(debugId) 
+		elif theHash:
+			bugs = DebugReports.by_hash(theHash)
+		else:
+			bugs = paging(page,None,"debug",since)
+		logging.info(bugs)
+		return debugFormatter(bugs)	
 
-		return DebugReports.get_all()
-
-
-	def deleteDebug(self):
-		# remove a bug from the datastore
-		pass
+	def deleteDebug(self,origin,theHash):
+		# remove a bug from the datastore (if only we could remove all the bugs from the datastore! )
+		debugReport = DebugReports.by_hash(theHash)
+		msg = "Succesful Deletion"
+		if debugReport is None:
+			stat = HTTP_NOT_FOUND
+		else:
+			if debugReport.origin == origin:
+				debugReport.delete()
+				stat = HTTP_DELETED
+			else:
+				stat = HTTP_NOT_FOUND
+		return stat,msg
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
@@ -256,24 +284,29 @@ def getCachedData(key):
 
 	return result
 
-def initialPage(typeFilter=None):
+def initialPage(typeFilter=None, endpoint="comment",sinceTime=None):
 	'''
 		set up initial page in memecache and the initial cursor. This will guarantee that at least one key and page will be 
 		in the cache (the first one).
 	'''
-	querySet = Comments.all().ancestor(Comments.app_key())
-	initialCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter,1)
-	initialPageKey = 'greenup_comments_page_%s_%s' %(typeFilter,1)
+	if endpoint == "comment":
+		querySet = Comments.all().ancestor(Comments.app_key())
+	elif endpoint == "debug":
+		querySet = DebugReports.all().ancestor(DebugReports.app_key())
+	else:
+		raise Exception("No paging supported for comment")
+	initialCursorKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter,1)
+	initialPageKey = 'greenup_%s_%ss_page_%s_%s' %(sinceTime,endpoint,typeFilter,1)
 
 	results = querySet[0:20]
 	# sort, newest to oldest
-	results = sorted(results, key=lambda comment: comment.timeSent, reverse=True)
+	results = sorted(results, key=lambda dataPoint: dataPoint.timeSent, reverse=True)
 	memcache.set(initialPageKey, serialize_entities(results))
 
-	commentsCursor = querySet.cursor()
-	memcache.set(initialCursorKey, commentsCursor)
+	dataCursor = querySet.cursor()
+	memcache.set(initialCursorKey, dataCursor)
 
-def paging(page=1,typeFilter=None):
+def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 	'''
 		Paging works thusly:
 		Try to find the cursor key for the page passed in. If you find it, look it up in cache and return it.
@@ -284,24 +317,32 @@ def paging(page=1,typeFilter=None):
 	resultsPerPage = 20
 	querySet = None
 	if typeFilter is not None and typeFilter is not "":
+		#typeFilter must always by null when coming from debug endpoint
 		querySet = Comments.by_type_pagination(typeFilter)
 	else:
-		querySet = Comments.all().ancestor(Pins.app_key())
+		if endpoint == "comment":
+			querySet = Comments.all().ancestor(Pins.app_key())
+		elif endpoint == "debug":
+			logging.info("debug elif")
+			if sinceTime is not None:
+				querySet = DebugReports.since(sinceTime)
+			else:
+				querySet = DebugReports.get_all_delayed()
 
-	currentCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page)
+	currentCursorKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, page)
 	pageInCache = memcache.get(currentCursorKey)
 
 	misses = []
 
-	if not memcache.get('greeunup_comment_paging_cursor_%s_%s' %(typeFilter, 1) ):
+	if not memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, 1) ):
 		# make sure the initial page is in cache
-		initialPage(typeFilter)
+		initialPage(typeFilter,endpoint,sinceTime)
 
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
-			prevCursorKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, x)
+			prevCursorKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, x)
 			prevPageInCache = memcache.get(prevCursorKey)
 
 			if not prevPageInCache:
@@ -313,7 +354,7 @@ def paging(page=1,typeFilter=None):
 			# get the cursor of the previous page
 			cursorKey = misses.pop()			
 			oldNum = int(cursorKey[-1]) - 1
-			oldKey = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, oldNum)
+			oldKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, oldNum)
 			cursor = memcache.get(oldKey)
 
 			# get 20 results from where we left off
@@ -323,15 +364,15 @@ def paging(page=1,typeFilter=None):
 			items = [item for item in results]
 
 			# save an updated cursor in cache 
-			commentsCursor = querySet.cursor()
-			memcache.set(cursorKey, commentsCursor)
+			dataCursor = querySet.cursor()
+			memcache.set(cursorKey, dataCursor)
 
 			# save those results in memecache with thier own key
-			pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, cursorKey[-1])
+			pageKey = 'greenup_%s_%ss_page_%s_%s' %(sinceTime,endpoint,typeFilter, cursorKey[-1])
 			memcache.set(pageKey, serialize_entities(items))
 
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
-		prevCursor = 'greeunup_comment_paging_cursor_%s_%s' %(typeFilter, page-1)
+		prevCursor = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, page-1)
 		cursor = memcache.get(prevCursor)
 
 		results = querySet.with_cursor(start_cursor=cursor)
@@ -339,25 +380,24 @@ def paging(page=1,typeFilter=None):
 
 		items = [item for item in results]
 		# sort, newest to oldest
-		items = sorted(items, key=lambda comment: comment.timeSent, reverse=True)
+		items = sorted(items, key=lambda dataPoint: dataPoint.timeSent, reverse=True)
 
 		# save updated cursor
-		commentsCursor = querySet.cursor()
-		memcache.set(currentCursorKey, commentsCursor)
+		dataCursor = querySet.cursor()
+		memcache.set(currentCursorKey, dataCursor)
 
 		# save results in memecache with key
-		pageKey = 'greenup_comments_page_%s_%s' %(typeFilter, page)
+		pageKey = 'greenup_%s_%ss_page_%s_%s' %(sinceTime,endpoint,typeFilter, page)
 		memcache.set(pageKey, serialize_entities(items))
-
 		return items
 
 	# otherwise, just get the page out of memcache
 	# print "did this instead, cause it was in the cache"
-	pageKey = "greenup_comments_page_%s_%s" %(typeFilter, page)
+	pageKey = "greenup_%s_%ss_page_%s_%s" %(sinceTime,endpoint,typeFilter, page)
 	results = deserialize_entities(memcache.get(pageKey))
 	
 	# sort, newest to oldest
-	results = sorted(results, key=lambda comment: comment.timeSent, reverse=True)
+	results = sorted(results, key=lambda dataPoint: dataPoint.timeSent, reverse=True)
 
 	return results
 
@@ -472,7 +512,8 @@ def debugFormatter(dbBugs):
 	# properly format bugs in json and return
 	bugs = []
 	for bug in dbBugs:
-		bugs.append({   'errorMessage' : bug.errorMessage,
-						'debugInfo'    : bug.debugInfo,
-						'timestamp'    : bug.timestamp })
+		bugs.append({   'message' : bug.errorMessage,
+						'stackTrace'    : bug.debugInfo,
+						'timestamp'    : bug.timeSent.strftime(SINCE_TIME_FORMAT) ,
+						'hash' 		   : bug.authhash })
 	return bugs
