@@ -20,7 +20,7 @@ COMMENTS_RESOURCE_PATH = "/comments"
 DEBUG_RESOURCE_PATH = "/debug"
 
 """ String format of error messages """
-ERROR_STR = '{"Error_Message" : "%s"}'
+ERROR_STR = '{"status_code" : %i, "Error_Message" : "%s"}'
 SINCE_TIME_FORMAT = "%Y-%m-%d-%H:%M"
 
 """ Error to throw on a sematic error in a request """

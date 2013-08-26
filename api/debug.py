@@ -25,7 +25,7 @@ class Debug(webapp2.RequestHandler):
 		if page is not None and msgHash is not None and not (page == "" or msgHash == ""):
 			#Well this makes no sense. You can only do one! SEMATICS
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM,"")
-			self.response.write(ERROR_STR % "Page and hash parameters are mutually exclusive")
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM,"Page and hash parameters are mutually exclusive"))
 			return
 
 		if msgHash is not None and since is not None and msgHash != "":
@@ -44,7 +44,7 @@ class Debug(webapp2.RequestHandler):
 				page = abs(int(page))
 			except Exception, e:
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-				self.response.write(ERROR_STR % "Non-integer page value not allowed")
+				self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM,"Non-integer page value not allowed"))
 				return
 		else:
 			page = 1
@@ -56,7 +56,7 @@ class Debug(webapp2.RequestHandler):
 			except ValueError, ve:
 				#Messed up your time format. syntax error 
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM,"")
-				self.response.write(ERROR_STR % "The since datetime format could not be parsed. Please use YYYY-mm-dd-HH:MM with military time.")
+				self.response.write(ERROR_STR % (HTTP_REQUEST_SYNTAX_PROBLEM,"The since datetime format could not be parsed. Please use YYYY-mm-dd-HH:MM with military time."))
 				return
 		else:
 			#Since is nothing
@@ -84,7 +84,7 @@ class Debug(webapp2.RequestHandler):
 		except Exception, e:
 			#The request body is malformed. 
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM,"")
-			self.response.write(ERROR_STR % "Request body is malformed")
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SYNTAX_PROBLEM,"Request body is malformed"))
 			#Don't allow execution to proceed any further than this
 			return
 		info = json.loads(self.request.body)
@@ -97,7 +97,7 @@ class Debug(webapp2.RequestHandler):
 		except Exception, e:
 			#The request body lacks proper keys
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write(ERROR_STR % "Required keys not present in request")
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM,"Required keys not present in request"))
 			return
 
 		#Do things here
@@ -108,17 +108,17 @@ class Debug(webapp2.RequestHandler):
 		#Validate that there is something to accept here
 		if len(message.strip(" ")) == 0:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write(ERROR_STR % "debug message may not be empty")
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM,"debug message may not be empty"))
 			return
 
 		if len(stackTrace.strip(" ")) == 0:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write(ERROR_STR % "stack trace may not be empty")
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM,"stack trace may not be empty"))
 			return
 
 		if len(origin.strip(" ")) == 0:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write(ERROR_STR % "origin identifier may not be empty")
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM,"origin identifier may not be empty"))
 			return
 
 		#All arguments validated pass off to abstraction handler
@@ -138,15 +138,8 @@ class Debug(webapp2.RequestHandler):
 
 		if msgHash is None or origin is None:
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-			self.response.write(ERROR_STR % ('Both hash and origin parameters are required'))
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SYNTAX_PROBLEM,'Both hash and origin parameters are required'))
 			return
-
-		#Pass along to data store and get either 404 or 200.
-		#The datastore should return some flag value (like None)
-		#if it can't find the message to delete.
-		#It would be nice to be able to just do something like:
-		#status_code,response = abstractionLayer.functionForDelete(hash,origin)
-		#Then check the status_code to determine what to do
 
 		layer = AbstractionLayer()
 		status_code, response = layer.deleteDebug(origin,msgHash)
