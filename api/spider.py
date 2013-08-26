@@ -216,6 +216,15 @@ def validateDebugDELETERequest(debugs_response_to_delete):
 	return True
 
 
+def validateDebugDELETE404Response(debugs_response_to_delete):
+	assert debugs_response_to_delete is not None
+	debug_expected_keys = ['status_code', 'message']
+	for key,val in debugs_response_to_post.iteritems():
+		assert key in debug_expected_keys
+		if key == "status_code":
+			assert val == HTTP_NOT_FOUND
+	return True
+
 
 
 
