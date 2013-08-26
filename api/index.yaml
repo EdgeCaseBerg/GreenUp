@@ -16,6 +16,11 @@ indexes:
   - name: timeSent
     direction: desc
 
+- kind: DebugReports
+  ancestor: yes
+  properties:
+  - name: timeSent
+
 - kind: GridPoints
   ancestor: yes
   properties:

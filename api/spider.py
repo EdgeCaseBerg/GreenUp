@@ -9,6 +9,7 @@ import json
 import logging
 import types
 import numbers
+import datetime
 
 from constants import *
 
@@ -17,8 +18,12 @@ class BetterHTTPErrorProcessor(urllib2.BaseHandler):
     # that doesn't raise exceptions on status codes 200,400,422,503
     def http_error_200(self, request, response, code, msg, hdrs):
         return response
+    def http_error_204(self, request, response, code, msg, hdrs):
+    	return response
     def http_error_400(self, request, response, code, msg, hdrs):
         return response
+    def http_error_404(self, request, response, code, msg, hdrs):
+    	return response
     def http_error_422(self, request, response, code, msg, hdrs):
         return response
     def http_error_503(self, request, response, code, msg, hdrs):
@@ -34,14 +39,16 @@ class Spider(object):
 			data = (json.dumps(withData))
 			request = urllib2.Request(link, data)
 		else:
-			#Construct get parameters
+			#Construct get parameters (or delete)
 			gets = "?"
 			for key,value in withData.iteritems():
 				gets = gets + key +"=" + str(value) +"&"
 			request = urllib2.Request(link + gets)
 
+
 		request.add_header('Content-Type', 'application/json')
 		request.get_method = lambda: httpMethod
+
 		self.spiderlink  = opener.open(request)
 
 	def getCode(self):
@@ -53,6 +60,7 @@ class Spider(object):
 		"""Returns an object from json returned from spiderlink, or None if the information is malformed or not there"""
 		# print self.spiderlink.read()
 		if self.spiderlink:
+			raw = ""
 			try:
 				raw = self.spiderlink.read()
 				#print raw #You may only read from spiderlink once! so if you need to use the value from read more than once extend the variable classwide or save it in a temporary
@@ -62,7 +70,16 @@ class Spider(object):
 				print "there's been an exception"
 				#Issue parsing json. Die a silent death and allow tests to fail due to None
 				print e
+				print raw
 				pass
+
+	def getRaw(self):
+		if self.spiderlink:
+			raw = ""
+			raw = self.spiderlink.read() 
+			if raw == "":
+				raw = None
+			return raw
 			
 
 
@@ -151,9 +168,65 @@ def validatePinsPOSTRequest(pins_response_to_post):
 	assert pins_response_to_post['message'] == "Successful submit"
 	return True
 
-def validateErrorMessageReturned(comments_error_response):
-	assert "Error_Message" in comments_error_response
+def validateErrorMessageReturned(err_message_returned):
+	assert err_message_returned is not None
+	assert "Error_Message" in err_message_returned
 	return True
+
+def validateDebugGETRequest(debugs_response_to_get,since=None):
+	assert debugs_response_to_get is not None
+	debug_outer_keys = ['status_code','messages','page']
+	debug_inner_keys = ['message', 'stackTrace','timestamp','hash']
+	debug_page_keys  = ['next','previous']
+	for out_key,out_val in debugs_response_to_get.iteritems():
+		assert out_key in debug_outer_keys
+		if out_key == "status_code":
+			assert int(out_val) == HTTP_OK
+		if out_key == "messages":
+			for msg in out_val:
+				for msg_key,msg_val in msg.iteritems():
+					assert msg_key in debug_inner_keys
+					if msg_key == "timestamp":
+						#validate the timestamp format
+						try:
+							datetime.datetime.strptime(msg_val, SINCE_TIME_FORMAT)
+						except Exception,e:
+							raise Exception("fuck")
+						if since is not None:
+							#Validate that the timestamp is not prior the since date
+							returned_time = datetime.datetime.strptime(msg_val, SINCE_TIME_FORMAT)
+							assert returned_time > since
+
+		if out_key == "page":
+			for key,val in out_val.iteritems():
+				assert key in debug_page_keys
+	return True
+
+def validateDebugPOSTRequest(debugs_response_to_post):
+	assert debugs_response_to_post is not None
+	debug_expected_keys = ['status_code', 'message']
+	for key,val in debugs_response_to_post.iteritems():
+		assert key in debug_expected_keys
+		if key == "status_code":
+			assert val == HTTP_OK
+	return True
+
+def validateDebugDELETERequest(debugs_response_to_delete):
+	assert debugs_response_to_delete is None
+	return True
+
+
+def validateDebugDELETE404Response(debugs_response_to_delete):
+	assert debugs_response_to_delete is not None
+	debug_expected_keys = ['status_code', 'message']
+	for key,val in debugs_response_to_delete.iteritems():
+		assert key in debug_expected_keys
+		if key == "status_code":
+			assert val == HTTP_NOT_FOUND
+	return True
+
+
+
 
 
 
@@ -165,9 +238,11 @@ if __name__ == "__main__":
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
 			'pins' : baseURL + "/pins",
-			'heatmap' : baseURL + '/heatmap'
+			'heatmap' : baseURL + '/heatmap',
+			'debug' : baseURL + '/debug'
 	}
 
+	print "Beginning Spider API test against %s " % baseURL
 	
 	#Test the comment endpoint:
 	tester = Spider()
@@ -228,7 +303,7 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	print "Comments Endpoint Passed all asserted tests"
+	print "\tComments Endpoint Passed all asserted tests"
 
 	#Default GET + no parameters
 	tester.followLink(endPoints['heatmap'])
@@ -310,7 +385,7 @@ if __name__ == "__main__":
 
 
 
-	print "Heatmap endpoint Passed all assertion tests"
+	print "\tHeatmap endpoint Passed all assertion tests"
 
 
 	'''
@@ -414,8 +489,118 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	print "Pins endpoint passed all assertion tests"
+	print "\tPins endpoint passed all assertion tests"
 
+
+	#Test the DEBUG endpoint
+	tester.followLink(endPoints['debug'])
+	assert tester.getCode() == HTTP_OK
+	assert validateDebugGETRequest(tester.getJSON()) is True
+
+	#empty values are ok and ignored
+	tester.followLink(endPoints['debug'],withData={'hash' :'','page' : '', 'since':''},httpMethod="GET")
+	assert tester.getCode() == HTTP_OK
+	assert validateDebugGETRequest(tester.getJSON()) is True
+
+	#Valid time format returns things with proper time
+	tester.followLink(endPoints['debug'],withData={'hash' :'','page' : '', 'since':'2013-08-17-00:00'},httpMethod="GET")
+	assert tester.getCode() == HTTP_OK
+	assert validateDebugGETRequest(tester.getJSON(),since=datetime.datetime.now()) is True 
+
+	tester.followLink(endPoints['debug'],withData={'hash' :'','page' : '', 'since':'2013-08-17-00:00'},httpMethod="GET")
+	assert tester.getCode() == HTTP_OK
+	assert validateDebugGETRequest(tester.getJSON(),since=datetime.datetime.strptime('2013-08-17-00:00', SINCE_TIME_FORMAT)) is True 
+
+	#mutual exclusion of parameters page and hash
+	tester.followLink(endPoints['debug'],withData={'hash' : 'asdf','page' : 1},httpMethod="GET")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#Test that page must be numeric
+	tester.followLink(endPoints['debug'],withData={'hash' : '','page' : 'derp'},httpMethod="GET")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#Test bad date parameters
+	tester.followLink(endPoints['debug'],withData={'hash' :'','page' : '', 'since':'2013-08-17+00:00'},httpMethod="GET")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	tester.followLink(endPoints['debug'],withData={'hash' :'','page' : '', 'since':'2008-17+00:00'},httpMethod="GET")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#Test the post validation
+
+	#A proper post
+	tester.followLink(endPoints['debug'],withData={'message' : 'Test message', 'stackTrace' : 'line 520 in spider.py', 'origin' : 'spider-test' },httpMethod="POST")
+	assert tester.getCode() == HTTP_OK
+	assert validateDebugPOSTRequest(tester.getJSON()) is True
+
+	#With a messed up mesage key
+	tester.followLink(endPoints['debug'],withData={'mesage' : 'Test message', 'stackTrace' : 'line 520 in spider.py', 'origin' : 'spider-test' },httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#bad stack trace key
+	tester.followLink(endPoints['debug'],withData={'message' : 'Test message', 'stackTraces' : 'line 520 in spider.py', 'origin' : 'spider-test' },httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#bad origin key
+	tester.followLink(endPoints['debug'],withData={'message' : 'Test message', 'stackTrace' : 'line 520 in spider.py', 'origins' : 'spider-test' },httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#Empty values
+	tester.followLink(endPoints['debug'],withData={'message' : '', 'stackTrace' : 'line 520 in spider.py', 'origin' : 'spider-test' },httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	tester.followLink(endPoints['debug'],withData={'message' : 'Test message', 'stackTrace' : '', 'origin' : 'spider-test' },httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	tester.followLink(endPoints['debug'],withData={'message' : 'Test message', 'stackTrace' : 'line 520 in spider.py', 'origin' : '' },httpMethod="POST")
+	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#Test the deletion validations
+	tester.followLink(endPoints['debug'],withData={'hash' : '5f8b50789cadf1cf56328e3419be87a76f8a13b1c931475640bc9fdbbaffc37f', 'origin' : 'spider-test' },httpMethod="DELETE")	
+	assert tester.getCode() == HTTP_DELETED
+	assert validateDebugDELETERequest(tester.getRaw()) is True
+
+	#test the trying to delete again will give 404
+	tester.followLink(endPoints['debug'],withData={'hash' : '5f8b50789cadf1cf56328e3419be87a76f8a13b1c931475640bc9fdbbaffc37f', 'origin' : 'spider-test' },httpMethod="DELETE")
+	assert tester.getCode() == HTTP_NOT_FOUND
+	assert validateDebugDELETE404Response(tester.getJSON()) is True
+
+	#Test that the two parameters are required
+	tester.followLink(endPoints['debug'],withData={'origin' : 'spider-test' },httpMethod="DELETE")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	tester.followLink(endPoints['debug'],withData={'hash' : 'xkj45tr99sder' },httpMethod="DELETE")
+	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
+	assert validateErrorMessageReturned(tester.getJSON()) is True
+	
+
+
+
+
+
+
+
+
+
+
+	print "\tDebug endpoint passed all assertion tests"
+
+
+
+	print "Spider API Test complete. All tests passed"
+
+	
 
 
 

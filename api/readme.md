@@ -364,6 +364,124 @@ URL: **/api/pins**
 
 If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
 
+----------------------------
+
+###Retrieve log messages
+
+Method: **GET**
+
+URL: **/api/debug**
+
+####Optional Parameters
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>since</td><td>timestamp</td><td>All messages retrieved will have a timestamp greater than this value. Should be in the format of: "YYYY-mm-dd-HH:MM" in military time for "HH:MM"</td></tr>
+        <tr><td>hash</td><td>String</td><td>Used to get a single message that has the same hash value. Cannot be used in conjunction with page</td></tr>
+        <tr><td>page</td><td>unsigned Integer</td><td>Based on [RFC 5005], for use with pagination, a request for a page that does not exist will result in no debug messages being returned. A non-integer value for this parameter will result in a 422 HTTP status code. Paging begins at 1.</td></tr>
+    </tbody>
+</table>
+
+####Example Request
+`http://greenup.xenonapps.com/api/debug`
+
+####Response
+```
+{
+    "status" : 200,
+    "messages" : [
+        {
+            "message" : "Null pointer exception on line 42 in badcontroller.java",
+            "stackTrace" : " stack trace: ..."
+            "timestamp" : "2013-05-08-00:00",
+            "hash" : "aed60d05a1bd3f7633a6464a7a9b4eab5a9c13a185f47cb651e6b4130ce09dfa"
+        },
+        {
+            "message" : "Problem resolving up address of server. stack trace: ...",
+            "stackTrace" : " stack trace: ..."
+            "timestamp" : "2014-03-11-15:11",
+            "hash" : "6f3d78c8ca1d63645015d6fa2ld975902348d585f954efd0e8ecca4f362c697d9"  
+        }
+    ]
+}
+```
+
+###Post log message
+
+Method: **POST**
+
+URL: **/api/debug**
+
+####Required POST data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>message</td><td>String</td><td>A custom message detailing origin of the error and any information that may assist with debugging the problem</td></tr>
+        <tr><td>stackTrace</td><td>String</td><td>The programmatic stack trace of the failure</td></tr>
+        <tr><td>origin</td><td>String</td><td>Unique information from a client device that allows deletion of a log message by the client</td></tr>
+    </tbody>
+</table>
+
+####Example Request
+`http://greenup.xenonapps.com/api/debug`
+
+####Message Body
+```
+{
+    "message" : "There was a problem in the main controller",
+    "stackTrace" : "line 52... etc etc" 
+    "origin" : "6f3d78c8ca1d63645015d6fa2d975902348d585f954efd0e8ecca4f362c697d9"
+}
+```
+
+####Response
+```
+{ 
+ "status" : 200, 
+ "message" : "Successful submit"
+}
+```
+
+###Delete log message
+
+Method: **DELETE**
+
+URL: **/api/debug**
+
+####Required DELETE data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>origin</td><td>String</td><td>The unique id identifying a client device.</td></tr>
+        <tr><td>hash</td><td>String</td><td>The identifying id for a submitted debug message (can be found through get)</td></tr>
+    </tbody>
+</table>
+
+Debug messages can also be deleted by developers through the use of a master key. Or through direct access to the database. This master key should not be stored in a public place.
+
+####Example Request
+`http://greenup.xenonapps.com/api/debug/?origin=6f3d78c8ca1d63645015d6fa2d975902348d585f954efd0e8ecca4f362c697d9&hash=aed60d05a1bd3f7633a6464a7a9b4eab5a9c13a185f47cb651e6b4130ce09dfa`
+
+####Response
+```
+
+```
+
+Note that by design response code 204 returns no content. So this is the only endpoint that does not follow the pattern of the other endpoints returning json status codes. This endpoint does not return a json object. It is the only one that does so.
+
+If the resource to be deleted is not found during a request, then a 404 is returned along with the following response:
+####Response
+```
+{'status_code' : 404 ,'message' : 'Successful Deletion'}
+```
+
+-------------------------------
 
 ##Error messages and codes
 
@@ -619,7 +737,72 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
 </table>
 
 
-
+#### Debug
+<table> 
+    <thead>
+        <tr><th>Code</th><th>Message</th><th>Causes</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="3" style="text-align: center;">GET Requests</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>Page and hash parameters are mutually exclusive</td>
+            <td>You can only send either hash or page as a parameter to the end point. Not both at the same time.</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>Non-integer page value not allowed</td>
+            <td>The value given or page was not an integer</td>
+        </tr>
+        <tr>
+            <td>400</td>
+            <td>The since datetime format could not be parsed. Please use YYYY-mm-dd-HH:MM with military time.</td>
+            <td>The since parameter sent in the query string was not a valid timestamp. You must use the format specified in the error message. An example would be: "2013-08-21-15:30"</td>
+        </tr>
+    </tbody>
+    <tr>
+        <td colspan="3" style="text-align: center;">POST Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td>400</td>
+            <td>Request body is malformed</td>
+            <td>The JSON submitted to the endpoint was invalid</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>Required keys not present in request</td>
+            <td>The required keys specified in the API documentation were not present</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>debug message may not be empty</td>
+            <td>The debug message sent to the server was empty</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>stack trace may not be empty</td>
+            <td>The stack trace sent to the server was empty</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>origin identifier may not be empty</td>
+            <td>The origin argument sent to the server was empty.</td>
+        </tr>
+    </tbody>
+    <tr>
+        <td colspan="3" style="text-align: center;">DELETE Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td>400</td>
+            <td>Both hash and origin parameters are required</td>
+            <td>You must send non-empty values for both hash and origin parameters</td>
+        </tr>
+    </tbody>
+</table>
 
 
 [RFC 5005]: http://www.ietf.org/rfc/rfc5005.txt
