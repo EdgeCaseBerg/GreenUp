@@ -36,11 +36,10 @@ class DummyData():
 		# write dummy data to the datastore through the abstraction layer
 		al = AbstractionLayer()
 
-		for i in range(0,99):		
+		for i in range(0,49):		
 			al.submitComments(commentInputTypes[i%len(commentInputTypes)], inputStrings[i%len(inputStrings)])
 			# al.updateHeatmap(inputFloats[i], inputFloats[i], inputSeconds[i])
-			al.submitPin(inputFloats[i], inputFloats[i], pinsInputTypes[i%len(pinsInputTypes)], inputStrings[i%len(inputStrings)])
-
+			# al.submitPin(inputFloats[i], inputFloats[i], pinsInputTypes[i%len(pinsInputTypes)], inputStrings[i%len(inputStrings)])
 			shuffle(pinsInputTypes)
 			shuffle(commentInputTypes)
 			shuffle(inputStrings)
@@ -72,13 +71,14 @@ class MemecacheViewer(Handler):
 		# 	logging.info( r.message )
 		# memcache.flush_all()
 
-		results = paging(1, 'FORUM')
-		logging.info(results)
-		# results = paging(5)
+		# results = paging(1, 'FORUM')
+		# logging.info(results)
+		results = paging(3)
 		# logging.info(results)
 		
 		for r in results:
-			print r.message
+			# print r.message + " " + str(r.timeSent)
+			print str(r.timeSent)
 
 		# initialPage()
 		# entities = deserialize_entities(memcache.get("greenup_comments_page_1"))

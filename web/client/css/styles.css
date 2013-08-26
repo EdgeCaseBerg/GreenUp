@@ -246,15 +246,21 @@ a, a:hover, a:visited{
     background: -moz-linear-gradient(top, #47d14e, #12690a);
 }
 
-#navbarPullUpTab{
-    background: url("../img/icons/pullUpArrow.png");
-    background-repeat: no-repeat;
-    background-position: center;
+#navPullUpNest{
+    background:#bbb;
     width:100%;
     height:8%;
     position: fixed;
     top:94%;
     z-index:190;
+}
+
+#navbarPullUpTab{
+    width:100%;
+    height:100%;
+    background: url("../img/icons/pullUpArrow.png");
+    background-repeat: no-repeat;
+    background-position: center;
     cursor:pointer;
 }
 
@@ -354,7 +360,7 @@ a, a:hover, a:visited{
 }
 
 .mapToggleContainer{
-    font-size:3.0em;
+    font-size:2.0em;
     font-weight:bold;
     width:80%;
     margin:auto;
@@ -450,17 +456,30 @@ a, a:hover, a:visited{
     float:left;
     position:absolute;
     top:0px;
-    left:0px;
     z-index:100;
-    width:100%;
+    width:33.2%;
     height:100%;
     background: url('../img/backgrounds/80_percent_black.png');
     display:none;
 }
 
+.markerTypePanel1{
+    left:0px;   
+}
+
+.markerTypePanel2{
+    left: 33.2%;
+}
+
+.markerTypePanel3{
+    left: 66.4%;
+}
+
 .tileContainer{
+/*    position:absolute;
+    top: 0px;*/
     height:30%;
-    width:33.2%;
+    width:90%;
     margin:auto;
     margin-top: 20%;
     /*border:solid 1px white;*/
@@ -677,7 +696,7 @@ h1{
 /*    -------------------- messages ------- */
 #commentContainer{
     height:100%;
-    padding-bottom:14%;
+    padding-bottom:20%;
 }
 #bubbleContainer{
     width:90%;
@@ -685,13 +704,15 @@ h1{
     text-align:center;
 }
 .bubble{
+    opacity: 1;
+    transition: opacity .25s ease-in-out;
     vertical-align: top;
     text-align:left;
-    width: 95%;
+    width: 90%;
     position: relative;
     margin-top:30px;
     height: auto;
-    padding: 5px 3px 5px 3px;
+    padding: 1em;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -701,7 +722,6 @@ h1{
 
 .bubbleRight{
     margin-left:3%;
-    background: #FFDCAB;
 }
 
 .bubbleRight:after {
@@ -711,14 +731,12 @@ h1{
     right: 5%;
     border-style: solid;
     border-width: 15px 15px 0;
-    border-color: #FFDCAB transparent;
     display: block;
     width: 0;
     z-index: 1;
 }
 
 .bubbleLeft{
-    background: #ddd;
 }
 
 .bubbleLeft:after {
@@ -728,10 +746,29 @@ h1{
     left: 5%;
     border-style: solid;
     border-width: 15px 15px 0;
-    border-color: #ddd transparent;
     display: block;
     width: 0;
     z-index: 1;
+}
+
+.bubbleForum{
+    background: red;
+}
+
+.bubbleForum:after{
+    border-color: red transparent;  
+}
+.bubbleNeeds{
+    background: blue;
+}
+.bubbleNeeds:after{
+    border-color: blue transparent;
+}
+.bubbleMessage{
+    background:orange;
+}
+.bubbleMessage:after{
+    border-color: orange transparent;
 }
 
 #comment_submission_form{
@@ -770,7 +807,7 @@ h1{
     display:inline-block;
     color:#777777;
     font-family:arial;
-    font-size:2em;
+    font-size:1.5em;
     font-weight:bold;
     padding:6px 2% 6px 2%;
     text-decoration:none;
@@ -881,6 +918,7 @@ h1{
     width:100%;
 }
 .panelSlideDownContent{
+    position:relative;
     color:#000;
     width:96%;
     padding:0.5%;
@@ -890,6 +928,13 @@ h1{
     height:68%;
     background:#eee;
     display:none;
+}
+
+.slideDownNest{
+    position:absolute;
+    bottom:5px;
+    height:auto;
+    width:100%;
 }
 
 #hamburgerNest{
