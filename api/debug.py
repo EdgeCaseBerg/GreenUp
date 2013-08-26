@@ -68,9 +68,6 @@ class Debug(webapp2.RequestHandler):
 		layer = AbstractionLayer()
 		messages = layer.getDebug(None,None,since=since,page=page)
 
-
-
-		
 		prevPage = page -1 if page != 1 else 1
 		response={"status_code" : "%s" % status_code, "messages" :  messages, "page" : { "next" : "%s%s%s?page=%i&since=%s" % (BASE_URL, CONTEXT_PATH, DEBUG_RESOURCE_PATH, page+1, since.strftime(SINCE_TIME_FORMAT)), "previous" : "%s%s%s?page=%i&since=%s" % (BASE_URL, CONTEXT_PATH, DEBUG_RESOURCE_PATH, prevPage, since.strftime(SINCE_TIME_FORMAT))}}
 
