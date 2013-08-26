@@ -152,7 +152,6 @@ class Debug(webapp2.RequestHandler):
 		#Then check the status_code to determine what to do
 
 		layer = AbstractionLayer()
-
 		status_code, response = layer.deleteDebug(origin,msgHash)
 
 		self.response.set_status(status_code)

@@ -240,12 +240,11 @@ class AbstractionLayer():
 			stat = HTTP_NOT_FOUND
 		else:
 			if debugReport.origin == origin:
-				logging.info("yes")
+				debugReport.delete()
 				stat = HTTP_DELETED
 			else:
 				stat = HTTP_NOT_FOUND
 		return stat,msg
-
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
