@@ -219,7 +219,6 @@ class AbstractionLayer():
 		authhash = hashlib.sha256(errorMessage + debugInfo).hexdigest()
 		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin).put()
 		memcache.flush_all()
-		initialPage(None,"debug")
 
 	def getDebug(self, debugId=None, theHash=None,since=None,page=1):
 		# retrieve information about a bug by id, hash, or get them all with optional since time
@@ -286,18 +285,23 @@ def getCachedData(key):
 
 	return result
 
-def initialPage(typeFilter=None, endpoint="comment"):
+def initialPage(typeFilter=None, endpoint="comment",sinceTime=None):
 	'''
 		set up initial page in memecache and the initial cursor. This will guarantee that at least one key and page will be 
 		in the cache (the first one).
 	'''
-	querySet = Comments.all().ancestor(Comments.app_key())
-	initialCursorKey = 'greeunup_%s_paging_cursor_%s_%s' %(endpoint,typeFilter,1)
-	initialPageKey = 'greenup_%ss_page_%s_%s' %(endpoint,typeFilter,1)
+	if endpoint == "comment":
+		querySet = Comments.all().ancestor(Comments.app_key())
+	elif endpoint == "debug":
+		querySet = DebugReports.all().ancestor(DebugReports.app_key())
+	else:
+		raise Exception("No paging supported for comment")
+	initialCursorKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter,1)
+	initialPageKey = 'greenup_%s_%ss_page_%s_%s' %(sinceTime,endpoint,typeFilter,1)
 
 	results = querySet[0:20]
 	# sort, newest to oldest
-	results = sorted(results, key=lambda comment: comment.timeSent, reverse=True)
+	results = sorted(results, key=lambda dataPoint: dataPoint.timeSent, reverse=True)
 	memcache.set(initialPageKey, serialize_entities(results))
 
 	dataCursor = querySet.cursor()
@@ -322,27 +326,24 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 		elif endpoint == "debug":
 			logging.info("debug elif")
 			if sinceTime is not None:
-				logging.info("since time")
 				querySet = DebugReports.since(sinceTime)
 			else:
-				logging.info("get delayed")
 				querySet = DebugReports.get_all_delayed()
 
-	currentCursorKey = 'greeunup_%s_paging_cursor_%s_%s' %(endpoint,typeFilter, page)
+	currentCursorKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, page)
 	pageInCache = memcache.get(currentCursorKey)
 
 	misses = []
 
-	if not memcache.get('greeunup_%s_paging_cursor_%s_%s' %(endpoint,typeFilter, 1) ):
+	if not memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, 1) ):
 		# make sure the initial page is in cache
-		logging.info("getfromcache")
-		initialPage(typeFilter,endpoint)
+		initialPage(typeFilter,endpoint,sinceTime)
 
 	if not pageInCache:
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
-			prevCursorKey = 'greeunup_%s_paging_cursor_%s_%s' %(endpoint,typeFilter, x)
+			prevCursorKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, x)
 			prevPageInCache = memcache.get(prevCursorKey)
 
 			if not prevPageInCache:
@@ -354,7 +355,7 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 			# get the cursor of the previous page
 			cursorKey = misses.pop()			
 			oldNum = int(cursorKey[-1]) - 1
-			oldKey = 'greeunup_%s_paging_cursor_%s_%s' %(endpoint,typeFilter, oldNum)
+			oldKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, oldNum)
 			cursor = memcache.get(oldKey)
 
 			# get 20 results from where we left off
@@ -368,11 +369,11 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 			memcache.set(cursorKey, dataCursor)
 
 			# save those results in memecache with thier own key
-			pageKey = 'greenup_%ss_page_%s_%s' %(endpoint,typeFilter, cursorKey[-1])
+			pageKey = 'greenup_%s_%ss_page_%s_%s' %(sinceTime,endpoint,typeFilter, cursorKey[-1])
 			memcache.set(pageKey, serialize_entities(items))
 
 		# here is where we return the results for page = 'page', now that we've built all the pages up to 'page'
-		prevCursor = 'greeunup_%s_paging_cursor_%s_%s' %(endpoint,typeFilter, page-1)
+		prevCursor = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, page-1)
 		cursor = memcache.get(prevCursor)
 
 		results = querySet.with_cursor(start_cursor=cursor)
@@ -387,13 +388,13 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 		memcache.set(currentCursorKey, dataCursor)
 
 		# save results in memecache with key
-		pageKey = 'greenup_%ss_page_%s_%s' %(endpoint,typeFilter, page)
+		pageKey = 'greenup_%s_%ss_page_%s_%s' %(sinceTime,endpoint,typeFilter, page)
 		memcache.set(pageKey, serialize_entities(items))
 		return items
 
 	# otherwise, just get the page out of memcache
 	# print "did this instead, cause it was in the cache"
-	pageKey = "greenup_%ss_page_%s_%s" %(endpoint,typeFilter, page)
+	pageKey = "greenup_%s_%ss_page_%s_%s" %(sinceTime,endpoint,typeFilter, page)
 	results = deserialize_entities(memcache.get(pageKey))
 	
 	# sort, newest to oldest

@@ -22,6 +22,8 @@ class BetterHTTPErrorProcessor(urllib2.BaseHandler):
     	return response
     def http_error_400(self, request, response, code, msg, hdrs):
         return response
+    def http_error_404(self, request, response, code, msg, hdrs):
+    	return response
     def http_error_422(self, request, response, code, msg, hdrs):
         return response
     def http_error_503(self, request, response, code, msg, hdrs):
@@ -559,10 +561,10 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_DELETED
 	assert validateDebugDELETERequest(tester.getRaw()) is True
 
-	# #test the trying to delete again will give 404
-	# tester.followLink(endPoints['debug'],withData={'hash' : 'Test message', 'origin' : 'spider-test' },httpMethod="DELETE")
-	# assert tester.getCode() == HTTP_NOT_FOUND #CANT DO THIS UNTIL WE HAVE ABSTRACTION layer done
-	# assert validateErrorMessageReturned(tester.getJSON()) is True
+	#test the trying to delete again will give 404
+	tester.followLink(endPoints['debug'],withData={'hash' : 'Test message', 'origin' : 'spider-test' },httpMethod="DELETE")
+	assert tester.getCode() == HTTP_NOT_FOUND #CANT DO THIS UNTIL WE HAVE ABSTRACTION layer done
+	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Test that the two parameters are required
 	tester.followLink(endPoints['debug'],withData={'origin' : 'spider-test' },httpMethod="DELETE")
