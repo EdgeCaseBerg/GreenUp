@@ -219,7 +219,7 @@ def validateDebugDELETERequest(debugs_response_to_delete):
 def validateDebugDELETE404Response(debugs_response_to_delete):
 	assert debugs_response_to_delete is not None
 	debug_expected_keys = ['status_code', 'message']
-	for key,val in debugs_response_to_post.iteritems():
+	for key,val in debugs_response_to_delete.iteritems():
 		assert key in debug_expected_keys
 		if key == "status_code":
 			assert val == HTTP_NOT_FOUND
@@ -573,7 +573,7 @@ if __name__ == "__main__":
 	#test the trying to delete again will give 404
 	tester.followLink(endPoints['debug'],withData={'hash' : '5f8b50789cadf1cf56328e3419be87a76f8a13b1c931475640bc9fdbbaffc37f', 'origin' : 'spider-test' },httpMethod="DELETE")
 	assert tester.getCode() == HTTP_NOT_FOUND #CANT DO THIS UNTIL WE HAVE ABSTRACTION layer done
-	assert validateErrorMessageReturned(tester.getJSON()) is True
+	assert validateDebugDELETE404Response(tester.getJSON()) is True
 
 	#Test that the two parameters are required
 	tester.followLink(endPoints['debug'],withData={'origin' : 'spider-test' },httpMethod="DELETE")
