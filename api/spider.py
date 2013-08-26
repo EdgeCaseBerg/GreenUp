@@ -233,7 +233,7 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 if __name__ == "__main__":
 	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapp.appspot.com/api'
-	baseURL = 'http://localhost:16084/api'
+	baseURL = 'http://localhost:30002/api'
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
@@ -572,7 +572,7 @@ if __name__ == "__main__":
 
 	#test the trying to delete again will give 404
 	tester.followLink(endPoints['debug'],withData={'hash' : '5f8b50789cadf1cf56328e3419be87a76f8a13b1c931475640bc9fdbbaffc37f', 'origin' : 'spider-test' },httpMethod="DELETE")
-	assert tester.getCode() == HTTP_NOT_FOUND #CANT DO THIS UNTIL WE HAVE ABSTRACTION layer done
+	assert tester.getCode() == HTTP_NOT_FOUND
 	assert validateDebugDELETE404Response(tester.getJSON()) is True
 
 	#Test that the two parameters are required
