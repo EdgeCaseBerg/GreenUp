@@ -7,7 +7,9 @@
 //
 
 #import "MessageViewController.h"
-#import "FSNConnection.h"
+//#import "FSNConnection.h"
+#import "greenhttp.h"
+#import "ContainerViewController.h"
 
 @interface MessageViewController ()
 
@@ -54,61 +56,7 @@
 
 -(void)getMessages
 {
-    NSURL *url = [NSURL URLWithString:@"http://greenupapp.appspot.com/api/comments"];
-    
-    FSNConnection *connection =
-    [FSNConnection withUrl:url
-                    method:FSNRequestMethodGET
-                   headers:nil
-                parameters:nil
-                parseBlock:^id(FSNConnection *c, NSError **error)
-     {
-         NSDictionary *d = [c.responseData dictionaryFromJSONWithError:error];
-         if(!d)
-         {
-             return nil;
-         }
-         
-         /*
-          if (c.response.statusCode == 200)
-          {
-          *error = [NSError errorWithDomain:@"FSAPIErrorDomain"
-          code:1
-          userInfo:[d objectForKey:@"meta"]];
-          }
-          */
-         
-         NSArray *array = [d objectForKey:@"comments"];
-         Message *msg = nil;
-         
-         NSMutableArray *messageArray = [[NSMutableArray alloc] init];
-         for(id comment in array)
-         {
-             msg = [[Message alloc] init];
-             msg.messageContent = [comment objectForKey:@"message"];
-             msg.messageType = [comment objectForKey:@"type"];
-             if([comment objectForKey:@"pin"] != [NSNull null])
-             {
-                 msg.pinID = [NSNumber numberWithInt:[[comment objectForKey:@"pin"] integerValue]];
-             }
-             [messageArray addObject:msg];
-         }
-         return messageArray;
-     }
-           completionBlock:^(FSNConnection *c)
-     {
-         NSMutableArray *result = c.parseResult;
-    
-         self.messages = result;
-         [self.theTableView reloadData];
-         NSLog(@"complete: %@\n\nerror: %@\n\n", c, c.error);
-     }
-             progressBlock:^(FSNConnection *c)
-     {
-         NSLog(@"progress: %@: %.2f/%.2f", c, c.uploadProgress, c.downloadProgress);
-     }];
-    
-    [connection start];
+   // GET was here
 }
 
 -(void)post
