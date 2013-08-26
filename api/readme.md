@@ -63,7 +63,7 @@ URL: **/api**
 ```no-highlight
 {
     "status_code" : 200,
-    "version" : 1.00,
+    "version" : 2.5,
     "Credit" : "Powered by Xenon Apps",
 }
 ```
