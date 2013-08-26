@@ -89,16 +89,6 @@
                     <input type="hidden" value="0" id="startCoords" />
                		<div id="map-canvas"></div>
         		</div>
-
-		        <div id="markerTypeDialog">
-
-                    <div class="tileContainer">
-                        <div class="tile tile1" id="selectPickup">Pickup</div>
-                        <div class="tile tile2" id="selectComment">Comment</div>
-                        <div class="tile tile3" id="selectTrash">Trash</div>
-                        <div class="tile tile4" id="cancel">Cancel</div>
-                    </div>
-			 </div>
         </div>
 
 		<div class="panel" id="panel3" onscroll="window.Comments.updateScroll(this)">
@@ -177,6 +167,15 @@
         <div id="loadingText" style="color:white; width:100%; text-align:center;"></div>
     </div>
 
+    <div id="markerTypeDialog">
+        <div class="tileContainer">
+            <div class="tile tile1" id="selectPickup">Pickup</div>
+            <div class="tile tile2" id="selectComment">Comment</div>
+            <div class="tile tile3" id="selectTrash">Trash</div>
+            <div class="tile tile4" id="cancel">Cancel</div>
+        </div>
+    </div>
+
     <div id="dialogSlider">
         <div id="dialogSliderNest">
             <textarea id="dialogSliderTextarea" class="dialogSliderContents" maxlength="140"></textarea>
@@ -189,6 +188,7 @@
             </div>
         </div>
     </div>
+
     <div id="navPullUpNest">
         <div id="navbarPullUpTab"></div>
     </div>
@@ -199,6 +199,8 @@
             <li><a id="pan3">Comments</a></li>
         </ul>
     </div>
+
+
 </body>
 
 </html>

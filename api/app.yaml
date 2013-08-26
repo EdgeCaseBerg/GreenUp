@@ -1,5 +1,5 @@
 application: greenupapi
-version: 2
+version: 2-5
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -17,6 +17,9 @@ handlers:
 
 - url: /api/comments
   script: comments.application
+
+- url: /api/debug
+  script: debug.application
 
 - url: /api 
   script: api.application

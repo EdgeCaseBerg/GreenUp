@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		390415AC1798C359005EC308 /* MenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 390415AB1798C359005EC308 /* MenuView.m */; };
 		390415AF1798DC63005EC308 /* mapPinExample.png in Resources */ = {isa = PBXBuildFile; fileRef = 390415AE1798DC63005EC308 /* mapPinExample.png */; };
-		39156059179DFE2A00D6E35D /* FSNData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39156053179DFE2A00D6E35D /* FSNData.m */; };
-		3915605A179DFE2A00D6E35D /* FSNConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 39156055179DFE2A00D6E35D /* FSNConnection.m */; };
-		3915605B179DFE2A00D6E35D /* FSN_categories.m in Sources */ = {isa = PBXBuildFile; fileRef = 39156057179DFE2A00D6E35D /* FSN_categories.m */; };
 		3915605F179E086100D6E35D /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 3915605E179E086100D6E35D /* Message.m */; };
 		392E74761798B79E00C71680 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 392E74751798B79E00C71680 /* AppDelegate.m */; };
 		392E74791798B7D500C71680 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 392E74781798B7D500C71680 /* ContainerViewController.m */; };
@@ -58,6 +55,10 @@
 		39592580177519730035E351 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3959257F177519730035E351 /* SystemConfiguration.framework */; };
 		39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D06AFC1783A6A300DD94B7 /* MapKit.framework */; };
 		39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E46BE3179C7000008590A6 /* GoGreenTabBar.m */; };
+		DF2E50B817BC6FF6009BEB11 /* NSArray+Primitive.m in Sources */ = {isa = PBXBuildFile; fileRef = DF2E50B717BC6FF6009BEB11 /* NSArray+Primitive.m */; };
+		DF62E07117C18E1B00B29D43 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF62E06F17C18E1A00B29D43 /* greenhttp.c */; };
+		DF62E07417C1992700B29D43 /* BDHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DF62E07317C1992700B29D43 /* BDHost.m */; };
+		DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF62E07517C1996700B29D43 /* CFNetwork.framework */; };
 		DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */; };
 		DF7C827317B58D2F0099099E /* start.png in Resources */ = {isa = PBXBuildFile; fileRef = DF7C826D17B58D2F0099099E /* start.png */; };
 		DF7C827417B58D2F0099099E /* start@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF7C826E17B58D2F0099099E /* start@2x.png */; };
@@ -82,12 +83,6 @@
 		390415AA1798C359005EC308 /* MenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuView.h; sourceTree = "<group>"; };
 		390415AB1798C359005EC308 /* MenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuView.m; sourceTree = "<group>"; };
 		390415AE1798DC63005EC308 /* mapPinExample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mapPinExample.png; path = Images/mapPinExample.png; sourceTree = SOURCE_ROOT; };
-		39156053179DFE2A00D6E35D /* FSNData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSNData.m; path = ../../../FSNetworking/src/FSNData.m; sourceTree = "<group>"; };
-		39156054179DFE2A00D6E35D /* FSNData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSNData.h; path = ../../../FSNetworking/src/FSNData.h; sourceTree = "<group>"; };
-		39156055179DFE2A00D6E35D /* FSNConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSNConnection.m; path = ../../../FSNetworking/src/FSNConnection.m; sourceTree = "<group>"; };
-		39156056179DFE2A00D6E35D /* FSNConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSNConnection.h; path = ../../../FSNetworking/src/FSNConnection.h; sourceTree = "<group>"; };
-		39156057179DFE2A00D6E35D /* FSN_categories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSN_categories.m; path = ../../../FSNetworking/src/FSN_categories.m; sourceTree = "<group>"; };
-		39156058179DFE2A00D6E35D /* FSN_categories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSN_categories.h; path = ../../../FSNetworking/src/FSN_categories.h; sourceTree = "<group>"; };
 		3915605D179E086100D6E35D /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		3915605E179E086100D6E35D /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		392E74741798B79E00C71680 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -146,6 +141,13 @@
 		39D06AFC1783A6A300DD94B7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39E46BE2179C7000008590A6 /* GoGreenTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoGreenTabBar.h; sourceTree = "<group>"; };
 		39E46BE3179C7000008590A6 /* GoGreenTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoGreenTabBar.m; sourceTree = "<group>"; };
+		DF2E50B617BC6FF6009BEB11 /* NSArray+Primitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+Primitive.h"; path = "GoGreen2/NSArray+Primitive.h"; sourceTree = "<group>"; };
+		DF2E50B717BC6FF6009BEB11 /* NSArray+Primitive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+Primitive.m"; path = "GoGreen2/NSArray+Primitive.m"; sourceTree = "<group>"; };
+		DF62E06F17C18E1A00B29D43 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = greenhttp.c; path = "green-http/greenhttp.c"; sourceTree = "<group>"; };
+		DF62E07017C18E1B00B29D43 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = greenhttp.h; path = "green-http/greenhttp.h"; sourceTree = "<group>"; };
+		DF62E07217C1992700B29D43 /* BDHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDHost.h; sourceTree = "<group>"; };
+		DF62E07317C1992700B29D43 /* BDHost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDHost.m; sourceTree = "<group>"; };
+		DF62E07517C1996700B29D43 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		DF6C594817AB411C005FA0E8 /* HeatMapPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeatMapPoint.h; sourceTree = "<group>"; };
 		DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPoint.m; sourceTree = "<group>"; };
 		DF7C826D17B58D2F0099099E /* start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = start.png; path = Images/start.png; sourceTree = SOURCE_ROOT; };
@@ -162,6 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */,
 				39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */,
 				39592580177519730035E351 /* SystemConfiguration.framework in Frameworks */,
 				3959257E1775196B0035E351 /* QuartzCore.framework in Frameworks */,
@@ -220,20 +223,6 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
-		39156052179DFE0500D6E35D /* FSNetworking Library */ = {
-			isa = PBXGroup;
-			children = (
-				39156054179DFE2A00D6E35D /* FSNData.h */,
-				39156053179DFE2A00D6E35D /* FSNData.m */,
-				39156056179DFE2A00D6E35D /* FSNConnection.h */,
-				39156055179DFE2A00D6E35D /* FSNConnection.m */,
-				39156058179DFE2A00D6E35D /* FSN_categories.h */,
-				39156057179DFE2A00D6E35D /* FSN_categories.m */,
-			);
-			name = "FSNetworking Library";
-			path = GoGreen2;
-			sourceTree = "<group>";
-		};
 		392B9D8D178F66F300C40B64 /* Heat Map Library */ = {
 			isa = PBXGroup;
 			children = (
@@ -260,12 +249,16 @@
 		392B9DE41790C9F500C40B64 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				DF62E06F17C18E1A00B29D43 /* greenhttp.c */,
+				DF62E07017C18E1B00B29D43 /* greenhttp.h */,
 				DF6C594817AB411C005FA0E8 /* HeatMapPoint.h */,
 				DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */,
 				392E74851798B83E00C71680 /* MapViewController.h */,
 				392E74861798B83E00C71680 /* MapViewController.m */,
 				392E74841798B83E00C71680 /* MapView_IPhone.xib */,
 				392E748C1798B88000C71680 /* MapView_IPhone5.xib */,
+				DF62E07217C1992700B29D43 /* BDHost.h */,
+				DF62E07317C1992700B29D43 /* BDHost.m */,
 			);
 			name = Map;
 			sourceTree = "<group>";
@@ -308,6 +301,8 @@
 		39592519177518690035E351 = {
 			isa = PBXGroup;
 			children = (
+				DF62E07517C1996700B29D43 /* CFNetwork.framework */,
+				86B89EFE17C1544300FDF820 /* greenHttp */,
 				3959252B177518690035E351 /* GoGreen */,
 				39592552177518690035E351 /* GoGreen2Tests */,
 				39592524177518690035E351 /* Frameworks */,
@@ -327,7 +322,7 @@
 		39592524177518690035E351 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				39156052179DFE0500D6E35D /* FSNetworking Library */,
+				DF2E50B517BC6FE0009BEB11 /* NSArray+Primitives */,
 				392B9D8D178F66F300C40B64 /* Heat Map Library */,
 				39D06AFC1783A6A300DD94B7 /* MapKit.framework */,
 				3959257F177519730035E351 /* SystemConfiguration.framework */,
@@ -407,6 +402,23 @@
 				39E46BE3179C7000008590A6 /* GoGreenTabBar.m */,
 			);
 			name = Tabbar;
+			sourceTree = "<group>";
+		};
+		86B89EFE17C1544300FDF820 /* greenHttp */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = greenHttp;
+			path = GoGreen2/greenHttp;
+			sourceTree = "<group>";
+		};
+		DF2E50B517BC6FE0009BEB11 /* NSArray+Primitives */ = {
+			isa = PBXGroup;
+			children = (
+				DF2E50B617BC6FF6009BEB11 /* NSArray+Primitive.h */,
+				DF2E50B717BC6FF6009BEB11 /* NSArray+Primitive.m */,
+			);
+			name = "NSArray+Primitives";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -545,11 +557,11 @@
 				393743E61798B98A005597FF /* HeatMapView.m in Sources */,
 				390415AC1798C359005EC308 /* MenuView.m in Sources */,
 				39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */,
-				39156059179DFE2A00D6E35D /* FSNData.m in Sources */,
-				3915605A179DFE2A00D6E35D /* FSNConnection.m in Sources */,
-				3915605B179DFE2A00D6E35D /* FSN_categories.m in Sources */,
 				3915605F179E086100D6E35D /* Message.m in Sources */,
 				DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */,
+				DF2E50B817BC6FF6009BEB11 /* NSArray+Primitive.m in Sources */,
+				DF62E07117C18E1B00B29D43 /* greenhttp.c in Sources */,
+				DF62E07417C1992700B29D43 /* BDHost.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
