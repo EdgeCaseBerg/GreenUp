@@ -17,7 +17,7 @@ class API(Handler):
 
 	def get(self):
 		#Display API information
-		info = json.dumps({"version" : 2.00, "powered by" : "Xenon Apps"})
+		info = json.dumps({"status_code" : 200, "version" : 2.00, "powered by" : "Xenon Apps"})
 		self.response.set_status(200,info)
 		self.write(info)
 		

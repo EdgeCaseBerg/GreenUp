@@ -27,7 +27,7 @@ class Comments(webapp2.RequestHandler):
 			else:
 				#Semantically incorrect query
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-				self.response.write('{ "Error_Message" : "Unrecognized type"} ')
+				self.response.write('{ "status_code" : %i, "Error_Message" : "Unrecognized type"} ' % HTTP_REQUEST_SEMANTICS_PROBLEM)
 				return
 		#Check for other optional parameter:
 		page = self.request.get("page")
@@ -39,7 +39,7 @@ class Comments(webapp2.RequestHandler):
 			except Exception, e:
 				#Poorly formed page parameter
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-				self.response.write('{"Error_Message" : "Non-integer page value not allowed"}')
+				self.response.write('{"status_code" : %i, "Error_Message" : "Non-integer page value not allowed"}' % HTTP_REQUEST_SEMANTICS_PROBLEM)
 				return
 		else:
 			#No page given, so start it off
@@ -60,7 +60,7 @@ class Comments(webapp2.RequestHandler):
 
 		#write out the comments in json form
 		comments = layer
-		response = { "comments" : comments, "page" : {"next" : next, "previous" : previous}}
+		response = { "status_code" : HTTP_OK, "comments" : comments, "page" : {"next" : next, "previous" : previous}}
 
 		#Send out the response
 		self.response.set_status(HTTP_OK,"")
@@ -75,7 +75,7 @@ class Comments(webapp2.RequestHandler):
 		except Exception, e:
 			#The request body is malformed. 
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM,"")
-			self.response.write('{"Error_Message" : "Request body is malformed"}')
+			self.response.write('{"status_code" : %i, "Error_Message" : "Request body is malformed"}' % HTTP_REQUEST_SYNTAX_PROBLEM)
 			#Don't allow execution to proceed any further than this
 			return
 		info = json.loads(self.request.body)
@@ -87,7 +87,7 @@ class Comments(webapp2.RequestHandler):
 		except Exception, e:
 			#The request body lacks proper keys
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write(json.dumps({"Error_Message" : "Required keys not present in request"}))
+			self.response.write(json.dumps({"status_code" : HTTP_REQUEST_SEMANTICS_PROBLEM, "Error_Message" : "Required keys not present in request"}))
 			return
 
 		#Request has proper required keys
@@ -96,7 +96,7 @@ class Comments(webapp2.RequestHandler):
 
 		if typeOfComment is None or commentMessage is None:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
+			self.response.write('{"status_code" : %i, "Error_Message" : "Cannot accept null data for required parameters" }' % HTTP_REQUEST_SEMANTICS_PROBLEM)
 			return
 
 		#Determine if type is semantically correct
@@ -104,7 +104,7 @@ class Comments(webapp2.RequestHandler):
 			pass
 		else:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write(json.dumps({ "Error_Message" : "Unrecognized Type" }))
+			self.response.write(json.dumps({"status_code" : HTTP_REQUEST_SEMANTICS_PROBLEM, "Error_Message" : "Unrecognized Type" }))
 			return
 
 		pin = None
@@ -113,7 +113,7 @@ class Comments(webapp2.RequestHandler):
 			pin = int(info['pin'])
 		except ValueError, v:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{ "Error_Message" : "If pin information is sent in a request, it must be a numeric id" }')
+			self.response.write('{"status_code" : %i, "Error_Message" : "If pin information is sent in a request, it must be a numeric id" }' % HTTP_REQUEST_SEMANTICS_PROBLEM)
 			return
 		except Exception, e:
 			#Die silently if the pin is not there as it is optional
@@ -122,18 +122,18 @@ class Comments(webapp2.RequestHandler):
 		# validate the message
 		if (len(info['message'].strip(" ")) == 0) or (info['message'] == None):
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write(json.dumps({ "Error_Message" : "Cannot accept an empty message" }))
+			self.response.write(json.dumps({"status_code" : HTTP_REQUEST_SEMANTICS_PROBLEM, "Error_Message" : "Cannot accept an empty message" }))
 			return
 
 		if len(info['message']) > 140:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write(json.dumps({ "Error_Message" : "Message exceeds 140 characters" }))
+			self.response.write(json.dumps({"status_code" : HTTP_REQUEST_SEMANTICS_PROBLEM, "Error_Message" : "Message exceeds 140 characters" }))
 			return
 
 		#All information present and valid. Store information in the database
 		AbstractionLayer().submitComments(commentType=typeOfComment.upper(), message=commentMessage, pin=pin)
 
-		self.response.write('{ "status" : %i, "message" : "Successfuly submitted new comment" }' % HTTP_OK)
+		self.response.write('{ "status_code" : %i, "message" : "Successfuly submitted new comment" }' % HTTP_OK)
 
 		
 

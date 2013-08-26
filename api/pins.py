@@ -9,6 +9,8 @@ from datastore import Pins as DBPins
 from constants import *
 from datastore import *
 
+import logging
+
 class Pins(webapp2.RequestHandler):
 
 	def get(self):
@@ -42,11 +44,11 @@ class Pins(webapp2.RequestHandler):
 			except ValueError, v:
 				#Syntactic error
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "latDegrees parameter must be numeric"}')
+				self.response.write('{"status_code" : %i,"Error_Message" : "latDegrees parameter must be numeric"}' % HTTP_REQUEST_SYNTAX_PROBLEM)
 				return
 			except SemanticError, s:
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
-				self.response.write('{"Error_Message" : "%s"}' % s.message)
+				self.response.write('{"status_code" : %i,"Error_Message" : "%s"}' % (HTTP_REQUEST_SEMANTICS_PROBLEM ,s.message))
 				return
 		
 
@@ -60,11 +62,11 @@ class Pins(webapp2.RequestHandler):
 				parameters+=1
 			except ValueError, v:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "%s" }' % "lonDegrees parameter must be numeric")
+				self.response.write('{"status_code" : %i,"Error_Message" : "%s" }' % (HTTP_REQUEST_SYNTAX_PROBLEM,"lonDegrees parameter must be numeric"))
 				return
 			except SemanticError, s:
 				self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM,s.message)
-				self.response.write('{ "Error_Message" : "%s" }' % s.message)
+				self.response.write('{"status_code" : %i, "Error_Message" : "%s" }' % (HTTP_REQUEST_SEMANTICS_PROBLEM,s.message))
 				return
 				
 		
@@ -73,7 +75,7 @@ class Pins(webapp2.RequestHandler):
 		#It'd be great if python had XOR for objects instead of just bitwise ^
 		if (lonOffset and not latOffset) or (latOffset and not lonOffset):
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "%s"}' % "Both lonOffset and latOffset must be present if either is used")
+			self.response.write('{"status_code" : %i, "Error_Message" : "%s"}' % (HTTP_REQUEST_SEMANTICS_PROBLEM,"Both lonOffset and latOffset must be present if either is used"))
 			return
 
 		#the choice of lon is arbitrary, either lat or lon offset would work here
@@ -85,7 +87,7 @@ class Pins(webapp2.RequestHandler):
 				#We could check to see if the offsets cause us to go out of range for our queries, but really that's unneccesary and would cause unneccesary calculation on the clientside to deal making sure they're within range.
 			except ValueError, e:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write('{"Error_Message" : "Offsets defined must both be integers" }')
+				self.response.write('{"status_code" : %i, "Error_Message" : "Offsets defined must both be integers" }' % HTTP_REQUEST_SYNTAX_PROBLEM)
 				return
 
 		#If no parameters are specified we'll return everything we have for them
@@ -95,7 +97,7 @@ class Pins(webapp2.RequestHandler):
 		response = layer.getPins(latDegrees=latDegrees, latOffset=latOffset, lonDegrees=lonDegrees, lonOffset=lonOffset)
 		#By this point we have a response and we simply have to send it back
 		self.response.set_status(HTTP_OK)
-		self.response.write(json.dumps(response))
+		self.response.write(json.dumps({'status_code' : HTTP_OK, 'pins' : response}))
 
 	def post(self):
 		self.response.set_status(HTTP_OK)
@@ -105,7 +107,7 @@ class Pins(webapp2.RequestHandler):
 		except Exception, e:
 			#The request body is malformed. 
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-			self.response.write('{"Error_Message" : "Request body is malformed"}')
+			self.response.write('{"status_code" : %i, "Error_Message" : "Request body is malformed"}' % HTTP_REQUEST_SYNTAX_PROBLEM)
 			#Don't allow execution to proceed any further than this
 			return
 		info = json.loads(self.request.body)
@@ -118,7 +120,7 @@ class Pins(webapp2.RequestHandler):
 		except Exception, e:
 			#Improper request
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-			self.response.write('{"Error_Message" : "Required keys not present in request"}')
+			self.response.write('{"status_code" : %i, "Error_Message" : "Required keys not present in request"}' % HTTP_REQUEST_SYNTAX_PROBLEM)
 			return
 		
 		pinType = info['type']
@@ -129,13 +131,13 @@ class Pins(webapp2.RequestHandler):
 		#Catch nulls
 		if pinType is None or latDegrees is None or lonDegrees is None or message is None:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "Cannot accept null data for required parameters" }')
+			self.response.write('{"status_code" : %i, "Error_Message" : "Cannot accept null data for required parameters" }' % HTTP_REQUEST_SEMANTICS_PROBLEM)
 			return
 
 		#Determine if the type is correct:
 		if pinType.upper() not in PIN_TYPES:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "Pin type not a valid type." }')
+			self.response.write('{"status_code" : %i, "Error_Message" : "Pin type not a valid type." }' % HTTP_REQUEST_SEMANTICS_PROBLEM)
 			return
 
 		#Determine if lat Degrees and lon degrees are within the proper range and numeric
@@ -145,11 +147,11 @@ class Pins(webapp2.RequestHandler):
 				raise SemanticError("Lat degrees must be within the range between -180.0 and 180.0")
 		except ValueError, e:
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-			self.response.write('{"Error_Message" : "Lat degrees must be a numeric value" }')
+			self.response.write('{"status_code" : %i, "Error_Message" : "Lat degrees must be a numeric value" }' % HTTP_REQUEST_SYNTAX_PROBLEM)
 			return
 		except SemanticError,s:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "%s" }' % s.message)
+			self.response.write('{"status_code" : %i, "Error_Message" : "%s" }' % (HTTP_REQUEST_SEMANTICS_PROBLEM,s.message))
 			return
 		
 		#do the same thing for lon degrees
@@ -159,17 +161,17 @@ class Pins(webapp2.RequestHandler):
 				raise SemanticError("Lon degrees must be within the range of -90.0 and 90.0")
 		except ValueError, e:
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-			self.response.write('{"Error_Message" : "Lon degrees must be a numeric value"}')
+			self.response.write('{"status_code" : %i,"Error_Message" : "Lon degrees must be a numeric value"}' % HTTP_REQUEST_SYNTAX_PROBLEM)
 			return
 		except SemanticError, s:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "%s"}' % s.message)
+			self.response.write('{"status_code" : %i,"Error_Message" : "%s"}' % (HTTP_REQUEST_SEMANTICS_PROBLEM,s.message))
 			return
 
 		#Verify the message is not empty
 		if message.lstrip().rstrip() == '':
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
-			self.response.write('{"Error_Message" : "Pin message may not be empty."}')
+			self.response.write('{"status_code" : %i, "Error_Message" : "Pin message may not be empty."}' % HTTP_REQUEST_SEMANTICS_PROBLEM)
 			return
 
 		#Place the pin into the datastore
@@ -177,7 +179,7 @@ class Pins(webapp2.RequestHandler):
 		layer.submitPin(latDegrees=latDegrees, lonDegrees=lonDegrees, pinType=pinType.upper(), message=message)
 
 		#self.response.set_status(HTTP_OK)		
-		self.response.write('{  "status" : 200,  "message" : "Successful submit"}')
+		self.response.write('{  "status_code" : 200,  "message" : "Successful submit"}')
 
 		
 

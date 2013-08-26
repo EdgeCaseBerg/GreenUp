@@ -62,6 +62,7 @@ URL: **/api**
 ####Response:
 ```no-highlight
 {
+    "status_code" : 200,
     "version" : 1.00,
     "Credit" : "Powered by Xenon Apps",
 }
@@ -96,6 +97,7 @@ No type specified will return all comments.
 ####Response:
 ```no-highlight
 {
+    "status_code" : 200,
     "comments" : [
         { 
             "type" : "trash pickup", 
@@ -171,7 +173,7 @@ If the post data is malformed, the server will return a `400 bad request` respon
 ####Response:
 ```
 { 
- "status" : 200, 
+ "status_code" : 200, 
  "message" : "Succesfully submited new comment",
 }
 ```
@@ -209,18 +211,21 @@ If the request only specifies the offset then the API will return an error messa
 
 ####Response
 ```
-[
-    {
-        "latDegrees" : 24.53, 
-        "lonDegrees" : 43.2, 
-        "secondsWorked" : 120
-    },
-    {
-        "latDegrees" : 25.13, 
-        "lonDegrees" : 41.2, 
-        "secondsWorked" : 133
-    }
-]
+{
+    "status_code" : 200,
+    "grid" : [
+        {
+            "latDegrees" : 24.53, 
+            "lonDegrees" : 43.2, 
+            "secondsWorked" : 120
+        },
+        {
+            "latDegrees" : 25.13, 
+            "lonDegrees" : 41.2, 
+            "secondsWorked" : 133
+        }
+    ]
+}
 ```
 
 ---------------------------
@@ -267,7 +272,7 @@ If the request is malformed the server will return an error code of `400 bad req
 ####Response
 ```
 { 
- "status" : 200, 
+ "status_code" : 200, 
  "message" : "Successful submit",
 }
 ```
@@ -303,20 +308,23 @@ If no latitude or longitude are specified then all pins will be returned.
 
 ####Response
 ```
-[
-    {
-        "latDegrees" : 24.53, 
-        "lonDegrees" : 43.2, 
-        "type" : "general message", 
-        "message", "I need help with the trash on Colchester ave"
-    },
-    {
-        "latDegrees" : 25.13, 
-        "lonDegrees" : 41.2, 
-        "type" : "help needed", 
-        "message", "There's a lot of trash on Pearl St, I could use some help!"
-    }
-]
+{
+    "status_code" : 200,
+    "pins" : [
+        {
+            "latDegrees" : 24.53, 
+            "lonDegrees" : 43.2, 
+            "type" : "general message", 
+            "message", "I need help with the trash on Colchester ave"
+        },
+        {
+            "latDegrees" : 25.13, 
+            "lonDegrees" : 41.2, 
+            "type" : "help needed", 
+            "message", "There's a lot of trash on Pearl St, I could use some help!"
+        }
+    ]
+}
 ```
 
 
@@ -357,7 +365,7 @@ URL: **/api/pins**
 ####Response
 ```
 { 
- "status" : 200, 
+ "status_code" : 200, 
  "message" : "Successful submit",
 }
 ```

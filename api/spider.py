@@ -85,7 +85,7 @@ class Spider(object):
 
 def validateCommentsGETRequest(comments_response_to_get):
 	#define filters
-	comment_response_keys = ['comments','page']
+	comment_response_keys = ['comments','page','status_code']
 	comment_response_inner_keys = {'comments' : ['type','message','timestamp','pin','id'],
 									'page' : ['next','previous']
 	}
@@ -103,68 +103,93 @@ def validateCommentsGETRequest(comments_response_to_get):
 
 def validateCommentsPOSTRequest(comments_response_to_post):
 	assert comments_response_to_post is not None
-	assert 'status' in comments_response_to_post
+	assert 'status_code' in comments_response_to_post
 	assert 'message' in comments_response_to_post
-	assert comments_response_to_post['status'] == 200
+	assert comments_response_to_post['status_code'] == 200
 	assert comments_response_to_post['message'] == "Successfuly submitted new comment"
 	return True
 
 def validateHeatmapGETRequest(heatmap_response_to_get):
-	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked']
-	for gridzone in heatmap_response_to_get:
-		for key,value in gridzone.iteritems():
-			assert key in heatmap_response_keys
-			assert isinstance(value,numbers.Number)
+	heatmap_response_keys = ['grid','status_code']
+	heatmap_response_inner_keys = ['latDegrees','lonDegrees','secondsWorked']
+	for out_key,out_val in heatmap_response_to_get.iteritems():
+		assert out_key in heatmap_response_keys
+		if out_key == "status_code":
+			assert out_val == 200
+		if out_key == "grid":
+			for gridzone in heatmap_response_to_get['grid']:
+				for key,value in gridzone.iteritems():
+					assert key in heatmap_response_inner_keys
+					assert isinstance(value,numbers.Number)
 	return True
 
 def validateHeatmapGETRawFalseRequest(heatmap_response_to_get):
-	heatmap_response_keys = ['latDegrees','lonDegrees','secondsWorked']
-	for gridzone in heatmap_response_to_get:
-		for key,value in gridzone.iteritems():
-			assert key in heatmap_response_keys
-			assert isinstance(value,numbers.Number)
-			if key=="secondsWorked":
-				assert value <= 1.0
+	heatmap_response_keys = ['grid','status_code']
+	heatmap_response_inner_keys = ['latDegrees','lonDegrees','secondsWorked']
+	for out_key,out_val in heatmap_response_to_get.iteritems():
+		if out_key == "grid":
+			for gridzone in out_val:
+				for key,value in gridzone.iteritems():
+					assert key in heatmap_response_inner_keys
+					assert isinstance(value,numbers.Number)
+					if key=="secondsWorked":
+						assert value <= 1.0
+		if out_key == "status_code":
+			assert out_val == 200
 	return True
 
 def validateHeatmapGETRawTrueRequest(heatmap_response_to_get):
+	heatmap_response_keys = ['grid','status_code']
+	heatmap_response_inner_keys = ['latDegrees','lonDegrees','secondsWorked']
 	#Assert validity of syntax
 	valid = False
 	if(validateHeatmapGETRequest(heatmap_response_to_get)):
-		for gridzone in heatmap_response_to_get:
-			for key,value in gridzone.iteritems():
-				#We have to assert that all the values are floats for secondsWorked and they're not all under 1,
-				if key=="secondsWorked":
-					valid = valid or value > 1.0
+		for out_key,out_val in heatmap_response_to_get.iteritems():
+			assert out_key in heatmap_response_keys
+			if out_key == "grid":
+				for gridzone in out_val:
+					for key,value in gridzone.iteritems():
+						assert key in heatmap_response_inner_keys
+						#We have to assert that all the values are floats for secondsWorked and they're not all under 1,
+						if key=="secondsWorked":
+							valid = valid or value > 1.0
+			if out_key == "status_code":
+				assert out_val == 200
 	assert valid == True
 	return True
 
 
 def validateHeatmapPUTRequest(heatmap_response_to_put):
 	assert heatmap_response_to_put is not None
-	assert 'status' in heatmap_response_to_put
+	assert 'status_code' in heatmap_response_to_put
 	assert 'message' in heatmap_response_to_put
-	assert heatmap_response_to_put['status'] == 200
+	assert heatmap_response_to_put['status_code'] == 200
 	assert heatmap_response_to_put['message'] == "Successful submit"
 	return True
 
 def validatePINSGetRequest(pins_response_to_get):
-	pins_response_keys = ['latDegrees','lonDegrees','type','message']
+	pins_response_keys = ['status_code', 'pins']
+	pins_response_inner_keys = ['latDegrees','lonDegrees','type','message']
 	assert pins_response_to_get is not None
-	for pin in pins_response_to_get:
-		for key,value in pin.iteritems():
-			assert key in pins_response_keys
-			if key in ['latDegrees','lonDegrees']:
-				assert isinstance(value,numbers.Number)
-			else:
-				assert isinstance(value,basestring)
+	for out_key,out_val in pins_response_to_get.iteritems():
+		assert out_key in pins_response_keys
+		if out_key == "status_code":
+			assert out_val == 200
+		if out_key == "pins":
+			for pin in out_val:
+				for key,value in pin.iteritems():
+					assert key in pins_response_inner_keys
+					if key in ['latDegrees','lonDegrees']:
+						assert isinstance(value,numbers.Number)
+					else:
+						assert isinstance(value,basestring)
 	return True
 
 def validatePinsPOSTRequest(pins_response_to_post):
 	assert pins_response_to_post is not None
-	assert 'status' in pins_response_to_post
+	assert 'status_code' in pins_response_to_post
 	assert 'message' in pins_response_to_post
-	assert pins_response_to_post['status'] == 200
+	assert pins_response_to_post['status_code'] == 200
 	assert pins_response_to_post['message'] == "Successful submit"
 	return True
 
@@ -341,7 +366,11 @@ if __name__ == "__main__":
 	assert validateHeatmapGETRawFalseRequest(tester.getJSON()) is True
 
 	#PUT requests to server checking
-	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 32, "secondsWorked" : 45}],httpMethod="PUT")
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 32, "secondsWorked" : 25}],httpMethod="PUT")
+	assert tester.getCode() == HTTP_OK
+	assert validateHeatmapPUTRequest(tester.getJSON()) is True
+
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 12, "secondsWorked" : 45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_OK
 	assert validateHeatmapPUTRequest(tester.getJSON()) is True
 
