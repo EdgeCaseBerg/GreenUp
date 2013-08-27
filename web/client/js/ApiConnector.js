@@ -1068,7 +1068,11 @@ function UiHandle(){
 			window.UI.commentsPrevPageUrl = null;
 		}
 
+		console.log("comments: ");
+		console.log(comments);
+
 		for(var ii=0; ii<comments.length; ii++){
+
 				var div = document.createElement("div");
 				var timeDiv = document.createElement("div");
 				var messageContent = document.createElement("span");
@@ -1092,14 +1096,25 @@ function UiHandle(){
 					div.className = "bubbleLeft bubble";
 				}
 
+				switch(comments[ii].type){
+					case "TRASH PICKUP":
+					break;
+					case "HELP NEEDED":
+					break;
+					case "GENERAL MESSAGE":
+					break;
+					case "FORUM":
+					break;
+				}
+
 				switch(comments[ii]['type']){
 					case 'FORUM':
 						div.className += " bubbleForum";
 					break;
-					case 'needs':
+					case 'TRASH PICKUP':
 						div.className += " bubbleNeeds";
 					break;
-					case 'message':
+					case 'GENERAL MESSAGE':
 						div.className += " bubbleMessage";
 					break;
 					default:
