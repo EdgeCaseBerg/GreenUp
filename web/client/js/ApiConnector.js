@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 
@@ -1048,6 +1048,7 @@ function UiHandle(){
 
 	// data is passed from the api connector to here to update the forum.
 	UiHandle.prototype.updateForum = function updateForum(data){
+		document.getElementById("bubbleContainer").innerHTML = "";
 		console.log("In Update forum");
 		// console.log("Comment data: "+data);
 		// document.getElementById("bubbleContainer").innerHTML = "";
