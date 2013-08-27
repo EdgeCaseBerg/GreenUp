@@ -7,8 +7,12 @@
 //
 
 #import "ContainerViewController.h"
-#import "FSNConnection.h"
+//#import "FSNConnection.h"
+#import "greenhttp.h"
 #import "Message.h"
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 @interface ContainerViewController ()
 
@@ -59,7 +63,7 @@ static ContainerViewController* theContainerView = nil;
     }
     
     //Menu
-    self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171)];
+    self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
     [self.view addSubview:self.theMenuView];
     
     //TabBar
@@ -124,6 +128,7 @@ static ContainerViewController* theContainerView = nil;
 
 -(void)switchHomeView
 {
+    //[self.theMenuView buildViewForHome];
     [self.theHomeViewController.view setHidden:FALSE];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item1];
@@ -141,6 +146,7 @@ static ContainerViewController* theContainerView = nil;
 }
 -(void)switchMapView
 {
+    //[self.theMenuView buildViewForMap];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item2];
     //Animate Block
@@ -158,6 +164,7 @@ static ContainerViewController* theContainerView = nil;
 }
 -(void)switchMessageView
 {
+    //[self.theMenuView buildViewForMessages];
     [self.theMessageViewController.view setHidden:FALSE];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item3];
@@ -263,5 +270,7 @@ static ContainerViewController* theContainerView = nil;
         }
     }
 }
+
+
 
 @end

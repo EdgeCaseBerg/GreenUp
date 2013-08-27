@@ -63,7 +63,7 @@ URL: **/api**
 ```no-highlight
 {
     "status_code" : 200,
-    "version" : 1.00,
+    "version" : 2.5,
     "Credit" : "Powered by Xenon Apps",
 }
 ```
@@ -441,7 +441,7 @@ URL: **/api/debug**
 ```
 {
     "message" : "There was a problem in the main controller",
-    "stackTrace" : "line 52... etc etc" 
+    "stackTrace" : "line 52... etc etc" ,
     "origin" : "6f3d78c8ca1d63645015d6fa2d975902348d585f954efd0e8ecca4f362c697d9"
 }
 ```

@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448819"
-   height="1052.3622047"
+   width="341.5444"
+   height="4.5861106"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="bubble_green_bottom_reverse.svg">
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="bubble_green_center.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.2"
-     inkscape:cx="87.880122"
-     inkscape:cy="722.32385"
+     inkscape:zoom="1.4"
+     inkscape:cx="336.72884"
+     inkscape:cy="-85.514292"
      inkscape:document-units="px"
      inkscape:current-layer="g4080-5-1"
      showgrid="false"
@@ -34,7 +34,11 @@
      inkscape:window-height="718"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -43,14 +47,15 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-72.829339,-321.27458)">
     <g
        id="g4514"
        transform="matrix(-1,0,0,1,487.20309,-30)"
@@ -71,10 +76,10 @@
             <rect
                style="fill:#008000;stroke:none"
                id="rect4056-5-5-4"
-               width="339.53302"
-               height="6.8138666"
-               x="84.309052"
-               y="488.61606"
+               width="382.84787"
+               height="40.774136"
+               x="58.746197"
+               y="470.04404"
                ry="0" />
           </g>
         </g>

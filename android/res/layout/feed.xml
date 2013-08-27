@@ -11,7 +11,9 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="352dp"
-        android1:layout_weight="0.42" >
+        android1:layout_weight="0.42" 
+        android:footerDividersEnabled="false"	
+        android:headerDividersEnabled="false">
     </ListView>
 
     <EditText

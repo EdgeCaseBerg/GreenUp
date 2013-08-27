@@ -70,10 +70,7 @@ class Debug(webapp2.RequestHandler):
 			self.response.set_status(HTTP_OK,"")
 			self.response.write(json.dumps(response))	
 			return
-		
-		
-
-
+			
 		#If we've made it this far it means we have a page and possibly a time to filter with
 		#Pass that down to the abstraction layer and let it return the messages to us
 		layer = AbstractionLayer()
