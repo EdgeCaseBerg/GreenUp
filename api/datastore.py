@@ -325,7 +325,6 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 		if endpoint == "comment":
 			querySet = Comments.all().ancestor(Pins.app_key())
 		elif endpoint == "debug":
-			logging.info("debug elif")
 			if sinceTime is not None:
 				querySet = DebugReports.since(sinceTime)
 			else:
@@ -515,6 +514,8 @@ def pinFormatter(dbPins):
 def debugFormatter(dbBugs):
 	# properly format bugs in json and return
 	bugs = []
+	if dbBugs is None:
+		return bugs
 	for bug in dbBugs:
 		bugs.append({   'message' : bug.errorMessage,
 						'stackTrace'    : bug.debugInfo,
