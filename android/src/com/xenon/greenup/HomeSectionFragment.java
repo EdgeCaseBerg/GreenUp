@@ -11,7 +11,7 @@ public class HomeSectionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_section_dummy, container, false);
+        return inflater.inflate(R.layout.start_page, container, false);
     }
 
 }
