@@ -223,9 +223,11 @@ class AbstractionLayer():
 	def getDebug(self, debugId=None, theHash=None,since=None,page=1):
 		# retrieve information about a bug by id, hash, or get them all with optional since time
 		# add JSON Formatting to the returns such that {  "errror_message" : "Stack trace or debugging information here", "id":id, "time":timestamp } 
-		if debugId:
+		if debugId is not None:
+			logging.info("by id")
 			bugs = DebugReports.by_id(debugId) 
-		elif theHash:
+		elif theHash is not None:
+			logging.info("by hash")
 			bugs = DebugReports.by_hash(theHash)
 		else:
 			bugs = paging(page,None,"debug",since)
