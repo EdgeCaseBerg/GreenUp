@@ -30,8 +30,11 @@ public class FeedSectionFragment extends ListFragment {
 	
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-		CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
-		this.comments = cp.getCommentsList();
+		//CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
+		//this.comments = cp.getCommentsList();
+		for(int i=0; i < 60; i++){
+			this.comments.add(new Comment("FORUM","message",0));
+		}
 		//Set the adapter
 		Activity currentActivity = getActivity();
 		//If we have no internet then we will get nothing back from the api
@@ -94,7 +97,7 @@ public class FeedSectionFragment extends ListFragment {
 		protected Void doInBackground(Void...voids) {
 			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
 			//Java makes no sense. It requires the capital version of Void because there simply
-			//must be something returned and you have to java's bastard children, the wrapper 
+			//must be something returned and you have to use java's bastard children, the wrapper 
 			//types instead of primitives because it's an async task. But yet, the primitive
 			//keyword null is apparent a Void type (although returning void is wrong). 
 			//sense, this makes none.
