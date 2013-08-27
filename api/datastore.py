@@ -339,6 +339,8 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 		initialPage(typeFilter,endpoint,sinceTime)
 
 	if not pageInCache:
+		if page is None:
+			page = 1
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache

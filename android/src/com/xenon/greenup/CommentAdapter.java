@@ -13,6 +13,7 @@ import java.util.TimeZone;
 import android.app.Activity;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,7 +99,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    //Determine the twitter-esk stamp
 	    SimpleDateFormat sdf = new SimpleDateFormat("E LLL d kk:mm:ss yyyy",Locale.US);
 	    //The app engines timestamps are GMT
-	    sdf.setTimeZone(TimeZone.getTimeZone("GMT+4"));
+	    sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 	    Date fromStamp = null;
 	    try {
 	    	String ts = comment.getTimestamp();
