@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 
@@ -436,16 +436,11 @@ function MapHandle(){
 
 	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message, lat, lon){
 		// console.log("in addMarker()");
-		console.log("message");
+		console.log(message);
 
 		var pin = new Pin();
 		pin.message = message;
 		pin.type = window.MAP.markerType;
-		// alert(pin.type);
-		
-		// heres the issue (bug)
-		// pin.latDegrees = lat;
-		// pin.lonDegrees = lon;
 
 		var iconUrl; 
 		switch(window.MAP.markerType){
@@ -469,20 +464,26 @@ function MapHandle(){
 	
 		var eventLatLng = window.MAP.markerEvent;
 		console.log(eventLatLng.latLng);
-		pin.latDegrees = eventLatLng.latLng.mb;
-		pin.lonDegrees = eventLatLng.latLng.nb;
-		alert(pin.latDegrees);
+		pin.latDegrees = eventLatLng.latLng.lat();
+		pin.lonDegrees = eventLatLng.latLng.lng();
+
+		var marker = new google.maps.Marker({
+        	position: new google.maps.LatLng(pin.latDegrees, pin.lonDegrees),
+        	map: window.MAP.map,
+        	icon: iconUrl
+    	});
+		marker.setVisible(window.UI.isMarkerVisible);
+    	window.MAP.pickupMarkers.push(marker);
 
 		var serializedPin = JSON.stringify(pin);
-		console.log(serializedPin);
     	window.ApiConnector.pushNewPin(serializedPin);
-
 	}
 
 	MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
 		console.log("Heatmap data to be applied to map: ");
 		console.log(data);
-		var dataObj = eval(data);
+		// var dataObj = eval(data);
+		var dataObj = JSON.parse(data);
 		var heatmapData = [];
 			// console.log(dataObj[ii].latDegrees);
 		for(var ii=0; ii<dataObj.length; ii++){
@@ -805,10 +806,11 @@ function UiHandle(){
 
 	// shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
 	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(type){
-		if(type = "comment"){
+		if(type == "comment"){
 			window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.COMMENT;	
 		}
 		if(window.CURRENT_USER_INPUT_TYPE == window.INPUT_TYPE.COMMENT){
+			console.log("comment");
 			window.UI.topSliderToggle();
 			// add marker type selectors
 			// alert("comment");
@@ -830,6 +832,7 @@ function UiHandle(){
 		    });
 
 		}else{
+			console.log("marker");
 			// add marker type selectors
 			// alert("marker");
 			document.getElementById("markerTypeDialog").className = "markerTypePanel2";
@@ -1036,9 +1039,9 @@ function UiHandle(){
 	// markers coming from the apiconnector comes here to be added to the UI
 	UiHandle.prototype.updateMarker = function updateMarker(data){
 		console.log("marker response: "+data);
-		var dataArr = eval("("+data+")");
-        for(ii=0; ii<dataArr.length; ii++){
-            window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
+		var dataArr = JSON.parse(data);
+        for(ii=0; ii<dataArr.pins.length; ii++){
+            window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
         }
 
 	}
