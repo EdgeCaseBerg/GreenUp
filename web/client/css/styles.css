@@ -246,6 +246,11 @@ a, a:hover, a:visited{
     background: -moz-linear-gradient(top, #009246, #12690a);
 }
 
+.navbarIcons{
+    display:inline-block;
+    height:3em;
+}
+
 #navPullUpNest{
     background:#bbb;
     width:100%;
@@ -266,6 +271,7 @@ a, a:hover, a:visited{
 
 
 	.nav li{
+        vertical-align: top;
 	   display:inline;
 	   
     }
@@ -300,7 +306,7 @@ a, a:hover, a:visited{
         font-family:arial;
         font-size:1.2em;
         font-weight:bold;
-        padding:8% 0% 7% 0%;
+        padding:3% 0% 7% 0%;
         text-decoration:none;
         
         text-shadow:0px 1px 0px #ced9bf;
@@ -752,7 +758,7 @@ h1{
 }
 
 .bubbleTrash{
-    background: blue;
+    background: #6fb9ec;
 }
 
 .bubbleForum{
@@ -763,10 +769,10 @@ h1{
     border-color: red transparent;  
 }
 .bubbleNeeds{
-    background: blue;
+    background: #6fb9ec;
 }
 .bubbleNeeds:after{
-    border-color: blue transparent;
+    border-color: #6fb9ec transparent;
 }
 .bubbleMessage{
     background:orange;
@@ -829,7 +835,7 @@ h1{
 
 
 #messagesContainer{
-    border:solid 1px green;
+    border:solid 1px #009246;
     width:90%;
     margin:auto;
 }
@@ -911,7 +917,7 @@ h1{
         width:100%;
         position:fixed;
         z-index:900;
-        background:green;
+        background:#009246;
         -webkit-transition: all 0.7s ease-in-out;
 
     }
@@ -949,7 +955,7 @@ h1{
     left:90%;
     padding:5px 3px 3px 2px;
     border-radius: 11px 0px 0px 10px;
-    background:green;
+    background:#009246;
 }
 .hamburger {
     cursor:pointer;
