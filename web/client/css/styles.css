@@ -762,11 +762,11 @@ h1{
 }
 
 .bubbleForum{
-    background: red;
+    background: #7ccc83;
 }
 
 .bubbleForum:after{
-    border-color: red transparent;  
+    border-color: #7ccc83 transparent;  
 }
 .bubbleNeeds{
     background: #6fb9ec;
@@ -775,10 +775,10 @@ h1{
     border-color: #6fb9ec transparent;
 }
 .bubbleMessage{
-    background:orange;
+    background:#fbc883;
 }
 .bubbleMessage:after{
-    border-color: orange transparent;
+    border-color: #fbc883 transparent;
 }
 
 #comment_submission_form{
