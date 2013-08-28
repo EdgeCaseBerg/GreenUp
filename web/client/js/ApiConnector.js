@@ -486,8 +486,8 @@ function MapHandle(){
 		var dataObj = JSON.parse(data);
 		var heatmapData = [];
 			// console.log(dataObj[ii].latDegrees);
-		for(var ii=0; ii<dataObj.length; ii++){
-			heatmapData.push({location: new google.maps.LatLng(dataObj[ii].latDegrees, dataObj[ii].lonDegrees), weight: dataObj[ii].secondsWorked});
+		for(var ii=0; ii<dataObj.grid.length; ii++){
+			heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
 			
 		}
 
