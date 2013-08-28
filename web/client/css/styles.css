@@ -69,8 +69,8 @@ body{
 
 .bigStartButton{
     border: solid #a1a1a1 2px;
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#47d14e), to(#12690a));
-    background: -moz-linear-gradient(top, #47d14e, #12690a);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#009246), to(#12690a));
+    background: -moz-linear-gradient(top, #009246, #12690a);
 }
 .bigStartButton:hover {
     background: #1c961c;
@@ -242,8 +242,8 @@ a, a:hover, a:visited{
     width:100%;
     padding:0px;
     text-align:center;
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#47d14e), to(#12690a));
-    background: -moz-linear-gradient(top, #47d14e, #12690a);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#009246), to(#12690a));
+    background: -moz-linear-gradient(top, #009246, #12690a);
 }
 
 #navPullUpNest{
