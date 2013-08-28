@@ -128,25 +128,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         _ViewPager = (ViewPager) findViewById(R.id.pager);
         mTabsAdapter = new TabsAdapter(this, _ViewPager);
         
-        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
-        // user swipes between sections.
-        
-        _ViewPager.setAdapter(mTabsAdapter);
-        _ViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                // When swiping between different app sections, select the corresponding tab.
-                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
-                // Tab.
-            	Log.i("position",""+position);
-                actionBar.setSelectedNavigationItem(position);
-                actionBar.selectTab(actionBar.getTabAt(position));
-                setIconActive(position);
-                
-            }
-        });
-
-        
         
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i <  3 && actionBar.getTabCount() < 3 ; i++) {
@@ -165,6 +146,24 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         //Set the home page as active since we'll start there:
         this.setIconActive(0);
         
+        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+        // user swipes between sections.        
+        _ViewPager.setAdapter(mTabsAdapter);
+        _ViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                // When swiping between different app sections, select the corresponding tab.
+                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
+                // Tab.
+            	Log.i("position",""+position);
+                actionBar.setSelectedNavigationItem(position);
+                actionBar.selectTab(actionBar.getTabAt(position));
+                setIconActive(position);
+                
+            }
+        });
+
+        
         //Setting the display to custom will push the action bar to the top
         //which gives us more real estate
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -180,6 +179,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in the ViewPager.
+    	Log.i("position",""+tab.getPosition());
         _ViewPager.setCurrentItem(tab.getPosition());
     }
 
@@ -260,7 +260,6 @@ public Fragment getItem(int position) {
     TabInfo info = mTabs.get(position);
     switch (position) {
     case 0:
-		//TODO: Launch HomeSectionFragment
 		Fragment home = new HomeSectionFragment();
 		return home;
     case 1:
@@ -268,7 +267,6 @@ public Fragment getItem(int position) {
 		Fragment map = new MapSectionFragment();
 		return map;
 	case 2:
-		//TODO: Launch FeedSectionFragment
 		//Fragment feed = new FeedSectionFragment();
 	    return Fragment.instantiate(mContext, FeedSectionFragment.class.getName(), info.args);
 	default:

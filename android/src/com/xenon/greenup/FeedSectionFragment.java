@@ -30,19 +30,6 @@ public class FeedSectionFragment extends ListFragment {
 	
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-		//CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
-		//this.comments = cp.getCommentsList();
-		for(int i=0; i < 60; i++){
-			this.comments.add(new Comment("FORUM","message",0));
-		}
-		//Set the adapter
-		Activity currentActivity = getActivity();
-		//If we have no internet then we will get nothing back from the api
-		if(this.comments == null)
-			this.comments = new ArrayList<Comment>(60);
-		
-		//Do feed rendering async or else it will take orders of magnitude longer to render
-		new AsyncCommentLoadTask(this,currentActivity,this.comments).execute();
 	}
 	
     @Override
@@ -50,6 +37,13 @@ public class FeedSectionFragment extends ListFragment {
      * Called when the android needs to create the view, simply inflates the layout
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
+		this.comments = cp.getCommentsList();
+		if(this.comments == null)
+			this.comments = new ArrayList<Comment>(60);
+		new AsyncCommentLoadTask(this,getActivity(),this.comments).execute();
+
+		
     	View rootView = inflater.inflate(R.layout.feed, container, false);
     	editText =  (EditText)rootView.findViewById(R.id.text_entry_comments);
     	editText.setOnEditorActionListener(new OnEditorActionListener() {
