@@ -135,32 +135,35 @@
             </div>
             <div id="panel3SlideDownContent" class="panelSlideDownContent">
                 <div class="slideDownNest">
-                    <ul>
-                        <li>    
-                            <div class="roundedTwo">
-                                <input type="checkbox" value="None" id="toggleForum" onchange="window.Comments.toggleComments('forum')" class="checkboxUnder" name="check" checked />
+
+                    <ul class="toggleNest">
+                        <li class="toggleNestLabel">Comments to Display</li>
+                        <li> 
+                            <div class="slide1 slideToggle">    
+                                <input type="checkbox" value="None" id="toggleForum" name="check" onchange="window.Comments.toggleComments('forum')"/>
                                 <label for="toggleForum"></label>
-                            </div>
-                            <span>Forum</span>
+                            </div>  
+                            <span class="slideToggleLabel">Forum</span>
                         </li>
                         <li>
-                            <div class="roundedTwo">
-                                <input type="checkbox" value="None" id="toggleNeeds" onchange="window.Comments.toggleComments('needs')" class="checkboxUnder" name="check" checked />
+                            <div class="slide2 slideToggle">    
+                                <input type="checkbox" value="None" id="toggleNeeds" name="check" onchange="window.Comments.toggleComments('needs')"/>
                                 <label for="toggleNeeds"></label>
-                            </div>
-                            <span>Needs</span>
+                            </div> 
+                            <span class="slideToggleLabel">Needs</span>
                         </li>
                         <li>
-                            <div class="roundedTwo">
-                                <input type="checkbox" value="None" id="toggleMessages" onchange="window.Comments.toggleComments('message')" class="checkboxUnder" name="check" checked />
+                            <div class="slide3 slideToggle">    
+                                <input type="checkbox" value="None" id="toggleMessages" name="check" onchange="window.Comments.toggleComments('message')"/>
                                 <label for="toggleMessages"></label>
-                            </div>
-                            <span>Messages</span>
+                            </div> 
+                            <span class="slideToggleLabel">Messages</span>
                         </li>
-                        <li><div class="addCommentButton commentButton" id="addCommentButton" onclick="window.UI.showMarkerTypeSelect('comment')">+ New Comment</div></li>
+                    </ul>
+
+                    <div class="addCommentButton commentButton" id="addCommentButton" onclick="window.UI.showMarkerTypeSelect('comment')">+ New Comment</div>
                         <input type="hidden" id="commentTypeToBePosted" value="null" />
                         <input type="hidden" id="commentToBePosted" value="null" />
-                    </ul>
                 </div>
             </div>
         </div>
