@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	// var BASE = "http://greenupapp.appspot.com/api";
-	var BASE = "http://localhost:30002/api";
+	var BASE = "http://greenupapp.appspot.com/api";
+	// var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 
@@ -731,6 +731,8 @@ function UiHandle(){
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
 	    document.getElementById("panel1SlideDownContent").style.display = "block";
 
+	    window.UI.setActiveDisplay(0);
+
 	    document.getElementById("navbarPullUpTab").addEventListener('mousedown', function(){
 	    	window.UI.navbarSlideUp();
 	    });
@@ -867,11 +869,6 @@ function UiHandle(){
 
 	// centers the appropriate panels (main display panels)
 	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
-		if(displayNum == 0){
-			document.getElementById("topSlideDown").className = "sliderHidden";
-		}else{
-			document.getElementById("topSlideDown").className = "sliderUp";
-		}
 		var container = document.getElementById("container");
 		if(displayNum != window.UI.currentDisplay){
 			if(window.UI.isMarkerDisplayVisible){
@@ -888,6 +885,10 @@ function UiHandle(){
 		switch(displayNum){
 			case 0:
 				this.currentDisplay = 1;
+				document.getElementById("homeNavButton").src="img/home_active.png";
+				document.getElementById("mapNavButton").src="img/map.png";
+				document.getElementById("commentsNavButton").src="img/comments.png";
+				document.getElementById("topSlideDown").className = "sliderHidden";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "none";
 				document.getElementById("panel1SlideDownContent").style.display = "block";
@@ -895,6 +896,10 @@ function UiHandle(){
 			break;
 			case 1:
 				this.currentDisplay = 2;
+				document.getElementById("mapNavButton").src="img/map_active.png";
+				document.getElementById("homeNavButton").src="img/home.png";
+				document.getElementById("commentsNavButton").src="img/comments.png";
+				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel1SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "none";
 				document.getElementById("panel2SlideDownContent").style.display = "block";
@@ -902,6 +907,10 @@ function UiHandle(){
 			break;
 			case 2:
 				this.currentDisplay = 3;
+				document.getElementById("commentsNavButton").src="img/comments_active.png";
+				document.getElementById("mapNavButton").src="img/map.png";
+				document.getElementById("homeNavButton").src="img/home.png";
+				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel1SlideDownContent").style.display = "none";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "block";
@@ -910,6 +919,7 @@ function UiHandle(){
 			break;
 			default:
 				this.currentDisplay = 1;
+				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "none";
 				document.getElementById("panel1SlideDownContent").style.display = "block";
