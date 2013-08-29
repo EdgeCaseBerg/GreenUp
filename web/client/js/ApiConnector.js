@@ -634,42 +634,42 @@ function CommentsHandle(){
 			case('forum'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleForum');
 				if(document.getElementById("toggleForum").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleForum");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleForum");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 			case('needs'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
 				if(document.getElementById("toggleNeeds").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleNeeds");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleNeeds");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 			case('message'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
 				if(document.getElementById("toggleMessages").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleMessage");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleMessage");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
@@ -1120,17 +1120,6 @@ function UiHandle(){
 					div.className = "bubbleRight bubble"; 
 				}else{
 					div.className = "bubbleLeft bubble";
-				}
-
-				switch(comments[ii].type){
-					case "TRASH PICKUP":
-					break;
-					case "HELP NEEDED":
-					break;
-					case "GENERAL MESSAGE":
-					break;
-					case "FORUM":
-					break;
 				}
 
 				switch(comments[ii]['type']){
