@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 
@@ -400,6 +400,8 @@ function MapHandle(){
 	this.markerType;
 	this.map;
 	this.pickupMarkers = [];
+	this.isHeatmapVisible = true;
+
 	// fire up our google map
 	MapHandle.prototype.initMap = function initMap(){
 		window.LS.setLoadingText("Please wait while the map loads");
@@ -421,6 +423,7 @@ function MapHandle(){
 		  // google.maps.MapTypeControlOptions
 		  // google.maps.StreetViewControlOptions
 		  // google.maps.ZoomControlOptions
+		  // this.toggleHeatmap();
 
 		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 		  // for activating the loading screen while map loads
@@ -497,13 +500,13 @@ function MapHandle(){
   		if(heatmapData.length > 0){
 	        var pointArray = new google.maps.MVCArray(heatmapData);
 
-			heatmap = new google.maps.visualization.HeatmapLayer({
+			window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
 			    data: pointArray,
 			    dissipating: true, 
 			    radius: 5
 			});
 
-	  		heatmap.setMap(window.MAP.map);
+	  		window.MAP.heatmap.setMap(window.MAP.map);
 	  	}
 	}
 
@@ -566,7 +569,13 @@ function MapHandle(){
 	}
 
 	MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
-
+		if(window.MAP.isHeatmapVisible){
+			window.MAP.heatmap.setMap(null);
+			window.MAP.isHeatmapVisible = false;
+		}else{
+			window.MAP.heatmap.setMap(window.MAP.map);
+			window.MAP.isHeatmapVisible = true ;
+		}
 	}
 
 	MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){

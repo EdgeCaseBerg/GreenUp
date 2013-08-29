@@ -944,6 +944,10 @@ h1{
     display:none;
 }
 
+#panel2SlideDownContent ul{
+    margin-top:10%;
+}
+
 .slideDownNest{
     position:absolute;
     bottom:5px;
