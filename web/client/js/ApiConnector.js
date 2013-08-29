@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 
@@ -331,7 +331,9 @@ function GpsHandle(){
 	    	// console.log("getting position data");
 	    	 if(navigator.geolocation){
 	    	 	var options = {timeout:29000};
-	    	 	navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+	    	 	// navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	var watchID = navigator.geolocation.watchPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	var timeout = setTimeout( function() { navigator.geolocation.clearWatch( watchID ); }, 5000 );
 		     	window.updateCounter++;
 	    	 }else{
 	    	 	console.log("Geolocation is not supported by this browser.");
@@ -675,6 +677,10 @@ function CommentsHandle(){
 			break;
 		}
 	} // end toggleComments()
+
+	CommentsHandle.prototype.goToMarker = function goToMarker(marker){
+	// when the user clicks a comment box
+	}
 
 	//  The user presses the submit button on the comment submission screen
 	CommentsHandle.prototype.commentSubmission = function commentSubmission(commentType, commentMessage){
