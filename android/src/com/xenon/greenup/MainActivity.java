@@ -51,6 +51,90 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * time.
      */
     ViewPager _ViewPager;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Set up the action bar.
+        final ActionBar actionBar = getActionBar();
+        
+        // Specify that the Home/Up button should not be enabled, since there is no hierarchical parent.
+        actionBar.setHomeButtonEnabled(false);
+        
+        //Set the stacked background otherwise we get the gross dark gray color under the icon
+        BitmapDrawable background = (BitmapDrawable)getResources().getDrawable(R.drawable.bottom_menu);
+        background.setTileModeXY(TileMode.REPEAT,TileMode.MIRROR);
+        actionBar.setStackedBackgroundDrawable(background);
+        
+
+        // Specify that we will be displaying tabs in the action bar.
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setIcon(R.drawable.bottom_menu);
+        
+        _ViewPager = (ViewPager) findViewById(R.id.pager);
+        mTabsAdapter = new TabsAdapter(this, _ViewPager);
+        
+        // For each of the sections in the app, add a tab to the action bar.
+        for (int i = 0; i <  3 && actionBar.getTabCount() < 3 ; i++) {
+            // Create a tab with text corresponding to the page title defined by the adapter.
+            // Also specify this Activity object, which implements the TabListener interface, as the
+            // listener for when this tab is selected.
+        	
+        	ActionBar.Tab tabToAdd = actionBar.newTab();
+        	
+        	tabToAdd.setTabListener(this);
+        	tabToAdd.setIcon(getRegularIcon(i));
+        	
+        	 Bundle args = new Bundle();
+             args.putInt(""+i, i);
+    
+            mTabsAdapter.addTab(tabToAdd,Fragment.class, args);
+            
+        }
+        //Set the home page as active since we'll start there:
+        this.setIconActive(0);
+        
+        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+        // user swipes between sections.        
+        _ViewPager.setAdapter(mTabsAdapter);
+        _ViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                // When swiping between different app sections, select the corresponding tab.
+                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
+                // Tab.
+            	Log.i("position",""+position);
+                actionBar.setSelectedNavigationItem(position);
+                actionBar.selectTab(actionBar.getTabAt(position));
+                setIconActive(position);
+                
+            }
+        });
+
+        
+        //Setting the display to custom will push the action bar to the top
+        //which gives us more real estate
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.show();
+        Log.i("visible",""+_ViewPager.VISIBLE);
+     
+    }	
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        // When the given tab is selected, switch to the corresponding page in the ViewPager.
+    	Log.i("position",""+tab.getPosition());
+        _ViewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
     
     /**
      * getRegularIcon returns the resource id of the icon image for the actionbar tabs.
@@ -100,96 +184,105 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     		if(i != iconToActivate){
     			actionBar.getTabAt(i).setIcon(getRegularIcon(i));
     		}
-    	}
-    	
-    	
+    	}    	
     }
-
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // Set up the action bar.
-        final ActionBar actionBar = getActionBar();
-        
-        // Specify that the Home/Up button should not be enabled, since there is no hierarchical parent.
-        actionBar.setHomeButtonEnabled(false);
-        
-        //Set the stacked background otherwise we get the gross dark gray color under the icon
-        BitmapDrawable background = (BitmapDrawable)getResources().getDrawable(R.drawable.bottom_menu);
-        background.setTileModeXY(TileMode.REPEAT,TileMode.MIRROR);
-        actionBar.setStackedBackgroundDrawable(background);
-        
-
-        // Specify that we will be displaying tabs in the action bar.
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setIcon(R.drawable.bottom_menu);
-        
-        _ViewPager = (ViewPager) findViewById(R.id.pager);
-        mTabsAdapter = new TabsAdapter(this, _ViewPager);
-        
-        
-        // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i <  3 && actionBar.getTabCount() < 3 ; i++) {
-            // Create a tab with text corresponding to the page title defined by the adapter.
-            // Also specify this Activity object, which implements the TabListener interface, as the
-            // listener for when this tab is selected.
-        	
-        	ActionBar.Tab tabToAdd = actionBar.newTab();
-        	
-        	tabToAdd.setTabListener(this);
-        	tabToAdd.setIcon(getRegularIcon(i));
     
-            mTabsAdapter.addTab(tabToAdd,Fragment.class, null);
+    public static class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+        private final Context mContext;
+        private final ActionBar mActionBar;
+        private final ViewPager mViewPager;
+        private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+
+        static final class TabInfo {
+            private final Class<?> clss;
+            private final Bundle args;
+
+            TabInfo(Class<?> _class, Bundle _args) {
+                clss = _class;
+                args = _args;
+            }
+        }
+
+        public TabsAdapter(FragmentActivity activity, ViewPager pager) {
+            super(activity.getSupportFragmentManager());
+            mContext = activity;
+            mActionBar = activity.getActionBar();
+            mViewPager = pager;
+            mViewPager.setAdapter(this);
+            mViewPager.setOnPageChangeListener(this);
+        }
+
+        public void addTab(ActionBar.Tab tab, Class<?> clss, Bundle args) {
+            TabInfo info = new TabInfo(clss, args);
+            tab.setTag(info);
+            tab.setTabListener(this);
+            mTabs.add(info);
+            mActionBar.addTab(tab);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return mTabs.size();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            TabInfo info = mTabs.get(position);
+            StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+            StackTraceElement e = stacktrace[3];//maybe this number needs to be corrected
+            String methodName = e.getMethodName();
+            Log.i("stack",methodName);
+            Log.i("getItemTabAdapter",""+position);
+            switch (position) {
+                case 1:
+            		return Fragment.instantiate(mContext, MapSectionFragment.class.getName(), info.args);
+            	case 2:
+            	    return Fragment.instantiate(mContext, FeedSectionFragment.class.getName(), info.args);
+            	default:
+                    return Fragment.instantiate(mContext, HomeSectionFragment.class.getName(), info.args);
+        	}
+        }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+        	Log.i("onPageSelected","Setting on pageselected ="+position);
+            mActionBar.setSelectedNavigationItem(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+
+        @Override
+        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+            Object tag = tab.getTag();
+            for (int i=0; i<mTabs.size(); i++) {
+                if (mTabs.get(i) == tag) {
+                	Log.i("onTabSelected","Setting i="+i+" to be mViewPager current item");
+                    mViewPager.setCurrentItem(i);
+                }
+            }
             
         }
-        //Set the home page as active since we'll start there:
-        this.setIconActive(0);
-        
-        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
-        // user swipes between sections.        
-        _ViewPager.setAdapter(mTabsAdapter);
-        _ViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                // When swiping between different app sections, select the corresponding tab.
-                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
-                // Tab.
-            	Log.i("position",""+position);
-                actionBar.setSelectedNavigationItem(position);
-                actionBar.selectTab(actionBar.getTabAt(position));
-                setIconActive(position);
-                
-            }
-        });
 
-        
-        //Setting the display to custom will push the action bar to the top
-        //which gives us more real estate
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.show();
-        Log.i("visible",""+_ViewPager.VISIBLE);
-     
-    }	
+        @Override
+        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+        }
 
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // When the given tab is selected, switch to the corresponding page in the ViewPager.
-    	Log.i("position",""+tab.getPosition());
-        _ViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
+        @Override
+        public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        }
+            
+    }//endtabadapter
 
     /**
-     * A dummy fragment representing a section of the app, but that simply displays dummy text.
-     */
+    * A dummy fragment representing a section of the app, but that simply displays dummy text.
+    */
     public static class DummySectionFragment extends Fragment implements OnClickListener {
 
         public static final String ARG_SECTION_NUMBER = "section_number";
@@ -207,105 +300,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
         
         public void onClick(View v) {
-        	Log.i("button","I was clicked!");
-        	//CommentPage page = i.getComments("general message",1);
-        	Heatmap h = new Heatmap();
-        	h.add(new HeatmapPoint(24.53,43.2,120));
-        	APIServerInterface.updateHeatmap(h);
+            Log.i("button","I was clicked!");
         }
-    }
-    
-    public static class TabsAdapter extends FragmentPagerAdapter
-    implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
-private final Context mContext;
-private final ActionBar mActionBar;
-private final ViewPager mViewPager;
-private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
-
-static final class TabInfo {
-    private final Class<?> clss;
-    private final Bundle args;
-
-    TabInfo(Class<?> _class, Bundle _args) {
-        clss = _class;
-        args = _args;
-    }
-}
-
-public TabsAdapter(FragmentActivity activity, ViewPager pager) {
-    super(activity.getSupportFragmentManager());
-    mContext = activity;
-    mActionBar = activity.getActionBar();
-    mViewPager = pager;
-    mViewPager.setAdapter(this);
-    mViewPager.setOnPageChangeListener(this);
-}
-
-public void addTab(ActionBar.Tab tab, Class<?> clss, Bundle args) {
-    TabInfo info = new TabInfo(clss, args);
-    tab.setTag(info);
-    tab.setTabListener(this);
-    mTabs.add(info);
-    mActionBar.addTab(tab);
-    notifyDataSetChanged();
-}
-
-@Override
-public int getCount() {
-    return mTabs.size();
-}
-
-@Override
-public Fragment getItem(int position) {
-    TabInfo info = mTabs.get(position);
-    switch (position) {
-    case 0:
-		Fragment home = new HomeSectionFragment();
-		return home;
-    case 1:
-		//TODO: Launch MapSectionFragment
-		Fragment map = new MapSectionFragment();
-		return map;
-	case 2:
-		//Fragment feed = new FeedSectionFragment();
-	    return Fragment.instantiate(mContext, FeedSectionFragment.class.getName(), info.args);
-	default:
-        // The other sections of the app are dummy placeholders.
-	}
-    return Fragment.instantiate(mContext, info.clss.getName(), info.args);
-}
-
-@Override
-public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-}
-
-@Override
-public void onPageSelected(int position) {
-    mActionBar.setSelectedNavigationItem(position);
-}
-
-@Override
-public void onPageScrollStateChanged(int state) {
-}
-
-@Override
-public void onTabSelected(Tab tab, FragmentTransaction ft) {
-    Object tag = tab.getTag();
-    for (int i=0; i<mTabs.size(); i++) {
-        if (mTabs.get(i) == tag) {
-            mViewPager.setCurrentItem(i);
-        }
-    }
-    
-}
-
-@Override
-public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-}
-
-@Override
-public void onTabReselected(Tab tab, FragmentTransaction ft) {
-}
-    
+        
     }
 }
