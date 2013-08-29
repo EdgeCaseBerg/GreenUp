@@ -12,7 +12,7 @@
 #import "HeatMapPoint.h"
 #import "NSArray+Primitive.h"
 
-#define UPLOAD_QUEUE_LENGTH 1
+#define UPLOAD_QUEUE_LENGTH 2
 
 @interface MapViewController ()
 
@@ -212,53 +212,56 @@
     //If the number of gathered points in the queue array is equal to our define or we have the overdue flag set. Update our gathered points with the server!
     if(self.gatheredMapPointsQueue.count >= UPLOAD_QUEUE_LENGTH || self.pushOverdue)
     {
-        for(HeatMapPoint *point in self.gatheredMapPointsQueue)
+        NSMutableArray *dataArray = [[NSMutableArray alloc] init];
+        for(int i = 0; i < self.gatheredMapPointsQueue.count; i++)
         {
-            NSURL *url = [NSURL URLWithString:HEAT_MAP_URL];
+            HeatMapPoint *point = [self.gatheredMapPointsQueue objectAtIndex:i];
             
+            //Create Parameters For Push
             NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"secondsWorked", nil];
             NSMutableArray *objects = [[NSMutableArray alloc] init];
-            [objects addFloat:point.lat];
             [objects addFloat:point.lon];
+            [objects addFloat:point.lat];
             [objects addFloat:point.secWorked];
             
             NSLog(@"PUSHING - Lat: %f", point.lat);
             NSLog(@"PUSHING - Lon: %f", point.lon);
             
+            //Create Dictionary Of Parameters
             NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
-            
-            NSArray *allCalls = [NSArray arrayWithObject:parameters];
-            NSDictionary *par = [[NSDictionary alloc] initWithObjects:allCalls forKeys:[NSArray arrayWithObject:@"1"]];
-            
-            //Parse NSDictionary to JSON
-            NSError *error;
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:par
-                                options:0
-                                error:&error];
-
-            NSString *jsonString;
-            if (! jsonData)
-            {
-                NSLog(@"Got an error: %@", error);
-            }
-            else
-            {
-                jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            }
-            
-            char *payload=[jsonString UTF8String];
-            
-            //Perform a POST
-            //NSString *hostString = [url absoluteString];
-            //char *host=[hostString UTF8String];
-       
-            char *request = gh_build_put_query([BASE_URL UTF8String], "/api/heatmap", payload);
-            char *charPointer = gh_make_request(request, [BASE_URL UTF8String], "127.0.0.1", API_PORT);
-            NSLog(@"response was: %s", charPointer);
-            
-            //always call free
-            free(charPointer);
+            [dataArray addObject:parameters];
         }
+        
+        //Parse NSDictionary to JSON
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataArray
+                                                           options:0
+                                                             error:&error];
+
+        
+        //Check If Parsing Worked Correctly
+        NSString *jsonString;
+        if (!jsonData)
+        {
+            NSLog(@"Got an error: %@", error);
+        }
+        else
+        {
+            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
+        
+        char *payload=[jsonString UTF8String];
+        
+        //Perform a POST
+        //NSString *hostString = [url absoluteString];
+        //char *host=[hostString UTF8String];
+        
+        char *request = gh_build_put_query([BASE_URL UTF8String], "/api/heatmap", payload);
+        char *charPointer = gh_make_request(request, [BASE_URL UTF8String], "127.0.0.1", API_PORT);
+        NSLog(@"response was: %s", charPointer);
+        
+        //always call free
+        free(charPointer);
     }
 }
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location

@@ -17,19 +17,6 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "GoGreen2/MapViewController.m"
-         timestampString = "398561156.143414"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "251"
-         endingLineNumber = "251"
-         landmarkName = "-pushHeatMapDataToServer"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
@@ -73,11 +60,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "398565919.067596"
+         timestampString = "399480473.315945"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "282"
-         endingLineNumber = "282"
+         startingLineNumber = "285"
+         endingLineNumber = "285"
          landmarkName = "-getHeatDataFromServer:andLocation:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -86,11 +73,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "398565919.067596"
+         timestampString = "399480473.315945"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "281"
-         endingLineNumber = "281"
+         startingLineNumber = "284"
+         endingLineNumber = "284"
          landmarkName = "-getHeatDataFromServer:andLocation:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "398565919.067596"
+         timestampString = "399480473.315945"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "280"
-         endingLineNumber = "280"
+         startingLineNumber = "283"
+         endingLineNumber = "283"
          landmarkName = "-getHeatDataFromServer:andLocation:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -112,24 +99,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "398565977.298713"
+         timestampString = "399480479.19516"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "242"
-         endingLineNumber = "242"
-         landmarkName = "-pushHeatMapDataToServer"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "GoGreen2/MapViewController.m"
-         timestampString = "398565978.7217"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "246"
-         endingLineNumber = "246"
+         startingLineNumber = "236"
+         endingLineNumber = "236"
          landmarkName = "-pushHeatMapDataToServer"
          landmarkType = "5">
       </FileBreakpoint>
