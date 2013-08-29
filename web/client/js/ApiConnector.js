@@ -720,9 +720,10 @@ function UiHandle(){
 
     UiHandle.prototype.init = function init(){
 
+
     	// top slider dropdown
     	document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
-
+    	document.getElementById("topSlideDown").className = "sliderHidden";
 	    // controls the main panel movement
 	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
@@ -866,6 +867,11 @@ function UiHandle(){
 
 	// centers the appropriate panels (main display panels)
 	UiHandle.prototype.setActiveDisplay = function setActiveDisplay(displayNum){
+		if(displayNum == 0){
+			document.getElementById("topSlideDown").className = "sliderHidden";
+		}else{
+			document.getElementById("topSlideDown").className = "sliderUp";
+		}
 		var container = document.getElementById("container");
 		if(displayNum != window.UI.currentDisplay){
 			if(window.UI.isMarkerDisplayVisible){
