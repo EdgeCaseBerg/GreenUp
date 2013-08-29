@@ -188,8 +188,8 @@
         [self.gatheredMapPointsQueue addObject:mapPoint];
         
         //Update With Server        
-        //[self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        [self pushHeatMapDataToServer];
+        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+        //[self pushHeatMapDataToServer];
         [self updateHeatMapOverlay];
         
          //Update Map Location
@@ -284,10 +284,17 @@
    
     char * request = gh_build_get_query([BASE_URL UTF8String], "/api/heatmap");
     char *charPointer = gh_make_request(request, [BASE_URL UTF8String], "127.0.0.1", API_PORT);
-    NSLog(@"response was: %s", charPointer);
+    NSString *response = [NSString stringWithFormat:@"%s", charPointer];
+    
+    NSLog(@"response was: %@", response);
+    
+#warning NEED TO PARSE NSSTRING INTO NSARRAY OF NSDICTIONARIES
     
     //Aways call free
     free(charPointer);
+    
+    //Loop through downloaded points and remove any duplicates found in gatherHeatMapPoints, then add the remaining new ones to gatheredHeatMapPoints
+    
 }
 
 
