@@ -56,9 +56,9 @@ public class FeedSectionFragment extends ListFragment {
     }
     
     @Override
-    public void onStart(){
-    	super.onStart();
-    	Log.i("fuck","fuckyou");
+    public void onResume(){
+    	super.onResume();
+    	
     	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
 		this.comments = cp.getCommentsList();
 		if(this.comments == null)
@@ -102,6 +102,7 @@ public class FeedSectionFragment extends ListFragment {
 			//sense, this makes none.
 			return null;
 		}
+		
 	}
 
 }
