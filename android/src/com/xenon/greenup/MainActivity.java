@@ -187,7 +187,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	}    	
     }
     
-    public static class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+    public static class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener{
         private final Context mContext;
         private final ActionBar mActionBar;
         private final ViewPager mViewPager;
@@ -209,7 +209,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             mActionBar = activity.getActionBar();
             mViewPager = pager;
             mViewPager.setAdapter(this);
-            mViewPager.setOnPageChangeListener(this);
         }
 
         public void addTab(ActionBar.Tab tab, Class<?> clss, Bundle args) {
@@ -245,26 +244,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
 
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-        	Log.i("onPageSelected","Setting on pageselected ="+position);
-            mActionBar.setSelectedNavigationItem(position);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-        }
-
-        @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
             Object tag = tab.getTag();
             for (int i=0; i<mTabs.size(); i++) {
                 if (mTabs.get(i) == tag) {
                 	Log.i("onTabSelected","Setting i="+i+" to be mViewPager current item");
-                    mViewPager.setCurrentItem(i);
+                    mViewPager.setCurrentItem(tab.getPosition());
                 }
             }
             
