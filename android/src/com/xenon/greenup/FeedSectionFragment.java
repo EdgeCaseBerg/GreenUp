@@ -37,13 +37,7 @@ public class FeedSectionFragment extends ListFragment {
      * Called when the android needs to create the view, simply inflates the layout
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
-		this.comments = cp.getCommentsList();
-		if(this.comments == null)
-			this.comments = new ArrayList<Comment>(60);
-		new AsyncCommentLoadTask(this,getActivity(),this.comments).execute();
-
-		
+    		
     	View rootView = inflater.inflate(R.layout.feed, container, false);
     	editText =  (EditText)rootView.findViewById(R.id.text_entry_comments);
     	editText.setOnEditorActionListener(new OnEditorActionListener() {
@@ -59,6 +53,17 @@ public class FeedSectionFragment extends ListFragment {
     	    }
     	});
        	return rootView;
+    }
+    
+    @Override
+    public void onStart(){
+    	super.onStart();
+    	Log.i("fuck","fuckyou");
+    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
+		this.comments = cp.getCommentsList();
+		if(this.comments == null)
+			this.comments = new ArrayList<Comment>(60);
+		new AsyncCommentLoadTask(this,getActivity(),this.comments).execute();
     }
     
 	private class AsyncCommentLoadTask extends AsyncTask<Void,Void,Void>{
