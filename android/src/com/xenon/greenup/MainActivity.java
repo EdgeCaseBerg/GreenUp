@@ -192,6 +192,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         private final ActionBar mActionBar;
         private final ViewPager mViewPager;
         private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+        private final ArrayList<Fragment> fragments = new ArrayList<Fragment>();
 
         static final class TabInfo {
             private final Class<?> clss;
@@ -209,6 +210,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             mActionBar = activity.getActionBar();
             mViewPager = pager;
             mViewPager.setAdapter(this);
+            fragments.add(Fragment.instantiate(mContext, HomeSectionFragment.class.getName()));
+            fragments.add(Fragment.instantiate(mContext, MapSectionFragment.class.getName()));
+            fragments.add(Fragment.instantiate(mContext, FeedSectionFragment.class.getName()));
+            
         }
 
         public void addTab(ActionBar.Tab tab, Class<?> clss, Bundle args) {
@@ -229,18 +234,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public Fragment getItem(int position) {
             TabInfo info = mTabs.get(position);
             StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
-            StackTraceElement e = stacktrace[3];//maybe this number needs to be corrected
-            String methodName = e.getMethodName();
-            Log.i("stack",methodName);
+            for(int i=0; i < 14; i++){
+            	StackTraceElement e = stacktrace[i];//maybe this number needs to be corrected
+            	String methodName = e.getMethodName();
+            	 Log.i("stack",methodName);
+            }
+            Log.i("currentpage",""+mViewPager.getCurrentItem());
             Log.i("getItemTabAdapter",""+position);
-            switch (position) {
-                case 1:
-            		return Fragment.instantiate(mContext, MapSectionFragment.class.getName(), info.args);
-            	case 2:
-            	    return Fragment.instantiate(mContext, FeedSectionFragment.class.getName(), info.args);
-            	default:
-                    return Fragment.instantiate(mContext, HomeSectionFragment.class.getName(), info.args);
-        	}
+            return fragments.get(position);
+            
         }
 
         @Override
@@ -249,6 +251,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             for (int i=0; i<mTabs.size(); i++) {
                 if (mTabs.get(i) == tag) {
                 	Log.i("onTabSelected","Setting i="+i+" to be mViewPager current item");
+                	Log.i("currentPage",""+mViewPager.getCurrentItem());
                     mViewPager.setCurrentItem(tab.getPosition());
                 }
             }
