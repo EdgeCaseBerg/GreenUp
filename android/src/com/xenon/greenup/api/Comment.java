@@ -103,7 +103,7 @@ public class Comment {
 			json.put("message",this.message);
 			if (this.pin != 0)
 				json.put("pin",this.pin);
-			Log.i("newComment",json.toString());
+			//Log.i("newComment",json.toString());
 			return json;
 		}
 		catch (JSONException e) {

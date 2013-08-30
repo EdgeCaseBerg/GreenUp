@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <ImageView
+        android:id="@+id/start_page"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="0px"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/greenup_logo" >
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/home_page_help_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Track your clean up progress\nSee what areas need the most help\nFind an area to drop off what you pick up"
+        android:textAlignment="center"
+        android:lines="3"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+    <Chronometer
+        android:id="@+id/chronometer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/chronotext"
+        android:format="%s"
+        android:gravity="center"
+        android:hint="Time Spent Cleaning"
+        android:text="Time Spent Cleaning"
+        android:textSize="40dp"
+        android:visibility="visible" />
+
+    <ToggleButton
+        android:id="@+id/start_stop_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:background="@drawable/start"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="ToggleButton"
+        android:textOff="@string/start_toggle_text"
+        android:textOn="@string/stop_toggle_text" />
+
+	<TextView
+	    android:id="@+id/textView1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+	    android:layout_marginRight="@dimen/activity_horizontal_margin"
+	    android:text="To start greening up VT hit the button above. To find a drop off point or to flag an area, go to the map page"
+	    android:textAppearance="?android:attr/textAppearanceSmall" />
+        
+</LinearLayout>

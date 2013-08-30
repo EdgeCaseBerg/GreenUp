@@ -30,16 +30,6 @@ public class FeedSectionFragment extends ListFragment {
 	
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-		CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
-		this.comments = cp.getCommentsList();
-		//Set the adapter
-		Activity currentActivity = getActivity();
-		//If we have no internet then we will get nothing back from the api
-		if(this.comments == null)
-			this.comments = new ArrayList<Comment>(60);
-		
-		//Do feed rendering async or else it will take orders of magnitude longer to render
-		new AsyncCommentLoadTask(this,currentActivity,this.comments).execute();
 	}
 	
     @Override
@@ -47,6 +37,7 @@ public class FeedSectionFragment extends ListFragment {
      * Called when the android needs to create the view, simply inflates the layout
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    		
     	View rootView = inflater.inflate(R.layout.feed, container, false);
     	editText =  (EditText)rootView.findViewById(R.id.text_entry_comments);
     	editText.setOnEditorActionListener(new OnEditorActionListener() {
@@ -62,6 +53,17 @@ public class FeedSectionFragment extends ListFragment {
     	    }
     	});
        	return rootView;
+    }
+    
+    @Override
+    public void onResume(){
+    	super.onResume();
+    	
+    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
+		this.comments = cp.getCommentsList();
+		if(this.comments == null)
+			this.comments = new ArrayList<Comment>(60);
+		new AsyncCommentLoadTask(this,getActivity(),this.comments).execute();
     }
     
 	private class AsyncCommentLoadTask extends AsyncTask<Void,Void,Void>{
@@ -94,12 +96,13 @@ public class FeedSectionFragment extends ListFragment {
 		protected Void doInBackground(Void...voids) {
 			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
 			//Java makes no sense. It requires the capital version of Void because there simply
-			//must be something returned and you have to java's bastard children, the wrapper 
+			//must be something returned and you have to use java's bastard children, the wrapper 
 			//types instead of primitives because it's an async task. But yet, the primitive
 			//keyword null is apparent a Void type (although returning void is wrong). 
 			//sense, this makes none.
 			return null;
 		}
+		
 	}
 
 }
