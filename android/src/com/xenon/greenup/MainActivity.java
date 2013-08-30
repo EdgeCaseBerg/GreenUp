@@ -98,19 +98,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.        
         _ViewPager.setAdapter(mTabsAdapter);
-        _ViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                // When swiping between different app sections, select the corresponding tab.
-                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
-                // Tab.
-            	Log.i("position",""+position);
-                actionBar.setSelectedNavigationItem(position);
-                actionBar.selectTab(actionBar.getTabAt(position));
-                setIconActive(position);
-                
-            }
-        });
+
 
         
         //Setting the display to custom will push the action bar to the top
@@ -192,6 +180,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         private final ActionBar mActionBar;
         private final ViewPager mViewPager;
         private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+        private final ArrayList<Fragment> fragments = new ArrayList<Fragment>();
 
         static final class TabInfo {
             private final Class<?> clss;
@@ -210,6 +199,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             mViewPager = pager;
             mViewPager.setAdapter(this);
             mViewPager.setOnPageChangeListener(this);
+            fragments.add(Fragment.instantiate(mContext, HomeSectionFragment.class.getName()));
+            fragments.add(Fragment.instantiate(mContext, MapSectionFragment.class.getName()));
+            fragments.add(Fragment.instantiate(mContext, FeedSectionFragment.class.getName()));
+           
         }
 
         public void addTab(ActionBar.Tab tab, Class<?> clss, Bundle args) {
@@ -234,14 +227,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             String methodName = e.getMethodName();
             Log.i("stack",methodName);
             Log.i("getItemTabAdapter",""+position);
-            switch (position) {
-                case 1:
-            		return Fragment.instantiate(mContext, MapSectionFragment.class.getName(), info.args);
-            	case 2:
-            	    return Fragment.instantiate(mContext, FeedSectionFragment.class.getName(), info.args);
-            	default:
-                    return Fragment.instantiate(mContext, HomeSectionFragment.class.getName(), info.args);
-        	}
+            return fragments.get(position);
+            
         }
 
         @Override
