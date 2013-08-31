@@ -10,7 +10,11 @@
 #import "ContainerViewController.h"
 #import "greenhttp.h"
 #import "HeatMapPoint.h"
+#import "CSocketController.h"
 #import "NSArray+Primitive.h"
+
+#import <netdb.h>
+#include <arpa/inet.h>
 
 #define UPLOAD_QUEUE_LENGTH 2
 
@@ -189,7 +193,7 @@
         
         //Update With Server        
         [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        //[self pushHeatMapDataToServer];
+        [self pushHeatMapDataToServer];
         [self updateHeatMapOverlay];
         
          //Update Map Location
@@ -232,42 +236,14 @@
             [dataArray addObject:parameters];
         }
         
-        //Parse NSDictionary to JSON
-        NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataArray
-                                                           options:0
-                                                             error:&error];
-
+        NSString *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
         
-        //Check If Parsing Worked Correctly
-        NSString *jsonString;
-        if (!jsonData)
-        {
-            NSLog(@"Got an error: %@", error);
-        }
-        else
-        {
-            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        }
-        
-        char *payload=[jsonString UTF8String];
-        
-        //Perform a POST
-        //NSString *hostString = [url absoluteString];
-        //char *host=[hostString UTF8String];
-        
-        char *request = gh_build_put_query([BASE_URL UTF8String], "/api/heatmap", payload);
-        char *charPointer = gh_make_request(request, [BASE_URL UTF8String], "127.0.0.1", API_PORT);
-        NSLog(@"response was: %s", charPointer);
-        
-        //always call free
-        free(charPointer);
+        [self.gatheredMapPointsQueue removeAllObjects];
     }
 }
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
 {
-    NSURL *url = [NSURL URLWithString:HEAT_MAP_URL];
-    
+    //Generation Properties
     NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
     NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:location.center.latitude], [NSNumber numberWithFloat:location.center.longitude], [NSNumber numberWithFloat:span.latitudeDelta], [NSNumber numberWithFloat:span.longitudeDelta], nil];
     
@@ -278,23 +254,51 @@
     NSLog(@"Span-Lon: %f", span.longitudeDelta);
     NSLog(@"Span-Lat: %f", span.latitudeDelta);
     
-    //Perform a GET
-    //NSString *hostString = [url absoluteString];
-    //char *host=[hostString UTF8String];
-   
-    char * request = gh_build_get_query([BASE_URL UTF8String], "/api/heatmap");
-    char *charPointer = gh_make_request(request, [BASE_URL UTF8String], "127.0.0.1", API_PORT);
-    NSString *response = [NSString stringWithFormat:@"%s", charPointer];
+    NSArray *results = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:parameters];
     
-    NSLog(@"response was: %@", response);
-    
-#warning NEED TO PARSE NSSTRING INTO NSARRAY OF NSDICTIONARIES
-    
-    //Aways call free
-    free(charPointer);
-    
-    //Loop through downloaded points and remove any duplicates found in gatherHeatMapPoints, then add the remaining new ones to gatheredHeatMapPoints
-    
+    for(NSDictionary *pointDictionary in results)
+    {
+        HeatMapPoint *newPoint = [[HeatMapPoint alloc] init];
+        double lat = [[pointDictionary objectForKey:@"latDegrees"] doubleValue];
+        double lon = [[pointDictionary objectForKey:@"lonDegrees"] doubleValue];
+        double secWorked = [[pointDictionary objectForKey:@"secondsWorked"] doubleValue];
+        
+        newPoint.lat = lat;
+        newPoint.lon = lon;
+        newPoint.secWorked = secWorked;
+        
+        //Remove Duplicates I've Already Gathered
+        BOOL found = FALSE;
+        for(HeatMapPoint *point in self.downloadedMapPoints)
+        {
+            NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
+            NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
+            NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
+            
+            if(newPoint.lat == point.lon && newPoint.lon == point.lat && newPoint.secWorked == point.secWorked)
+            {
+                NSLog(@"************ DUPLICATE FOUND DOWNLOAD");
+                found = TRUE;
+            }
+        }
+        for(HeatMapPoint *point in self.gatheredMapPoints)
+        {
+            NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
+            NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
+            NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
+            
+            if(newPoint.lat == point.lon && newPoint.lon == point.lat && newPoint.secWorked == point.secWorked)
+            {
+                NSLog(@"************ DUPLICATE FOUND IN GATHERED");
+                found = TRUE;
+            }
+        }
+        
+        if(!found)
+        {
+            [self.downloadedMapPoints addObject:newPoint];
+        }
+    }
 }
 
 

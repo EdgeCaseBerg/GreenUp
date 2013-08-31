@@ -55,7 +55,6 @@
 		39592580177519730035E351 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3959257F177519730035E351 /* SystemConfiguration.framework */; };
 		39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D06AFC1783A6A300DD94B7 /* MapKit.framework */; };
 		39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E46BE3179C7000008590A6 /* GoGreenTabBar.m */; };
-		DF2E50B817BC6FF6009BEB11 /* NSArray+Primitive.m in Sources */ = {isa = PBXBuildFile; fileRef = DF2E50B717BC6FF6009BEB11 /* NSArray+Primitive.m */; };
 		DF62E07117C18E1B00B29D43 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF62E06F17C18E1A00B29D43 /* greenhttp.c */; };
 		DF62E07417C1992700B29D43 /* BDHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DF62E07317C1992700B29D43 /* BDHost.m */; };
 		DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF62E07517C1996700B29D43 /* CFNetwork.framework */; };
@@ -66,6 +65,8 @@
 		DF7C827617B58D2F0099099E /* stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF7C827017B58D2F0099099E /* stop@2x.png */; };
 		DF7C827717B58D2F0099099E /* topBar.png in Resources */ = {isa = PBXBuildFile; fileRef = DF7C827117B58D2F0099099E /* topBar.png */; };
 		DF7C827817B58D2F0099099E /* topBar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF7C827217B58D2F0099099E /* topBar@2x.png */; };
+		DFA9AA7817D25AEA006F58A5 /* CSocketController.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9AA7717D25AEA006F58A5 /* CSocketController.m */; };
+		DFA9AA7C17D2666B006F58A5 /* NSArray+Primitive.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9AA7B17D2666B006F58A5 /* NSArray+Primitive.m */; };
 		DFB9042117B08AE800368F89 /* download.png in Resources */ = {isa = PBXBuildFile; fileRef = DFB9042017B08AE800368F89 /* download.png */; };
 /* End PBXBuildFile section */
 
@@ -141,8 +142,6 @@
 		39D06AFC1783A6A300DD94B7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39E46BE2179C7000008590A6 /* GoGreenTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoGreenTabBar.h; sourceTree = "<group>"; };
 		39E46BE3179C7000008590A6 /* GoGreenTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoGreenTabBar.m; sourceTree = "<group>"; };
-		DF2E50B617BC6FF6009BEB11 /* NSArray+Primitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+Primitive.h"; path = "GoGreen2/NSArray+Primitive.h"; sourceTree = "<group>"; };
-		DF2E50B717BC6FF6009BEB11 /* NSArray+Primitive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+Primitive.m"; path = "GoGreen2/NSArray+Primitive.m"; sourceTree = "<group>"; };
 		DF62E06F17C18E1A00B29D43 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = greenhttp.c; path = "green-http/greenhttp.c"; sourceTree = "<group>"; };
 		DF62E07017C18E1B00B29D43 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = greenhttp.h; path = "green-http/greenhttp.h"; sourceTree = "<group>"; };
 		DF62E07217C1992700B29D43 /* BDHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDHost.h; sourceTree = "<group>"; };
@@ -156,6 +155,10 @@
 		DF7C827017B58D2F0099099E /* stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stop@2x.png"; path = "Images/stop@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF7C827117B58D2F0099099E /* topBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topBar.png; path = Images/topBar.png; sourceTree = SOURCE_ROOT; };
 		DF7C827217B58D2F0099099E /* topBar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "topBar@2x.png"; path = "Images/topBar@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFA9AA7617D25AE9006F58A5 /* CSocketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSocketController.h; sourceTree = "<group>"; };
+		DFA9AA7717D25AEA006F58A5 /* CSocketController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSocketController.m; sourceTree = "<group>"; };
+		DFA9AA7A17D2666B006F58A5 /* NSArray+Primitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+Primitive.h"; path = "GoGreen2/NSArray+Primitive.h"; sourceTree = "<group>"; };
+		DFA9AA7B17D2666B006F58A5 /* NSArray+Primitive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+Primitive.m"; path = "GoGreen2/NSArray+Primitive.m"; sourceTree = "<group>"; };
 		DFB9042017B08AE800368F89 /* download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = download.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -322,7 +325,7 @@
 		39592524177518690035E351 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DF2E50B517BC6FE0009BEB11 /* NSArray+Primitives */,
+				DFA9AA7917D26654006F58A5 /* NSArray+Primitives */,
 				392B9D8D178F66F300C40B64 /* Heat Map Library */,
 				39D06AFC1783A6A300DD94B7 /* MapKit.framework */,
 				3959257F177519730035E351 /* SystemConfiguration.framework */,
@@ -364,6 +367,7 @@
 		3959252C177518690035E351 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DFA9AA7517D25ABF006F58A5 /* CSocketController */,
 				390415AD1798DC50005EC308 /* Images */,
 				3959252D177518690035E351 /* GoogleGreenMapTest-Info.plist */,
 				3959252E177518690035E351 /* InfoPlist.strings */,
@@ -412,11 +416,20 @@
 			path = GoGreen2/greenHttp;
 			sourceTree = "<group>";
 		};
-		DF2E50B517BC6FE0009BEB11 /* NSArray+Primitives */ = {
+		DFA9AA7517D25ABF006F58A5 /* CSocketController */ = {
 			isa = PBXGroup;
 			children = (
-				DF2E50B617BC6FF6009BEB11 /* NSArray+Primitive.h */,
-				DF2E50B717BC6FF6009BEB11 /* NSArray+Primitive.m */,
+				DFA9AA7617D25AE9006F58A5 /* CSocketController.h */,
+				DFA9AA7717D25AEA006F58A5 /* CSocketController.m */,
+			);
+			name = CSocketController;
+			sourceTree = "<group>";
+		};
+		DFA9AA7917D26654006F58A5 /* NSArray+Primitives */ = {
+			isa = PBXGroup;
+			children = (
+				DFA9AA7A17D2666B006F58A5 /* NSArray+Primitive.h */,
+				DFA9AA7B17D2666B006F58A5 /* NSArray+Primitive.m */,
 			);
 			name = "NSArray+Primitives";
 			sourceTree = "<group>";
@@ -559,9 +572,10 @@
 				39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */,
 				3915605F179E086100D6E35D /* Message.m in Sources */,
 				DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */,
-				DF2E50B817BC6FF6009BEB11 /* NSArray+Primitive.m in Sources */,
 				DF62E07117C18E1B00B29D43 /* greenhttp.c in Sources */,
 				DF62E07417C1992700B29D43 /* BDHost.m in Sources */,
+				DFA9AA7817D25AEA006F58A5 /* CSocketController.m in Sources */,
+				DFA9AA7C17D2666B006F58A5 /* NSArray+Primitive.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
