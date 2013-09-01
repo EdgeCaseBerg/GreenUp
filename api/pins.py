@@ -38,8 +38,8 @@ class Pins(webapp2.RequestHandler):
 				float(latDegrees)
 				#check range
 				latDegrees = float(latDegrees)
-				if latDegrees < -180.0 or latDegrees > 180.0:
-					raise SemanticError("latDegrees must be within the range of -180.0 and 180.0")
+				if latDegrees < -90.0 or latDegrees > 90.0:
+					raise SemanticError("latDegrees must be within the range of -90.0 and 90.0")
 				parameters+= 1
 			except ValueError, v:
 				#Syntactic error
@@ -57,7 +57,7 @@ class Pins(webapp2.RequestHandler):
 				float(lonDegrees)
 				#check range
 				lonDegrees = float(lonDegrees)
-				if lonDegrees < -90.0 or lonDegrees > 90.0:
+				if lonDegrees < -180.0 or lonDegrees > 180.0:
 					raise SemanticError("lonDegrees must be within the range of -180.0 and 180.0")
 				parameters+=1
 			except ValueError, v:
@@ -157,8 +157,8 @@ class Pins(webapp2.RequestHandler):
 		#do the same thing for lon degrees
 		try:
 			lonDegrees = float(lonDegrees)
-			if lonDegrees < -90.0 or lonDegrees > 90.0:
-				raise SemanticError("Lon degrees must be within the range of -90.0 and 90.0")
+			if lonDegrees < -180.0 or lonDegrees > 180.0:
+				raise SemanticError("Lon degrees must be within the range of -180.0 and 180.0")
 		except ValueError, e:
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
 			self.response.write('{"status_code" : %i,"Error_Message" : "Lon degrees must be a numeric value"}' % HTTP_REQUEST_SYNTAX_PROBLEM)

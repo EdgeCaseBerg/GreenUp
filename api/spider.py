@@ -254,7 +254,7 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 if __name__ == "__main__":
 	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapp.appspot.com/api'
-	#baseURL = 'http://localhost:30002/api'
+	baseURL = 'http://localhost:30002/api'
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
@@ -429,7 +429,7 @@ if __name__ == "__main__":
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#GET with bad lonDegrees
-	tester.followLink(endPoints['pins'],withData={"lonDegrees" : 91})
+	tester.followLink(endPoints['pins'],withData={"lonDegrees" : 191})
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
@@ -485,7 +485,7 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 150, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 190, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
