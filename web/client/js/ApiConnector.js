@@ -331,7 +331,9 @@ function GpsHandle(){
 	    	// console.log("getting position data");
 	    	 if(navigator.geolocation){
 	    	 	var options = {timeout:29000};
-	    	 	navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+	    	 	// navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	var watchID = navigator.geolocation.watchPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	var timeout = setTimeout( function() { navigator.geolocation.clearWatch( watchID ); }, 5000 );
 		     	window.updateCounter++;
 	    	 }else{
 	    	 	console.log("Geolocation is not supported by this browser.");
@@ -634,47 +636,51 @@ function CommentsHandle(){
 			case('forum'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleForum');
 				if(document.getElementById("toggleForum").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleForum");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleForum");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 			case('needs'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
 				if(document.getElementById("toggleNeeds").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleNeeds");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleNeeds");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 			case('message'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
 				if(document.getElementById("toggleMessages").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleMessage");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleMessage");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 		}
 	} // end toggleComments()
+
+	CommentsHandle.prototype.goToMarker = function goToMarker(marker){
+	// when the user clicks a comment box
+	}
 
 	//  The user presses the submit button on the comment submission screen
 	CommentsHandle.prototype.commentSubmission = function commentSubmission(commentType, commentMessage){
@@ -1120,17 +1126,6 @@ function UiHandle(){
 					div.className = "bubbleRight bubble"; 
 				}else{
 					div.className = "bubbleLeft bubble";
-				}
-
-				switch(comments[ii].type){
-					case "TRASH PICKUP":
-					break;
-					case "HELP NEEDED":
-					break;
-					case "GENERAL MESSAGE":
-					break;
-					case "FORUM":
-					break;
 				}
 
 				switch(comments[ii]['type']){
