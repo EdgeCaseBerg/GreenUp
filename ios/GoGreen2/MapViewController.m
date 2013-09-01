@@ -16,7 +16,7 @@
 #import <netdb.h>
 #include <arpa/inet.h>
 
-#define UPLOAD_QUEUE_LENGTH 2
+#define UPLOAD_QUEUE_LENGTH 1
 
 @interface MapViewController ()
 
@@ -187,6 +187,8 @@
         HeatMapPoint *mapPoint = [[HeatMapPoint alloc] init];
         mapPoint.lat = location.coordinate.latitude;
         mapPoint.lon = location.coordinate.longitude;
+        
+        NSLog(@"Lat: %f - Lon: %f", location.coordinate.latitude, location.coordinate.longitude);
         mapPoint.secWorked = 1;
         [self.gatheredMapPoints addObject:mapPoint];
         [self.gatheredMapPointsQueue addObject:mapPoint];
@@ -214,18 +216,21 @@
 -(void)pushHeatMapDataToServer
 {
     //If the number of gathered points in the queue array is equal to our define or we have the overdue flag set. Update our gathered points with the server!
+    NSLog(@"COUNTER: %d - TOTAL: %d", self.gatheredMapPointsQueue.count, self.gatheredMapPoints.count);
     if(self.gatheredMapPointsQueue.count >= UPLOAD_QUEUE_LENGTH || self.pushOverdue)
     {
+        int sentCount = 0;
         NSMutableArray *dataArray = [[NSMutableArray alloc] init];
         for(int i = 0; i < self.gatheredMapPointsQueue.count; i++)
         {
+            sentCount++;
             HeatMapPoint *point = [self.gatheredMapPointsQueue objectAtIndex:i];
             
             //Create Parameters For Push
             NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"secondsWorked", nil];
             NSMutableArray *objects = [[NSMutableArray alloc] init];
-            [objects addFloat:point.lon];
             [objects addFloat:point.lat];
+            [objects addFloat:point.lon];
             [objects addFloat:point.secWorked];
             
             NSLog(@"PUSHING - Lat: %f", point.lat);
@@ -236,7 +241,11 @@
             [dataArray addObject:parameters];
         }
         
+        NSLog(@"SEND POINTS: %d", sentCount);
+        
         NSString *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
+        if([response isKindOfClass:[NSString class]])
+        NSLog(@"PUSH RESPONSE: %@", response);
         
         [self.gatheredMapPointsQueue removeAllObjects];
     }
