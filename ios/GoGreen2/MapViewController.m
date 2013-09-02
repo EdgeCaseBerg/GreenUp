@@ -246,16 +246,20 @@
         NSLog(@"SEND POINTS: %d", sentCount);
         
         NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
-        if([[[response allKeys] objectAtIndex:0] isEqualToString:@"Error_Message"])
+        NSString *statusCode = [response objectForKey:@"status_code"];
+        
+        if([statusCode integerValue] == 200)
         {
             NSLog(@"*************PUSH ERROR OCCURED: %@", [response objectForKey:@"Error_Message"]);
             self.pushOverdue = TRUE;
+           
         }
         else
         {
             self.pushOverdue = FALSE;
             [self.gatheredMapPointsQueue removeAllObjects];
         }
+        
     }
 }
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
@@ -273,54 +277,62 @@
     NSLog(@"Span-Lat: %f", span.latitudeDelta);
     */
     
-    NSArray *results = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:nil];
+    NSDictionary *results = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+    NSString *statusCode = [results objectForKey:@"status_code"];
     
-    for(NSDictionary *pointDictionary in results)
+    if([statusCode integerValue] == 200)
     {
-        HeatMapPoint *newPoint = [[HeatMapPoint alloc] init];
-        double lat = [[pointDictionary objectForKey:@"latDegrees"] doubleValue];
-        double lon = [[pointDictionary objectForKey:@"lonDegrees"] doubleValue];
-        double secWorked = [[pointDictionary objectForKey:@"secondsWorked"] doubleValue];
-        
-        newPoint.lat = lat;
-        newPoint.lon = lon;
-        newPoint.secWorked = secWorked;
-        
-        //Remove Duplicates I've Already Gathered
-        BOOL found = FALSE;
-        for(HeatMapPoint *point in self.downloadedMapPoints)
+        for(NSDictionary *pointDictionary in [results objectForKey:@"grid"])
         {
-            /*
-            NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
-            NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
-            NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
-            */
+            HeatMapPoint *newPoint = [[HeatMapPoint alloc] init];
+            double lat = [[pointDictionary objectForKey:@"latDegrees"] doubleValue];
+            double lon = [[pointDictionary objectForKey:@"lonDegrees"] doubleValue];
+            double secWorked = [[pointDictionary objectForKey:@"secondsWorked"] doubleValue];
             
-            if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
+            newPoint.lat = lat;
+            newPoint.lon = lon;
+            newPoint.secWorked = secWorked;
+            
+            //Remove Duplicates I've Already Gathered
+            BOOL found = FALSE;
+            for(HeatMapPoint *point in self.downloadedMapPoints)
             {
-                NSLog(@"************ DUPLICATE FOUND DOWNLOAD");
-                found = TRUE;
+                /*
+                 NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
+                 NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
+                 NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
+                 */
+                
+                if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
+                {
+                    NSLog(@"************ DUPLICATE FOUND DOWNLOAD");
+                    found = TRUE;
+                }
+            }
+            for(HeatMapPoint *point in self.gatheredMapPoints)
+            {
+                /*
+                 NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
+                 NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
+                 NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
+                 */
+                
+                if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
+                {
+                    NSLog(@"************ DUPLICATE FOUND IN GATHERED");
+                    found = TRUE;
+                }
+            }
+            
+            if(!found)
+            {
+                [self.downloadedMapPoints addObject:newPoint];
             }
         }
-        for(HeatMapPoint *point in self.gatheredMapPoints)
-        {
-            /*
-            NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
-            NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
-            NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
-            */
-            
-            if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
-            {
-                NSLog(@"************ DUPLICATE FOUND IN GATHERED");
-                found = TRUE;
-            }
-        }
-        
-        if(!found)
-        {
-            [self.downloadedMapPoints addObject:newPoint];
-        }
+    }
+    else
+    {
+        NSLog(@"*************GET ERROR OCCURED: %@", [results objectForKey:@"Error_Message"]);
     }
 }
 
