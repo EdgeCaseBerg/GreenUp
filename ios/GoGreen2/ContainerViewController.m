@@ -68,11 +68,12 @@ static ContainerViewController* theContainerView = nil;
     
     //TabBar
     self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 411, 320, 49)];
+    //[self.theTabBar setBackgroundImage:[UIImage imageNamed:@"bottom_menu.png"]];
     self.theTabBar.delegate = self;
     
-    self.item1 = [[UITabBarItem alloc] initWithTitle:@"Home" image:[UIImage imageNamed:nil] tag:HOME_VIEW];
-    self.item2 = [[UITabBarItem alloc] initWithTitle:@"Map" image:[UIImage imageNamed:nil] tag:Map_VIEW];
-    self.item3 = [[UITabBarItem alloc] initWithTitle:@"Messages" image:[UIImage imageNamed:nil] tag:MESSAGE_VIEW];
+    self.item1 = [[UITabBarItem alloc] initWithTitle:@"Home" image:[UIImage imageNamed:@"home_active.png"] tag:HOME_VIEW];
+    self.item2 = [[UITabBarItem alloc] initWithTitle:@"Map" image:[UIImage imageNamed:@"map.png"] tag:Map_VIEW];
+    self.item3 = [[UITabBarItem alloc] initWithTitle:@"Messages" image:[UIImage imageNamed:@"comments.png"] tag:MESSAGE_VIEW];
     [self.theTabBar setItems:[NSArray arrayWithObjects:self.item1, self.item2, self.item3, nil] animated:YES];
     [self.theTabBar setSelectedItem:[self.theTabBar.items objectAtIndex:0]];
     [self.view addSubview:self.theTabBar];
@@ -128,6 +129,9 @@ static ContainerViewController* theContainerView = nil;
 
 -(void)switchHomeView
 {
+    [self.item1 setImage:[UIImage imageNamed:@"home_active.png"]];
+    [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
+    [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
     //[self.theMenuView buildViewForHome];
     [self.theHomeViewController.view setHidden:FALSE];
     [self.theMapViewController.view setHidden:FALSE];
@@ -146,6 +150,9 @@ static ContainerViewController* theContainerView = nil;
 }
 -(void)switchMapView
 {
+    [self.item1 setImage:[UIImage imageNamed:@"home.png"]];
+    [self.item2 setImage:[UIImage imageNamed:@"map_active.png"]];
+    [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
     //[self.theMenuView buildViewForMap];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item2];
@@ -164,6 +171,9 @@ static ContainerViewController* theContainerView = nil;
 }
 -(void)switchMessageView
 {
+    [self.item1 setImage:[UIImage imageNamed:@"home.png"]];
+    [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
+    [self.item3 setImage:[UIImage imageNamed:@"comments_active.png"]];
     //[self.theMenuView buildViewForMessages];
     [self.theMessageViewController.view setHidden:FALSE];
     [self.theMapViewController.view setHidden:FALSE];
