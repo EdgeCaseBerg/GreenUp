@@ -14,17 +14,33 @@
    id="Layer_1"
    x="0px"
    y="0px"
-   width="1"
-   height="20"
-   viewBox="0 0 1 20"
+   width="31.75988"
+   height="312.51721"
+   viewBox="0 0 31.75988 312.5172"
    enable-background="new 0 0 10.667 53"
    xml:space="preserve"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="bottom_menu.svg"><metadata
-   id="metadata3039"><rdf:RDF><cc:Work
+   id="metadata9"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
-   id="defs3037" /><sodipodi:namedview
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
+   id="defs7"><linearGradient
+     id="linearGradient3752"><stop
+       style="stop-color:#009246;stop-opacity:1;"
+       offset="0"
+       id="stop3754" /><stop
+       style="stop-color:#00d384;stop-opacity:1;"
+       offset="1"
+       id="stop3756" /></linearGradient><linearGradient
+     inkscape:collect="always"
+     xlink:href="#linearGradient3752"
+     id="linearGradient3758"
+     x1="3.8111863"
+     y1="119.17031"
+     x2="5.0815806"
+     y2="-0.24684258"
+     gradientUnits="userSpaceOnUse"
+     gradientTransform="translate(-2.540791,-1.0235646)" /></defs><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
    borderopacity="1"
@@ -33,64 +49,26 @@
    guidetolerance="10"
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
-   inkscape:window-width="640"
-   inkscape:window-height="480"
-   id="namedview3035"
+   inkscape:window-width="1366"
+   inkscape:window-height="696"
+   id="namedview5"
    showgrid="false"
-   inkscape:zoom="35.622642"
-   inkscape:cx="0.75808886"
-   inkscape:cy="22.455667"
+   fit-margin-top="0"
+   fit-margin-left="0"
+   fit-margin-right="0"
+   fit-margin-bottom="0"
+   inkscape:zoom="0.78715661"
+   inkscape:cx="44.679537"
+   inkscape:cy="172.841"
    inkscape:window-x="0"
-   inkscape:window-y="0"
-   inkscape:window-maximized="0"
+   inkscape:window-y="24"
+   inkscape:window-maximized="1"
    inkscape:current-layer="Layer_1" />
-<g
-   id="Ry3M15_1_"
-   transform="matrix(0.94385578,0,0,0.48417631,-3.846386,-4.2529072)">
-	
-		<image
-   overflow="visible"
-   width="1"
-   height="48"
-   id="Ry3M15_2_"
-   xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgEASABIAAD/7AARRHVja3kAAQAEAAAAHgAA/+4AIUFkb2JlAGTAAAAAAQMA EAMCAwYAAAGEAAABkwAAAb//2wCEABALCwsMCxAMDBAXDw0PFxsUEBAUGx8XFxcXFx8eFxoaGhoX Hh4jJSclIx4vLzMzLy9AQEBAQEBAQEBAQEBAQEABEQ8PERMRFRISFRQRFBEUGhQWFhQaJhoaHBoa JjAjHh4eHiMwKy4nJycuKzU1MDA1NUBAP0BAQEBAQEBAQEBAQP/CABEIADEAAgMBIgACEQEDEQH/ xABwAAEBAQEBAAAAAAAAAAAAAAAAAQIFBgEAAwEAAAAAAAAAAAAAAAAAAAIEARAAAwADAAAAAAAA AAAAAAAAABARIAISEQACAQUBAAAAAAAAAAAAAAAAhTEBQVEShDUSAQAAAAAAAAAAAAAAAAAAACD/ 2gAMAwEAAhEDEQAAAO0ySGINygb0Iaj/2gAIAQIAAQUAw//aAAgBAwABBQAhF//aAAgBAQABBQDv ZUpSr//aAAgBAgIGPwAf/9oACAEDAgY/AB//2gAIAQEBBj8Amvi7TfIjEYiEIgOc/9k="
-   transform="translate(5.0005,3.1665)"
-   style="overflow:visible">
-	</image>
-</g>
-<image
-   y="-2.7086849"
-   x="-0.95974571"
-   overflow="visible"
-   width="0.7966103"
-   height="23.240463"
-   id="Ry3M15_2_-4"
-   xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgEASABIAAD/7AARRHVja3kAAQAEAAAAHgAA/+4AIUFkb2JlAGTAAAAAAQMA EAMCAwYAAAGEAAABkwAAAb//2wCEABALCwsMCxAMDBAXDw0PFxsUEBAUGx8XFxcXFx8eFxoaGhoX Hh4jJSclIx4vLzMzLy9AQEBAQEBAQEBAQEBAQEABEQ8PERMRFRISFRQRFBEUGhQWFhQaJhoaHBoa JjAjHh4eHiMwKy4nJycuKzU1MDA1NUBAP0BAQEBAQEBAQEBAQP/CABEIADEAAgMBIgACEQEDEQH/ xABwAAEBAQEBAAAAAAAAAAAAAAAAAQIFBgEAAwEAAAAAAAAAAAAAAAAAAAIEARAAAwADAAAAAAAA AAAAAAAAABARIAISEQACAQUBAAAAAAAAAAAAAAAAhTEBQVEShDUSAQAAAAAAAAAAAAAAAAAAACD/ 2gAMAwEAAhEDEQAAAO0ySGINygb0Iaj/2gAIAQIAAQUAw//aAAgBAwABBQAhF//aAAgBAQABBQDv ZUpSr//aAAgBAgIGPwAf/9oACAEDAgY/AB//2gAIAQEBBj8Amvi7TfIjEYiEIgOc/9k="
-   style="overflow:visible"
-   transform="scale(-1,1)" /><image
-   y="-2.7086849"
-   x="-0.62288153"
-   overflow="visible"
-   width="0.7966103"
-   height="23.240463"
-   id="Ry3M15_2_-4-5"
-   xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgEASABIAAD/7AARRHVja3kAAQAEAAAAHgAA/+4AIUFkb2JlAGTAAAAAAQMA EAMCAwYAAAGEAAABkwAAAb//2wCEABALCwsMCxAMDBAXDw0PFxsUEBAUGx8XFxcXFx8eFxoaGhoX Hh4jJSclIx4vLzMzLy9AQEBAQEBAQEBAQEBAQEABEQ8PERMRFRISFRQRFBEUGhQWFhQaJhoaHBoa JjAjHh4eHiMwKy4nJycuKzU1MDA1NUBAP0BAQEBAQEBAQEBAQP/CABEIADEAAgMBIgACEQEDEQH/ xABwAAEBAQEBAAAAAAAAAAAAAAAAAQIFBgEAAwEAAAAAAAAAAAAAAAAAAAIEARAAAwADAAAAAAAA AAAAAAAAABARIAISEQACAQUBAAAAAAAAAAAAAAAAhTEBQVEShDUSAQAAAAAAAAAAAAAAAAAAACD/ 2gAMAwEAAhEDEQAAAO0ySGINygb0Iaj/2gAIAQIAAQUAw//aAAgBAwABBQAhF//aAAgBAQABBQDv ZUpSr//aAAgBAgIGPwAf/9oACAEDAgY/AB//2gAIAQEBBj8Amvi7TfIjEYiEIgOc/9k="
-   style="overflow:visible"
-   transform="scale(-1,1)" /><image
-   y="-2.7086849"
-   x="1.3246821"
-   overflow="visible"
-   width="0.83156765"
-   height="23.240463"
-   id="Ry3M15_2_-4-2"
-   xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgEASABIAAD/7AARRHVja3kAAQAEAAAAHgAA/+4AIUFkb2JlAGTAAAAAAQMA EAMCAwYAAAGEAAABkwAAAb//2wCEABALCwsMCxAMDBAXDw0PFxsUEBAUGx8XFxcXFx8eFxoaGhoX Hh4jJSclIx4vLzMzLy9AQEBAQEBAQEBAQEBAQEABEQ8PERMRFRISFRQRFBEUGhQWFhQaJhoaHBoa JjAjHh4eHiMwKy4nJycuKzU1MDA1NUBAP0BAQEBAQEBAQEBAQP/CABEIADEAAgMBIgACEQEDEQH/ xABwAAEBAQEBAAAAAAAAAAAAAAAAAQIFBgEAAwEAAAAAAAAAAAAAAAAAAAIEARAAAwADAAAAAAAA AAAAAAAAABARIAISEQACAQUBAAAAAAAAAAAAAAAAhTEBQVEShDUSAQAAAAAAAAAAAAAAAAAAACD/ 2gAMAwEAAhEDEQAAAO0ySGINygb0Iaj/2gAIAQIAAQUAw//aAAgBAwABBQAhF//aAAgBAQABBQDv ZUpSr//aAAgBAgIGPwAf/9oACAEDAgY/AB//2gAIAQEBBj8Amvi7TfIjEYiEIgOc/9k="
-   style="overflow:visible" /><image
-   y="-2.7086844"
-   x="-0.31408897"
-   overflow="visible"
-   width="0.7966103"
-   height="23.240463"
-   id="Ry3M15_2_-4-2-6"
-   xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgEASABIAAD/7AARRHVja3kAAQAEAAAAHgAA/+4AIUFkb2JlAGTAAAAAAQMA EAMCAwYAAAGEAAABkwAAAb//2wCEABALCwsMCxAMDBAXDw0PFxsUEBAUGx8XFxcXFx8eFxoaGhoX Hh4jJSclIx4vLzMzLy9AQEBAQEBAQEBAQEBAQEABEQ8PERMRFRISFRQRFBEUGhQWFhQaJhoaHBoa JjAjHh4eHiMwKy4nJycuKzU1MDA1NUBAP0BAQEBAQEBAQEBAQP/CABEIADEAAgMBIgACEQEDEQH/ xABwAAEBAQEBAAAAAAAAAAAAAAAAAQIFBgEAAwEAAAAAAAAAAAAAAAAAAAIEARAAAwADAAAAAAAA AAAAAAAAABARIAISEQACAQUBAAAAAAAAAAAAAAAAhTEBQVEShDUSAQAAAAAAAAAAAAAAAAAAACD/ 2gAMAwEAAhEDEQAAAO0ySGINygb0Iaj/2gAIAQIAAQUAw//aAAgBAwABBQAhF//aAAgBAQABBQDv ZUpSr//aAAgBAgIGPwAf/9oACAEDAgY/AB//2gAIAQEBBj8Amvi7TfIjEYiEIgOc/9k="
-   style="overflow:visible"
-   transform="scale(-1,1)" /></svg>
+
+<rect
+   style="fill:url(#linearGradient3758);fill-opacity:1;stroke:none"
+   id="rect3750"
+   width="31.75988"
+   height="312.51721"
+   x="0"
+   y="-4.9999999e-06" /></svg>

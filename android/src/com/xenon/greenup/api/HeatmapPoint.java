@@ -65,8 +65,9 @@ public class HeatmapPoint {
 	public void setSecondsWorked(int secondsWorked) {
 		this.secondsWorked = secondsWorked;
 	}
+	
 	public JSONObject toJSON() {
-	JSONObject json = new JSONObject();
+		JSONObject json = new JSONObject();
 		try {
 			json.put("latDegrees",this.latDegrees);
 			json.put("lonDegrees",this.lonDegrees);

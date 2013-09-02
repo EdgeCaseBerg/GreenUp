@@ -16,9 +16,11 @@ public class Heatmap {
 	
 	public Heatmap(String jsonString) {
 		int i;
+		JSONObject object;
 		JSONArray points;
 		try {
-			points = new JSONArray(jsonString);
+			object = new JSONObject(jsonString);
+			points = object.getJSONArray("grid");
 			this.pointList = new ArrayList<HeatmapPoint>();
 			for (i = 0; i < points.length(); i++){
 				this.pointList.add(new HeatmapPoint(points.getString(i)));

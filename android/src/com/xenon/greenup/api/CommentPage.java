@@ -30,6 +30,11 @@ public class CommentPage {
 			this.commentsList = new ArrayList<Comment>();
 			for (i = 0; i < comments.length(); i++){
 				this.commentsList.add(new Comment(comments.getString(i)));
+				Log.i("id",Integer.toString(commentsList.get(i).getId()));
+				Log.i("type",commentsList.get(i).getType());
+				Log.i("message",commentsList.get(i).getMessage());
+				Log.i("timestamp",commentsList.get(i).getTimestamp());
+				Log.i("pin",Integer.toString(commentsList.get(i).getPin()));
 			}
 		}
 		catch (JSONException e){

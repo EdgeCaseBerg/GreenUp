@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:android1="http://schemas.android.com/apk/res/android"
+    android:id="@+id/feed_ll"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="top"
@@ -9,7 +10,18 @@
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="352dp"
+        android1:layout_weight="0.42" 
+        android:footerDividersEnabled="false"	
+        android:headerDividersEnabled="false">
     </ListView>
+
+    <EditText
+        android:id="@+id/text_entry_comments"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Submit your comment here"
+        android:imeOptions="actionSend"
+        android:inputType="text" />
 
 </LinearLayout>

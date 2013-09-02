@@ -18,6 +18,9 @@ handlers:
 - url: /api/comments
   script: comments.application
 
+- url: /api/debug
+  script: debug.application
+
 - url: /api 
   script: api.application
 
