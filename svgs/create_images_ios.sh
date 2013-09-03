@@ -1,68 +1,68 @@
-convert home.svg -resize '48x' home.png
-convert home.svg -resize '96x' home@2x.png
-convert home_active.svg -resize '48x' home_active.png
-convert home_active.svg -resize '96x' home_active@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png home.png -w 48 home.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png home@2x.png -w 96 home.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png home_active.png -w 48 home_active.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png home_active@2x.png -w 96 home_active.svg
 
-convert map.svg -resize '48x' map.png
-convert map.svg -resize '96x' map@2x.png
-convert map_active.svg -resize '48x' map_active.png
-convert map_active.svg -resize '96x' map_active@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png map.png -w 48 map.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png map@2x.png -w 96 map.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png map_active.png -w 48 map_active.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png map_active@2x.png -w 96 map_active.svg
 
-convert comments.svg -resize '48x' comments.png
-convert comments.svg -resize '96x' comments@2x.png
-convert comments_active.svg -resize '48x' comments_active.png
-convert comments_active.svg -resize '96x' comments_active@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png comments.png -w 48 comments.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png comments@2x.png -w 96 comments.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png comments_active.png -w 48 comments_active.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png comments_active@2x.png -w 96 comments_active.svg
 
-convert bubble_green_bottom_reverse.svg -resize '300x15' bubble_green_bottom_reverse.png
-convert bubble_green_bottom_reverse.svg -resize '600x30' bubble_green_bottom_reverse@2x.png
-convert bubble_green_bottom.svg -resize '300x15' bubble_green_bottom.png
-convert bubble_green_bottom.svg -resize '600x30' bubble_green_bottom@2x.png
-convert bubble_green_center.svg -resize '300x1' bubble_green_center.png
-convert bubble_green_center.svg -resize '600x2' bubble_green_center@2x.png
-convert bubble_green_top.svg -resize '300x5' bubble_green_top.png
-convert bubble_green_top.svg -resize '600x5' bubble_green_top@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_green_bottom_reverse.png -w 300 bubble_green_bottom_reverse.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_green_bottom_reverse@2x.png -w 600 bubble_green_bottom_reverse.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_green_bottom.png -w 300 bubble_green_bottom.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_green_bottom@2x.png -w 600 bubble_green_bottom.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_green_center.png -w 300 bubble_green_center.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_green_center@2x.png -w 600 bubble_green_center.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_green_top.png -w 300 bubble_green_top.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bbubble_green_top@2x.png -w 600 bubble_green_top.svg
 
-convert bubble_orange_bottom_reverse.svg -resize '300x15' bubble_orange_bottom_reverse.png
-convert bubble_orange_bottom_reverse.svg -resize '600x30' bubble_orange_bottom_reverse@2x.png
-convert bubble_orange_bottom.svg -resize '300x15' bubble_orange_bottom.png
-convert bubble_orange_bottom.svg -resize '600x30' bubble_orange_bottom@2x.png
-convert bubble_orange_center.svg -resize '300x1' bubble_orange_center.png
-convert bubble_orange_center.svg -resize '600x2' bubble_orange_center@2x.png
-convert bubble_orange_top.svg -resize '300x5' bubble_orange_top.png
-convert bubble_orange_top.svg -resize '600x5' bubble_orange_top@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_orange_bottom_reverse.png -w 300 bubble_orange_bottom_reverse.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_orange_bottom_reverse@2x.png -w 600 bubble_orange_bottom_reverse.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_orange_bottom.png -w 300 bubble_orange_bottom.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_orange_bottom@2x.png -w 600 bubble_orange_bottom.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_orange_center.png -w 300 bubble_orange_center.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_orange_center@2x.png -w 600 bubble_orange_center.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_orange_top.png -w 300 bubble_orange_top.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bbubble_orange_top@2x.png -w 600 bubble_orange_top.svg
 
-convert bubble_red_bottom_reverse.svg -resize '300x15' bubble_red_bottom_reverse.png
-convert bubble_red_bottom_reverse.svg -resize '600x30' bubble_red_bottom_reverse@2x.png
-convert bubble_red_bottom.svg -resize '300x15' bubble_red_bottom.png
-convert bubble_red_bottom.svg -resize '600x30' bubble_red_bottom@2x.png
-convert bubble_red_center.svg -resize '300x1' bubble_red_center.png
-convert bubble_red_center.svg -resize '600x2' bubble_red_center@2x.png
-convert bubble_red_top.svg -resize '300x5' bubble_red_top.png
-convert bubble_red_top.svg -resize '600x5' bubble_red_top@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_red_bottom_reverse.png -w 300 bubble_red_bottom_reverse.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_red_bottom_reverse@2x.png -w 600 bubble_red_bottom_reverse.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_red_bottom.png -w 300 bubble_red_bottom.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_red_bottom@2x.png -w 600 bubble_red_bottom.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_red_center.png -w 300 bubble_red_center.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_red_center@2x.png -w 600 bubble_red_center.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_red_top.png -w 300 bubble_red_top.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bbubble_red_top@2x.png -w 600 bubble_red_top.svg
 
-convert bubble_yellow_bottom_reverse.svg -resize '300x15' bubble_yellow_bottom_reverse.png
-convert bubble_yellow_bottom_reverse.svg -resize '600x30' bubble_yellow_bottom_reverse@2x.png
-convert bubble_yellow_bottom.svg -resize '300x15' bubble_yellow_bottom.png
-convert bubble_yellow_bottom.svg -resize '600x30' bubble_yellow_bottom@2x.png
-convert bubble_yellow_center.svg -resize '300x1' bubble_yellow_center.png
-convert bubble_yellow_center.svg -resize '600x2' bubble_yellow_center@2x.png
-convert bubble_yellow_top.svg -resize '300x5' bubble_yellow_top.png
-convert bubble_yellow_top.svg -resize '600x5' bubble_yellow_top@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_yellow_bottom_reverse.png -w 300 bubble_yellow_bottom_reverse.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_yellow_bottom_reverse@2x.png -w 600 bubble_yellow_bottom_reverse.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_yellow_bottom.png -w 300 bubble_yellow_bottom.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_yellow_bottom@2x.png -w 600 bubble_yellow_bottom.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_yellow_center.png -w 300 bubble_yellow_center.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_yellow_center@2x.png -w 600 bubble_yellow_center.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bubble_yellow_top.png -w 300 bubble_yellow_top.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bbubble_yellow_top@2x.png -w 600 bubble_yellow_top.svg
 
-convert Start.svg -resize '300x' Start.png
-convert Start.svg -resize '600x' Start@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png Start.png -w 300 Start.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png Start@2x.png -w 600 Start.svg
 
-convert Stop.svg -resize '300x' Stop.png
-convert Stop.svg -resize '600x' Stop@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png Stop.png -w 300 Stop.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png Stop@2x.png -w 600 Stop.svg
 
-convert top_bar.svg -resize '320x' top_bar.png
-convert top_bar.svg -resize '640x' top_bar@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png top_bar.png -w 320 top_bar.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png top_bar@2x.png -w 640 top_bar.svg
 
-convert hamburger_icon.svg -resize '30x' hamburger_icon.png
-convert hamburger_icon.svg -resize '60x' hamburger_icon@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png hamburger_icon.png -w 30 hamburger_icon.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png hamburger_icon@2x.png -w 60 hamburger_icon.svg
 
-convert bottom_menu.svg -resize '320x' bottom_menu.png
-convert bottom_menu.svg -resize '640x' bottom_menu@2x.png
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bottom_menu.png -h 49 bottom_menu.svg
+/Applications/Inkscape.app/Contents/Resources/bin/inkscape --export-png bottom_menu@2x.png -h 98 bottom_menu.svg
 
 
 

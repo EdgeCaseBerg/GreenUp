@@ -64,7 +64,7 @@ static ContainerViewController* theContainerView = nil;
     
     //TabBar
     self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 411, 320, 49)];
-    [self.theTabBar setBackgroundColor:[UIColor redColor]];
+    [self.theTabBar setBackgroundImage:[UIImage imageNamed:@"bottom_menu.png"]];
     
     self.theTabBar.delegate = self;
     
@@ -77,7 +77,6 @@ static ContainerViewController* theContainerView = nil;
     [self.theTabBar setItems:[NSArray arrayWithObjects:self.item1, self.item2, self.item3, nil] animated:YES];
     [self.theTabBar setSelectedItem:[self.theTabBar.items objectAtIndex:0]];
     [self.view addSubview:self.theTabBar];
-    
 
     //Menu
     self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
@@ -137,7 +136,7 @@ static ContainerViewController* theContainerView = nil;
     [self.item1 setImage:[UIImage imageNamed:@"home_active.png"]];
     [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
     [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
-    //[self.theMenuView buildViewForHome];
+    [self.theMenuView fadeViewToView:MENU_HOME_VIEW];
     [self.theHomeViewController.view setHidden:FALSE];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item1];
@@ -158,7 +157,7 @@ static ContainerViewController* theContainerView = nil;
     [self.item1 setImage:[UIImage imageNamed:@"home.png"]];
     [self.item2 setImage:[UIImage imageNamed:@"map_active.png"]];
     [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
-    //[self.theMenuView buildViewForMap];
+    [self.theMenuView fadeViewToView:MENU_MAP_VIEW];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item2];
     //Animate Block
@@ -179,7 +178,7 @@ static ContainerViewController* theContainerView = nil;
     [self.item1 setImage:[UIImage imageNamed:@"home.png"]];
     [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
     [self.item3 setImage:[UIImage imageNamed:@"comments_active.png"]];
-    //[self.theMenuView buildViewForMessages];
+    [self.theMenuView fadeViewToView:MENU_MESSAGE_VIEW];
     [self.theMessageViewController.view setHidden:FALSE];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item3];
