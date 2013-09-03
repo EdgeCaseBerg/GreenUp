@@ -10,6 +10,9 @@
 //#import "FSNConnection.h"
 #import "greenhttp.h"
 #import "ContainerViewController.h"
+#import "MessageCell.h"
+#import "UIFont+methods.h"
+#import "NetworkMessage.h"
 
 @interface MessageViewController ()
 
@@ -24,20 +27,46 @@
 
     self.messages = [[NSMutableArray alloc] init];
     
+    for(int i = 0; i < 15; i++)
+    {
+        NetworkMessage *newMsg = [[NetworkMessage alloc] init];
+        NSString *type = nil;
+        int rand = arc4random() % 4;
+        if(rand == 0)
+        {
+            type = Message_Cell_Type_A;
+        }
+        else if(rand == 1)
+        {
+            type = Message_Cell_Type_B;
+        }
+        else if(rand == 2)
+        {
+            type = Message_Cell_Type_C;
+        }
+        else
+        {
+            type = Message_Cell_Type_D;
+        }
+
+        newMsg.messageType = type;
+        newMsg.messageContent = @"sample message kfhsdjf sdjfsd kfjhsafklj sdflsd fks dlkjf jksdfl ksadjklb lkjbsdfkjl dljkfhs djkafja sdfk faf dfkjs dlkfkldf jdfkl dslf  df dlfsd";
+        
+        [self.messages addObject:newMsg];
+    }
+    
     return self;
 }
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    
 }
 
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    for(Message *msg in self.messages)
+    for(NetworkMessage *msg in self.messages)
     {
         NSLog(@"Message: %@", msg.messageContent);
     }
@@ -52,23 +81,23 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma - Networking Delegates
-
+#pragma mark - Networking Delegates
 -(void)getMessages
 {
-   // GET was here
+   // GET goes here
 }
 
 -(void)post
 {
-    
+    // POST goes here
 }
 
-#pragma - TABLE VIEW DATA SOURCE
 
+#pragma mark - TABLE VIEW DATA SOURCE
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSLog(@"Count: %d", self.messages.count);
+    
     return self.messages.count;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -77,40 +106,27 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"CountryCell";
+    static NSString *CellIdentifier = @"cellID";
     
     UITableViewCell *cell = [self.theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    if (cell != nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        for(UIView *subview in cell.contentView.subviews)
+        {
+            [subview removeFromSuperview];
+        }
+    }
+    
+    NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
+    
+    if(indexPath.row % 2 == 0)
+    {
+        cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:TRUE withText:msg.messageContent andResueIdentifier:CellIdentifier];
     }
     else
     {
-        for(UIView *view in cell.contentView.subviews)
-        {
-            [view removeFromSuperview];
-        }
+        cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:FALSE withText:msg.messageContent andResueIdentifier:CellIdentifier];
     }
- 
-    NSString *message = [[self.messages objectAtIndex:indexPath.row] messageContent];
-    NSString *type = [[self.messages objectAtIndex:indexPath.row] messageType];
-    NSString *pinID = [[[self.messages objectAtIndex:indexPath.row] pinID] stringValue];
-    
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 310, 60)];
-    [messageLabel setText:message];
-    [messageLabel setBackgroundColor:[UIColor clearColor]];
-    [messageLabel setFont:[messageLabel.font fontWithSize:12]];
-    [cell.contentView addSubview:messageLabel];
-    
-    UILabel *pinIDLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 70, 310, 10)];
-    [pinIDLabel setText:pinID];
-    [pinIDLabel setBackgroundColor:[UIColor clearColor]];
-    [pinIDLabel setFont:[pinIDLabel.font fontWithSize:8]];
-    
-    NSLog(@"MESSAGE %@", message);
-    
-    [cell.contentView addSubview:pinIDLabel];
-    
     return cell;
 }
 /*
@@ -138,12 +154,19 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 85;
+    NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
+    
+    CGSize size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(280, CGFLOAT_MAX)];
+    size.height += + 20 + 6;
+    NSLog(@"SIZE HEIGHT: %f - WIDTH: %f", size.height, size.width);
+    //return size;
+    
+    return size.height + 5;
 }
 /*
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+ 
 }
 - (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
 {

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Message.h"
+#import "NetworkMessage.h"
 @interface MessageViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray *messages;

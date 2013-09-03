@@ -9,7 +9,7 @@
 #import "ContainerViewController.h"
 //#import "FSNConnection.h"
 #import "greenhttp.h"
-#import "Message.h"
+#import "NetworkMessage.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -105,6 +105,9 @@ static ContainerViewController* theContainerView = nil;
     [rightRecognizer setNumberOfTouchesRequired:1];
     [rightRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     [self.view addGestureRecognizer:rightRecognizer];
+    
+    //Notification Center
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMenu:) name:@"toggleMenu" object:nil];
 }
 
 #pragma - Tab Bar Delegate
@@ -220,6 +223,19 @@ static ContainerViewController* theContainerView = nil;
 }
 
 #pragma - Menu
+
+-(IBAction)toggleMenu:(id)sender
+{
+    NSLog(@"y: %f", self.theMenuView.frame.origin.y);
+    if(self.theMenuView.frame.origin.y < 0)
+    {
+        [self showMenu:nil];
+    }
+    else
+    {
+        [self hideMenu:nil];
+    }
+}
 
 -(IBAction)hideMenu:(id)sender
 {

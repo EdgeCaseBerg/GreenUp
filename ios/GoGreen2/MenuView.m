@@ -25,6 +25,13 @@
         self.topBarImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"top_bar.png"]];
         [self.topBarImageView setFrame:CGRectMake(0, self.frame.size.height - 32, 320, 32)];
         [self addSubview:self.topBarImageView];
+        
+    
+        self.toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.toggleButton setFrame:CGRectMake(17, frame.size.height - 22, 30, 21)];
+        [self.toggleButton addTarget:self action:@selector(toggleMenu:) forControlEvents:UIControlEventTouchUpInside];
+        [self.toggleButton setBackgroundImage:[UIImage imageNamed:@"hamburger_icon.png"] forState:UIControlStateNormal];
+        [self addSubview:self.toggleButton];
 
         
         if([view isEqualToString:MENU_HOME_VIEW])
@@ -42,6 +49,11 @@
         
     }
     return self;
+}
+
+-(IBAction)toggleMenu:(id)sender
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"toggleMenu" object:nil];
 }
 
 -(void)fadeViewToView:(NSString *)view

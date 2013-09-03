@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		390415AC1798C359005EC308 /* MenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 390415AB1798C359005EC308 /* MenuView.m */; };
-		3915605F179E086100D6E35D /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 3915605E179E086100D6E35D /* Message.m */; };
+		3915605F179E086100D6E35D /* NetworkMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3915605E179E086100D6E35D /* NetworkMessage.m */; };
 		392E74761798B79E00C71680 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 392E74751798B79E00C71680 /* AppDelegate.m */; };
 		392E74791798B7D500C71680 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 392E74781798B7D500C71680 /* ContainerViewController.m */; };
 		392E747C1798B82800C71680 /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 392E747B1798B82800C71680 /* ContainerView.m */; };
@@ -117,6 +117,9 @@
 		DFA9ABF417D63C5B006F58A5 /* Stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9ABBB17D63C5B006F58A5 /* Stop@2x.png */; };
 		DFA9ABF517D63C5B006F58A5 /* top_bar.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9ABBC17D63C5B006F58A5 /* top_bar.png */; };
 		DFA9ABF617D63C5B006F58A5 /* top_bar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9ABBD17D63C5B006F58A5 /* top_bar@2x.png */; };
+		DFA9ABF917D653B0006F58A5 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9ABF817D653AF006F58A5 /* MessageCell.m */; };
+		DFA9ABFF17D66518006F58A5 /* UIFont+methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9ABFE17D66518006F58A5 /* UIFont+methods.m */; };
+		DFA9AC0217D66543006F58A5 /* UIColor+methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9AC0117D66543006F58A5 /* UIColor+methods.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,8 +135,8 @@
 /* Begin PBXFileReference section */
 		390415AA1798C359005EC308 /* MenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuView.h; sourceTree = "<group>"; };
 		390415AB1798C359005EC308 /* MenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuView.m; sourceTree = "<group>"; };
-		3915605D179E086100D6E35D /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
-		3915605E179E086100D6E35D /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		3915605D179E086100D6E35D /* NetworkMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkMessage.h; sourceTree = "<group>"; };
+		3915605E179E086100D6E35D /* NetworkMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkMessage.m; sourceTree = "<group>"; };
 		392E74741798B79E00C71680 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		392E74751798B79E00C71680 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		392E74771798B7D500C71680 /* ContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
@@ -258,6 +261,12 @@
 		DFA9ABBB17D63C5B006F58A5 /* Stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Stop@2x.png"; path = "Images/Stop@2x.png"; sourceTree = SOURCE_ROOT; };
 		DFA9ABBC17D63C5B006F58A5 /* top_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = top_bar.png; path = Images/top_bar.png; sourceTree = SOURCE_ROOT; };
 		DFA9ABBD17D63C5B006F58A5 /* top_bar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "top_bar@2x.png"; path = "Images/top_bar@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFA9ABF717D653AF006F58A5 /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
+		DFA9ABF817D653AF006F58A5 /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
+		DFA9ABFD17D66518006F58A5 /* UIFont+methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+methods.h"; sourceTree = "<group>"; };
+		DFA9ABFE17D66518006F58A5 /* UIFont+methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+methods.m"; sourceTree = "<group>"; };
+		DFA9AC0017D66543006F58A5 /* UIColor+methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+methods.h"; sourceTree = "<group>"; };
+		DFA9AC0117D66543006F58A5 /* UIColor+methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+methods.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -399,10 +408,7 @@
 		392B9DE41790C9F500C40B64 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				DF62E06F17C18E1A00B29D43 /* greenhttp.c */,
-				DF62E07017C18E1B00B29D43 /* greenhttp.h */,
-				DF6C594817AB411C005FA0E8 /* HeatMapPoint.h */,
-				DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */,
+				DFA9ABFA17D653BF006F58A5 /* Data Model Objects */,
 				392E74851798B83E00C71680 /* MapViewController.h */,
 				392E74861798B83E00C71680 /* MapViewController.m */,
 				392E74841798B83E00C71680 /* MapView_IPhone.xib */,
@@ -429,8 +435,9 @@
 		392B9DE71790CA3900C40B64 /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				3915605D179E086100D6E35D /* Message.h */,
-				3915605E179E086100D6E35D /* Message.m */,
+				DFA9ABFB17D653E4006F58A5 /* Data Model Objects */,
+				DFA9ABF717D653AF006F58A5 /* MessageCell.h */,
+				DFA9ABF817D653AF006F58A5 /* MessageCell.m */,
 				392E74891798B84800C71680 /* MessageViewController.h */,
 				392E748A1798B84800C71680 /* MessageViewController.m */,
 				393743E71798BB25005597FF /* MessageView_IPhone.xib */,
@@ -514,7 +521,8 @@
 		3959252C177518690035E351 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				DFA9AA7517D25ABF006F58A5 /* CSocketController */,
+				DFA9ABFC17D664E9006F58A5 /* Categories */,
+				DFA9AA7517D25ABF006F58A5 /* CSocketController / C Socket Library */,
 				390415AD1798DC50005EC308 /* Images */,
 				3959252D177518690035E351 /* GoogleGreenMapTest-Info.plist */,
 				3959252E177518690035E351 /* InfoPlist.strings */,
@@ -563,13 +571,15 @@
 			path = GoGreen2/greenHttp;
 			sourceTree = "<group>";
 		};
-		DFA9AA7517D25ABF006F58A5 /* CSocketController */ = {
+		DFA9AA7517D25ABF006F58A5 /* CSocketController / C Socket Library */ = {
 			isa = PBXGroup;
 			children = (
+				DF62E06F17C18E1A00B29D43 /* greenhttp.c */,
+				DF62E07017C18E1B00B29D43 /* greenhttp.h */,
 				DFA9AA7617D25AE9006F58A5 /* CSocketController.h */,
 				DFA9AA7717D25AEA006F58A5 /* CSocketController.m */,
 			);
-			name = CSocketController;
+			name = "CSocketController / C Socket Library";
 			sourceTree = "<group>";
 		};
 		DFA9AA7917D26654006F58A5 /* NSArray+Primitives */ = {
@@ -579,6 +589,35 @@
 				DFA9AA7B17D2666B006F58A5 /* NSArray+Primitive.m */,
 			);
 			name = "NSArray+Primitives";
+			sourceTree = "<group>";
+		};
+		DFA9ABFA17D653BF006F58A5 /* Data Model Objects */ = {
+			isa = PBXGroup;
+			children = (
+				DF6C594817AB411C005FA0E8 /* HeatMapPoint.h */,
+				DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */,
+			);
+			name = "Data Model Objects";
+			sourceTree = "<group>";
+		};
+		DFA9ABFB17D653E4006F58A5 /* Data Model Objects */ = {
+			isa = PBXGroup;
+			children = (
+				3915605D179E086100D6E35D /* NetworkMessage.h */,
+				3915605E179E086100D6E35D /* NetworkMessage.m */,
+			);
+			name = "Data Model Objects";
+			sourceTree = "<group>";
+		};
+		DFA9ABFC17D664E9006F58A5 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				DFA9ABFD17D66518006F58A5 /* UIFont+methods.h */,
+				DFA9ABFE17D66518006F58A5 /* UIFont+methods.m */,
+				DFA9AC0017D66543006F58A5 /* UIColor+methods.h */,
+				DFA9AC0117D66543006F58A5 /* UIColor+methods.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -766,12 +805,15 @@
 				393743E61798B98A005597FF /* HeatMapView.m in Sources */,
 				390415AC1798C359005EC308 /* MenuView.m in Sources */,
 				39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */,
-				3915605F179E086100D6E35D /* Message.m in Sources */,
+				3915605F179E086100D6E35D /* NetworkMessage.m in Sources */,
 				DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */,
 				DF62E07117C18E1B00B29D43 /* greenhttp.c in Sources */,
 				DF62E07417C1992700B29D43 /* BDHost.m in Sources */,
 				DFA9AA7817D25AEA006F58A5 /* CSocketController.m in Sources */,
 				DFA9AA7C17D2666B006F58A5 /* NSArray+Primitive.m in Sources */,
+				DFA9ABF917D653B0006F58A5 /* MessageCell.m in Sources */,
+				DFA9ABFF17D66518006F58A5 /* UIFont+methods.m in Sources */,
+				DFA9AC0217D66543006F58A5 /* UIColor+methods.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,6 +22,7 @@ typedef void (^VoidBlock)(void);
 
 @property (nonatomic, strong) UIImageView *topBarImageView;
 @property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIButton *toggleButton;
 
 
 @end

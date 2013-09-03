@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Message : NSObject
+@interface NetworkMessage : NSObject
 
 @property (strong, nonatomic) NSString *messageContent;
 @property (strong, nonatomic) NSString *messageType;

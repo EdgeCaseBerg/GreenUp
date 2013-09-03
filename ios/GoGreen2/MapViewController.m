@@ -193,8 +193,8 @@
         [self.gatheredMapPointsQueue addObject:mapPoint];
         
         //Update With Server        
-        //[self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        //[self pushHeatMapDataToServer];
+        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+        [self pushHeatMapDataToServer];
         [self updateHeatMapOverlay];
         
          //Update Map Location

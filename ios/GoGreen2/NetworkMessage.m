@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Aidan Melen. All rights reserved.
 //
 
-#import "Message.h"
+#import "NetworkMessage.h"
 
-@implementation Message
+@implementation NetworkMessage
 
 @end

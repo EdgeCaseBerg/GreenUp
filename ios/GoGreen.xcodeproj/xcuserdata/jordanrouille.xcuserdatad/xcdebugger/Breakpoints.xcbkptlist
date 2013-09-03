@@ -4,7 +4,7 @@
    version = "1.0">
    <FileBreakpoints>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
@@ -16,15 +16,47 @@
          landmarkName = "-pushHeatMapDataToServer"
          landmarkType = "5">
       </FileBreakpoint>
-   </FileBreakpoints>
-   <ExceptionBreakpoints>
-      <ExceptionBreakpoint
-         shouldBeEnabled = "Yes"
+      <FileBreakpoint
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         scope = "0"
-         stopOnStyle = "0">
-      </ExceptionBreakpoint>
+         filePath = "GoGreen2/MessageCell.m"
+         timestampString = "399930848.617826"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "26"
+         endingLineNumber = "26"
+         landmarkName = "-initWithMessageType:isBackwards:withText:andResueIdentifier:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "GoGreen2/MessageViewController.m"
+         timestampString = "399931093.734459"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "130"
+         endingLineNumber = "130"
+         landmarkName = "-tableView:cellForRowAtIndexPath:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "GoGreen2/MessageCell.m"
+         timestampString = "399930848.617826"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "16"
+         endingLineNumber = "16"
+         landmarkName = "-initWithMessageType:isBackwards:withText:andResueIdentifier:"
+         landmarkType = "5">
+      </FileBreakpoint>
+   </FileBreakpoints>
+   <ExceptionBreakpoints>
       <ExceptionBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
