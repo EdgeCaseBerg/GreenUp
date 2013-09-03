@@ -116,51 +116,55 @@
                 1111111111
             </div>
             <div id="panel2SlideDownContent" class="panelSlideDownContent">
-                <div class="slideDownNest">
-                    <div id="heatChoice" class="mapToggleContainer">
-                        <div class="roundedTwo">
-                            <input type="checkbox" value="None" id="toggleHeat" onchange="window.MAP.toggleHeatmap()" class="checkboxUnder" name="check" checked />
-                            <label for="toggleHeat"></label>
-                        </div>
-                        <span>Heat Map</span>
-                    </div>
-                    <div id="markerChoice" class="mapToggleContainer">
-                        <div class="roundedTwo">
-                            <input type="checkbox" value="None" id="toggleIcons" onchange="window.MAP.toggleIcons()" class="checkboxUnder" name="check" checked />
-                            <label for="toggleIcons"></label>
-                        </div>
-                        <span>Markers</span>
-                    </div>
-                </div>
+                <ul class="toggleNest">
+                        <li class="toggleNestLabel">Map Layers</li>
+                        <li> 
+                            <div class="slideToggle">    
+                                <input type="checkbox" value="None" id="toggleHeatmap" name="check" onchange="window.MAP.toggleHeatmap()" checked/>
+                                <label for="toggleHeatmap"></label>
+                            </div>  
+                            <span class="slideToggleLabel">Heatmap</span>
+                        </li>
+                        <li>
+                            <div class="slideToggle">    
+                                <input type="checkbox" value="None" id="toggleMarkers" name="check" onchange="window.MAP.toggleIcons()"/>
+                                <label for="toggleMarkers"></label>
+                            </div> 
+                            <span class="slideToggleLabel">Markers</span>
+                        </li>
+                    </ul>
             </div>
             <div id="panel3SlideDownContent" class="panelSlideDownContent">
                 <div class="slideDownNest">
-                    <ul>
-                        <li>    
-                            <div class="roundedTwo">
-                                <input type="checkbox" value="None" id="toggleForum" onchange="window.Comments.toggleComments('forum')" class="checkboxUnder" name="check" checked />
+
+                    <ul class="toggleNest">
+                        <li class="toggleNestLabel">Comments to Display</li>
+                        <li> 
+                            <div class="slideToggle">    
+                                <input type="checkbox" value="None" id="toggleForum" name="check" onchange="window.Comments.toggleComments('forum')" checked/>
                                 <label for="toggleForum"></label>
-                            </div>
-                            <span>Forum</span>
+                            </div>  
+                            <span class="slideToggleLabel">Forum</span>
                         </li>
                         <li>
-                            <div class="roundedTwo">
-                                <input type="checkbox" value="None" id="toggleNeeds" onchange="window.Comments.toggleComments('needs')" class="checkboxUnder" name="check" checked />
+                            <div class="slideToggle">    
+                                <input type="checkbox" value="None" id="toggleNeeds" name="check" onchange="window.Comments.toggleComments('needs')" checked/>
                                 <label for="toggleNeeds"></label>
-                            </div>
-                            <span>Needs</span>
+                            </div> 
+                            <span class="slideToggleLabel">Needs</span>
                         </li>
                         <li>
-                            <div class="roundedTwo">
-                                <input type="checkbox" value="None" id="toggleMessages" onchange="window.Comments.toggleComments('message')" class="checkboxUnder" name="check" checked />
+                            <div class="slideToggle">    
+                                <input type="checkbox" value="None" id="toggleMessages" name="check" onchange="window.Comments.toggleComments('message')" checked/>
                                 <label for="toggleMessages"></label>
-                            </div>
-                            <span>Messages</span>
+                            </div> 
+                            <span class="slideToggleLabel">Messages</span>
                         </li>
-                        <li><div class="addCommentButton commentButton" id="addCommentButton" onclick="window.UI.showMarkerTypeSelect('comment')">+ New Comment</div></li>
+                    </ul>
+
+                    <div class="addCommentButton commentButton" id="addCommentButton" onclick="window.UI.showMarkerTypeSelect('comment')">+ New Comment</div>
                         <input type="hidden" id="commentTypeToBePosted" value="null" />
                         <input type="hidden" id="commentToBePosted" value="null" />
-                    </ul>
                 </div>
             </div>
         </div>
@@ -194,9 +198,9 @@
     </div>
     <div id="navContainer">
         <ul class="nav" id="navbar">
-            <li><a id="pan1">Home</a></li>
-            <li><a id="pan2">Maps</a></li>
-            <li><a id="pan3">Comments</a></li>
+            <li><a id="pan1"><img src="img/home.png" class="navbarIcons"  id="homeNavButton"/></a></li>
+            <li><a id="pan2"><img src="img/map.png" class="navbarIcons" id="mapNavButton"/></a></li>
+            <li><a id="pan3"><img src="img/comments.png" class="navbarIcons" id="commentsNavButton"/></a></li>
         </ul>
     </div>
 </body>

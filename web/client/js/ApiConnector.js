@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	// var BASE = "http://greenupapp.appspot.com/api";
-	var BASE = "http://localhost:30002/api";
+	var BASE = "http://greenupapp.appspot.com/api";
+	// var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 
@@ -331,7 +331,9 @@ function GpsHandle(){
 	    	// console.log("getting position data");
 	    	 if(navigator.geolocation){
 	    	 	var options = {timeout:29000};
-	    	 	navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+	    	 	// navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	var watchID = navigator.geolocation.watchPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	var timeout = setTimeout( function() { navigator.geolocation.clearWatch( watchID ); }, 5000 );
 		     	window.updateCounter++;
 	    	 }else{
 	    	 	console.log("Geolocation is not supported by this browser.");
@@ -400,6 +402,8 @@ function MapHandle(){
 	this.markerType;
 	this.map;
 	this.pickupMarkers = [];
+	this.isHeatmapVisible = true;
+
 	// fire up our google map
 	MapHandle.prototype.initMap = function initMap(){
 		window.LS.setLoadingText("Please wait while the map loads");
@@ -421,6 +425,7 @@ function MapHandle(){
 		  // google.maps.MapTypeControlOptions
 		  // google.maps.StreetViewControlOptions
 		  // google.maps.ZoomControlOptions
+		  // this.toggleHeatmap();
 
 		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 		  // for activating the loading screen while map loads
@@ -497,13 +502,13 @@ function MapHandle(){
   		if(heatmapData.length > 0){
 	        var pointArray = new google.maps.MVCArray(heatmapData);
 
-			heatmap = new google.maps.visualization.HeatmapLayer({
+			window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
 			    data: pointArray,
 			    dissipating: true, 
 			    radius: 5
 			});
 
-	  		heatmap.setMap(window.MAP.map);
+	  		window.MAP.heatmap.setMap(window.MAP.map);
 	  	}
 	}
 
@@ -566,7 +571,13 @@ function MapHandle(){
 	}
 
 	MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
-
+		if(window.MAP.isHeatmapVisible){
+			window.MAP.heatmap.setMap(null);
+			window.MAP.isHeatmapVisible = false;
+		}else{
+			window.MAP.heatmap.setMap(window.MAP.map);
+			window.MAP.isHeatmapVisible = true ;
+		}
 	}
 
 	MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){
@@ -625,47 +636,51 @@ function CommentsHandle(){
 			case('forum'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleForum');
 				if(document.getElementById("toggleForum").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleForum");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleForum");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 			case('needs'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
 				if(document.getElementById("toggleNeeds").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleNeeds");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleNeeds");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 			case('message'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
 				if(document.getElementById("toggleMessages").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleMessage");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleMessage");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 		}
 	} // end toggleComments()
+
+	CommentsHandle.prototype.goToMarker = function goToMarker(marker){
+	// when the user clicks a comment box
+	}
 
 	//  The user presses the submit button on the comment submission screen
 	CommentsHandle.prototype.commentSubmission = function commentSubmission(commentType, commentMessage){
@@ -720,15 +735,18 @@ function UiHandle(){
 
     UiHandle.prototype.init = function init(){
 
+
     	// top slider dropdown
     	document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
-
+    	document.getElementById("topSlideDown").className = "sliderHidden";
 	    // controls the main panel movement
 	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
 	    document.getElementById("panel1SlideDownContent").style.display = "block";
+
+	    window.UI.setActiveDisplay(0);
 
 	    document.getElementById("navbarPullUpTab").addEventListener('mousedown', function(){
 	    	window.UI.navbarSlideUp();
@@ -882,6 +900,10 @@ function UiHandle(){
 		switch(displayNum){
 			case 0:
 				this.currentDisplay = 1;
+				document.getElementById("homeNavButton").src="img/home_active.png";
+				document.getElementById("mapNavButton").src="img/map.png";
+				document.getElementById("commentsNavButton").src="img/comments.png";
+				document.getElementById("topSlideDown").className = "sliderHidden";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "none";
 				document.getElementById("panel1SlideDownContent").style.display = "block";
@@ -889,6 +911,10 @@ function UiHandle(){
 			break;
 			case 1:
 				this.currentDisplay = 2;
+				document.getElementById("mapNavButton").src="img/map_active.png";
+				document.getElementById("homeNavButton").src="img/home.png";
+				document.getElementById("commentsNavButton").src="img/comments.png";
+				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel1SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "none";
 				document.getElementById("panel2SlideDownContent").style.display = "block";
@@ -896,6 +922,10 @@ function UiHandle(){
 			break;
 			case 2:
 				this.currentDisplay = 3;
+				document.getElementById("commentsNavButton").src="img/comments_active.png";
+				document.getElementById("mapNavButton").src="img/map.png";
+				document.getElementById("homeNavButton").src="img/home.png";
+				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel1SlideDownContent").style.display = "none";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "block";
@@ -904,6 +934,7 @@ function UiHandle(){
 			break;
 			default:
 				this.currentDisplay = 1;
+				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "none";
 				document.getElementById("panel1SlideDownContent").style.display = "block";
@@ -1095,17 +1126,6 @@ function UiHandle(){
 					div.className = "bubbleRight bubble"; 
 				}else{
 					div.className = "bubbleLeft bubble";
-				}
-
-				switch(comments[ii].type){
-					case "TRASH PICKUP":
-					break;
-					case "HELP NEEDED":
-					break;
-					case "GENERAL MESSAGE":
-					break;
-					case "FORUM":
-					break;
 				}
 
 				switch(comments[ii]['type']){

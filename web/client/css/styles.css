@@ -90,8 +90,8 @@ body{
 
 .bigStartButton{
     border: solid #a1a1a1 2px;
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#47d14e), to(#12690a));
-    background: -moz-linear-gradient(top, #47d14e, #12690a);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#009246), to(#12690a));
+    background: -moz-linear-gradient(top, #009246, #12690a);
 }
 .bigStartButton:hover {
     background: #1c961c;
@@ -265,6 +265,12 @@ a, a:hover, a:visited{
     text-align:center;
     background: -webkit-gradient(linear, 0 0, 0 100%, from(#009246), to(#12690a));
     background: -moz-linear-gradient(top, #009246, #12690a);
+
+}
+
+.navbarIcons{
+    display:inline-block;
+    height:3em;
 }
 
 #navPullUpNest{
@@ -287,6 +293,7 @@ a, a:hover, a:visited{
 
 
 	.nav li{
+        vertical-align: top;
 	   display:inline;
 	   
     }
@@ -321,7 +328,7 @@ a, a:hover, a:visited{
         font-family:arial;
         font-size:1.2em;
         font-weight:bold;
-        padding:8% 0% 7% 0%;
+        padding:3% 0% 7% 0%;
         text-decoration:none;
         
         text-shadow:0px 1px 0px #ced9bf;
@@ -773,27 +780,27 @@ h1{
 }
 
 .bubbleTrash{
-    background: blue;
+    background: #6fb9ec;
 }
 
 .bubbleForum{
-    background: red;
+    background: #7ccc83;
 }
 
 .bubbleForum:after{
-    border-color: red transparent;  
+    border-color: #7ccc83 transparent;  
 }
 .bubbleNeeds{
-    background: blue;
+    background: #6fb9ec;
 }
 .bubbleNeeds:after{
-    border-color: blue transparent;
+    border-color: #6fb9ec transparent;
 }
 .bubbleMessage{
-    background:orange;
+    background:#fbc883;
 }
 .bubbleMessage:after{
-    border-color: orange transparent;
+    border-color: #fbc883 transparent;
 }
 
 #comment_submission_form{
@@ -837,6 +844,9 @@ h1{
     padding:6px 2% 6px 2%;
     text-decoration:none;
     text-shadow:1px 1px 0px #ffffff;
+    width: 93%;
+    margin:auto;
+    text-align: center;
 }.addCommentButton:hover {
     background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
     background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
@@ -850,7 +860,7 @@ h1{
 
 
 #messagesContainer{
-    border:solid 1px green;
+    border:solid 1px #009246;
     width:90%;
     margin:auto;
 }
@@ -932,7 +942,7 @@ h1{
         width:100%;
         position:fixed;
         z-index:900;
-        background:green;
+        background:#009246;
         -webkit-transition: all 0.7s ease-in-out;
 
     }
@@ -943,6 +953,7 @@ h1{
     width:100%;
 }
 .panelSlideDownContent{
+    font-family:arial;
     position:relative;
     color:#000;
     width:96%;
@@ -953,6 +964,10 @@ h1{
     height:68%;
     background:#eee;
     display:none;
+}
+
+#panel2SlideDownContent ul{
+    margin-top:10%;
 }
 
 .slideDownNest{
@@ -970,7 +985,7 @@ h1{
     left:90%;
     padding:5px 3px 3px 2px;
     border-radius: 11px 0px 0px 10px;
-    background:green;
+    background:#009246;
 }
 .hamburger {
     cursor:pointer;
@@ -1048,6 +1063,10 @@ h1{
         top: -20%;
     }
 
+    .sliderHidden{
+        top: -100%;
+    }
+
     .contentContainer{
         width:100%;
         height:80%;
@@ -1065,5 +1084,114 @@ h1{
     #loading img{
         margin:45% 0% 0% 45%;
     }
+
+
+/* SLIDE THREE */
+
+.toggleNest{
+    width:95%;
+    margin:auto;
+    padding:1%;
+    border:solid 1px #ddd;
+}
+
+.toggleNestLabel{
+    margin-top:-20px;
+    color:#555;
+}
+
+.toggleNest li{
+    vertical-align: top;
+}
+
+
+.slideToggleLabel{
+    font-weight:bold;
+    color: #666;
+    display:inline-block;
+    margin:0px 0px 0px 10%;
+    padding: 10px 0px 0px 0px;
+}
+
+input[type=checkbox] {
+    visibility: hidden;
+}
+
+
+.slideToggle{
+    display:inline-block;
+    width: 80px;
+    height: 26px;
+    background: #333;
+    margin: 20px auto;
+
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    position: relative;
+
+    -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+    -moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+    box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+}
+
+.slideToggle:after {
+    content: 'OFF';
+    font: 12px/26px Arial, sans-serif;
+    color: #000;
+    position: absolute;
+    right: 10px;
+    z-index: 0;
+    font-weight: bold;
+    text-shadow: 1px 1px 0px rgba(255,255,255,.15);
+}
+
+.slideToggle:before {
+    content: 'ON';
+    font: 12px/26px Arial, sans-serif;
+    color: #00bf00;
+    position: absolute;
+    left: 10px;
+    z-index: 0;
+    font-weight: bold;
+}
+
+.slideToggle label {
+    display: block;
+    width: 34px;
+    height: 20px;
+
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+
+    -webkit-transition: all .4s ease;
+    -moz-transition: all .4s ease;
+    -o-transition: all .4s ease;
+    -ms-transition: all .4s ease;
+    transition: all .4s ease;
+    cursor: pointer;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    z-index: 1;
+
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+    background: #fcfff4;
+
+    background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
+}
+
+.slideToggle input[type=checkbox]:checked + label {
+    left: 43px;
+}
+
 
 
