@@ -127,7 +127,7 @@
         [self.locationManager stopUpdatingLocation];
         //Home
         [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setTitle:@"Start Cleaning" forState:UIControlStateNormal];
-        [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setBackgroundImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+        [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setBackgroundImage:[UIImage imageNamed:@"Start.png"] forState:UIControlStateNormal];
     }
     else
     {
@@ -140,7 +140,7 @@
         
         //Home
         [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setTitle:@"Stop Cleaning" forState:UIControlStateNormal];
-        [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setBackgroundImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+        [[[[ContainerViewController sharedContainer] theHomeViewController] cleanUpToggleButton] setBackgroundImage:[UIImage imageNamed:@"Stop.png"] forState:UIControlStateNormal];
     }
 }
 
@@ -193,8 +193,8 @@
         [self.gatheredMapPointsQueue addObject:mapPoint];
         
         //Update With Server        
-        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        [self pushHeatMapDataToServer];
+        //[self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+        //[self pushHeatMapDataToServer];
         [self updateHeatMapOverlay];
         
          //Update Map Location

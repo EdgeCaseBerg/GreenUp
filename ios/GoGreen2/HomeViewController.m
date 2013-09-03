@@ -40,7 +40,7 @@
         
         self.cleanUpToggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.cleanUpToggleButton setFrame:CGRectMake(30, 320, 260, 45)];
-        [self.cleanUpToggleButton setBackgroundImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+        [self.cleanUpToggleButton setBackgroundImage:[UIImage imageNamed:@"Start.png"] forState:UIControlStateNormal];
         [self.cleanUpToggleButton setTitle:@"Start Cleaning" forState:UIControlStateNormal];
         [self.cleanUpToggleButton addTarget:self action:@selector(toggleCleanUp:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.cleanUpToggleButton];

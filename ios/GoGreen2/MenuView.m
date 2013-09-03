@@ -71,7 +71,7 @@
     UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
     UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
     UIImageView *pin3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-    UIImageView *topBar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"topBar.png"]];
+    UIImageView *topBar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"top_bar.png"]];
     
     //Set Pin Image Frames
     [pin1Image setFrame:CGRectMake(10, 5, 80, 40)];

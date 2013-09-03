@@ -62,21 +62,26 @@ static ContainerViewController* theContainerView = nil;
         [self.view addSubview:vc.view];
     }
     
-    //Menu
-    self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
-    [self.view addSubview:self.theMenuView];
-    
     //TabBar
     self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 411, 320, 49)];
-    //[self.theTabBar setBackgroundImage:[UIImage imageNamed:@"bottom_menu.png"]];
+    [self.theTabBar setBackgroundColor:[UIColor redColor]];
+    
     self.theTabBar.delegate = self;
     
     self.item1 = [[UITabBarItem alloc] initWithTitle:@"Home" image:[UIImage imageNamed:@"home_active.png"] tag:HOME_VIEW];
-    self.item2 = [[UITabBarItem alloc] initWithTitle:@"Map" image:[UIImage imageNamed:@"map.png"] tag:Map_VIEW];
-    self.item3 = [[UITabBarItem alloc] initWithTitle:@"Messages" image:[UIImage imageNamed:@"comments.png"] tag:MESSAGE_VIEW];
+    [self.item1 setFinishedSelectedImage:[UIImage imageNamed:@"home_active.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"home.png"]];
+    self.item2 = [[UITabBarItem alloc] initWithTitle:@"Map" image:[UIImage imageNamed:@"map_active.png"] tag:Map_VIEW];
+    [self.item2 setFinishedSelectedImage:[UIImage imageNamed:@"map_active.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"map.png"]];
+    self.item3 = [[UITabBarItem alloc] initWithTitle:@"Messages" image:[UIImage imageNamed:@"comments_active.png"] tag:MESSAGE_VIEW];
+    [self.item3 setFinishedSelectedImage:[UIImage imageNamed:@"comments_active.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"comments.png"]];
     [self.theTabBar setItems:[NSArray arrayWithObjects:self.item1, self.item2, self.item3, nil] animated:YES];
     [self.theTabBar setSelectedItem:[self.theTabBar.items objectAtIndex:0]];
     [self.view addSubview:self.theTabBar];
+    
+
+    //Menu
+    self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
+    [self.view addSubview:self.theMenuView];
     
     //Up swipe to show settings
     UISwipeGestureRecognizer *upRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(hideMenu:)];
