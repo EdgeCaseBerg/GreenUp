@@ -20,7 +20,6 @@ public final class APIServerInterface {
 	// the various requests
 	
 	//TODO: Make it display a toast notification when an exception is thrown
-	//TODO: Clean up logging output
 	
 	//this isn't strictly necessary, but it'll prevent the class from being instantiated
 	private APIServerInterface(){};
@@ -108,7 +107,6 @@ public final class APIServerInterface {
 	
 	private static void sendRequestWithData(String url, String method, String data) {
 		APIRequestTask request = new APIRequestTask(url,method,data);
-		request.execute();
 		String response;
 		try {
 			response = request.get();
@@ -122,7 +120,6 @@ public final class APIServerInterface {
 	
 	private static String sendRequest(String url) {
 		APIRequestTask request = new APIRequestTask(url);
-		request.execute();
 		String response;
 		try {
 			response = request.get();
@@ -135,7 +132,7 @@ public final class APIServerInterface {
 		return response;
 	}
 	
-	private static class APIRequestTask extends AsyncTask<Void,Void,String>{
+	private static class APIRequestTask {
 		
 		private String url;
 		private String data;
@@ -155,8 +152,7 @@ public final class APIServerInterface {
 		}
 		
 		//Where the magic happens...
-		@Override
-		protected String doInBackground(Void...voids) {
+		protected String get() {
 			String response;
 			URL urlObject;
 			try {

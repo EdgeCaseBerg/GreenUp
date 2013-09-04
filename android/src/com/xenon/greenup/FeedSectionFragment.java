@@ -22,7 +22,6 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class FeedSectionFragment extends ListFragment {
 	private int lastPageLoaded = 1;
-	private ArrayList<Comment> comments = new ArrayList<Comment>(60); // Default to having enough space for 3 spaces
 	private EditText editText;
 	
 	public FeedSectionFragment(){
@@ -58,18 +57,13 @@ public class FeedSectionFragment extends ListFragment {
     @Override
     public void onResume(){
     	super.onResume();
-    	
-    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
-		this.comments = cp.getCommentsList();
-		if(this.comments == null)
-			this.comments = new ArrayList<Comment>(60);
-		new AsyncCommentLoadTask(this,getActivity(),this.comments).execute();
+		new AsyncCommentLoadTask(this,getActivity()).execute();
     }
     
 	private class AsyncCommentLoadTask extends AsyncTask<Void,Void,Void>{
 		
 		private final Activity act;
-		private final ArrayList<Comment> cmts;
+		private ArrayList<Comment> cmts;
 		private final FeedSectionFragment fsf;
 		
 		/**
@@ -79,10 +73,9 @@ public class FeedSectionFragment extends ListFragment {
 		 * @param a The activity which is running the FeedSectionFragment instance
 		 * @param c The list of comments which we will bind to an arrayadapter that will populate the feeds view
 		 */
-		public AsyncCommentLoadTask(FeedSectionFragment fsf, Activity a, ArrayList<Comment> c) {
+		public AsyncCommentLoadTask(FeedSectionFragment fsf, Activity a) {
 			//apparently I've jumped back to 1982 when variable length matters
 			this.act = a;
-			this.cmts = c;
 			this.fsf = fsf;
 		}
 		
@@ -94,7 +87,10 @@ public class FeedSectionFragment extends ListFragment {
 		 * passed at construction time.
 		 */
 		protected Void doInBackground(Void...voids) {
-			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
+	    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
+			this.cmts = cp.getCommentsList();
+			if(this.cmts == null)
+				this.cmts = new ArrayList<Comment>(60);
 			//Java makes no sense. It requires the capital version of Void because there simply
 			//must be something returned and you have to use java's bastard children, the wrapper 
 			//types instead of primitives because it's an async task. But yet, the primitive
@@ -103,6 +99,10 @@ public class FeedSectionFragment extends ListFragment {
 			return null;
 		}
 		
+		@Override
+		protected void onPostExecute(Void v) {
+			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
+		}
 	}
 
 }
