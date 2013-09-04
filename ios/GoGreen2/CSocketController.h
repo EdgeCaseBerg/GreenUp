@@ -18,9 +18,6 @@
 //PUT
 -(id)performPUTRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSArray *)properties;
 
-/*
 //POST
--(id)performPOSTRequestToHost:(NSString *)host withProperties:(NSDictionary *)properties;
--(id)performPOSTRequestToIP:(NSString *)ip withProperties:(NSDictionary *)properties;
-*/
+-(id)performPOSTRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSDictionary *)properties;
 @end

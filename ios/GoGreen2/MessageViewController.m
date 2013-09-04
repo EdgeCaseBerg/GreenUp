@@ -8,6 +8,7 @@
 
 #import "MessageViewController.h"
 //#import "FSNConnection.h"
+#import "CSocketController.h"
 #import "greenhttp.h"
 #import "ContainerViewController.h"
 #import "MessageCell.h"
@@ -29,33 +30,7 @@
     self.messages = [[NSMutableArray alloc] init];
     self.keyboardIsOut = FALSE;
     
-    for(int i = 0; i < 15; i++)
-    {
-        NetworkMessage *newMsg = [[NetworkMessage alloc] init];
-        NSString *type = nil;
-        int rand = arc4random() % 4;
-        if(rand == 0)
-        {
-            type = Message_Cell_Type_A;
-        }
-        else if(rand == 1)
-        {
-            type = Message_Cell_Type_B;
-        }
-        else if(rand == 2)
-        {
-            type = Message_Cell_Type_C;
-        }
-        else
-        {
-            type = Message_Cell_Type_D;
-        }
-
-        newMsg.messageType = type;
-        newMsg.messageContent = @"this is my first sample message test to see how long the text should be to fit inside the UILabel, this may not work but I sure hope it does!";
-        
-        [self.messages addObject:newMsg];
-    }
+    [self getMessages];
     
     self.sendMessageView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, 320, 50)];
     [self.sendMessageView setBackgroundColor:[UIColor grayColor]];
@@ -73,6 +48,7 @@
     
     UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [sendButton setTitle:@"Post" forState:UIControlStateNormal];
+    [sendButton addTarget:self action:@selector(post:) forControlEvents:UIControlEventTouchUpInside];
     [sendButton setFrame:CGRectMake(260, 5, 55, 40)];
     [self.sendMessageView addSubview:sendButton];
     
@@ -87,13 +63,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    for(NetworkMessage *msg in self.messages)
-    {
-        NSLog(@"Message: %@", msg.messageContent);
-    }
     
-    [self getMessages];
-    //[self.theTableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -105,12 +75,58 @@
 #pragma mark - Networking Delegates
 -(void)getMessages
 {
-   // GET goes here
+    //Remove Old Messages Incase Removed
+    [self.messages removeAllObjects];
+    
+    //Get New Message List
+    NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:nil];
+    
+    NSString *statusCode = [response objectForKey:@"status_code"];
+    if([statusCode integerValue] == 200)
+    {
+        NSArray *comments = [response objectForKey:@"comments"];
+        for(NSDictionary *comment in comments)
+        {
+            NetworkMessage *newMessage = [[NetworkMessage alloc] init];
+            newMessage.messageContent = [comment objectForKey:@"message"];
+            newMessage.messageID = [comment objectForKey:@"id"];
+            newMessage.messageTimeStamp = [comment objectForKey:@"timestamp"];
+            newMessage.messageType = [comment objectForKey:@"type"];
+            newMessage.pinID = [comment objectForKey:@"pin"];
+            
+            [self.messages addObject:newMessage];
+        }
+    }
 }
 
 -(IBAction)post:(id)sender
 {
-    // POST goes here
+    if([self.messageTextField.text isEqualToString:@""])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Blank Message" message:@"Cannot post blank message" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    else
+    {
+        NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:@"forum", self.messageTextField.text, nil] forKeys:[NSArray arrayWithObjects:@"type", @"message", nil]];
+        NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+        
+        NSString *statusCode = [response objectForKey:@"status_code"];
+        if([statusCode integerValue] != 200)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post Failed" message:@"An unknown error occured please try again" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        else
+        {
+            //Reset Message Field
+            self.messageTextField.text = @"";
+            
+            //Get New Messages
+            [self getMessages];
+            [self.theTableView reloadData];
+        }
+    }
 }
 
 

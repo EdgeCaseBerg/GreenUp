@@ -126,16 +126,56 @@ static CSocketController* theCSocketController = nil;
     }
 }
 
-/*
 #pragma mark - POST REQUESTS
--(id)performPOSTRequestToHost:(NSString *)host withProperties:(NSDictionary *)properties
+-(id)performPOSTRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSDictionary *)properties
 {
+    BOOL parseFailed = FALSE;
     
-}
--(id)performPOSTRequestToIP:(NSString *)ip withProperties:(NSDictionary *)properties
-{
+    //GET IP FROM HOST
+    struct hostent *host_entry = gethostbyname([host UTF8String]);
+    char *ip;
+    ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
     
+    //CREATE RAW JSON OF PROPERTIES
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:properties options:0 error:&error];
+    
+    NSString *jsonString = nil;
+    if (!jsonData)
+    {
+        parseFailed = TRUE;
+    }
+    else
+    {
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    
+    if(!parseFailed)
+    {
+        if(ip)
+        {
+            const char *payload = [jsonString cStringUsingEncoding:NSUTF8StringEncoding];
+            
+            char *request = gh_build_post_query((char *)[host UTF8String], (char *)[relativeURL UTF8String], payload);
+            char *charPointer = gh_make_request(request, (char *)[host UTF8String], ip, port);
+            NSString *response = [NSString stringWithFormat:@"%s", charPointer];
+            NSData *data = [response dataUsingEncoding:NSUTF8StringEncoding];
+            id finalResponse = [NSJSONSerialization JSONObjectWithData:data options:nil error:nil];
+            
+            //always call free
+            free(charPointer);
+            
+            return finalResponse;
+        }
+        else
+        {
+            return @"Invalid IP Address";
+        }
+    }
+    else
+    {
+        return @"Could Not Parse Properties Dictionary";
+    }
 }
-*/
 
 @end

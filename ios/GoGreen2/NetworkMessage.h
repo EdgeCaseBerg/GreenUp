@@ -13,5 +13,7 @@
 @property (strong, nonatomic) NSString *messageContent;
 @property (strong, nonatomic) NSString *messageType;
 @property (strong, nonatomic) NSNumber *pinID;
+@property (strong, nonatomic) NSNumber *messageID;
+@property (strong, nonatomic) NSNumber *messageTimeStamp;
 
 @end
