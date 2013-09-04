@@ -20,6 +20,7 @@ public final class APIServerInterface {
 	// the various requests
 	
 	//TODO: Make it display a toast notification when an exception is thrown
+	//TODO: Refactor
 	
 	//this isn't strictly necessary, but it'll prevent the class from being instantiated
 	private APIServerInterface(){};
@@ -106,7 +107,8 @@ public final class APIServerInterface {
 	}
 	
 	private static void sendRequestWithData(String url, String method, String data) {
-		APIRequestTask request = new APIRequestTask(url,method,data);
+		SubmitTask request = new SubmitTask(url,method,data);
+		request.execute();
 		String response;
 		try {
 			response = request.get();
@@ -131,6 +133,25 @@ public final class APIServerInterface {
 		Log.i("response",response);
 		return response;
 	}
+
+	
+	private static class SubmitTask extends AsyncTask<Void,Void,String> {
+		
+		private String url;
+		private String data;
+		private String method;
+		
+		public SubmitTask(String url,String method, String data) {
+			this.url = url;
+			this.method = method;
+			this.data = data;
+		}
+		
+		@Override
+		protected String doInBackground(Void...voids) {
+			return HTTPTransaction(url,method,data);
+		}
+	}
 	
 	private static class APIRequestTask {
 		
@@ -153,33 +174,37 @@ public final class APIServerInterface {
 		
 		//Where the magic happens...
 		protected String get() {
-			String response;
-			URL urlObject;
-			try {
-				urlObject = new URL(url);
-				HttpURLConnection connection = (HttpURLConnection)urlObject.openConnection();
-				connection.setRequestMethod(method);
-				if (data != null) {
-					connection.setDoOutput(true);
-					int length = data.length();
-					connection.setFixedLengthStreamingMode(length);
-					OutputStream out = connection.getOutputStream();
-					out.write(data.toString().getBytes());
-				}
-				InputStreamReader reader = new InputStreamReader(connection.getInputStream());
-				StringBuilder sb = new StringBuilder();
-				
-				int readByte;
-				while ((readByte = reader.read()) != -1) {
-					sb.append((char)readByte);
-				}
-				response = sb.toString();
-			}
-			catch(IOException e) {
-				e.printStackTrace();
-				response = "Error occurred, see stack trace";
-			}
-			return response;
+			return HTTPTransaction(url,method,data);
 		}
+	}
+	
+	private static String HTTPTransaction(String url,String method, String data) {
+		String response;
+		URL urlObject;
+		try {
+			urlObject = new URL(url);
+			HttpURLConnection connection = (HttpURLConnection)urlObject.openConnection();
+			connection.setRequestMethod(method);
+			if (data != null) {
+				connection.setDoOutput(true);
+				int length = data.length();
+				connection.setFixedLengthStreamingMode(length);
+				OutputStream out = connection.getOutputStream();
+				out.write(data.toString().getBytes());
+			}
+			InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+			StringBuilder sb = new StringBuilder();
+			
+			int readByte;
+			while ((readByte = reader.read()) != -1) {
+				sb.append((char)readByte);
+			}
+			response = sb.toString();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+			response = "Error occurred, see stack trace";
+		}
+		return response;
 	}
 }
