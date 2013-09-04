@@ -21,6 +21,6 @@
 
 @property (nonatomic, strong) UILabel *textContentLabel;
 
--(id)initWithMessageType:(NSString *)type isBackwards:(BOOL)backwards withText:(NSString *)text andResueIdentifier:(NSString *)reuseIdentifier;
+-(id)initWithMessageType:(NSString *)type isBackwards:(BOOL)backwards isFirstCell:(BOOL)first withText:(NSString *)text andResueIdentifier:(NSString *)reuseIdentifier;
 
 @end

@@ -13,6 +13,7 @@
 #import "MessageCell.h"
 #import "UIFont+methods.h"
 #import "NetworkMessage.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface MessageViewController ()
 
@@ -26,6 +27,7 @@
     self.title = @"About";
 
     self.messages = [[NSMutableArray alloc] init];
+    self.keyboardIsOut = FALSE;
     
     for(int i = 0; i < 15; i++)
     {
@@ -50,10 +52,29 @@
         }
 
         newMsg.messageType = type;
-        newMsg.messageContent = @"sample message kfhsdjf sdjfsd kfjhsafklj sdflsd fks dlkjf jksdfl ksadjklb lkjbsdfkjl dljkfhs djkafja sdfk faf dfkjs dlkfkldf jdfkl dslf  df dlfsd";
+        newMsg.messageContent = @"this is my first sample message test to see how long the text should be to fit inside the UILabel, this may not work but I sure hope it does!";
         
         [self.messages addObject:newMsg];
     }
+    
+    self.sendMessageView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, 320, 50)];
+    [self.sendMessageView setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:self.sendMessageView];
+    
+    UIView *messageBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(5, 5, 250, 40)];
+    [messageBackgroundView setBackgroundColor:[UIColor whiteColor]];
+    [[messageBackgroundView layer] setCornerRadius:5];
+    [self.sendMessageView addSubview:messageBackgroundView];
+    
+    self.messageTextField = [[UITextField alloc] initWithFrame:CGRectMake(5, 10, 240, 30)];
+    self.messageTextField.delegate = self;
+    [self.messageTextField setBackgroundColor:[UIColor clearColor]];
+    [messageBackgroundView addSubview:self.messageTextField];
+    
+    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [sendButton setTitle:@"Post" forState:UIControlStateNormal];
+    [sendButton setFrame:CGRectMake(260, 5, 55, 40)];
+    [self.sendMessageView addSubview:sendButton];
     
     return self;
 }
@@ -87,7 +108,7 @@
    // GET goes here
 }
 
--(void)post
+-(IBAction)post:(id)sender
 {
     // POST goes here
 }
@@ -121,11 +142,25 @@
     
     if(indexPath.row % 2 == 0)
     {
-        cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:TRUE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+        if(indexPath.row == 0)
+        {
+            cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:TRUE isFirstCell:TRUE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+        }
+        else
+        {
+            cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:TRUE isFirstCell:FALSE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+        }
     }
     else
     {
-        cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:FALSE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+        if(indexPath.row == 0)
+        {
+            cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:FALSE isFirstCell:TRUE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+        }
+        else
+        {
+            cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:FALSE isFirstCell:FALSE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+        }
     }
     return cell;
 }
@@ -161,7 +196,14 @@
     NSLog(@"SIZE HEIGHT: %f - WIDTH: %f", size.height, size.width);
     //return size;
     
-    return size.height + 5;
+    if(indexPath.row == 0)
+    {
+        return size.height + 25;
+    }
+    else
+    {
+        return size.height + 5;
+    }
 }
 /*
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -174,4 +216,52 @@
 }
  
  */
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.keyboardIsOut = TRUE;
+    
+    //Shift Subviews For Keyboard
+    CGRect currentTableFrame = self.theTableView.frame;
+    currentTableFrame.size.height -= 165;
+    [self.theTableView setFrame:currentTableFrame];
+    
+    CGRect currentMessageFrame = self.sendMessageView.frame;
+    currentMessageFrame.origin.y -= 165;
+    [self.sendMessageView setFrame:currentMessageFrame];
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    //Shift Subviews For Keyboard
+    if(self.keyboardIsOut)
+        [self hideKeyboard];
+}
+
+-(void)hideKeyboard
+{
+    self.keyboardIsOut = FALSE;
+    
+    //Shift Subviews For Keyboard
+    CGRect currentTableFrame = self.theTableView.frame;
+    currentTableFrame.size.height += 165;
+    [self.theTableView setFrame:currentTableFrame];
+    
+    CGRect currentMessageFrame = self.sendMessageView.frame;
+    currentMessageFrame.origin.y += 165;
+    [self.sendMessageView setFrame:currentMessageFrame];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if(self.keyboardIsOut)
+        [self hideKeyboard];
+    
+    [self.messageTextField resignFirstResponder];
+}
+
 @end

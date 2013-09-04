@@ -12,7 +12,7 @@
 
 +(UIFont *)messageFont
 {
-    return [UIFont fontWithName:@"HelveticaNeue-CondensedBold" size:12];
+    return [UIFont fontWithName:@"HelveticaNeue-CondensedBold" size:14];
 }
 
 @end
