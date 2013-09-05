@@ -20,6 +20,7 @@
 @property (strong, nonatomic) UIButton *messageTypeButton;
 @property (strong, nonatomic) MessageTypeSelectionView *messageTypePopoverView;
 @property (strong, nonatomic) NSString *currentMessageType;
+@property (strong, nonatomic) NSString *nextPageURL;
 
 @property BOOL keyboardIsOut;
 

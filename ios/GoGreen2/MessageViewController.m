@@ -134,6 +134,10 @@
             
             [self.messages addObject:newMessage];
         }
+        
+        NSDictionary *pages = [response objectForKey:@"nextPage"];
+        if(![[pages objectForKey:@"next"] isEqualToString:@"<null>"])
+            self.nextPageURL = [pages objectForKey:@"next"];
     }
     
 #warning SORT MESSAGES BY TIME STAMP!
@@ -429,6 +433,26 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    BOOL foundEndOfList = FALSE;
+    for(NSIndexPath *path in [self.theTableView indexPathsForVisibleRows])
+    {
+        NSLog(@"CHECKING PATH: %d With Count: %d", path.row, self.messages.count);
+        if(path.row == self.messages.count - 1)
+        {
+            foundEndOfList = TRUE;
+        }
+    }
+    
+    if(foundEndOfList)
+    {
+#warning MAKE GET REQUEST FOR self.NEXTPAGEURL
+        
+        self.nextPageURL = nil;
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"END OF LIST" message:@"" delegate:nil cancelButtonTitle:@"close" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+
     /*
     if(self.keyboardIsOut)
         [self hideKeyboard];
