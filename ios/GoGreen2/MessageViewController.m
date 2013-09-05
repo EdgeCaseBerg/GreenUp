@@ -16,7 +16,7 @@
 #import "NetworkMessage.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface MessageViewController ()
+@interface MessageViewController () <UITextViewDelegate>
 
 @end
 
@@ -32,25 +32,51 @@
     
     [self getMessages];
     
-    self.sendMessageView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, 320, 50)];
-    [self.sendMessageView setBackgroundColor:[UIColor grayColor]];
-    [self.view addSubview:self.sendMessageView];
+    self.messageViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, 320, 50)];
+    NSLog(@"***************** %f", self.view.frame.size.height - 50);
+    [self.messageViewContainer setBackgroundColor:[UIColor grayColor]];
+    [self.view addSubview:self.messageViewContainer];
     
+    /*
     UIView *messageBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(5, 5, 250, 40)];
     [messageBackgroundView setBackgroundColor:[UIColor whiteColor]];
     [[messageBackgroundView layer] setCornerRadius:5];
     [self.sendMessageView addSubview:messageBackgroundView];
+    */
     
-    self.messageTextField = [[UITextField alloc] initWithFrame:CGRectMake(5, 10, 240, 30)];
-    self.messageTextField.delegate = self;
-    [self.messageTextField setBackgroundColor:[UIColor clearColor]];
-    [messageBackgroundView addSubview:self.messageTextField];
+    self.messageTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, 10, 250, 30)];
+    self.messageTextView.delegate = self;
+    [self.messageTextView setEditable:TRUE];
+    [self.messageTextView setScrollEnabled:TRUE];
+    [self.messageTextView setBackgroundColor:[UIColor whiteColor]];
+    self.messageTextView.layer.cornerRadius = 4.0;
+    self.messageTextView.clipsToBounds = YES;
+    [self.messageTextView setAutoresizesSubviews:TRUE];
+    self.messageTextView.font = [UIFont messageFont];
+    self.messageTextView.returnKeyType = UIReturnKeyDone;
+    self.messageTextView.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.messageTextView.autocorrectionType = UITextAutocorrectionTypeNo;
+    [self.messageTextView addObserver:self forKeyPath: @"contentSize" options:NSKeyValueObservingOptionOld context:NULL];
+    self.messageTextView.contentOffset = CGPointMake(0, 5);
+
+    [self.messageViewContainer addSubview:self.messageTextView];
     
-    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [sendButton setTitle:@"Post" forState:UIControlStateNormal];
-    [sendButton addTarget:self action:@selector(post:) forControlEvents:UIControlEventTouchUpInside];
-    [sendButton setFrame:CGRectMake(260, 5, 55, 40)];
-    [self.sendMessageView addSubview:sendButton];
+    self.messageSendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.messageSendButton setTitle:@"Post" forState:UIControlStateNormal];
+    [self.messageSendButton addTarget:self action:@selector(post:) forControlEvents:UIControlEventTouchUpInside];
+    [self.messageSendButton setFrame:CGRectMake(260, 5, 55, 40)];
+    [self.messageViewContainer addSubview:self.messageSendButton];
+    
+    //Keyboard CallBacks
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(keyboardWillShow:)
+                                                 name: UIKeyboardWillShowNotification
+                                               object: nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(keyboardWillHide:)
+                                                 name: UIKeyboardWillHideNotification
+                                               object: nil];
     
     return self;
 }
@@ -101,14 +127,14 @@
 
 -(IBAction)post:(id)sender
 {
-    if([self.messageTextField.text isEqualToString:@""])
+    if([self.messageTextView.text isEqualToString:@""])
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Blank Message" message:@"Cannot post blank message" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
         [alert show];
     }
     else
     {
-        NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:@"forum", self.messageTextField.text, nil] forKeys:[NSArray arrayWithObjects:@"type", @"message", nil]];
+        NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:@"forum", self.messageTextView.text, nil] forKeys:[NSArray arrayWithObjects:@"type", @"message", nil]];
         NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
         
         NSString *statusCode = [response objectForKey:@"status_code"];
@@ -120,7 +146,7 @@
         else
         {
             //Reset Message Field
-            self.messageTextField.text = @"";
+            self.messageTextView.text = @"";
             
             //Get New Messages
             [self getMessages];
@@ -233,51 +259,126 @@
  
  */
 
-#pragma mark - UITextFieldDelegate
+#pragma mark - UITextField Observer
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id) object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString: @"contentSize"] && object == self.messageTextView)
+    {
+        CGSize oldContentSize = [[change objectForKey: NSKeyValueChangeOldKey] CGSizeValue];
+        float heightDiff = self.messageTextView.contentSize.height - oldContentSize.height;
+
+        CGSize newContentSize = self.messageTextView.contentSize;
+        NSLog(@"OLD: %f - New: %f - DIFF: %f", oldContentSize.height, self.messageTextView.contentSize.height, heightDiff);
+
+        if(heightDiff != 0)
+        {
+            VoidBlock animationBlock =
+            ^{
+                //Reposition Post Button
+                CGRect newFrame = self.messageSendButton.frame;
+                newFrame.origin.y += (heightDiff / 2);
+                [self.messageSendButton setFrame:newFrame];
+                
+                //Reposition MessageBackground
+                CGRect newFrame4 = self.messageViewContainer.frame;
+                newFrame4.origin.y -= heightDiff;
+                newFrame4.size.height += heightDiff;
+                [self.messageViewContainer setFrame:newFrame4];
+                
+                //Reposition Textfield
+                CGRect newFrame2 = self.messageTextView.frame;
+                newFrame2.size.height += heightDiff;
+                [self.messageTextView setFrame:newFrame2];
+                
+                //Reposition TableView
+                CGRect newFrame3 = self.theTableView.frame;
+                newFrame3.size.height -= heightDiff;
+                [self.theTableView setFrame:newFrame3];
+            };
+            
+            [UIView animateWithDuration: 0.25 animations: animationBlock];
+        }
+    }
+    
+    NSLog(@"OBSERVER: %f", self.messageViewContainer.frame.size.height);
+    
+}
+
+#pragma mark - UITextView Delegate
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)string
+{
+    if([string isEqualToString:@"\n"])
+    {
+        [self.messageTextView resignFirstResponder];
+        return FALSE;
+    }
+    else if(textView.text.length > 140)
+    {
+        if([string isEqualToString:@""] && range.length == 1)
+        {
+            return TRUE;
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+    else
+    {
+        return TRUE;
+    }
+}
+
+#pragma mark - KEYBOARD CALL BACKS
+-(IBAction)keyboardWillShow:(id)sender
 {
     self.keyboardIsOut = TRUE;
     
     //Shift Subviews For Keyboard
     CGRect currentTableFrame = self.theTableView.frame;
-    currentTableFrame.size.height -= 165;
+    NSLog(@"message container height: %f", self.messageViewContainer.frame.size.height);
+    currentTableFrame.size.height = (((self.view.frame.size.height - self.theTableView.frame.origin.y) - self.messageViewContainer.frame.size.height) - 165);
     [self.theTableView setFrame:currentTableFrame];
     
-    CGRect currentMessageFrame = self.sendMessageView.frame;
-    currentMessageFrame.origin.y -= 165;
-    [self.sendMessageView setFrame:currentMessageFrame];
+    CGRect currentMessageFrame = self.messageViewContainer.frame;
+    currentMessageFrame.origin.y = self.view.frame.size.height - self.messageViewContainer.frame.size.height - 165;
+    [self.messageViewContainer setFrame:currentMessageFrame];
 }
-
--(void)textFieldDidEndEditing:(UITextField *)textField
+ 
+-(IBAction)keyboardWillHide:(id)sender
 {
-    //Shift Subviews For Keyboard
-    if(self.keyboardIsOut)
-        [self hideKeyboard];
+    [self hideKeyboard];
 }
 
 -(void)hideKeyboard
 {
     self.keyboardIsOut = FALSE;
     
+    NSLog(@"HIDE KEYBORAD: %f", self.messageTextView.frame.size.height);
+    
+    
     //Shift Subviews For Keyboard
     CGRect currentTableFrame = self.theTableView.frame;
-    currentTableFrame.size.height += 165;
+    currentTableFrame.size.height = (self.view.frame.size.height - self.theTableView.frame.origin.y) - self.messageViewContainer.frame.size.height;
     [self.theTableView setFrame:currentTableFrame];
     
-    CGRect currentMessageFrame = self.sendMessageView.frame;
-    currentMessageFrame.origin.y += 165;
-    [self.sendMessageView setFrame:currentMessageFrame];
+    CGRect currentMessageViewFrame = self.messageViewContainer.frame;
+    currentMessageViewFrame.origin.y = self.view.frame.size.height - self.messageViewContainer.frame.size.height;
+    [self.messageViewContainer setFrame:currentMessageViewFrame];
 }
 
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    /*
     if(self.keyboardIsOut)
         [self hideKeyboard];
     
-    [self.messageTextField resignFirstResponder];
+    [self.messageTextView resignFirstResponder];
+     */
 }
 
 @end
