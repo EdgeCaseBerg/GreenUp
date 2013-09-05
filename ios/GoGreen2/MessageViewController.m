@@ -44,7 +44,7 @@
     [self.sendMessageView addSubview:messageBackgroundView];
     */
     
-    self.messageTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, 10, 250, 30)];
+    self.messageTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, 10, 200, 30)];
     self.messageTextView.delegate = self;
     [self.messageTextView setEditable:TRUE];
     [self.messageTextView setScrollEnabled:TRUE];
@@ -64,8 +64,14 @@
     self.messageSendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.messageSendButton setTitle:@"Post" forState:UIControlStateNormal];
     [self.messageSendButton addTarget:self action:@selector(post:) forControlEvents:UIControlEventTouchUpInside];
-    [self.messageSendButton setFrame:CGRectMake(260, 5, 55, 40)];
+    [self.messageSendButton setFrame:CGRectMake(265, 10, 50, 35)];
     [self.messageViewContainer addSubview:self.messageSendButton];
+    
+    self.messageTypeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.messageTypeButton setTitle:@"Type" forState:UIControlStateNormal];
+    [self.messageTypeButton addTarget:self action:@selector(changeType:) forControlEvents:UIControlEventTouchUpInside];
+    [self.messageTypeButton setFrame:CGRectMake(210, 10, 50, 35)];
+    [self.messageViewContainer addSubview:self.messageTypeButton];
     
     //Keyboard CallBacks
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -76,6 +82,12 @@
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyboardWillHide:)
                                                  name: UIKeyboardWillHideNotification
+                                               object: nil];
+    
+    //Setting Message Type
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(setMessageType:)
+                                                 name: @"messageTypeChanged"
                                                object: nil];
     
     return self;
@@ -123,6 +135,9 @@
             [self.messages addObject:newMessage];
         }
     }
+    
+#warning SORT MESSAGES BY TIME STAMP!
+    
 }
 
 -(IBAction)post:(id)sender
@@ -132,9 +147,17 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Blank Message" message:@"Cannot post blank message" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
         [alert show];
     }
+    else if(self.currentMessageType == nil || [self.currentMessageType isEqualToString:@""])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Type Selected" message:@"Cannot post a message with no type" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+        [alert show];
+    }
     else
     {
-        NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:@"forum", self.messageTextView.text, nil] forKeys:[NSArray arrayWithObjects:@"type", @"message", nil]];
+        if(self.currentMessageType == nil)
+            self.currentMessageType = Message_Cell_Type_A;
+        
+        NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:self.currentMessageType, self.messageTextView.text, nil] forKeys:[NSArray arrayWithObjects:@"type", @"message", nil]];
         NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
         
         NSString *statusCode = [response objectForKey:@"status_code"];
@@ -152,6 +175,9 @@
             [self getMessages];
             [self.theTableView reloadData];
         }
+        
+        //Clear Old Message Type
+        self.currentMessageType = nil;
     }
 }
 
@@ -280,6 +306,11 @@
                 newFrame.origin.y += (heightDiff / 2);
                 [self.messageSendButton setFrame:newFrame];
                 
+                //Reposition Type Button
+                CGRect newFrame5 = self.messageTypeButton.frame;
+                newFrame5.origin.y += (heightDiff / 2);
+                [self.messageTypeButton setFrame:newFrame5];
+                
                 //Reposition MessageBackground
                 CGRect newFrame4 = self.messageViewContainer.frame;
                 newFrame4.origin.y -= heightDiff;
@@ -329,6 +360,31 @@
     {
         return TRUE;
     }
+}
+
+#pragma mark - Message Methods
+
+-(IBAction)changeType:(id)sender
+{
+    //Remove Keyboard
+    [self.messageTextView resignFirstResponder];
+    
+    //Create Popover View and Animate It In
+    self.messageTypePopoverView = [[MessageTypeSelectionView alloc] initWithWindowFrame:self.view.window.frame andCurrent:self.currentMessageType];
+    [self.messageTypePopoverView setAlpha:0];
+    [self.view.window addSubview:self.messageTypePopoverView];
+    
+    VoidBlock animationBlock =
+    ^{
+        [self.messageTypePopoverView setAlpha:1];
+    };
+    
+    [UIView animateWithDuration:.25 animations: animationBlock];
+}
+
+-(IBAction)setMessageType:(NSNotification *)notificationRecieved
+{
+    self.currentMessageType = notificationRecieved.object;
 }
 
 #pragma mark - KEYBOARD CALL BACKS

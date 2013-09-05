@@ -120,6 +120,7 @@
 		DFA9ABF917D653B0006F58A5 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9ABF817D653AF006F58A5 /* MessageCell.m */; };
 		DFA9ABFF17D66518006F58A5 /* UIFont+methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9ABFE17D66518006F58A5 /* UIFont+methods.m */; };
 		DFA9AC0217D66543006F58A5 /* UIColor+methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9AC0117D66543006F58A5 /* UIColor+methods.m */; };
+		DFA9C37D17D9102000FBE61F /* MessageTypeSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C37C17D9101F00FBE61F /* MessageTypeSelectionView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -267,6 +268,8 @@
 		DFA9ABFE17D66518006F58A5 /* UIFont+methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+methods.m"; sourceTree = "<group>"; };
 		DFA9AC0017D66543006F58A5 /* UIColor+methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+methods.h"; sourceTree = "<group>"; };
 		DFA9AC0117D66543006F58A5 /* UIColor+methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+methods.m"; sourceTree = "<group>"; };
+		DFA9C37B17D9101F00FBE61F /* MessageTypeSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTypeSelectionView.h; sourceTree = "<group>"; };
+		DFA9C37C17D9101F00FBE61F /* MessageTypeSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTypeSelectionView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -442,6 +445,8 @@
 				392E748A1798B84800C71680 /* MessageViewController.m */,
 				393743E71798BB25005597FF /* MessageView_IPhone.xib */,
 				393743E91798BB36005597FF /* MessageView_IPhone5.xib */,
+				DFA9C37B17D9101F00FBE61F /* MessageTypeSelectionView.h */,
+				DFA9C37C17D9101F00FBE61F /* MessageTypeSelectionView.m */,
 			);
 			name = Message;
 			sourceTree = "<group>";
@@ -814,6 +819,7 @@
 				DFA9ABF917D653B0006F58A5 /* MessageCell.m in Sources */,
 				DFA9ABFF17D66518006F58A5 /* UIFont+methods.m in Sources */,
 				DFA9AC0217D66543006F58A5 /* UIColor+methods.m in Sources */,
+				DFA9C37D17D9102000FBE61F /* MessageTypeSelectionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

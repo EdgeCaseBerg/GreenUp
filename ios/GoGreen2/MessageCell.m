@@ -33,6 +33,7 @@
         
         [self.textContentLabel setFrame:CGRectMake(15, 6 + extraTop, 290, contentSize.height)];
 
+        NSLog(@"MESSAGE TYPE: %@", type);
         if([type isEqualToString:Message_Cell_Type_A])
         {
             //Top Slice
@@ -41,7 +42,7 @@
             
             //Variable Middle Slice
             self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height)];
-            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_red_center"]]];
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_red_center.png"]]];
         
             //Buttom Slice
             if(backwards)
@@ -62,7 +63,7 @@
             
             //Variable Middle Slice
             self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height)];
-            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_green_center"]]];
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_green_center.png"]]];
             
             //Buttom Slice
             if(backwards)
@@ -83,7 +84,7 @@
             
             //Variable Middle Slice
             self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height)];
-            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_orange_center"]]];
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_orange_center.png"]]];
             
             //Buttom Slice
             if(backwards)
@@ -104,7 +105,7 @@
             
             //Variable Middle Slice
             self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height)];
-            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_yellow_center"]]];
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_yellow_center.png"]]];
             
             //Buttom Slice
             if(backwards)

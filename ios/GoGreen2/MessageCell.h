@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-#define Message_Cell_Type_A @"forum"
-#define Message_Cell_Type_B @"help needed"
-#define Message_Cell_Type_C @"trash pickup"
-#define Message_Cell_Type_D @"general message"
+#define Message_Cell_Type_A @"FORUM"
+#define Message_Cell_Type_B @"HELP NEEDED"
+#define Message_Cell_Type_C @"TRASH PICKUP"
+#define Message_Cell_Type_D @"GENERAL MESSAGE"
 
 @interface MessageCell : UITableViewCell
 
