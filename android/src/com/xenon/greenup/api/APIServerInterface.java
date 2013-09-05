@@ -11,8 +11,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public final class APIServerInterface {
-	
-	
+		
 	private static final String BASE_URL = "https://greenupapp.appspot.com/api";
 	
 	//Class to serve as the main interface to the API server
@@ -121,10 +120,9 @@ public final class APIServerInterface {
 	}
 	
 	private static String sendRequest(String url) {
-		APIRequestTask request = new APIRequestTask(url);
 		String response;
 		try {
-			response = request.get();
+			response = HTTPTransaction(url,"GET",null);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -134,7 +132,6 @@ public final class APIServerInterface {
 		return response;
 	}
 
-	
 	private static class SubmitTask extends AsyncTask<Void,Void,String> {
 		
 		private String url;
@@ -153,30 +150,7 @@ public final class APIServerInterface {
 		}
 	}
 	
-	private static class APIRequestTask {
-		
-		private String url;
-		private String data;
-		private String method;
-		
-		//Constructor for GET requests
-		public APIRequestTask(String url) {
-			this.url = url;
-			this.method = "GET";
-		}
-		
-		//Constructor for POST and PUT requests
-		public APIRequestTask(String url,String method,String data) {
-			this.url = url;
-			this.data = data;
-			this.method = method;
-		}
-		
-		//Where the magic happens...
-		protected String get() {
-			return HTTPTransaction(url,method,data);
-		}
-	}
+
 	
 	private static String HTTPTransaction(String url,String method, String data) {
 		String response;
