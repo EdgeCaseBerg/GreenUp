@@ -256,7 +256,7 @@ class AbstractionLayer():
 		else:
 			q = Comments.all()
 			total = q.count()
-			if (((page-1) * 20) < total):
+			if (((page-1) * PAGE_SIZE) < total):
 				return page+1
 			else:
 				return None
