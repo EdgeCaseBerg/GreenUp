@@ -1,5 +1,26 @@
 @import url(http://fonts.googleapis.com/css?family=Pathway+Gothic+One);
 
+/* Color Scheme Classes 
+BottomBar = #009246
+Bottom Bar Accent (inactive icon) = #004a24
+Bottom Bar Accent (active icon) =  #a4c196
+
+Comment blue back = #6fb9ec
+Comment orange back = #fbc883
+Comment green back = #7ccc83
+
+Pinwheel leaf
+green1 = #39b64a
+green2 = #009246
+blue1 = #00aef0
+blue2 = #1875bd
+orange1 (yellow) = #fdba29
+orange2 = #f26623
+red1 = #b5212f
+red2 = #ee1d26
+*/
+
+
 
     div{
         margin:0px;
@@ -244,6 +265,7 @@ a, a:hover, a:visited{
     text-align:center;
     background: -webkit-gradient(linear, 0 0, 0 100%, from(#009246), to(#12690a));
     background: -moz-linear-gradient(top, #009246, #12690a);
+
 }
 
 .navbarIcons{
