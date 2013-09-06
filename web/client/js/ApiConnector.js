@@ -929,6 +929,7 @@ function UiHandle(){
 				document.getElementById("panel1SlideDownContent").style.display = "none";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "block";
+				window.ApiConnector.updateComments();
 				this.navbarSlideDown();
 				container.className = "panel3Center";
 			break;

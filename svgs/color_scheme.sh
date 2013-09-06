@@ -57,13 +57,13 @@ color[27]="#b5212f"
 # pinwheel_red2_new
 color[28]="#ee1d26"
 
-do echo date\n > color_history.txt
-for col in $color
-	do echo $col\n > color_history.txt
-
-do echo \n\n > color_history.txt
-
-for file in *.svg;
-	do sed -i s/$navbar_background_current/$navbar_background_new/ $file;
+echo date > color_history.txt
+for col in 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
+	do echo ${color[col]} \n >> color_history.txt
 done
+echo \n\n >> color_history.txt
+
+# for file in *.svg;
+#	do sed -i s/$navbar_background_current/$navbar_background_new/ $file;
+#done
 
