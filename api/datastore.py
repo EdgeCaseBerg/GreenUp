@@ -213,6 +213,7 @@ class AbstractionLayer():
 		# datastore write
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
+		return p.id()
 
 	def submitDebug(self, errorMessage, debugInfo,origin):
 		# submit information about a bug
@@ -491,7 +492,8 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  pin.lon and pin.lon < (lonDegrees + lonOffset)):
 				continue
-			pins.append( {  'latDegrees' : pin.lat,
+			pins.append( {  'id' : pin.id,
+							'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
 							'message'	 : pin.message }
@@ -505,7 +507,8 @@ def pinFormatter(dbPins):
 	# properly format pins in json and return
 	pins = []
 	for pin in dbPins:		
-		pins.append( {  'latDegrees' : pin.lat,
+		pins.append( {  'id' : pin.key().id(),
+						'latDegrees' : pin.lat,
 						'lonDegrees' : pin.lon,
 						'type'		 : pin.pinType,
 						'message'	 : pin.message }
