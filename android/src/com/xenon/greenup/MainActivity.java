@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Shader.TileMode;
@@ -28,7 +27,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -38,11 +36,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import com.xenon.greenup.api.APIServerInterface;
-import com.xenon.greenup.api.Heatmap;
-import com.xenon.greenup.api.HeatmapPoint;
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
+public class MainActivity extends FragmentActivity {
 
     TabsAdapter mTabsAdapter;
 
@@ -76,30 +71,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         mTabsAdapter = new TabsAdapter(this, _ViewPager);
         
         // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i <  3 && actionBar.getTabCount() < 3 ; i++) {
+        for (int i = 0; i < 3; i++) {
             // Create a tab with text corresponding to the page title defined by the adapter.
             // Also specify this Activity object, which implements the TabListener interface, as the
             // listener for when this tab is selected.
         	
         	ActionBar.Tab tabToAdd = actionBar.newTab();
-        	
-        	tabToAdd.setTabListener(this);
-        	tabToAdd.setIcon(getRegularIcon(i));
-        	
-        	 Bundle args = new Bundle();
-             args.putInt(""+i, i);
-    
-            mTabsAdapter.addTab(tabToAdd,Fragment.class, args);
+        	if (i == 0)
+                //Set the home page as active since we'll start there:
+        		tabToAdd.setIcon(getActiveIcon(i));
+        	else
+        		tabToAdd.setIcon(getRegularIcon(i));
+            mTabsAdapter.addTab(tabToAdd);
             
         }
-        //Set the home page as active since we'll start there:
-        this.setIconActive(0);
-        
-        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
-        // user swipes between sections.        
-        _ViewPager.setAdapter(mTabsAdapter);
-
-
         
         //Setting the display to custom will push the action bar to the top
         //which gives us more real estate
@@ -108,21 +93,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Log.i("visible",""+_ViewPager.VISIBLE);
      
     }	
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // When the given tab is selected, switch to the corresponding page in the ViewPager.
-    	Log.i("position",""+tab.getPosition());
-        _ViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
     
     /**
      * getRegularIcon returns the resource id of the icon image for the actionbar tabs.
@@ -158,39 +128,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	}
     }
     
-    /**
-     * sets the actionbar tab icon at position iconToActivate to active.
-     * @param iconToActivate The position of the ActionBar.Tab that will be activated
-     */
-    private void setIconActive(int iconToActivate){
-    	final ActionBar actionBar = getActionBar();
-    	final ActionBar.Tab tab = actionBar.getTabAt(iconToActivate);
-    	
-    	tab.setIcon(getActiveIcon(iconToActivate));
-    	//Set the other tabs to inactive
-    	for(int i=0; i <  3; i++){
-    		if(i != iconToActivate){
-    			actionBar.getTabAt(i).setIcon(getRegularIcon(i));
-    		}
-    	}    	
-    }
-    
-    public static class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+    private class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
         private final Context mContext;
         private final ActionBar mActionBar;
         private final ViewPager mViewPager;
-        private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
-        private final ArrayList<Fragment> fragments = new ArrayList<Fragment>();
+        private final ArrayList<ActionBar.Tab> mTabs = new ArrayList<ActionBar.Tab>();
+        private final ArrayList<Fragment> mFragments = new ArrayList<Fragment>();
 
-        static final class TabInfo {
-            private final Class<?> clss;
-            private final Bundle args;
-
-            TabInfo(Class<?> _class, Bundle _args) {
-                clss = _class;
-                args = _args;
-            }
-        }
 
         public TabsAdapter(FragmentActivity activity, ViewPager pager) {
             super(activity.getSupportFragmentManager());
@@ -199,17 +143,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             mViewPager = pager;
             mViewPager.setAdapter(this);
             mViewPager.setOnPageChangeListener(this);
-            fragments.add(Fragment.instantiate(mContext, HomeSectionFragment.class.getName()));
-            fragments.add(Fragment.instantiate(mContext, MapSectionFragment.class.getName()));
-            fragments.add(Fragment.instantiate(mContext, FeedSectionFragment.class.getName()));
+            mFragments.add(Fragment.instantiate(mContext, HomeSectionFragment.class.getName()));
+            mFragments.add(Fragment.instantiate(mContext, MapSectionFragment.class.getName()));
+            mFragments.add(Fragment.instantiate(mContext, FeedSectionFragment.class.getName()));
            
         }
-
-        public void addTab(ActionBar.Tab tab, Class<?> clss, Bundle args) {
-            TabInfo info = new TabInfo(clss, args);
-            tab.setTag(info);
+        
+        public void addTab(ActionBar.Tab tab) {
             tab.setTabListener(this);
-            mTabs.add(info);
+            mTabs.add(tab);
             mActionBar.addTab(tab);
             notifyDataSetChanged();
         }
@@ -221,14 +163,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         @Override
         public Fragment getItem(int position) {
-            TabInfo info = mTabs.get(position);
-            StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
-            StackTraceElement e = stacktrace[3];//maybe this number needs to be corrected
-            String methodName = e.getMethodName();
-            Log.i("stack",methodName);
-            Log.i("getItemTabAdapter",""+position);
-            return fragments.get(position);
-            
+            return mFragments.get(position);   
         }
 
         @Override
@@ -247,14 +182,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            Object tag = tab.getTag();
             for (int i=0; i<mTabs.size(); i++) {
-                if (mTabs.get(i) == tag) {
+            	if (mTabs.get(i) == tab) {
                 	Log.i("onTabSelected","Setting i="+i+" to be mViewPager current item");
                     mViewPager.setCurrentItem(i);
+                    mTabs.get(i).setIcon(getActiveIcon(i));
                 }
+                else
+                    mTabs.get(i).setIcon(getRegularIcon(i));
             }
-            
         }
 
         @Override
