@@ -249,6 +249,10 @@ class AbstractionLayer():
 				stat = HTTP_NOT_FOUND
 		return stat,msg
 
+	def checkNextPage(self, page):
+		# check for the presence of a next page in memecache
+		return  memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(None,"comment",None, page+1) )
+
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
 	datastore writes have been performed.
