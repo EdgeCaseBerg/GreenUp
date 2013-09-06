@@ -251,7 +251,17 @@ class AbstractionLayer():
 
 	def checkNextPage(self, page):
 		# check for the presence of a next page in memecache
-		return  memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(None,"comment",None, page+1) )
+		if memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(None,"comment",None, page+1) ):
+			return page+1
+		else:
+			q = Comments.all()
+			total = q.count()
+			if (((page-1) * 20) < total):
+				return page+1
+			else:
+				return None
+
+		return None	
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 

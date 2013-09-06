@@ -10,6 +10,7 @@ import logging
 import types
 import numbers
 import datetime
+import argparse
 
 from constants import *
 
@@ -253,6 +254,8 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 
 
 if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description='Test the API.')
+	
 	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
 	baseURL = 'http://greenupapp.appspot.com/api'
 	baseURL = 'http://localhost:16084/api'
