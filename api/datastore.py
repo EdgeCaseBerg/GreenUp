@@ -315,7 +315,7 @@ def initialPage(typeFilter=None, endpoint="comment",sinceTime=None):
 	initialCursorKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter,1)
 	initialPageKey = 'greenup_%s_%ss_page_%s_%s' %(sinceTime,endpoint,typeFilter,1)
 
-	results = querySet[0:20]
+	results = querySet[0:PAGE_SIZE]
 	# sort, newest to oldest
 	results = sorted(results, key=lambda dataPoint: dataPoint.timeSent, reverse=True)
 	memcache.set(initialPageKey, serialize_entities(results))
@@ -331,7 +331,7 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 		When a hit occurs (and a hit must occur, as the first cursor and page is always read into memcache), build each page
 		and their cursors up until we reach the page requested. Then, return that page of results.
 	'''
-	resultsPerPage = 20
+	resultsPerPage = PAGE_SIZE
 	querySet = None
 	if typeFilter is not None and typeFilter is not "":
 		#typeFilter must always by null when coming from debug endpoint
@@ -375,7 +375,7 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 			oldKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, oldNum)
 			cursor = memcache.get(oldKey)
 
-			# get 20 results from where we left off
+			# get PAGE_SIZE results from where we left off
 			results = querySet.with_cursor(start_cursor=cursor)
 			results = results.run(limit=resultsPerPage)
 

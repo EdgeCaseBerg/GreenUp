@@ -255,10 +255,16 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='Test the API.')
-	parser.add_argument('-port', help='Specify local port to run the spider against. If blank, i.')
-	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
-	baseURL = 'http://greenupapp.appspot.com/api'
-	baseURL = 'http://localhost:16084/api'
+	parser.add_argument('--p', help='Specify local port to run the spider against. If blank, run against app url.')
+	args = parser.parse_args()
+	if args.p:
+		port = args.p
+		baseURL = 'http://localhost:%s/api', %(port)
+	else:
+		baseURL = 'http://greenupapp.appspot.com/api'
+	
+	# baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
+	
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
