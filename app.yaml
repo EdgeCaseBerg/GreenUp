@@ -7,7 +7,7 @@ threadsafe: false
 skip_files: 
 - ^(.*/)?#.*#
 - ^(.*/)?.*~
-- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*\.py
 - ^(.*/)?.*/RCS/.*
 - ^(.*/)?\..*
 - ^android/.*
@@ -15,6 +15,10 @@ skip_files:
 - ^svgs/.*
 
 handlers:
+
+- url: /dash
+  static_dir: web/dash/
+
 - url: /favicon.ico
   static_files: api/favicon.ico
   upload: api.favicon.ico
