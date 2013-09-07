@@ -41,6 +41,7 @@
     <ul class="nav navbar-nav">
       <li class="navLi active"><a href="#" class="navLink" id="navMapLink">Maps</a></li>
       <li class="navLi"><a href="#" id="navCommentsLink" class="navLink">Comments</a></li>
+      <li class="navLi"><a href="#" id="navAnalyticsLink" class="navLink">Analytics</a></li>
     </ul>
     <form class="navbar-form navbar-left" role="search">
       <div class="form-group">
@@ -74,7 +75,30 @@
 	</div>
 	<div class="row commentsAdminContainer">
     	<div class="col-xs-6 col-sm-6 col-md-4">
-    		sdffsdfsdf
+    		<div class="col-xs-7 col-sm-4 col-md-3">
+    			wfqdfasdfadsf
+    		</div>
+
+    		<div class="col-xs-6 col-sm-3 col-md-9 bannedWordsListNest">
+    			<div class="bannedWordsList" id="bannedWordsList">
+    				<div class="bannedWord">
+    					<div class="bannedWordIcon banMe">X</div>
+    					fuck
+    				</div>
+    				<div>
+    					<div class="bannedWordIcon banMe">X</div>
+    					shit
+    				</div>
+    			</div>
+    			<script>
+    				for(var ii=0; ii<30; ii++){
+    					var banned = document.createElement("div");
+    					banned.className = "bannedWord";
+    					banned.innerHTML = "X"; 
+    					$('#bannedWordsList').append(banned);
+    				}
+    			</script>
+    		</div>
     	</div>
 	  	<div class="col-xs-12 col-sm-6 col-md-8">
 	  		<div id="bubbleContainer">

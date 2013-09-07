@@ -48,6 +48,44 @@ ul{
 	display:none;
 }
 
+.bannedCommentInputNest{
+	height: 300px;
+	width:200px;
+	border:solid 1px red;
+
+}
+
+.bannedWordsListNest{
+	/*border:solid 1px orange;*/
+}
+
+.bannedWordsList{
+	/*border: solid 1px green;*/
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+	height:500px;
+	overflow-y: scroll;
+}
+
+.bannedWordIcon{
+	margin:0px;
+	display: inline-block;
+	padding: 3px 5px 3px 5px;
+}
+
+.banMe{
+	border:solid 1px red;
+}
+
+.bannedWord{
+	display:block;
+	width: 100%;
+	padding:0px;
+	/*padding: 3px 0px 3px 0px;*/
+	border:solid 1px blue;
+}
+
 .bubble{
     opacity: 1;
     transition: opacity .25s ease-in-out;
