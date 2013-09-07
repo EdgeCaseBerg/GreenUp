@@ -611,8 +611,21 @@ function UiHandle(){
 	this.commentsNextPageUrl = "";
 	this.commentsPrevPageUrl = "";
 
-    UiHandle.prototype.init = function init(){	
+    UiHandle.prototype.init = function init(){
+    	$(".navLink").click(function(){
+    		$('.navLi').removeClass("active");
+    		$(this).parent().addClass("active");
+    	});
+
+    	$('#navMapLink').click(function(){
+    		$('.row').hide();
+    		$('.mapAdminContainer').show();	
+    	});
 		
+		$('#navCommentsLink').click(function(){
+    		$('.row').hide();
+    		$('.commentsAdminContainer').show();	
+    	});
 	} // end init
 
 	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
