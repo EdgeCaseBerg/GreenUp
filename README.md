@@ -35,12 +35,25 @@ Setup
 #### If you just want to run the API:
 - Run the dev_appserver.py script against GreenUp/api/
 
+Contributing
+--------------------
+If you are going to contribute to the project (please do!) there is a general flow for how we do things in this project.
+
+- All development work is done on the develop branch or a branch based off from it. The master branch is left for releases
+- We use git flow. So you'll see a lot of feature/branches or commits merged in with the --no-ff flag if they weren't started through flow.
+- Releases are done when breaking changes to the API occur or when there's a major update for clients. 
+- Send a pull request with your changes and it will be reviewed and merged if it passes inspection. In general, if you want a quick response then target your pull requests by tagging one of the developers listed below. In General:
+	- API pull requests you should tag [Ethan Eldridge]
+	- Web Application requests you should tag [Joshua Dickerson]
+	- iOS requests you should tag [Anders Melen]
+	- android requests you should tag [Evan Yandell] and [Ethan Eldridge]
+- If you have trouble with the public API or see an issue report the issue and let us know. 
+
 
 Developers:
 ------------------
 - [Ethan Eldridge]
 - [Joshua Dickerson]
-- [Collin Dewitt]
 - [Scott MacEwan]
 - [Anders Melen]
 - [Justin Adams]
