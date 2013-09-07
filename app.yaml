@@ -16,8 +16,8 @@ skip_files:
 
 handlers:
 
-- url: /dash
-  static_dir: web/dash/
+# - url: /dash
+#   static_dir: web/dash/
 
 - url: /favicon.ico
   static_files: api/favicon.ico
