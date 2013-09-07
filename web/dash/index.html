@@ -58,36 +58,46 @@
     <div class="row mapAdminContainer">
     	<div class="col-xs-6 col-sm-6 col-md-4">
     		<ul>
-    			<li>Add Marker</li>
+    			<li>Tap Map to Add Marker</li>
     		</ul>
     	</div>
 	  	<div class="col-xs-12 col-sm-6 col-md-8">
 	  		<div id="map-canvas">
 	  		</div>
-	  		<div id="markerTypeDialog" class="markerTypeSelectDialog">
-	  			<div id="selectPickup"></div>
-	  			<div id="selectComment"></div>	
-	  			<div id="selectTrash"></div>
-	  			<div id="cancel"></div>	
-	  		</div>
-
+	  		<div id="mapCover">
+		  		<div id="markerTypeDialog" class="markerTypeSelectDialog">
+		  			<div class="nestLabel">
+		  				Add a marker
+		  			</div>
+		  			<div id="markerTextareaNest markerTypeNestColumn">
+		  				<div class="markerTypeInputLabel">
+		  					Comment
+		  				</div>
+		  				<textarea id="markerTextarea" cols="20" rows="9">
+		  				</textarea>
+		  			</div>
+		  			<div id="selectPickup"></div>
+		  			<div id="selectComment"></div>	
+		  			<div id="selectTrash"></div>
+		  			<div id="cancel"></div>	
+		  		</div>
+		  	</div>
 	  	</div>
 	</div>
 	<div class="row commentsAdminContainer">
     	<div class="col-xs-6 col-sm-6 col-md-4">
-    		<div class="col-xs-7 col-sm-4 col-md-3">
-    			wfqdfasdfadsf
+    		<div class="col-xs-7 col-sm-4 col-md-4">
+    			<h4>Banned Words</h4>
     		</div>
 
-    		<div class="col-xs-6 col-sm-3 col-md-9 bannedWordsListNest">
+    		<div class="col-xs-6 col-sm-3 col-md-8 bannedWordsListNest">
     			<div class="bannedWordsList" id="bannedWordsList">
     				<div class="bannedWord">
-    					<div class="bannedWordIcon banMe">X</div>
-    					fuck
-    				</div>
-    				<div>
-    					<div class="bannedWordIcon banMe">X</div>
-    					shit
+    					<div class="slideToggle">    
+                            <input type="checkbox" value="None" id="toggleMessages" name="check" onchange="window.Comments.toggleComments('message')" checked/>
+                            <label for="toggleMessages"></label>
+                        </div> 
+                            <span class="slideToggleLabel">shit</span>
     				</div>
     			</div>
     			<script>

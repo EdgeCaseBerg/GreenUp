@@ -17,7 +17,7 @@ ul{
 }
 
 #map-canvas{
-	min-height:600px;
+	min-height:650px;
 	min-width:500px;
 	width:100%;
 	height:80%;
@@ -28,13 +28,14 @@ ul{
 
 .markerTypeSelectDialog{
 	float:left;
-	position:relative;
+	position:absolute;
+	top:100px;
 	z-index: 1000;
 	width: 100%;
 	height: 200px;
 	background: #eee;
 	margin:auto;
-	margin-top: -400px;
+	/*margin-top: -400px;*/
 	border:solid 1px #999;
 	-webkit-box-shadow:  0px 6px 20px -8px rgba(3, 3, 3, 0.7);
     box-shadow:  0px 6px 20px -8px rgba(3, 3, 3, 0.7);
@@ -42,49 +43,58 @@ ul{
 
 #markerTypeDialog{
 	/*display:none;*/
+	padding:5px;
+}
+
+#markerTextarea{
+	display:inline-block;
+	margin-left: -30px;
+}
+
+.markerTypeInputLabel{
+/*	padding:90px 0px 40px 0px;*/
+	float:left;
+	margin: 30px 0px 0px -30px;
+	font-size:1.2em;
+	font-weight:bold;
+	color:#999;
+	/*border:solid 1px red;*/
+	display:inline-block;
+	transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg); /* IE 9 */
+	-webkit-transform: rotate(-90deg); /* Safari and Chrome */
+}
+
+.markerTypeNestColumn{
+	vertical-align: top;
+	display:inline-block;
+
+}
+
+#mapCover{
+	min-height:600px;
+	min-width:500px;
+	width:100%;
+	height:100%;
+	position: absolute;
+	top:0px;
+	z-index:950;
+	background-image: url('images/backgrounds/80_percent_black.png');
+}
+
+.nestLabel{
+	font-size:1.4em;
+	font-weight: bold;
+	color: red;
+	float:left;
+	margin:-30px 0px 0px 0px;
 }
 
 .commentsAdminContainer{
 	display:none;
 }
 
-.bannedCommentInputNest{
-	height: 300px;
-	width:200px;
-	border:solid 1px red;
 
-}
-
-.bannedWordsListNest{
-	/*border:solid 1px orange;*/
-}
-
-.bannedWordsList{
-	/*border: solid 1px green;*/
-	width: 100%;
-	padding: 0px;
-	margin: 0px;
-	height:500px;
-	overflow-y: scroll;
-}
-
-.bannedWordIcon{
-	margin:0px;
-	display: inline-block;
-	padding: 3px 5px 3px 5px;
-}
-
-.banMe{
-	border:solid 1px red;
-}
-
-.bannedWord{
-	display:block;
-	width: 100%;
-	padding:0px;
-	/*padding: 3px 0px 3px 0px;*/
-	border:solid 1px blue;
-}
 
 .bubble{
     opacity: 1;
@@ -169,4 +179,135 @@ ul{
     color:#111;
     font-style: italic;
     font-size:0.3em;
+}
+
+.bannedCommentInputNest{
+	height: 300px;
+	width:200px;
+	border:solid 1px red;
+
+}
+
+.bannedWordsListNest{
+	/*border:solid 1px orange;*/
+}
+
+.bannedWordsList{
+	/*border: solid 1px green;*/
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+	height:500px;
+	overflow-y: scroll;
+	border:solid 1px #999;
+}
+
+.bannedWordIcon{
+	margin:0px;
+	display: inline-block;
+	padding: 3px 5px 3px 5px;
+}
+
+.banMe{
+	/*border:solid 1px red;*/
+}
+
+.bannedWord{
+	display:block;
+	width: 100%;
+	padding:5px 0px 5px 5px;
+	/*padding: 3px 0px 3px 0px;*/
+	/*border:solid 1px blue;*/
+}
+
+.slideToggleLabel{
+    font-weight:bold;
+    color: #666;
+    display:inline-block;
+/*    margin:0px 0px 0px 10%;*/
+    padding: 0px 0px 0px 0px;
+    font-size:1.5em;
+    font-weight:bold;
+    margin: 0px 0px 0px 10px;
+}
+
+input[type=checkbox] {
+    visibility: hidden;
+}
+
+
+.slideToggle{
+    display:inline-block;
+    width: 140px;
+    height: 26px;
+    background: #333;
+    margin: auto;
+    vertical-align: top;
+
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    position: relative;
+
+    -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+    -moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+    box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+}
+
+.slideToggle:after {
+    content: 'ALLOWED';
+    font: 12px/26px Arial, sans-serif;
+    color: red;
+    position: absolute;
+    right: 10px;
+    z-index: 0;
+    font-weight: bold;
+    text-shadow: 1px 1px 0px rgba(255,255,255,.15);
+}
+
+.slideToggle:before {
+    content: 'BANNED';
+    font: 12px/26px Arial, sans-serif;
+    color: #00bf00;
+    position: absolute;
+    left: 10px;
+    z-index: 0;
+    font-weight: bold;
+}
+
+.slideToggle label {
+    display: block;
+    width: 64px;
+    height: 20px;
+
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+
+    -webkit-transition: all .4s ease;
+    -moz-transition: all .4s ease;
+    -o-transition: all .4s ease;
+    -ms-transition: all .4s ease;
+    transition: all .4s ease;
+    cursor: pointer;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    z-index: 1;
+
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.3);
+    background: #fcfff4;
+
+    background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
+}
+
+.slideToggle input[type=checkbox]:checked + label {
+    left: 70px;
 }
