@@ -255,11 +255,11 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='Test the API.')
-	parser.add_argument('--p', help='Specify local port to run the spider against. If blank, run against app url.')
+	parser.add_argument('-p', help='Specify local port to run the spider against. If blank, run against app url.')
 	args = parser.parse_args()
 	if args.p:
 		port = args.p
-		baseURL = 'http://localhost:%s/api', %(port)
+		baseURL = 'http://localhost:%s/api' % port
 	else:
 		baseURL = 'http://greenupapp.appspot.com/api'
 	
