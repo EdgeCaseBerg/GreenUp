@@ -43,3 +43,88 @@ ul{
 .commentsAdminContainer{
 	display:none;
 }
+
+.bubble{
+    opacity: 1;
+    transition: opacity .25s ease-in-out;
+    vertical-align: top;
+    text-align:left;
+    width: 90%;
+    position: relative;
+    margin-top:30px;
+    height: auto;
+    padding: 1em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow:  0px 1px 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow:  0px 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.bubbleRight{
+    margin-left:3%;
+}
+
+.bubbleRight:after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    right: 5%;
+    border-style: solid;
+    border-width: 15px 15px 0;
+    display: block;
+    width: 0;
+    z-index: 1;
+}
+
+.bubbleLeft{
+}
+
+.bubbleLeft:after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    left: 5%;
+    border-style: solid;
+    border-width: 15px 15px 0;
+    display: block;
+    width: 0;
+    z-index: 1;
+}
+
+.bubbleTrash{
+    background: #6fb9ec;
+}
+
+.bubbleForum{
+    background: #7ccc83;
+}
+
+.bubbleForum:after{
+    border-color: #7ccc83 transparent;  
+}
+.bubbleNeeds{
+    background: #6fb9ec;
+}
+.bubbleNeeds:after{
+    border-color: #6fb9ec transparent;
+}
+.bubbleMessage{
+    background:#fbc883;
+}
+.bubbleMessage:after{
+    border-color: #fbc883 transparent;
+}
+
+#comment_submission_form{
+    display:none;
+}
+
+.bubbleTime{
+    display:inline-block;
+    float:right;
+    margin:2px 3px 0px 0px;
+    color:#111;
+    font-style: italic;
+    font-size:0.3em;
+}

@@ -366,7 +366,8 @@ function MapHandle(){
 		console.log("Heatmap data to be applied to map: ");
 		console.log(data);
 		// var dataObj = eval(data);
-		var dataObj = JSON.parse(data);
+		// var dataObj = JSON.parse(data);
+		var dataObj = data;
 		var heatmapData = [];
 			// console.log(dataObj[ii].latDegrees);
 		for(var ii=0; ii<dataObj.grid.length; ii++){
@@ -739,7 +740,8 @@ function UiHandle(){
 	// markers coming from the apiconnector comes here to be added to the UI
 	UiHandle.prototype.updateMarker = function updateMarker(data){
 		console.log("marker response: "+data);
-		var dataArr = JSON.parse(data);
+		// var dataArr = JSON.parse(data);
+		var dataArr = data;
         for(ii=0; ii<dataArr.pins.length; ii++){
             window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
         }
@@ -752,7 +754,9 @@ function UiHandle(){
 		console.log("In Update forum");
 		// console.log("Comment data: "+data);
 		// document.getElementById("bubbleContainer").innerHTML = "";
-		var dataObj = JSON.parse(data);
+		console.log(data);
+		dataObj = data;
+		// var dataObj = JSON.parse(data);
 		var comments = dataObj.comments;
 		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
 		// window.UI.commentsNextPageUrl = dataObj.page.next;
