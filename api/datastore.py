@@ -187,9 +187,10 @@ class AbstractionLayer():
 		dictComments = []
 		for comment in comments:
 			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "0" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
-		return dictComments
+		return sorted(dictComments, key=lambda k: k['timestamp'], reverse=True) 
+		
 
-	def submitComments(self, commentType, message, pin=None):
+	def submitComments(self, cocheckNextPagemmentType, message, pin=None):
 		# datastore write
 		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
 		#Clear the memcache then recreate the initial page.
