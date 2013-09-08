@@ -2,27 +2,33 @@ package com.xenon.greenup;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
+
 import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Comment;
 import com.xenon.greenup.api.CommentPage;
 
-import android.support.v4.app.ListFragment;
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
-
-public class FeedSectionFragment extends ListFragment {
+public class FeedSectionFragment extends ListFragment implements ListView.OnItemClickListener {
 	private int lastPageLoaded = 1;
 	private EditText editText;
+	private ListView filterList;
+	private String[] filters = {"Forum","General Message","Trash Pickup"};
 	
 	public FeedSectionFragment(){
 	}
@@ -51,6 +57,11 @@ public class FeedSectionFragment extends ListFragment {
     	        return handled;
     	    }
     	});
+    	
+    	filterList = (ListView)rootView.findViewById(R.id.filter_list);
+    	filterList.setAdapter(new ArrayAdapter<String>(getActivity(),R.layout.filter_list_item,R.id.filter_label,filters));
+    	filterList.setOnItemClickListener(this);
+    	
        	return rootView;
     }
     
@@ -103,6 +114,11 @@ public class FeedSectionFragment extends ListFragment {
 		protected void onPostExecute(Void v) {
 			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		
 	}
 
 }
