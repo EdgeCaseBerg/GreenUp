@@ -33,9 +33,11 @@
     <ListView
         android:id="@+id/filter_list"
         android:layout_width="200dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
         android:layout_weight="0.42"
-        android:layout_gravity="right" >
+        android:background="@color/white" >
+
     </ListView>
 
 </android.support.v4.widget.DrawerLayout>
