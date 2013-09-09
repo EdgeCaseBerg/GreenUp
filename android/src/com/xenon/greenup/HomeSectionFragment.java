@@ -22,6 +22,12 @@ public class HomeSectionFragment extends Fragment {
     	final  ToggleButton startStopButton = (ToggleButton)rootview.findViewById(R.id.start_stop_button );
     	final Chronometer chrono = (Chronometer)rootview.findViewById(R.id.chronometer1);
     	
+    	/* The chronometer starts off with a minimal 0:00 timer. Which is great, unless 
+    	 * you're going for a uniform look between all applications and really want to 
+    	 * have one specific format for all timers. Which we do. So here's the default:
+    	 */
+    	chrono.setText("00:00:00"); /* Once storage implemented set this accordingly */
+    	
     	startStopButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			
 			@Override
@@ -50,6 +56,28 @@ public class HomeSectionFragment extends Fragment {
 				
 			}
 		});
+    	
+    	chrono.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+    		/*Welcome to hell. 
+    		 * The chronometer defaults to the minimal number of 0's with a minimum of 3.
+    		 * So that means until you hit 10 minutes, your chronometer is just 4 characters 
+    		 * long. Which is great unless you DONT want your whole UI to shift around whenever
+    		 * someone happens to work a little bit longer. 
+    		 */ 
+	        public void onChronometerTick(Chronometer chronometer) {
+	            CharSequence text = chronometer.getText();
+	            if (text.length() == 4) {
+	            	chronometer.setText("00:0"+text);
+	            }else if (text.length()  == 5) {
+	                chronometer.setText("00:"+text);
+	            } else if (text.length() == 7) {
+	                chronometer.setText("0"+text);
+	            }
+	            /* This function might be a good place to check for the last time sent
+	             * To the heatmap and fire off the async task to do so.
+	             * */
+	        }
+	    });
 
         return rootview;
     }
