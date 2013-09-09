@@ -32,6 +32,7 @@ public class HomeSectionFragment extends Fragment {
 					if( pauseTime == 0L){
 						chrono.setBase(SystemClock.elapsedRealtime());
 						chrono.start();
+						MainActivity.secondsWorked = 0; /* Or set this from perstence*/
 					}else{
 						chrono.setBase(chrono.getBase() +  SystemClock.elapsedRealtime() - pauseTime);
 						chrono.start();
@@ -42,6 +43,7 @@ public class HomeSectionFragment extends Fragment {
 				} else {  
 					startStopButton.setBackgroundResource(R.drawable.start);
 					pauseTime = SystemClock.elapsedRealtime();
+					MainActivity.secondsWorked += chrono.getBase() + SystemClock.elapsedRealtime() - pauseTime;
 					chrono.stop();
 				}
 				toggleState = !toggleState;

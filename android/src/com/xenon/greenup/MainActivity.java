@@ -46,6 +46,7 @@ public class MainActivity extends FragmentActivity {
      * time.
      */
     ViewPager _ViewPager;
+    static long secondsWorked = 0L;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
