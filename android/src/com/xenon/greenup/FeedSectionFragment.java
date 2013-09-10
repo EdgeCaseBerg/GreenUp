@@ -8,15 +8,11 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -24,11 +20,13 @@ import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Comment;
 import com.xenon.greenup.api.CommentPage;
 
-public class FeedSectionFragment extends ListFragment implements ListView.OnItemClickListener {
+public class FeedSectionFragment extends ListFragment {//implements ListView.OnItemClickListener {
 	private int lastPageLoaded = 1;
 	private EditText editText;
-	private ListView filterList;
-	private String[] filters = {"Forum","General Message","Trash Pickup"};
+	private Switch forumSwitch, generalSwitch, trashSwitch;
+	private boolean forumFilterToggle = false;
+	private boolean generalFilterToggle = false;
+	private boolean trashFilterToggle = false;
 	
 	public FeedSectionFragment(){
 	}
@@ -57,11 +55,6 @@ public class FeedSectionFragment extends ListFragment implements ListView.OnItem
     	        return handled;
     	    }
     	});
-    	
-    	filterList = (ListView)rootView.findViewById(R.id.filter_list);
-    	filterList.setAdapter(new ArrayAdapter<String>(getActivity(),R.layout.filter_list_item,R.id.filter_label,filters));
-    	filterList.setOnItemClickListener(this);
-    	
        	return rootView;
     }
     
@@ -115,10 +108,4 @@ public class FeedSectionFragment extends ListFragment implements ListView.OnItem
 			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
 		}
 	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		
-	}
-
 }
