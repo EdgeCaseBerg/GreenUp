@@ -32,7 +32,7 @@
         [self.toggleButton addTarget:self action:@selector(toggleMenu:) forControlEvents:UIControlEventTouchUpInside];
         [self.toggleButton setBackgroundImage:[UIImage imageNamed:@"hamburger_icon.png"] forState:UIControlStateNormal];
         [self addSubview:self.toggleButton];
-
+        
         
         if([view isEqualToString:MENU_HOME_VIEW])
         {
@@ -170,11 +170,15 @@
     UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
     UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
     UIImageView *pin3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
+    UIButton *dropPinButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [dropPinButton setFrame:CGRectMake(10, 100, self.frame.size.width - 20, 30)];
+    [dropPinButton setTitle:@"Drop Pickup Marker" forState:UIControlStateNormal];
+    [dropPinButton addTarget:self action:@selector(dropMarker:) forControlEvents:UIControlEventTouchUpInside];
     
     //Set Pin Image Frames
-    [pin1Image setFrame:CGRectMake(10, 5, 80, 40)];
-    [pin2Image setFrame:CGRectMake(10, 50, 80, 40)];
-    [pin3Image setFrame:CGRectMake(10, 95, 80, 40)];
+    [pin1Image setFrame:CGRectMake(10, 5, 80, 30)];
+    [pin2Image setFrame:CGRectMake(10, 35, 80, 30)];
+    [pin3Image setFrame:CGRectMake(10, 65, 80, 30)];
     
     //Add pin images to view
     //[self addSubview:pin1Image];
@@ -183,9 +187,9 @@
     
     
     //Init Pin Labels
-    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 40)];
-    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(90, 50, 220, 40)];
-    UILabel *pin3 = [[UILabel alloc] initWithFrame:CGRectMake(90, 95, 220, 40)];
+    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 30)];
+    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(90, 35, 220, 30)];
+    UILabel *pin3 = [[UILabel alloc] initWithFrame:CGRectMake(90, 65, 220, 30)];
     
     //Set Pins Text
     [pin1 setText:@"Pickup Point"];
@@ -212,6 +216,7 @@
     [self.contentView addSubview:pin1];
     [self.contentView addSubview:pin2];
     [self.contentView addSubview:pin3];
+    [self.contentView addSubview:dropPinButton];
 }
 
 -(void)switchToMessageView
@@ -265,6 +270,12 @@
      [self.contentView addSubview:pin1];
      [self.contentView addSubview:pin2];
      [self.contentView addSubview:pin3];
+}
+
+-(IBAction)dropMarker:(id)sender
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"dropMarker" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"toggleMenu" object:nil];
 }
 
 

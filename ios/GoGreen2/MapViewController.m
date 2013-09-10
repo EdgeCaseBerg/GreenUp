@@ -12,11 +12,14 @@
 #import "HeatMapPoint.h"
 #import "CSocketController.h"
 #import "NSArray+Primitive.h"
+#import "MapPinSelectorView.h"
+#import "HeatMapPin.h"
 
 #import <netdb.h>
 #include <arpa/inet.h>
 
 #define UPLOAD_QUEUE_LENGTH 5
+#define longPressDuration 1
 
 @interface MapViewController ()
 
@@ -26,6 +29,9 @@
 
 -(MapViewController *)init
 {
+    self.mapView = [[GreenUpMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 411)];
+    [self.view addSubview:self.mapView];
+    
     self = [super initWithNibName:@"MapView_IPhone" bundle:nil];
     self.title = @"Map";
     
@@ -33,6 +39,9 @@
     self.gatheredMapPoints = [[NSMutableArray alloc] init];
     self.gatheredMapPointsQueue = [[NSMutableArray alloc] init];
     
+    //Notification Center
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dropCustomLocationMarker:) name:@"dropMarker" object:nil];
+
     return self;
 }
 
@@ -59,6 +68,11 @@
     [self.toggleGeoLogging addTarget:self action:@selector(toggleLogging:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.toggleGeoLogging];
     */
+    
+    //Gesture Recognizer For Custom Location Map Pin
+    UILongPressGestureRecognizer *customLocationMapPinGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(dropCustomMapPin:)];
+    [customLocationMapPinGesture setMinimumPressDuration:.25];
+    [self.mapView addGestureRecognizer:customLocationMapPinGesture];
     
     //Clear Points Button
     self.clearPoints = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -189,6 +203,20 @@
         mapPoint.lon = location.coordinate.longitude;
         mapPoint.secWorked = 1;
         
+        if(self.loggingForMarker)
+        {
+            //-------------- We Are Not Logging But Want To Drop Marker At Our Current Location ---------
+            self.loggingForMarker = FALSE;
+        }
+        else if(self.loggingForMarker && self.logging)
+        {
+            //-------------- We Are Logging AND ALSO Want To Drop A Marker --------------
+        }
+        else
+        {
+            //-------------- We Are Logging AND Don't Want To Drop A Marker --------------
+        }
+        
         [self.gatheredMapPoints addObject:mapPoint];
         [self.gatheredMapPointsQueue addObject:mapPoint];
         
@@ -206,7 +234,59 @@
          region.center = location.coordinate;
          [self.mapView setRegion:region animated:TRUE];
          [self.mapView regionThatFits:region];
+    }
+}
+
+#pragma mark - Drop Marker
+
+-(IBAction)dropMarker:(id)sender
+{
+    NSLog(@"DROPPING MARKER!");
+    if(!self.logging)
+    {
+        //If we arn't collecting GPS data start so we can drop a marker at our current location
+        [self startStandardUpdates];
+    }
+}
+
+#pragma mark - Long Press Gesture Recognizer
+-(IBAction)dropCustomMapPin:(UILongPressGestureRecognizer *)sender
+{
+    NSLog(@"HIT GESTURE");
+    if(sender.state == UIGestureRecognizerStateBegan)
+    {
+        NSLog(@"STARTED!");
         
+        //Start Timer
+        self.longPressTimer = [NSDate date];
+        
+        //Show Spinner
+        self.mapSpinner = [[MapPinSelectorView alloc] initWithMapPoint:[sender locationInView:self.view] andDuration:longPressDuration];
+        [self.view addSubview:self.mapSpinner];
+    }
+    else if(sender.state == UIGestureRecognizerStateEnded)
+    {
+        NSTimeInterval elapsedTime = -[self.longPressTimer timeIntervalSinceNow];
+        if(elapsedTime >= longPressDuration)
+        {
+            //Remove Old Timer
+            self.longPressTimer = nil;
+            
+            //Remove Spinner
+            [self.mapSpinner removeFromSuperview];
+            
+            //Add Map Pin
+            CGPoint point = [sender locationInView:self.mapView];
+            CLLocationCoordinate2D coord = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
+            
+            HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andTitle:@"Custom Pin"];
+            [self.mapView addAnnotation:customPin];
+        }
+        else
+        {
+            //GAVE UP LONG PRESS TO EARLY REMOVE SPINNER
+            [self.mapSpinner removeFromSuperview];
+        }
     }
 }
 

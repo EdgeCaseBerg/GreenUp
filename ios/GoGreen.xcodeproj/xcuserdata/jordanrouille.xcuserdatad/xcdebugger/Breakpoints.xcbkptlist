@@ -26,11 +26,11 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "16"
          endingLineNumber = "16"
-         landmarkName = "-initWithWindowFrame:"
+         landmarkName = "-initWithWindowFrame:andCurrent:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MessageViewController.m"
@@ -40,6 +40,19 @@
          startingLineNumber = "122"
          endingLineNumber = "122"
          landmarkName = "-getMessages"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "GoGreen2/HomeViewController.m"
+         timestampString = "400528426.352677"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "61"
+         endingLineNumber = "61"
+         landmarkName = "-pleaseWork:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

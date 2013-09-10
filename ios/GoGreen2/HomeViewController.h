@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HomeViewController : UIViewController
+@interface HomeViewController : UIViewController <UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UIButton *cleanUpToggleButton;

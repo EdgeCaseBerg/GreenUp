@@ -14,14 +14,18 @@
 #import "HeatMap.h"
 #import "HeatMapView.h"
 #import "BDHost.h"
+#import "GreenUpMapView.h"
 
-@interface MapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate>
+@class MapPinSelectorView;
 
-@property (strong, nonatomic) IBOutlet MKMapView *mapView;
+@interface MapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>
+
+@property (strong, nonatomic) IBOutlet GreenUpMapView *mapView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 //@property (strong, nonatomic) UIButton *toggleGeoLogging;
 @property (strong, nonatomic) UIButton *clearPoints;
 @property BOOL logging;
+@property BOOL loggingForMarker;
 @property (strong, nonatomic) HeatMap *heatMap;
 @property (strong, nonatomic) NSDate *startedCleaning;
 
@@ -29,6 +33,8 @@
 @property (strong, nonatomic) NSMutableArray *downloadedMapPoints;
 @property (strong, nonatomic) NSMutableArray *gatheredMapPoints;
 @property (strong, nonatomic) NSMutableArray *gatheredMapPointsQueue;
+@property (strong, nonatomic) NSDate *longPressTimer;
+@property (strong, nonatomic) MapPinSelectorView *mapSpinner;
 @property BOOL pushOverdue;
 
 

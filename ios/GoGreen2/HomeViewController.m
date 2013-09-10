@@ -44,9 +44,36 @@
         [self.cleanUpToggleButton setTitle:@"Start Cleaning" forState:UIControlStateNormal];
         [self.cleanUpToggleButton addTarget:self action:@selector(toggleCleanUp:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.cleanUpToggleButton];
+        
+        //Drop Pin Gesture Reconziers
+        UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(pleaseWork:)];
+        longPressGesture.minimumPressDuration = 1;
+        [self.view addGestureRecognizer:longPressGesture];
+        longPressGesture.delegate = self;
     }
 
     return self;
+}
+
+#pragma mark - Drop Custom Location Marker Pin
+-(void)pleaseWork:(UIGestureRecognizer*)sender
+{
+    NSLog(@"LONG PRESS WORKED");
+    /*
+    if(sender.state == UIGestureRecognizerStateEnded)
+    {
+        [self.view removeGestureRecognizer:sender];
+    }
+    else
+    {
+        //Convert Our Touch Point To Map Coordinates
+        CGPoint point = [sender locationInView:self.mapView];
+        CLLocationCoordinate2D coord = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
+        
+        HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andTitle:@"Custom Pin"];
+        [self.mapView addAnnotation:customPin];
+    }
+     */
 }
 
 -(IBAction)toggleCleanUp:(id)sender
