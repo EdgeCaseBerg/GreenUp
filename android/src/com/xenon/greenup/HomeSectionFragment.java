@@ -14,7 +14,14 @@ import android.widget.ToggleButton;
 public class HomeSectionFragment extends Fragment {
 	private boolean toggleState = false;
 	private long pauseTime = 0L;
-
+	private boolean chronoState =  false; /*  Is the chronometer supposed to be starting in an on or off state*/
+	protected static long currentTime = 0;
+	
+	@Override
+	public void onCreate(Bundle bundle){
+		super.onCreate(bundle);
+	}
+	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -26,10 +33,13 @@ public class HomeSectionFragment extends Fragment {
     	 * you're going for a uniform look between all applications and really want to 
     	 * have one specific format for all timers. Which we do. So here's the default:
     	 */
-    	chrono.setText("00:00:00"); /* Once storage implemented set this accordingly */
+    	chrono.setActivated(chronoState);		
+    	if(HomeSectionFragment.currentTime == 0)
+    		chrono.setText("00:00:00");
+    	else
+    		chrono.setText(getChronoString()); /* Once storage implemented set this accordingly */
     	
     	startStopButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(!toggleState) { 
@@ -52,8 +62,7 @@ public class HomeSectionFragment extends Fragment {
 					MainActivity.secondsWorked += chrono.getBase() + SystemClock.elapsedRealtime() - pauseTime;
 					chrono.stop();
 				}
-				toggleState = !toggleState;
-				
+				toggleState = !toggleState;		
 			}
 		});
     	
@@ -76,10 +85,35 @@ public class HomeSectionFragment extends Fragment {
 	            /* This function might be a good place to check for the last time sent
 	             * To the heatmap and fire off the async task to do so.
 	             * */
+	            Log.i("time","Is this still beating on the map page? " + HomeSectionFragment.currentTime);
+	            HomeSectionFragment.currentTime = getChronoTime(chronometer.getText().toString());
 	        }
 	    });
 
         return rootview;
     }
+    
+	public long getChronoTime(String timeForm){
+		//The chronometer doesn't actually have a 'getTime' function. So here's one
+		String[] pieces = timeForm.split(":");
+		long hours = Long.parseLong(pieces[0]);
+		long minutes = Long.parseLong(pieces[1]);
+		long seconds = Long.parseLong(pieces[2]);
+		return seconds + minutes*60 + hours*3600;
+	}
+	
+	public String getChronoString(){
+		long hours = HomeSectionFragment.currentTime/3600;
+		long minutes = HomeSectionFragment.currentTime/60 - hours*60;
+		long seconds = HomeSectionFragment.currentTime - minutes*60 - hours*3600;
+		/*Should switch to string builder for efficiency and
+		 *should switch to a string build so things like minutes < 10 -> "0"+minutes
+		 * */ 
+		if(hours > 10){
+			return "0"+hours+":"+minutes+":"+seconds;
+		}else{
+			return ""+hours+":"+minutes+":"+seconds;
+		}
+	}
 
 }

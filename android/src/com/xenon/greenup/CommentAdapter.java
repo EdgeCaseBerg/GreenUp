@@ -88,7 +88,6 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	      viewHolder.top = (ImageView) rowView.findViewById(R.id.comment_grid_top);
 	      rowView.setTag(viewHolder);
 	    }
-
 	    ViewHolder holder = (ViewHolder) rowView.getTag();
 	    
 	    Comment comment= comments.get(position);
