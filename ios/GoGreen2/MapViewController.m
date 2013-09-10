@@ -40,7 +40,7 @@
     self.gatheredMapPointsQueue = [[NSMutableArray alloc] init];
     
     //Notification Center
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dropCustomLocationMarker:) name:@"dropMarker" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dropMarkerAtCurrentLocation:) name:@"dropMarker" object:nil];
 
     return self;
 }
@@ -207,44 +207,89 @@
         {
             //-------------- We Are Not Logging But Want To Drop Marker At Our Current Location ---------
             self.loggingForMarker = FALSE;
+            
+            [self.gatheredMapPoints addObject:mapPoint];
+            [self.gatheredMapPointsQueue addObject:mapPoint];
+            
+            //Get Current Location
+            MKCoordinateRegion region;
+            MKCoordinateSpan span;
+            span.latitudeDelta=0.1;
+            span.longitudeDelta=0.1;
+            region.span = span;
+            region.center = location.coordinate;
+            [self.mapView setRegion:region animated:TRUE];
+            [self.mapView regionThatFits:region];
+            
+            //Stop Getting Updates
+            [self.locationManager stopUpdatingLocation];
+            
+            //Create Pin For Current Location
+            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andTitle:@"Location Pin"];
+            [self.mapView addAnnotation:currentLocationPin];
         }
         else if(self.loggingForMarker && self.logging)
         {
             //-------------- We Are Logging AND ALSO Want To Drop A Marker --------------
+            [self.gatheredMapPoints addObject:mapPoint];
+            [self.gatheredMapPointsQueue addObject:mapPoint];
+            
+            //Update With Server
+            [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+            [self pushHeatMapDataToServer];
+            [self updateHeatMapOverlay];
+            
+            //Update Map Location
+            MKCoordinateRegion region;
+            MKCoordinateSpan span;
+            span.latitudeDelta=0.1;
+            span.longitudeDelta=0.1;
+            region.span = span;
+            region.center = location.coordinate;
+            [self.mapView setRegion:region animated:TRUE];
+            [self.mapView regionThatFits:region];
+            
+            //Create Pin For Current Location
+            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andTitle:@"Location Pin"];
+            [self.mapView addAnnotation:currentLocationPin];
         }
         else
         {
             //-------------- We Are Logging AND Don't Want To Drop A Marker --------------
+            [self.gatheredMapPoints addObject:mapPoint];
+            [self.gatheredMapPointsQueue addObject:mapPoint];
+            
+            //Update With Server
+            [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+            [self pushHeatMapDataToServer];
+            [self updateHeatMapOverlay];
+            
+            //Update Map Location
+            MKCoordinateRegion region;
+            MKCoordinateSpan span;
+            span.latitudeDelta=0.1;
+            span.longitudeDelta=0.1;
+            region.span = span;
+            region.center = location.coordinate;
+            [self.mapView setRegion:region animated:TRUE];
+            [self.mapView regionThatFits:region];
         }
         
-        [self.gatheredMapPoints addObject:mapPoint];
-        [self.gatheredMapPointsQueue addObject:mapPoint];
-        
-        //Update With Server        
-        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        [self pushHeatMapDataToServer];
-        [self updateHeatMapOverlay];
-        
-         //Update Map Location
-         MKCoordinateRegion region;
-         MKCoordinateSpan span;
-         span.latitudeDelta=0.1;
-         span.longitudeDelta=0.1;
-         region.span = span;
-         region.center = location.coordinate;
-         [self.mapView setRegion:region animated:TRUE];
-         [self.mapView regionThatFits:region];
+        //Turn Off Pin Flag
+        self.loggingForMarker = FALSE;
     }
 }
 
 #pragma mark - Drop Marker
 
--(IBAction)dropMarker:(id)sender
+-(IBAction)dropMarkerAtCurrentLocation:(id)sender
 {
-    NSLog(@"DROPPING MARKER!");
+    //Set Logging For Marker Flag
+    self.loggingForMarker = TRUE;
+    
+    //If we arn't collecting GPS data start so we can drop a marker at our current location
     if(!self.logging)
     {
-        //If we arn't collecting GPS data start so we can drop a marker at our current location
         [self startStandardUpdates];
     }
 }
