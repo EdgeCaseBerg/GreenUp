@@ -13,7 +13,7 @@
 
 @implementation MapPinSelectorView
 
-- (id)initWithMapPoint:(CGPoint)sentPoint andDuration:(int)spinDuration
+- (id)initWithMapPoint:(CGPoint)sentPoint andDuration:(float)spinDuration
 {
     CGRect frameFromPoint = CGRectMake(sentPoint.x - 50, sentPoint.y - 53, 100, 106);
     self = [super initWithFrame:frameFromPoint];

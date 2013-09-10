@@ -15,6 +15,6 @@ typedef void (^VoidBlock)(void);
 @property int rotationCount;
 @property (nonatomic, strong) UIImageView *pinWheelImage;
 
-- (id)initWithMapPoint:(CGPoint)sentPoint andDuration:(int)spinDuration;
+- (id)initWithMapPoint:(CGPoint)sentPoint andDuration:(float)spinDuration;
 
 @end

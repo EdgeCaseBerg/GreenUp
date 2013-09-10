@@ -1,4 +1,3 @@
-//
 //  MapViewController.m
 //  GoGreen
 //
@@ -14,12 +13,13 @@
 #import "NSArray+Primitive.h"
 #import "MapPinSelectorView.h"
 #import "HeatMapPin.h"
+#import "MapPinCommentView.h"
 
 #import <netdb.h>
 #include <arpa/inet.h>
 
 #define UPLOAD_QUEUE_LENGTH 5
-#define longPressDuration 1
+#define longPressDuration .5
 
 @interface MapViewController ()
 
@@ -71,7 +71,7 @@
     
     //Gesture Recognizer For Custom Location Map Pin
     UILongPressGestureRecognizer *customLocationMapPinGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(dropCustomMapPin:)];
-    [customLocationMapPinGesture setMinimumPressDuration:.25];
+    [customLocationMapPinGesture setMinimumPressDuration:.2];
     [self.mapView addGestureRecognizer:customLocationMapPinGesture];
     
     //Clear Points Button
@@ -326,6 +326,10 @@
             
             HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andTitle:@"Custom Pin"];
             [self.mapView addAnnotation:customPin];
+            
+            //Show Message Overlay
+            MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
+            [self.view.window addSubview:commentView];
         }
         else
         {

@@ -126,6 +126,7 @@
 		DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C38417D94ABE00FBE61F /* pinwheel@2x.png */; };
 		DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */; };
 		DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */; };
+		DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -283,6 +284,8 @@
 		DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPin.m; sourceTree = "<group>"; };
 		DFA9C38B17DF916900FBE61F /* GreenUpMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GreenUpMapView.h; sourceTree = "<group>"; };
 		DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GreenUpMapView.m; sourceTree = "<group>"; };
+		DFA9C38E17DFB1F800FBE61F /* MapPinCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapPinCommentView.h; sourceTree = "<group>"; };
+		DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPinCommentView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -436,6 +439,8 @@
 				DF62E07317C1992700B29D43 /* BDHost.m */,
 				DFA9C37E17D9419B00FBE61F /* MapPinSelectorView.h */,
 				DFA9C37F17D9419B00FBE61F /* MapPinSelectorView.m */,
+				DFA9C38E17DFB1F800FBE61F /* MapPinCommentView.h */,
+				DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */,
 			);
 			name = Map;
 			sourceTree = "<group>";
@@ -854,6 +859,7 @@
 				DFA9C38017D9419B00FBE61F /* MapPinSelectorView.m in Sources */,
 				DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */,
 				DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */,
+				DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
