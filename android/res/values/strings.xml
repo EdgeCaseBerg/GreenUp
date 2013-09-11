@@ -29,4 +29,6 @@
 	<string name="forum_switch_text">Forum</string>
 	<string name="general_switch_text">General Message</string>
 	<string name="trash_switch_text">Trash Pickup</string>
+	<string name="show">Show</string>
+	<string name="hide">Hide</string>
 </resources>
