@@ -106,14 +106,11 @@ public class HomeSectionFragment extends Fragment {
 		long hours = HomeSectionFragment.currentTime/3600;
 		long minutes = HomeSectionFragment.currentTime/60 - hours*60;
 		long seconds = HomeSectionFragment.currentTime - minutes*60 - hours*3600;
-		/*Should switch to string builder for efficiency and
-		 *should switch to a string build so things like minutes < 10 -> "0"+minutes
-		 * */ 
-		if(hours > 10){
-			return "0"+hours+":"+minutes+":"+seconds;
-		}else{
-			return ""+hours+":"+minutes+":"+seconds;
-		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(hours > 10 ? "" : "0").append(hours);
+		sb.append(minutes > 10 ? "" : "0").append(minutes);
+		sb.append(seconds > 10 ? "" : "0").append(seconds);
+		return sb.toString();
 	}
 
 }
