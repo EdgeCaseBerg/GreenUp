@@ -10,6 +10,7 @@ import logging
 import types
 import numbers
 import datetime
+import argparse
 
 from constants import *
 
@@ -169,7 +170,7 @@ def validateHeatmapPUTRequest(heatmap_response_to_put):
 
 def validatePINSGetRequest(pins_response_to_get):
 	pins_response_keys = ['status_code', 'pins']
-	pins_response_inner_keys = ['latDegrees','lonDegrees','type','message']
+	pins_response_inner_keys = ['latDegrees','lonDegrees','type','message','id']
 	assert pins_response_to_get is not None
 	for out_key,out_val in pins_response_to_get.iteritems():
 		assert out_key in pins_response_keys
@@ -179,7 +180,7 @@ def validatePINSGetRequest(pins_response_to_get):
 			for pin in out_val:
 				for key,value in pin.iteritems():
 					assert key in pins_response_inner_keys
-					if key in ['latDegrees','lonDegrees']:
+					if key in ['latDegrees','lonDegrees','id']:
 						assert isinstance(value,numbers.Number)
 					else:
 						assert isinstance(value,basestring)
@@ -189,6 +190,7 @@ def validatePinsPOSTRequest(pins_response_to_post):
 	assert pins_response_to_post is not None
 	assert 'status_code' in pins_response_to_post
 	assert 'message' in pins_response_to_post
+	assert 'pin_id' in pins_response_to_post
 	assert pins_response_to_post['status_code'] == 200
 	assert pins_response_to_post['message'] == "Successful submit"
 	return True
@@ -252,9 +254,17 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 
 
 if __name__ == "__main__":
-	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
-	baseURL = 'http://greenupapp.appspot.com/api'
-	baseURL = 'http://localhost:30002/api'
+	parser = argparse.ArgumentParser(description='Test the API.')
+	parser.add_argument('-p', help='Specify local port to run the spider against. If blank, run against app url.')
+	args = parser.parse_args()
+	if args.p:
+		port = args.p
+		baseURL = 'http://localhost:%s/api' % port
+	else:
+		baseURL = 'http://greenupapp.appspot.com/api'
+	
+	# baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
+	
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',

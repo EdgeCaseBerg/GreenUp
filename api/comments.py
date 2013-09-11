@@ -53,10 +53,16 @@ class Comments(webapp2.RequestHandler):
 			pass
 		else:
 			previous = "%s%s%s%s%s%s%i" % (BASE_URL,CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType.replace(' ','+'),'&page=',page -1)
-		next = "%s%s%s%s%s%s%i" % (BASE_URL,CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType.replace(' ','+'),'&page=',page +1)
 
 		#Get comments:
 		layer = AbstractionLayer().getComments(cType=commentType,page=page)
+
+		nextPage = AbstractionLayer().checkNextPage(page)
+		if nextPage:
+			next = "%s%s%s%s%s%s%i" % (BASE_URL,CONTEXT_PATH,COMMENTS_RESOURCE_PATH,'?type=',commentType.replace(' ','+'),'&page=',page +1)
+		else:
+			#There is no next
+			next = None
 
 		#write out the comments in json form
 		comments = layer

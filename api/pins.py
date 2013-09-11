@@ -176,10 +176,10 @@ class Pins(webapp2.RequestHandler):
 
 		#Place the pin into the datastore
 		layer = AbstractionLayer()
-		layer.submitPin(latDegrees=latDegrees, lonDegrees=lonDegrees, pinType=pinType.upper(), message=message)
+		pid = layer.submitPin(latDegrees=latDegrees, lonDegrees=lonDegrees, pinType=pinType.upper(), message=message)
 
 		#self.response.set_status(HTTP_OK)		
-		self.response.write('{  "status_code" : 200,  "message" : "Successful submit"}')
+		self.response.write('{  "pin_id" : %i,  "status_code" : 200,  "message" : "Successful submit"}' % pid)
 
 		
 
