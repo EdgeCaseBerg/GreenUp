@@ -318,34 +318,42 @@
     
     NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", nil]];
     
-    NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
-    NSString *statusCode = [response objectForKey:@"status_code"];
-    if([statusCode integerValue] != 200)
-    {
-        //Request Failed Remove Pin From Map
-        [self.mapView removeAnnotation:self.tempPinRef];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:@"There was a problem connecting to the server, please try again" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
-    }
-    else
-    {
-        //Request Worked
-        NSString *pinID = [response objectForKey:@"pin_id"];
-        if(pinID == nil)
-        {
-            //Request Failed Remove Pin From Map
-            [self.mapView removeAnnotation:self.tempPinRef];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:@"There was a problem connecting to the server, please try again" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-            [alert show];
-        }
-        else
-        {
-            //Worked
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+        //Background Process Block
+        NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+
+        
+        dispatch_async(dispatch_get_main_queue(),^{
+            //Completion Block
+            NSString *statusCode = [response objectForKey:@"status_code"];
+            if([statusCode integerValue] != 200)
+            {
+                //Request Failed Remove Pin From Map
+                [self.mapView removeAnnotation:self.tempPinRef];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:@"There was a problem connecting to the server, please try again" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+            else
+            {
+                //Request Worked
+                NSString *pinID = [response objectForKey:@"pin_id"];
+                if(pinID == nil)
+                {
+                    //Request Failed Remove Pin From Map
+                    [self.mapView removeAnnotation:self.tempPinRef];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:@"There was a problem connecting to the server, please try again" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+                    [alert show];
+                }
+                else
+                {
+                    //Worked
+                    
+                }
+            }
             
-        }
-    }
-    
-    self.tempPinRef = nil;
+            self.tempPinRef = nil;
+        });
+    });
 }
 
 -(IBAction)markerWasCanceled:(id)sender
@@ -450,20 +458,27 @@
         
         NSLog(@"SEND POINTS: %d", sentCount);
         
-        NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
-        NSString *statusCode = [response objectForKey:@"status_code"];
-        
-        if([statusCode integerValue] != 200)
-        {
-            NSLog(@"*************PUSH ERROR OCCURED: %@", [response objectForKey:@"Error_Message"]);
-            self.pushOverdue = TRUE;
-        }
-        else
-        {
-            self.pushOverdue = FALSE;
-            [self.gatheredMapPointsQueue removeAllObjects];
-        }
-        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+            //Background Process Block
+            NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
+            
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                //Completion Block
+                NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                if([statusCode integerValue] != 200)
+                {
+                    NSLog(@"*************PUSH ERROR OCCURED: %@", [response objectForKey:@"Error_Message"]);
+                    self.pushOverdue = TRUE;
+                }
+                else
+                {
+                    self.pushOverdue = FALSE;
+                    [self.gatheredMapPointsQueue removeAllObjects];
+                }
+            });
+        });
     }
 }
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
@@ -481,63 +496,71 @@
     NSLog(@"Span-Lat: %f", span.latitudeDelta);
     */
     
-    NSDictionary *results = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:parameters];
-    NSString *statusCode = [results objectForKey:@"status_code"];
     
-    if([statusCode integerValue] == 200)
-    {
-        for(NSDictionary *pointDictionary in [results objectForKey:@"grid"])
-        {
-            HeatMapPoint *newPoint = [[HeatMapPoint alloc] init];
-            double lat = [[pointDictionary objectForKey:@"latDegrees"] doubleValue];
-            double lon = [[pointDictionary objectForKey:@"lonDegrees"] doubleValue];
-            double secWorked = [[pointDictionary objectForKey:@"secondsWorked"] doubleValue];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+        //Background Process Block
+        NSDictionary *results = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+        
+        dispatch_async(dispatch_get_main_queue(),^{
+            //Completion Block
+            NSString *statusCode = [results objectForKey:@"status_code"];
             
-            newPoint.lat = lat;
-            newPoint.lon = lon;
-            newPoint.secWorked = secWorked;
-            
-            //Remove Duplicates I've Already Gathered
-            BOOL found = FALSE;
-            for(HeatMapPoint *point in self.downloadedMapPoints)
+            if([statusCode integerValue] == 200)
             {
-                /*
-                 NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
-                 NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
-                 NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
-                 */
-                
-                if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
+                for(NSDictionary *pointDictionary in [results objectForKey:@"grid"])
                 {
-                    NSLog(@"************ DUPLICATE FOUND DOWNLOAD");
-                    found = TRUE;
+                    HeatMapPoint *newPoint = [[HeatMapPoint alloc] init];
+                    double lat = [[pointDictionary objectForKey:@"latDegrees"] doubleValue];
+                    double lon = [[pointDictionary objectForKey:@"lonDegrees"] doubleValue];
+                    double secWorked = [[pointDictionary objectForKey:@"secondsWorked"] doubleValue];
+                    
+                    newPoint.lat = lat;
+                    newPoint.lon = lon;
+                    newPoint.secWorked = secWorked;
+                    
+                    //Remove Duplicates I've Already Gathered
+                    BOOL found = FALSE;
+                    for(HeatMapPoint *point in self.downloadedMapPoints)
+                    {
+                        /*
+                         NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
+                         NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
+                         NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
+                         */
+                        
+                        if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
+                        {
+                            NSLog(@"************ DUPLICATE FOUND DOWNLOAD");
+                            found = TRUE;
+                        }
+                    }
+                    for(HeatMapPoint *point in self.gatheredMapPoints)
+                    {
+                        /*
+                         NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
+                         NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
+                         NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
+                         */
+                        
+                        if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
+                        {
+                            NSLog(@"************ DUPLICATE FOUND IN GATHERED");
+                            found = TRUE;
+                        }
+                    }
+                    
+                    if(!found)
+                    {
+                        [self.downloadedMapPoints addObject:newPoint];
+                    }
                 }
             }
-            for(HeatMapPoint *point in self.gatheredMapPoints)
+            else
             {
-                /*
-                 NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
-                 NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
-                 NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
-                 */
-                
-                if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
-                {
-                    NSLog(@"************ DUPLICATE FOUND IN GATHERED");
-                    found = TRUE;
-                }
+                NSLog(@"*************GET ERROR OCCURED: %@", [results objectForKey:@"Error_Message"]);
             }
-            
-            if(!found)
-            {
-                [self.downloadedMapPoints addObject:newPoint];
-            }
-        }
-    }
-    else
-    {
-        NSLog(@"*************GET ERROR OCCURED: %@", [results objectForKey:@"Error_Message"]);
-    }
+        });
+    });
 }
 
 
