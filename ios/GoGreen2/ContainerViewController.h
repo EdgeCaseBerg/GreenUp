@@ -21,6 +21,7 @@
 #define BASE_HOST @"localhost"
 #define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
 #define COMMENTS_RELATIVE_URL @"/api/comments"
+#define PINS_RELATIVE_URL @"/api/pins"
 
 typedef void (^VoidBlock)(void);
 

@@ -77,7 +77,7 @@ static ContainerViewController* theContainerView = nil;
     [self.theTabBar setItems:[NSArray arrayWithObjects:self.item1, self.item2, self.item3, nil] animated:YES];
     [self.theTabBar setSelectedItem:[self.theTabBar.items objectAtIndex:0]];
     [self.view addSubview:self.theTabBar];
-
+    
     //Menu
     self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
     [self.view addSubview:self.theMenuView];
@@ -136,6 +136,9 @@ static ContainerViewController* theContainerView = nil;
 
 -(void)switchHomeView
 {
+    //Update HeatMap
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMap" object:nil];
+    
     [self.item1 setImage:[UIImage imageNamed:@"home_active.png"]];
     [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
     [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
@@ -157,6 +160,9 @@ static ContainerViewController* theContainerView = nil;
 }
 -(void)switchMapView
 {
+    //Update HeatMap
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMap" object:nil];
+    
     [self.item1 setImage:[UIImage imageNamed:@"home.png"]];
     [self.item2 setImage:[UIImage imageNamed:@"map_active.png"]];
     [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
@@ -174,10 +180,14 @@ static ContainerViewController* theContainerView = nil;
     [UIView animateWithDuration:.3 animations:animate];
     
     [self performSelector:@selector(hideAllButtMapView:) withObject:nil afterDelay:.3];
-
+    
 }
 -(void)switchMessageView
 {
+    //Update Messages and HeatMap
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMap" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMessages" object:nil];
+    
     [self.item1 setImage:[UIImage imageNamed:@"home.png"]];
     [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
     [self.item3 setImage:[UIImage imageNamed:@"comments_active.png"]];

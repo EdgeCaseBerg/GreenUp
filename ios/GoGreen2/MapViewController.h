@@ -16,7 +16,7 @@
 #import "BDHost.h"
 #import "GreenUpMapView.h"
 
-@class MapPinSelectorView;
+@class MapPinSelectorView, HeatMapPin;
 
 @interface MapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>
 
@@ -35,6 +35,7 @@
 @property (strong, nonatomic) NSMutableArray *gatheredMapPointsQueue;
 @property (strong, nonatomic) NSDate *longPressTimer;
 @property (strong, nonatomic) MapPinSelectorView *mapSpinner;
+@property (strong, nonatomic) HeatMapPin *tempPinRef;
 @property BOOL pushOverdue;
 
 

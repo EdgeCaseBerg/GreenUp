@@ -39,9 +39,15 @@
     self.gatheredMapPoints = [[NSMutableArray alloc] init];
     self.gatheredMapPointsQueue = [[NSMutableArray alloc] init];
     
-    //Notification Center
+    //Drop Marker
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dropMarkerAtCurrentLocation:) name:@"dropMarker" object:nil];
-
+    //Marker Canceled
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(markerWasCanceled:) name:@"markerCanceled" object:nil];
+    //Marker Submitted
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postMarker:) name:@"postMarker" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewWillAppear:) name:@"switchedToMap" object:nil];
+    
     return self;
 }
 
@@ -100,6 +106,12 @@
     
     //Networking
     self.pushOverdue = FALSE;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+    [self updateHeatMapOverlay];
 }
 
 
@@ -226,7 +238,12 @@
             
             //Create Pin For Current Location
             HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andTitle:@"Location Pin"];
+            self.tempPinRef = currentLocationPin;
             [self.mapView addAnnotation:currentLocationPin];
+            
+            //Show Message Overlay
+            MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
+            [self.view.window addSubview:commentView];
         }
         else if(self.loggingForMarker && self.logging)
         {
@@ -251,7 +268,12 @@
             
             //Create Pin For Current Location
             HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andTitle:@"Location Pin"];
+            self.tempPinRef = currentLocationPin;
             [self.mapView addAnnotation:currentLocationPin];
+            
+            //Show Message Overlay
+            MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
+            [self.view.window addSubview:commentView];
         }
         else
         {
@@ -280,8 +302,62 @@
     }
 }
 
-#pragma mark - Drop Marker
 
+#pragma mark - Map Pin Callbacks
+-(IBAction)postMarker:(NSNotification *)sender
+{
+    NSString *message = sender.object;
+    self.tempPinRef.message = message;
+    
+    //Perform Post Code To Update With Server
+    NSMutableArray *objects = [[NSMutableArray alloc] init];
+    [objects addFloat:self.tempPinRef.coordinate.latitude];
+    [objects addFloat:self.tempPinRef.coordinate.longitude];
+    [objects addObject:@"TRASH PICKUP"];
+    [objects addObject:message];
+    
+    NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", nil]];
+    
+    NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+    NSString *statusCode = [response objectForKey:@"status_code"];
+    if([statusCode integerValue] != 200)
+    {
+        //Request Failed Remove Pin From Map
+        [self.mapView removeAnnotation:self.tempPinRef];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:@"There was a problem connecting to the server, please try again" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    else
+    {
+        //Request Worked
+        NSString *pinID = [response objectForKey:@"pin_id"];
+        if(pinID == nil)
+        {
+            //Request Failed Remove Pin From Map
+            [self.mapView removeAnnotation:self.tempPinRef];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:@"There was a problem connecting to the server, please try again" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        else
+        {
+            //Worked
+            
+        }
+    }
+    
+    self.tempPinRef = nil;
+}
+
+-(IBAction)markerWasCanceled:(id)sender
+{
+    //Remove Pin Because WE Canceled
+    [self.mapView removeAnnotation:self.tempPinRef];
+    
+    //Clear Temp
+    self.tempPinRef = nil;
+}
+
+#pragma mark - Map Pin Methods
 -(IBAction)dropMarkerAtCurrentLocation:(id)sender
 {
     //Set Logging For Marker Flag
@@ -294,7 +370,6 @@
     }
 }
 
-#pragma mark - Long Press Gesture Recognizer
 -(IBAction)dropCustomMapPin:(UILongPressGestureRecognizer *)sender
 {
     NSLog(@"HIT GESTURE");
@@ -325,6 +400,7 @@
             CLLocationCoordinate2D coord = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
             
             HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andTitle:@"Custom Pin"];
+            self.tempPinRef = customPin;
             [self.mapView addAnnotation:customPin];
             
             //Show Message Overlay
@@ -377,11 +453,10 @@
         NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
         NSString *statusCode = [response objectForKey:@"status_code"];
         
-        if([statusCode integerValue] == 200)
+        if([statusCode integerValue] != 200)
         {
             NSLog(@"*************PUSH ERROR OCCURED: %@", [response objectForKey:@"Error_Message"]);
             self.pushOverdue = TRUE;
-           
         }
         else
         {

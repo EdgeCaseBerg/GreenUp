@@ -90,6 +90,13 @@
                                                  name: @"messageTypeChanged"
                                                object: nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(viewWillAppear:)
+                                                 name: @"messageViewWillAppear"
+                                               object: nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewWillAppear:) name:@"switchedToMessages" object:nil];
+    
     return self;
 }
 - (void)viewDidLoad
@@ -101,7 +108,8 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+    [self getMessages];
+    [self.theTableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -450,7 +458,7 @@
         self.nextPageURL = nil;
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"END OF LIST" message:@"" delegate:nil cancelButtonTitle:@"close" otherButtonTitles:nil, nil];
-        [alert show];
+        //[alert show];
     }
 
     /*
