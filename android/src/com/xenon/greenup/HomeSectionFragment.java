@@ -1,5 +1,7 @@
 package com.xenon.greenup;
 
+import com.xenon.greenup.util.Storage;
+
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -22,6 +24,13 @@ public class HomeSectionFragment extends Fragment {
 		super.onCreate(bundle);
 	}
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+    	final Storage database = new Storage( this.getActivity() ); 
+    	database.setSecondsWorked( getChronoString());
+	}
+	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -36,8 +45,14 @@ public class HomeSectionFragment extends Fragment {
     	chrono.setActivated(chronoState);		
     	if(HomeSectionFragment.currentTime == 0)
     		chrono.setText("00:00:00");
-    	else
+    	else{
+    		final Storage database = new Storage( this.getActivity() );
+    		String secondsWorkedString = database.getSecondsWorked();
+    		Log.i("dbTIME",secondsWorkedString);
+    		if( secondsWorkedString != null)
+    			HomeSectionFragment.currentTime = getChronoTime(secondsWorkedString);
     		chrono.setText(getChronoString()); /* Once storage implemented set this accordingly */
+    	}
     	
     	startStopButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
@@ -107,8 +122,8 @@ public class HomeSectionFragment extends Fragment {
 		long minutes = HomeSectionFragment.currentTime/60 - hours*60;
 		long seconds = HomeSectionFragment.currentTime - minutes*60 - hours*3600;
 		StringBuilder sb = new StringBuilder();
-		sb.append(hours > 10 ? "" : "0").append(hours);
-		sb.append(minutes > 10 ? "" : "0").append(minutes);
+		sb.append(hours > 10 ? "" : "0").append(hours).append(":");
+		sb.append(minutes > 10 ? "" : "0").append(minutes).append(":");
 		sb.append(seconds > 10 ? "" : "0").append(seconds);
 		return sb.toString();
 	}

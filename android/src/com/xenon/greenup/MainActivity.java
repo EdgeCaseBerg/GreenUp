@@ -18,6 +18,8 @@ package com.xenon.greenup;
 
 import java.util.ArrayList;
 
+import com.xenon.greenup.util.Storage;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
@@ -47,8 +49,15 @@ public class MainActivity extends FragmentActivity {
      */
     ViewPager _ViewPager;
     static long secondsWorked = 0L;
-
+    
+    @Override
+    public void onStop(){
+    	super.onStop();
+    	//Save secondsWorked
+    }
+    
     public void onCreate(Bundle savedInstanceState) {
+    	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

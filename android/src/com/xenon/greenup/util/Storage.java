@@ -14,53 +14,59 @@ public class Storage extends SQLiteOpenHelper{
 	private static final String DATABASE_NAME = "GREENUP";
 	private static final String KEY_ID = "secondsWorked";
 	private static final String KEY_TIME = "time";
-	private static final String KEY_STATE = "state";
-	private static final String table_name = "heatmap_time";
+	private static final String SECONDS_WORKED_TABLE_NAME = "secondsWorked";
 	
-	Storage(Context context){
+	public Storage(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		//context.deleteDatabase(DATABASE_NAME);
 	}
 	
 	public void onCreate(SQLiteDatabase db){
 		
-		String create_table = "CREATE TABLE " + table_name + "(" + KEY_ID + " TEXT PRIMARY KEY," + KEY_TIME + " TEXT," + KEY_STATE + " TEXT)";
+		String create_table = "CREATE TABLE " + SECONDS_WORKED_TABLE_NAME + "(" + KEY_ID + " TEXT PRIMARY KEY," + KEY_TIME + " TEXT)";
 		db.execSQL(create_table);
+		
+		ContentValues values = new ContentValues();
+		/* For now just test persitent time, otherwise we'd be stored a better key here*/
+		values.put(KEY_ID, "1");
+		values.put(KEY_TIME, "00:00:00");
+		
+		db.insert(SECONDS_WORKED_TABLE_NAME, null,values);
 	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-		db.execSQL("DROP TABLE IF EXISTS " + table_name);
+		db.execSQL("DROP TABLE IF EXISTS " + SECONDS_WORKED_TABLE_NAME);
 		onCreate(db);
+		
 	}
 	
-	/* This is an example from a previous project of mine on how to use the storage*/
-	/*public void addTask(Task task){
+	
+	public void setSecondsWorked(String formattedTime){
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-		values.put(KEY_ID, task.getTaskName());
-		values.put(KEY_TIME, task.getTime());
-		values.put(KEY_STATE, task.getState());
+		/* For now just test persitent time, otherwise we'd be stored a better key here*/
+		values.put(KEY_ID, "1");
+		values.put(KEY_TIME, formattedTime);
 		
-		db.insert(table_name, null,values);
+		db.update(SECONDS_WORKED_TABLE_NAME, values, KEY_ID + "= ?", new String[]{KEY_ID});
 		db.close();
 	}
-	
-	public Task getTask(String id){
+	public String getSecondsWorked(){
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.query(table_name, new String[] {KEY_ID,KEY_TIME,KEY_STATE},KEY_ID + "?",new String[]{id},null,null,null,null);
+		String selectQuery = "SELECT " +  KEY_TIME + " FROM " + SECONDS_WORKED_TABLE_NAME + " LIMIT 1";
+		Cursor cursor = db.rawQuery(selectQuery,null);
+		
 		if(cursor != null){
 			cursor.moveToFirst();
+			return (cursor.getString(0));
 		}
-		Task t = new Task();
-		t.setName(cursor.getString(0));
-		t.setTime(cursor.getString(1));
-		t.setState(cursor.getString(2));
+		return null;
 		
-		return t;
 	}
 	
-	public List<Task> getAllTasks(){ 
+	/* This is an example from a previous project of mine on how to use the storage*/
+	/*public List<Task> getAllTasks(){ 
 		List<Task> taskList = new ArrayList<Task>();
 		String selectQuery = "SELECT * FROM " + table_name;
 		SQLiteDatabase db = this.getWritableDatabase();
