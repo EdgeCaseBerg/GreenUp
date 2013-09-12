@@ -91,8 +91,8 @@
     MKCoordinateRegion region;
     MKCoordinateSpan span;
     CLLocationCoordinate2D location = CLLocationCoordinate2DMake(44.468581,-73.157959);
-    span.latitudeDelta=100;
-    span.longitudeDelta=100;
+    span.latitudeDelta=1000000000;
+    span.longitudeDelta=1000000000;
     region.span = span;
     region.center = location;
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(location, 5*METERS_PER_MILE, 5*METERS_PER_MILE);
@@ -102,7 +102,6 @@
     //Heat Map
     self.heatMap = [[HeatMap alloc] initWithData:nil];
     [self.mapView addOverlay:self.heatMap];
-    //[self updateHeatMapOverlay];
     
     //Networking
     self.pushOverdue = FALSE;
@@ -116,7 +115,12 @@
 
 
 #pragma mark - MKMapViewDelegate
-
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    //Get heatmap data and pins from server
+    [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+    [self getMapPins];
+}
 -(void)updateHeatMapOverlay
 {
     //remove old overlay
@@ -132,8 +136,7 @@
     //create new heatmap overlay and display it
     self.heatMap = [[HeatMap alloc] initWithData:[self convertPointsToHeatMapFormat:allPoints]];
     [self.mapView addOverlay:self.heatMap];
-    [self.mapView setVisibleMapRect:[self.heatMap boundingMapRect] animated:YES];
-    
+    //[self.mapView setVisibleMapRect:[self.heatMap boundingMapRect] animated:YES];
 }
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
@@ -422,60 +425,84 @@
 
 #pragma mark - Networking Methods
 
+-(void)getMapPins
+{
+#warning ADD NETWORKING TO DOWNLOAD PINS
+    
+    for(NetworkMessage *message in [[[ContainerViewController sharedContainer] theMessageViewController] messages])
+    {
+        if(message.pinID != nil)
+        {
+            HeatMapPin *newPin = nil;
+            newPin.pinID = message.pinID;
+            newPin.message = message.messageContent;
+        }
+    }
+}
+
 -(void)pushHeatMapDataToServer
 {
     //If the number of gathered points in the queue array is equal to our define or we have the overdue flag set. Update our gathered points with the server!
     NSLog(@"COUNTER: %d - TOTAL: %d", self.gatheredMapPointsQueue.count, self.gatheredMapPoints.count);
     if(self.gatheredMapPointsQueue.count >= UPLOAD_QUEUE_LENGTH || self.pushOverdue)
     {
-        NSLog(@"********************* PUSHING QUEUE LIMIT REACHED");
-        int sentCount = 0;
-        NSMutableArray *dataArray = [[NSMutableArray alloc] init];
-        for(int i = 0; i < self.gatheredMapPointsQueue.count; i++)
+        if(![self networkingReachability])
         {
-            sentCount++;
-            HeatMapPoint *point = [self.gatheredMapPointsQueue objectAtIndex:i];
-            
-            //Create Parameters For Push
-            NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"secondsWorked", nil];
-            NSMutableArray *objects = [[NSMutableArray alloc] init];
-            [objects addFloat:point.lat];
-            [objects addFloat:point.lon];
-            [objects addFloat:point.secWorked];
-            
-            NSLog(@"PUSHING - Lat: %f", point.lat);
-            NSLog(@"PUSHING - Lon: %f", point.lon);
-            NSLog(@"PUSHING - sec: %d", point.secWorked);
-            
-            
-            //Create Dictionary Of Parameters
-            NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
-            [dataArray addObject:parameters];
+            //If We Dont Have Service, Mark As Overdue
+            self.pushOverdue = TRUE;
         }
-        
-        NSLog(@"SEND POINTS: %d", sentCount);
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-            //Background Process Block
-            NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
-            
-            
-            dispatch_async(dispatch_get_main_queue(),^{
-                //Completion Block
-                NSString *statusCode = [response objectForKey:@"status_code"];
+        else
+        {
+            //If We Do Have Service Push That Bitch
+            NSLog(@"********************* PUSHING QUEUE LIMIT REACHED");
+            int sentCount = 0;
+            NSMutableArray *dataArray = [[NSMutableArray alloc] init];
+            for(int i = 0; i < self.gatheredMapPointsQueue.count; i++)
+            {
+                sentCount++;
+                HeatMapPoint *point = [self.gatheredMapPointsQueue objectAtIndex:i];
                 
-                if([statusCode integerValue] != 200)
-                {
-                    NSLog(@"*************PUSH ERROR OCCURED: %@", [response objectForKey:@"Error_Message"]);
-                    self.pushOverdue = TRUE;
-                }
-                else
-                {
-                    self.pushOverdue = FALSE;
-                    [self.gatheredMapPointsQueue removeAllObjects];
-                }
+                //Create Parameters For Push
+                NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"secondsWorked", nil];
+                NSMutableArray *objects = [[NSMutableArray alloc] init];
+                [objects addFloat:point.lat];
+                [objects addFloat:point.lon];
+                [objects addFloat:point.secWorked];
+                
+                NSLog(@"PUSHING - Lat: %f", point.lat);
+                NSLog(@"PUSHING - Lon: %f", point.lon);
+                NSLog(@"PUSHING - sec: %d", point.secWorked);
+                
+                
+                //Create Dictionary Of Parameters
+                NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+                [dataArray addObject:parameters];
+            }
+            
+            NSLog(@"SEND POINTS: %d", sentCount);
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+                //Background Process Block
+                NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
+                
+                
+                dispatch_async(dispatch_get_main_queue(),^{
+                    //Completion Block
+                    NSString *statusCode = [response objectForKey:@"status_code"];
+                    
+                    if([statusCode integerValue] != 200)
+                    {
+                        NSLog(@"*************PUSH ERROR OCCURED: %@", [response objectForKey:@"Error_Message"]);
+                        self.pushOverdue = TRUE;
+                    }
+                    else
+                    {
+                        self.pushOverdue = FALSE;
+                        [self.gatheredMapPointsQueue removeAllObjects];
+                    }
+                });
             });
-        });
+        }
     }
 }
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
@@ -492,7 +519,6 @@
     NSLog(@"Span-Lon: %f", span.longitudeDelta);
     NSLog(@"Span-Lat: %f", span.latitudeDelta);
     */
-    
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
         //Background Process Block
@@ -575,6 +601,21 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Network Reachability
+-(BOOL)networkingReachability
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable)
+    {
+        return FALSE;
+    }
+    else
+    {
+        return TRUE;
+    }        
 }
 
 @end

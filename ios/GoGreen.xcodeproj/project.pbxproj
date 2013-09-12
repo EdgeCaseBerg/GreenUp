@@ -54,6 +54,7 @@
 		39592580177519730035E351 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3959257F177519730035E351 /* SystemConfiguration.framework */; };
 		39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D06AFC1783A6A300DD94B7 /* MapKit.framework */; };
 		39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E46BE3179C7000008590A6 /* GoGreenTabBar.m */; };
+		DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3F00FD17E25CD000530A4D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DF62E07117C18E1B00B29D43 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF62E06F17C18E1A00B29D43 /* greenhttp.c */; };
 		DF62E07417C1992700B29D43 /* BDHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DF62E07317C1992700B29D43 /* BDHost.m */; };
 		DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF62E07517C1996700B29D43 /* CFNetwork.framework */; };
@@ -127,6 +128,9 @@
 		DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */; };
 		DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */; };
 		DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */; };
+		DFA9C39317E22FA000FBE61F /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39117E22F9900FBE61F /* logo.png */; };
+		DFA9C39417E22FA000FBE61F /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39217E22F9D00FBE61F /* logo@2x.png */; };
+		DFA9C39617E2332300FBE61F /* testingCStacks.c in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C39517E2332300FBE61F /* testingCStacks.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,6 +204,8 @@
 		39D06AFC1783A6A300DD94B7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39E46BE2179C7000008590A6 /* GoGreenTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoGreenTabBar.h; sourceTree = "<group>"; };
 		39E46BE3179C7000008590A6 /* GoGreenTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoGreenTabBar.m; sourceTree = "<group>"; };
+		DF3F00FC17E25CD000530A4D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = SOURCE_ROOT; };
+		DF3F00FD17E25CD000530A4D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = SOURCE_ROOT; };
 		DF62E06F17C18E1A00B29D43 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = greenhttp.c; path = "green-http/greenhttp.c"; sourceTree = "<group>"; };
 		DF62E07017C18E1B00B29D43 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = greenhttp.h; path = "green-http/greenhttp.h"; sourceTree = "<group>"; };
 		DF62E07217C1992700B29D43 /* BDHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDHost.h; sourceTree = "<group>"; };
@@ -286,6 +292,9 @@
 		DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GreenUpMapView.m; sourceTree = "<group>"; };
 		DFA9C38E17DFB1F800FBE61F /* MapPinCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapPinCommentView.h; sourceTree = "<group>"; };
 		DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPinCommentView.m; sourceTree = "<group>"; };
+		DFA9C39117E22F9900FBE61F /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Images/logo.png; sourceTree = SOURCE_ROOT; };
+		DFA9C39217E22F9D00FBE61F /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo@2x.png"; path = "Images/logo@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFA9C39517E2332300FBE61F /* testingCStacks.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = testingCStacks.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -355,6 +364,8 @@
 				DFA9AB8F17D63C5B006F58A5 /* bubble_orange_bottom_reverse.png */,
 				DFA9AB9017D63C5B006F58A5 /* bubble_orange_bottom_reverse@2x.png */,
 				DFA9AB9117D63C5B006F58A5 /* bubble_orange_bottom.png */,
+				DFA9C39117E22F9900FBE61F /* logo.png */,
+				DFA9C39217E22F9D00FBE61F /* logo@2x.png */,
 				DFA9AB9217D63C5B006F58A5 /* bubble_orange_bottom@2x.png */,
 				DFA9AB9317D63C5B006F58A5 /* bubble_orange_center.png */,
 				DFA9AB9417D63C5B006F58A5 /* bubble_orange_center@2x.png */,
@@ -478,6 +489,7 @@
 			isa = PBXGroup;
 			children = (
 				392E74741798B79E00C71680 /* AppDelegate.h */,
+				DFA9C39517E2332300FBE61F /* testingCStacks.c */,
 				392E74751798B79E00C71680 /* AppDelegate.m */,
 			);
 			name = AppDelegate;
@@ -549,6 +561,7 @@
 		3959252C177518690035E351 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DF3F00FB17E25CBC00530A4D /* Reachability Library */,
 				DFA9ABFC17D664E9006F58A5 /* Categories */,
 				DFA9AA7517D25ABF006F58A5 /* CSocketController / C Socket Library */,
 				390415AD1798DC50005EC308 /* Images */,
@@ -597,6 +610,15 @@
 			);
 			name = greenHttp;
 			path = GoGreen2/greenHttp;
+			sourceTree = "<group>";
+		};
+		DF3F00FB17E25CBC00530A4D /* Reachability Library */ = {
+			isa = PBXGroup;
+			children = (
+				DF3F00FC17E25CD000530A4D /* Reachability.h */,
+				DF3F00FD17E25CD000530A4D /* Reachability.m */,
+			);
+			name = "Reachability Library";
 			sourceTree = "<group>";
 		};
 		DFA9AA7517D25ABF006F58A5 /* CSocketController / C Socket Library */ = {
@@ -800,6 +822,8 @@
 				DFA9ABF617D63C5B006F58A5 /* top_bar@2x.png in Resources */,
 				DFA9C38517D94ABE00FBE61F /* pinwheel.png in Resources */,
 				DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */,
+				DFA9C39317E22FA000FBE61F /* logo.png in Resources */,
+				DFA9C39417E22FA000FBE61F /* logo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -860,6 +884,8 @@
 				DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */,
 				DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */,
 				DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */,
+				DFA9C39617E2332300FBE61F /* testingCStacks.c in Sources */,
+				DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

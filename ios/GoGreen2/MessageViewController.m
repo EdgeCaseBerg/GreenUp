@@ -15,6 +15,7 @@
 #import "UIFont+methods.h"
 #import "NetworkMessage.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Reachability.h"
 
 @interface MessageViewController () <UITextViewDelegate>
 
@@ -121,87 +122,98 @@
 #pragma mark - Networking Delegates
 -(void)getMessages
 {
-    //Remove Old Messages Incase Removed
-    [self.messages removeAllObjects];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-        //Background Process Block
-        //Get New Message List
-        NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:nil];
-
-        dispatch_async(dispatch_get_main_queue(),^{
-            //Completion Block
-            NSString *statusCode = [response objectForKey:@"status_code"];
-            if([statusCode integerValue] == 200)
-            {
-                NSArray *comments = [response objectForKey:@"comments"];
-                for(NSDictionary *comment in comments)
-                {
-                    NetworkMessage *newMessage = [[NetworkMessage alloc] init];
-                    newMessage.messageContent = [comment objectForKey:@"message"];
-                    newMessage.messageID = [comment objectForKey:@"id"];
-                    newMessage.messageTimeStamp = [comment objectForKey:@"timestamp"];
-                    newMessage.messageType = [comment objectForKey:@"type"];
-                    newMessage.pinID = [comment objectForKey:@"pin"];
-                    
-                    [self.messages addObject:newMessage];
-                }
-                
-                NSDictionary *pages = [response objectForKey:@"nextPage"];
-                if(![[pages objectForKey:@"next"] isEqualToString:@"<null>"])
-                    self.nextPageURL = [pages objectForKey:@"next"];
-                
-                [self.theTableView reloadData];
-            }
-
-        });
-    });
-#warning SORT MESSAGES BY TIME STAMP!
-}
-
--(IBAction)post:(id)sender
-{
-    if([self.messageTextView.text isEqualToString:@""])
+    if([self networkingReachability])
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Blank Message" message:@"Cannot post blank message" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-        [alert show];
-    }
-    else if(self.currentMessageType == nil || [self.currentMessageType isEqualToString:@""])
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Type Selected" message:@"Cannot post a message with no type" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-        [alert show];
-    }
-    else
-    {
-        if(self.currentMessageType == nil)
-            self.currentMessageType = Message_Cell_Type_A;
-        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             //Background Process Block
-            NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:self.currentMessageType, self.messageTextView.text, nil] forKeys:[NSArray arrayWithObjects:@"type", @"message", nil]];
-            NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+            //Get New Message List
+            NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:nil];
             
             dispatch_async(dispatch_get_main_queue(),^{
                 //Completion Block
                 NSString *statusCode = [response objectForKey:@"status_code"];
-                if([statusCode integerValue] != 200)
+                if([statusCode integerValue] == 200)
                 {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post Failed" message:@"An unknown error occured please try again" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-                    [alert show];
-                }
-                else
-                {
-                    //Reset Message Field
-                    self.messageTextView.text = @"";
+                    //Remove Old Messages Incase Removed
+                    [self.messages removeAllObjects];
                     
-                    //Get New Messages
-                    [self getMessages];
+                    NSArray *comments = [response objectForKey:@"comments"];
+                    for(NSDictionary *comment in comments)
+                    {
+                        NetworkMessage *newMessage = [[NetworkMessage alloc] init];
+                        newMessage.messageContent = [comment objectForKey:@"message"];
+                        newMessage.messageID = [comment objectForKey:@"id"];
+                        newMessage.messageTimeStamp = [comment objectForKey:@"timestamp"];
+                        newMessage.messageType = [comment objectForKey:@"type"];
+                        newMessage.pinID = [comment objectForKey:@"pin"];
+                        
+                        [self.messages addObject:newMessage];
+                    }
+                    
+                    NSDictionary *pages = [response objectForKey:@"nextPage"];
+                    if(![[pages objectForKey:@"next"] isEqualToString:@"<null>"])
+                        self.nextPageURL = [pages objectForKey:@"next"];
+                    
+                    [self.theTableView reloadData];
                 }
                 
-                //Clear Old Message Type
-                self.currentMessageType = nil;
             });
         });
+#warning SORT MESSAGES BY TIME STAMP!
+    }
+}
+
+-(IBAction)post:(id)sender
+{
+    if([self networkingReachability])
+    {
+        if([self.messageTextView.text isEqualToString:@""])
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Blank Message" message:@"Cannot post blank message" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        else if(self.currentMessageType == nil || [self.currentMessageType isEqualToString:@""])
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Type Selected" message:@"Cannot post a message with no type" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        else
+        {
+            if(self.currentMessageType == nil)
+                self.currentMessageType = Message_Cell_Type_A;
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+                //Background Process Block
+                NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:self.currentMessageType, self.messageTextView.text, nil] forKeys:[NSArray arrayWithObjects:@"type", @"message", nil]];
+                NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+                
+                dispatch_async(dispatch_get_main_queue(),^{
+                    //Completion Block
+                    NSString *statusCode = [response objectForKey:@"status_code"];
+                    if([statusCode integerValue] != 200)
+                    {
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post Failed" message:@"An unknown error occured please try again" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+                        [alert show];
+                    }
+                    else
+                    {
+                        //Reset Message Field
+                        self.messageTextView.text = @"";
+                        
+                        //Get New Messages
+                        [self getMessages];
+                    }
+                    
+                    //Clear Old Message Type
+                    self.currentMessageType = nil;
+                });
+            });
+        }
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Message" message:@"You dont appear to have a network connect, please connect and retry posting your message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
     }
 }
 
@@ -479,6 +491,21 @@
     
     [self.messageTextView resignFirstResponder];
      */
+}
+
+#pragma mark - Network Reachability
+-(BOOL)networkingReachability
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable)
+    {
+        return FALSE;
+    }
+    else
+    {
+        return TRUE;
+    }
 }
 
 @end

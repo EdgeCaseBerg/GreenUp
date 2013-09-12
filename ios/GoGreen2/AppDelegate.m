@@ -25,16 +25,6 @@
         self.customContainer = [ContainerViewController sharedContainer];
         
         self.window.rootViewController = self.customContainer;
-        
-        int a[5] = {1,2,3,4,5};
-      
-        
-
-
-        NSLog(@"STOP");
-        
-        
-        
     }
     [self.window makeKeyAndVisible];
     return YES;

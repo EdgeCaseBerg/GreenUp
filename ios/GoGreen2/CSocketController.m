@@ -55,6 +55,7 @@ static CSocketController* theCSocketController = nil;
     
     if(ip)
     {
+        NSLog(@"URL PARAMS: %@", urlParameters);
         NSString *finalRelativeURL = [NSString stringWithFormat:@"%@%@", relativeURL, urlParameters];
         const char *relativeURLCString = [finalRelativeURL cStringUsingEncoding:NSUTF8StringEncoding];
         char * request = gh_build_get_query((char *)[host UTF8String], (char *)relativeURLCString);

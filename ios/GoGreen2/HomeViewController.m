@@ -21,6 +21,10 @@
     if (self)
     {
         // Custom initialization
+        UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo.png"]];
+        [logo setFrame:CGRectMake(0, 0, 320, 207)];
+        [self.view addSubview:logo];
+        
         UILabel *mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 180, 260, 70)];
         [mainLabel setNumberOfLines:4];
         [mainLabel setBackgroundColor:[UIColor clearColor]];
@@ -44,44 +48,39 @@
         [self.cleanUpToggleButton setTitle:@"Start Cleaning" forState:UIControlStateNormal];
         [self.cleanUpToggleButton addTarget:self action:@selector(toggleCleanUp:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.cleanUpToggleButton];
-        
-        //Drop Pin Gesture Reconziers
-        UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(pleaseWork:)];
-        longPressGesture.minimumPressDuration = 1;
-        [self.view addGestureRecognizer:longPressGesture];
-        longPressGesture.delegate = self;
     }
 
     return self;
 }
 
-#pragma mark - Drop Custom Location Marker Pin
--(void)pleaseWork:(UIGestureRecognizer*)sender
-{
-    NSLog(@"LONG PRESS WORKED");
-    /*
-    if(sender.state == UIGestureRecognizerStateEnded)
-    {
-        [self.view removeGestureRecognizer:sender];
-    }
-    else
-    {
-        //Convert Our Touch Point To Map Coordinates
-        CGPoint point = [sender locationInView:self.mapView];
-        CLLocationCoordinate2D coord = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
-        
-        HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andTitle:@"Custom Pin"];
-        [self.mapView addAnnotation:customPin];
-    }
-     */
-}
 
 -(IBAction)toggleCleanUp:(id)sender
 {
     [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
     if([[[ContainerViewController sharedContainer] theMapViewController] logging])
     {
+        self.startDate = [NSDate date];
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(cleanUpCounter:) userInfo:nil repeats:YES];
+
         [[ContainerViewController sharedContainer] switchMapView];
+    }
+}
+
+- (void)cleanUpCounter:(NSTimer*)theTimer
+{
+    // code is written so one can see everything that is happening
+    // I am sure, some people would combine a few of the lines together
+    NSDate *currentDate = [NSDate date];
+    NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:self.startDate];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:elaspedTime];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+    NSString *formattedDate = [dateFormatter stringFromDate:date];
+    
+    if(elaspedTime >= 1 && [[[ContainerViewController sharedContainer] theMapViewController] logging])
+    {
+        self.timeLabel.text = [NSString stringWithFormat:@"%@", formattedDate];
     }
 }
 

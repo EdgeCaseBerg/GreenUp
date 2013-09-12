@@ -136,9 +136,6 @@ static ContainerViewController* theContainerView = nil;
 
 -(void)switchHomeView
 {
-    //Update HeatMap
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMap" object:nil];
-    
     [self.item1 setImage:[UIImage imageNamed:@"home_active.png"]];
     [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
     [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
@@ -184,8 +181,7 @@ static ContainerViewController* theContainerView = nil;
 }
 -(void)switchMessageView
 {
-    //Update Messages and HeatMap
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMap" object:nil];
+    //Update Messages
     [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMessages" object:nil];
     
     [self.item1 setImage:[UIImage imageNamed:@"home.png"]];

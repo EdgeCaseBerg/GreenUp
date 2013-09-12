@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UIButton *cleanUpToggleButton;
+@property (strong, nonatomic) NSDate *startDate;
 
 -(IBAction)toggleCleanUp:(id)sender;
 
