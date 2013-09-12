@@ -214,13 +214,17 @@ class AbstractionLayer():
 		# datastore write
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
+		memcache.flush_all()
+		initialPage(None,"comment")
 		return p.id()
+
 
 	def submitDebug(self, errorMessage, debugInfo,origin):
 		# submit information about a bug
 		authhash = hashlib.sha256(errorMessage + debugInfo).hexdigest()
 		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin).put()
 		memcache.flush_all()
+		initialPage(None,"comment")
 
 	def getDebug(self, debugId=None, theHash=None,since=None,page=1):
 		# retrieve information about a bug by id, hash, or get them all with optional since time

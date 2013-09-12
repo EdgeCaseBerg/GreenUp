@@ -48,6 +48,7 @@ class Spider(object):
 
 
 		request.add_header('Content-Type', 'application/json')
+		request.add_header('User-Agent', 'api-spider-test')
 		request.get_method = lambda: httpMethod
 
 		self.spiderlink  = opener.open(request)
