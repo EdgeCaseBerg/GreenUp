@@ -220,9 +220,6 @@
             //-------------- We Are Not Logging But Want To Drop Marker At Our Current Location ---------
             self.loggingForMarker = FALSE;
             
-            [self.gatheredMapPoints addObject:mapPoint];
-            [self.gatheredMapPointsQueue addObject:mapPoint];
-            
             //Get Current Location
             MKCoordinateRegion region;
             MKCoordinateSpan span;

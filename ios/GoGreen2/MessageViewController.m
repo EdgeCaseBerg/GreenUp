@@ -150,6 +150,8 @@
                 NSDictionary *pages = [response objectForKey:@"nextPage"];
                 if(![[pages objectForKey:@"next"] isEqualToString:@"<null>"])
                     self.nextPageURL = [pages objectForKey:@"next"];
+                
+                [self.theTableView reloadData];
             }
 
         });
@@ -194,7 +196,6 @@
                     
                     //Get New Messages
                     [self getMessages];
-                    [self.theTableView reloadData];
                 }
                 
                 //Clear Old Message Type
