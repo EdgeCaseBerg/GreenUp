@@ -17,8 +17,16 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:@"HomeView_IPhone" bundle:nil];
-    if (self)
+    if([UIScreen mainScreen].bounds.size.height == 568)
+    {
+        self = [super initWithNibName:@"HomeView_IPhone5" bundle:nil];
+    }
+    else
+    {
+        self = [super initWithNibName:@"HomeView_IPhone" bundle:nil];
+    }
+    
+    if(self)
     {
         // Custom initialization
         UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo.png"]];

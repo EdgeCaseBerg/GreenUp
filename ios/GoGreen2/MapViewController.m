@@ -29,7 +29,14 @@
 
 -(MapViewController *)init
 {
-    self.mapView = [[GreenUpMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 411)];
+    if([UIScreen mainScreen].bounds.size.height == 568)
+    {
+        self.mapView = [[GreenUpMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 499)];
+    }
+    else
+    {
+       self.mapView = [[GreenUpMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 411)]; 
+    }
     [self.view addSubview:self.mapView];
     
     self = [super initWithNibName:@"MapView_IPhone" bundle:nil];

@@ -25,7 +25,16 @@
 
 -(MessageViewController *)init
 {
-    self = [super initWithNibName:@"MessageView_IPhone" bundle:nil];
+    if([UIScreen mainScreen].bounds.size.height == 568)
+    {
+        self = [super initWithNibName:@"MessageView_IPhone5" bundle:nil];
+        self.messageViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, 320, 50)];
+    }
+    else
+    {
+        self = [super initWithNibName:@"MessageView_IPhone" bundle:nil];
+        self.messageViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, 320, 50)];
+    }
     self.title = @"About";
 
     self.messages = [[NSMutableArray alloc] init];
@@ -33,7 +42,7 @@
     
     [self getMessages];
     
-    self.messageViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, 320, 50)];
+
     NSLog(@"***************** %f", self.view.frame.size.height - 50);
     [self.messageViewContainer setBackgroundColor:[UIColor grayColor]];
     [self.view addSubview:self.messageViewContainer];

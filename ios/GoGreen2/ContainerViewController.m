@@ -46,7 +46,16 @@ static ContainerViewController* theContainerView = nil;
 -(void)viewDidLoad
 {
     //Initilize the view
-    self.theView = [[ContainerView alloc] initWithFrame:CGRectMake(20, 0, 320, 460)];
+    
+    if([UIScreen mainScreen].bounds.size.height == 568)
+    {
+        self.theView = [[ContainerView alloc] initWithFrame:CGRectMake(20, 0, 320, 548)];
+    }
+    else
+    {
+        self.theView = [[ContainerView alloc] initWithFrame:CGRectMake(20, 0, 320, 460)];
+    }
+    
     self.view = self.theView;
     
     //Views
@@ -63,7 +72,14 @@ static ContainerViewController* theContainerView = nil;
     }
     
     //TabBar
-    self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 411, 320, 49)];
+    if([UIScreen mainScreen].bounds.size.height == 568)
+    {
+        self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 499, 320, 49)];
+    }
+    else
+    {
+        self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 411, 320, 49)];
+    }
     [self.theTabBar setBackgroundImage:[UIImage imageNamed:@"bottom_menu.png"]];
     
     self.theTabBar.delegate = self;
