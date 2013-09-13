@@ -8,7 +8,7 @@ import android.util.Log;
 public class Comment {
 	
 	private int id;
-	private String type; //either "forum", "needs" or "message"
+	private String type; //either "forum", "general" or "trash"
 	private String message;
 	private String timestamp;
 	private int pin;
