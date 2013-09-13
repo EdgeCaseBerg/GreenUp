@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -20,13 +22,13 @@ import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Comment;
 import com.xenon.greenup.api.CommentPage;
 
-public class FeedSectionFragment extends ListFragment {//implements ListView.OnItemClickListener {
+public class FeedSectionFragment extends ListFragment implements OnCheckedChangeListener{
 	private int lastPageLoaded = 1;
 	private EditText editText;
 	private Switch forumSwitch, generalSwitch, trashSwitch;
-	private boolean forumFilterToggle = false;
-	private boolean generalFilterToggle = false;
-	private boolean trashFilterToggle = false;
+	private boolean forumFilterToggle = true;
+	private boolean generalFilterToggle = true;
+	private boolean trashFilterToggle = true;
 	
 	public FeedSectionFragment(){
 	}
@@ -55,7 +57,19 @@ public class FeedSectionFragment extends ListFragment {//implements ListView.OnI
     	        return handled;
     	    }
     	});
-       	return rootView;
+    	
+    	//initialize the toggle switches
+    	forumSwitch = (Switch)rootView.findViewById(R.id.forum_switch);
+    	generalSwitch = (Switch)rootView.findViewById(R.id.general_switch);
+    	trashSwitch = (Switch)rootView.findViewById(R.id.trash_switch);
+		forumSwitch.setChecked(forumFilterToggle);
+		generalSwitch.setChecked(generalFilterToggle);
+		trashSwitch.setChecked(trashFilterToggle);
+		forumSwitch.setOnCheckedChangeListener(this);
+		generalSwitch.setOnCheckedChangeListener(this);
+		trashSwitch.setOnCheckedChangeListener(this);
+       	
+    	return rootView;
     }
     
     @Override
@@ -91,8 +105,8 @@ public class FeedSectionFragment extends ListFragment {//implements ListView.OnI
 		 * passed at construction time.
 		 */
 		protected Void doInBackground(Void...voids) {
-	    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
-			this.cmts = cp.getCommentsList();
+	    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded);
+			this.cmts = cp.getCommentsList(forumFilterToggle,generalFilterToggle,trashFilterToggle);
 			if(this.cmts == null)
 				this.cmts = new ArrayList<Comment>(60);
 			//Java makes no sense. It requires the capital version of Void because there simply
@@ -107,5 +121,15 @@ public class FeedSectionFragment extends ListFragment {//implements ListView.OnI
 		protected void onPostExecute(Void v) {
 			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
 		}
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if (buttonView == forumSwitch)
+			forumFilterToggle = isChecked;
+		if (buttonView == generalSwitch)
+			generalFilterToggle = isChecked;
+		if (buttonView == trashSwitch)
+			trashFilterToggle = isChecked;
 	}
 }

@@ -51,6 +51,21 @@ public class CommentPage {
 	public ArrayList<Comment> getCommentsList() {
 		return commentsList;
 	}
+	
+	public ArrayList<Comment> getCommentsList(boolean includeForum, boolean includeGeneral, boolean includeTrash) {
+		String commentType;
+		ArrayList<Comment> filteredList = new ArrayList<Comment>();
+		for (int i = 0; i < commentsList.size(); i++) {
+			commentType = commentsList.get(i).getType();
+			if (commentType.equals("FORUM") && includeForum)
+				filteredList.add(commentsList.get(i));
+			if (commentType.equals("GENERAL MESSAGE") && includeGeneral)
+				filteredList.add(commentsList.get(i));
+			if (commentType.equals("TRASH PICKUP") && includeTrash)
+				filteredList.add(commentsList.get(i));
+		}
+		return filteredList;
+	}
 	/**
 	 * @param commentsList the commentsList to set
 	 */
