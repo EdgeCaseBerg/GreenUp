@@ -14,22 +14,26 @@ public class Storage extends SQLiteOpenHelper{
 	private static final String DATABASE_NAME = "GREENUP";
 	private static final String KEY_ID = "secondsWorked";
 	private static final String KEY_TIME = "time";
+	private static final String KEY_CHRONO_STATE = "chronoState";
+	private static final String KEY_STOP_TIME = "stopTime";
 	private static final String SECONDS_WORKED_TABLE_NAME = "secondsWorked";
 	
 	public Storage(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		//context.deleteDatabase(DATABASE_NAME);
+		context.deleteDatabase(DATABASE_NAME);
 	}
 	
 	public void onCreate(SQLiteDatabase db){
 		
-		String create_table = "CREATE TABLE " + SECONDS_WORKED_TABLE_NAME + "(" + KEY_ID + " TEXT PRIMARY KEY," + KEY_TIME + " TEXT)";
+		String create_table = "CREATE TABLE " + SECONDS_WORKED_TABLE_NAME + "(" + KEY_ID + " TEXT PRIMARY KEY," + KEY_TIME + " TEXT," + KEY_CHRONO_STATE  + " TEXT, " + KEY_STOP_TIME + " STRING )";
 		db.execSQL(create_table);
 		
 		ContentValues values = new ContentValues();
 		/* For now just test persitent time, otherwise we'd be stored a better key here*/
 		values.put(KEY_ID, "1");
 		values.put(KEY_TIME, "00:00:00");
+		values.put(KEY_CHRONO_STATE, "OFF");
+		values.put(KEY_STOP_TIME, "0");
 		
 		db.insert(SECONDS_WORKED_TABLE_NAME, null,values);
 	}
@@ -41,25 +45,27 @@ public class Storage extends SQLiteOpenHelper{
 	}
 	
 	
-	public void setSecondsWorked(String formattedTime){
+	public void setSecondsWorked(String formattedTime,boolean onOff){
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
 		/* For now just test persitent time, otherwise we'd be stored a better key here*/
 		values.put(KEY_ID, "1");
 		values.put(KEY_TIME, formattedTime);
+		values.put(KEY_CHRONO_STATE,  onOff ? "ON" : "OFF");
+		values.put(KEY_STOP_TIME, String.valueOf(System.currentTimeMillis()/1000L));
 		
 		db.update(SECONDS_WORKED_TABLE_NAME, values, KEY_ID + "= ?", new String[]{KEY_ID});
 		db.close();
 	}
-	public String getSecondsWorked(){
+	public String[] getSecondsWorked(){
 		SQLiteDatabase db = this.getReadableDatabase();
-		String selectQuery = "SELECT " +  KEY_TIME + " FROM " + SECONDS_WORKED_TABLE_NAME + " LIMIT 1";
+		String selectQuery = "SELECT " +  KEY_TIME + "," + KEY_CHRONO_STATE + ", " +  KEY_STOP_TIME + " FROM " + SECONDS_WORKED_TABLE_NAME + " LIMIT 1";
 		Cursor cursor = db.rawQuery(selectQuery,null);
 		
 		if(cursor != null){
 			cursor.moveToFirst();
-			return (cursor.getString(0));
+			return new String[]{cursor.getString(0), cursor.getString(1), cursor.getString(2)};
 		}
 		return null;
 		

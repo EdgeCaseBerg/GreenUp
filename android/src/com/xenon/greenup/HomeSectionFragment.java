@@ -28,7 +28,7 @@ public class HomeSectionFragment extends Fragment {
 	public void onPause(){
 		super.onPause();
     	final Storage database = new Storage( this.getActivity() ); 
-    	database.setSecondsWorked( getChronoString());
+    	database.setSecondsWorked( getChronoString(), chronoState);
 	}
 	
     @Override
@@ -43,14 +43,24 @@ public class HomeSectionFragment extends Fragment {
     	 * have one specific format for all timers. Which we do. So here's the default:
     	 */
     	chrono.setActivated(chronoState);		
-    	if(HomeSectionFragment.currentTime == 0)
-    		chrono.setText("00:00:00");
-    	else{
+    	if(HomeSectionFragment.currentTime == 0){
     		final Storage database = new Storage( this.getActivity() );
-    		String secondsWorkedString = database.getSecondsWorked();
-    		Log.i("dbTIME",secondsWorkedString);
+    		String [] chronoStuff = database.getSecondsWorked();
+    		String secondsWorkedString = chronoStuff[0];
+    		if(chronoStuff[1].compareTo("OFF") == 0){
+    			chrono.setActivated(false);
+    			chrono.stop();
+    		}else{
+    	  		String strStopSign = chronoStuff[2];
+    	  		long baseTime =  Long.parseLong(strStopSign);
+    	  		chrono.setBase(baseTime);
+    			chrono.setActivated(true);
+    			chrono.start();
+    		}
     		if( secondsWorkedString != null)
     			HomeSectionFragment.currentTime = getChronoTime(secondsWorkedString);
+    		chrono.setText(getChronoString()); 
+    	}else{
     		chrono.setText(getChronoString()); /* Once storage implemented set this accordingly */
     	}
     	
@@ -63,10 +73,12 @@ public class HomeSectionFragment extends Fragment {
 					if( pauseTime == 0L){
 						chrono.setBase(SystemClock.elapsedRealtime());
 						chrono.start();
+						chronoState = true;
 						MainActivity.secondsWorked = 0; /* Or set this from perstence*/
 					}else{
 						chrono.setBase(chrono.getBase() +  SystemClock.elapsedRealtime() - pauseTime);
 						chrono.start();
+						chronoState = true;
 					}
 					startStopButton.setBackgroundResource(R.drawable.stop);
 					//Fire off some type of request to start the background gps polling service
@@ -76,6 +88,7 @@ public class HomeSectionFragment extends Fragment {
 					pauseTime = SystemClock.elapsedRealtime();
 					MainActivity.secondsWorked += chrono.getBase() + SystemClock.elapsedRealtime() - pauseTime;
 					chrono.stop();
+					chronoState = false;
 				}
 				toggleState = !toggleState;		
 			}
