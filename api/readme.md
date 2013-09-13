@@ -14,7 +14,7 @@ License:
 API Requests:
 -------------------
 
-`http://greenup.xenonapps.com/api/comments?type=forum`
+`http://greenup.xenonapps.com/api/comments?type=COMMENT`
 
 Request URLs are composed from the protocol, host, context path, a resource path, and optional query parameters.
 
@@ -23,7 +23,7 @@ In this example,
  - the host is `greenup.xenonapps.com` 
  - the context path is `/api` 
  - the resource path is `/comments` 
- - and optional query parameters of `type=forum`. 
+ - and optional query parameters of `type=COMMENT`. 
   
 All API parameters are returned in the JSON format, and all data sent to the API must be in JSON as well. Query parameters follow a single `?` after the resource path, and are seperated by `&`.
 
@@ -83,7 +83,7 @@ URL: **/api/comments**
 <tr><th>name</th><th>type</th><th>description  </th></tr>
 </thead>
 <tbody>
-<tr><td>type</td><td>String </td><td> Can be either `forum`, `general message`, `trash pickup` or `help needed` </td></tr>
+<tr><td>type</td><td>String </td><td> Can be either `COMMENT`, `ADMIN` or `MARKER` </td></tr>
 <tr><td>page</td><td>unsigned Integer</td><td>Based on [RFC 5005], for use with pagination, a request for a page that does not exist will result in no comments being returned. A non-integer value for this parameter will result in a 422 HTTP status code. Paging begins at 1.</td></tr>
 </tbody>
 
@@ -100,14 +100,14 @@ No type specified will return all comments.
     "status_code" : 200,
     "comments" : [
         { 
-            "type" : "trash pickup", 
+            "type" : "ADMIN", 
             "message" : "I need help with the trash on Colchester ave",
             "timestamp" : "2013-05-07 17:12:01",
             "pin" : 3,
             "id" : 4156
         },
         {
-            "type" : "help needed",
+            "type" : "MARKER",
             "message" : "There's a lot of trash on Pearl St, I could use some help!"
             "timestamp" : "1970-01-01 00:00:01",
             "pin" : None,
@@ -115,8 +115,8 @@ No type specified will return all comments.
         }
     ],
     "page" : {
-        "next" : "http://greenup.xenonapps.com/api/comments?type=help+needed&amp;page=3",
-        "previous" : "http://greenup.xenonapps.com/api/comments?type=help+needed&amp;page=1"
+        "next" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=3",
+        "previous" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=1"
     }
 }
 ```
@@ -137,7 +137,7 @@ URL: **/api/comments**
     </thead>
     <tbody>
         <tr>
-            <td> type </td><td>String </td><td> Can be either `forum`, `help needed`, `trash pickup` or `general message` </td>
+            <td> type </td><td>String </td><td> Can be either `MARKER`, `ADMIN` or `COMMENT` </td>
         </tr>
         <tr>
             <td> message   </td><td> String </td><td> The message to associated with this comment. Message length must not exceed 140 characters, and must also be non-empty. </td>
@@ -165,7 +165,7 @@ If the post data is malformed, the server will return a `400 bad request` respon
 ####Example Request Body
 ```
 {
-    "type" : "forum",
+    "type" : "COMMENT",
     "message" : "Have you guys heard about the free cookies on Pearl St and South Winooski? Bring your green bags down there and get one!"
 }
 ```
@@ -315,14 +315,14 @@ If no latitude or longitude are specified then all pins will be returned.
             "id" : 3324523452345,
             "latDegrees" : 24.53, 
             "lonDegrees" : 43.2, 
-            "type" : "general message", 
+            "type" : "COMMENT", 
             "message", "I need help with the trash on Colchester ave"
         },
         {
             "id" : 5246234532534,
             "latDegrees" : 25.13, 
             "lonDegrees" : 41.2, 
-            "type" : "help needed", 
+            "type" : "MARKER", 
             "message", "There's a lot of trash on Pearl St, I could use some help!"
         }
     ]
@@ -346,7 +346,7 @@ URL: **/api/pins**
     <tbody>
         <tr><td>latDegrees</td><td>float</td><td>The latitude coordinate of the pin in Decimal Degrees, values must range between -90.0 and 90.0</td></tr>
         <tr><td>lonDegrees</td><td>float</td><td>The longitude coordinate of the pin in Decimal Degrees, values must range between -180.0 and 180.0</td></tr>
-        <tr><td> type </td><td>String </td><td> Can be either `general message`, `help needed`, or `trash pickup` </td></tr>
+        <tr><td> type </td><td>String </td><td> Can be either `COMMENT`, `MARKER`, or `ADMIN` </td></tr>
         <tr><td>message</td><td>String</td><td>The message associated with this pin. May not be empty or a semantic error will occur</td></tr>
     </tbody>
 </table>
@@ -359,7 +359,7 @@ URL: **/api/pins**
 {
     "latDegrees" : 24.53, 
     "lonDegrees" : 43.2, 
-    "type" : "trash pickup", 
+    "type" : "ADMIN", 
     "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?"
 }
 ```
