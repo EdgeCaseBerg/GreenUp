@@ -14,7 +14,9 @@
 @property CLLocationCoordinate2D coordinate;
 @property (nonatomic, strong) NSString *message;
 @property int pinID;
+@property (nonatomic, strong) NSString *type;
+@property BOOL isValid;
 
--(id)initWithCoordinate:(CLLocationCoordinate2D)coordinate andTitle:(NSString *)title;
+-(id)initWithCoordinate:(CLLocationCoordinate2D)coordinate andValiditity:(BOOL)isValid andTitle:(NSString *)title andType:(NSString *)type;
 
 @end

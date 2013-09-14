@@ -10,13 +10,15 @@
 
 @implementation HeatMapPin
 
--(id)initWithCoordinate:(CLLocationCoordinate2D)coordinate andTitle:(NSString *)title
+-(id)initWithCoordinate:(CLLocationCoordinate2D)coordinate andValiditity:(BOOL)isValid andTitle:(NSString *)title andType:(NSString *)type
 {
     if(self = [super init])
     {
         self.pinID = -1;
         self.message = nil;
         self.coordinate = coordinate;
+        self.type = type;
+        self.isValid = isValid;
     }
     return self;
 }

@@ -38,15 +38,18 @@ static CSocketController* theCSocketController = nil;
     ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
     
     //CREATE URL STRING PROPERTIES
-    NSArray *keys = properties.allKeys;
-    
     NSMutableString *urlParameters = [[NSMutableString alloc] init];
-    [urlParameters appendString:@"?"];
     BOOL first = TRUE;
     for(NSString *key in properties.allKeys)
     {
-        if(!first)
+        if(first)
+        {
+            [urlParameters appendString:@"?"];
+        }
+        else
+        {
             [urlParameters appendString:@"&"];
+        }
         
         first = FALSE;
         

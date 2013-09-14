@@ -55,6 +55,12 @@
 		39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D06AFC1783A6A300DD94B7 /* MapKit.framework */; };
 		39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E46BE3179C7000008590A6 /* GoGreenTabBar.m */; };
 		DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3F00FD17E25CD000530A4D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		DF3F010517E3E5E200530A4D /* trasbag.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010317E3E5E200530A4D /* trasbag.png */; };
+		DF3F010617E3E5E200530A4D /* trashbag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010417E3E5E200530A4D /* trashbag@2x.png */; };
+		DF3F010A17E3FEED00530A4D /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010717E3FEED00530A4D /* check.png */; };
+		DF3F010B17E3FEED00530A4D /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010817E3FEED00530A4D /* check@2x.png */; };
+		DF3F010C17E3FEED00530A4D /* notCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010917E3FEED00530A4D /* notCheck.png */; };
+		DF3F010E17E3FF2A00530A4D /* notCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010D17E3FF2A00530A4D /* notCheck@2x.png */; };
 		DF62E07117C18E1B00B29D43 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF62E06F17C18E1A00B29D43 /* greenhttp.c */; };
 		DF62E07417C1992700B29D43 /* BDHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DF62E07317C1992700B29D43 /* BDHost.m */; };
 		DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF62E07517C1996700B29D43 /* CFNetwork.framework */; };
@@ -206,6 +212,12 @@
 		39E46BE3179C7000008590A6 /* GoGreenTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoGreenTabBar.m; sourceTree = "<group>"; };
 		DF3F00FC17E25CD000530A4D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = SOURCE_ROOT; };
 		DF3F00FD17E25CD000530A4D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = SOURCE_ROOT; };
+		DF3F010317E3E5E200530A4D /* trasbag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trasbag.png; path = Images/trasbag.png; sourceTree = SOURCE_ROOT; };
+		DF3F010417E3E5E200530A4D /* trashbag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trashbag@2x.png"; path = "Images/trashbag@2x.png"; sourceTree = SOURCE_ROOT; };
+		DF3F010717E3FEED00530A4D /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = check.png; path = Images/check.png; sourceTree = SOURCE_ROOT; };
+		DF3F010817E3FEED00530A4D /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "check@2x.png"; path = "Images/check@2x.png"; sourceTree = SOURCE_ROOT; };
+		DF3F010917E3FEED00530A4D /* notCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notCheck.png; path = Images/notCheck.png; sourceTree = SOURCE_ROOT; };
+		DF3F010D17E3FF2A00530A4D /* notCheck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "notCheck@2x.png"; path = "Images/notCheck@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF62E06F17C18E1A00B29D43 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = greenhttp.c; path = "green-http/greenhttp.c"; sourceTree = "<group>"; };
 		DF62E07017C18E1B00B29D43 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = greenhttp.h; path = "green-http/greenhttp.h"; sourceTree = "<group>"; };
 		DF62E07217C1992700B29D43 /* BDHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDHost.h; sourceTree = "<group>"; };
@@ -386,6 +398,10 @@
 				DFA9ABA317D63C5B006F58A5 /* bubble_yellow_center.png */,
 				DFA9ABA417D63C5B006F58A5 /* bubble_yellow_center@2x.png */,
 				DFA9ABA517D63C5B006F58A5 /* bubble_yellow_top.png */,
+				DF3F010717E3FEED00530A4D /* check.png */,
+				DF3F010817E3FEED00530A4D /* check@2x.png */,
+				DF3F010917E3FEED00530A4D /* notCheck.png */,
+				DF3F010D17E3FF2A00530A4D /* notCheck@2x.png */,
 				DFA9ABA617D63C5B006F58A5 /* bubble_yellow_top@2x.png */,
 				DFA9ABA717D63C5B006F58A5 /* comments_active.png */,
 				DFA9ABA817D63C5B006F58A5 /* comments_active@2x.png */,
@@ -400,6 +416,8 @@
 				DFA9ABB117D63C5B006F58A5 /* home_active@2x.png */,
 				DFA9ABB217D63C5B006F58A5 /* home.png */,
 				DFA9ABB317D63C5B006F58A5 /* home@2x.png */,
+				DF3F010317E3E5E200530A4D /* trasbag.png */,
+				DF3F010417E3E5E200530A4D /* trashbag@2x.png */,
 				DFA9ABB417D63C5B006F58A5 /* map_active.png */,
 				DFA9ABB517D63C5B006F58A5 /* map_active@2x.png */,
 				DFA9ABB617D63C5B006F58A5 /* map.png */,
@@ -824,6 +842,12 @@
 				DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */,
 				DFA9C39317E22FA000FBE61F /* logo.png in Resources */,
 				DFA9C39417E22FA000FBE61F /* logo@2x.png in Resources */,
+				DF3F010517E3E5E200530A4D /* trasbag.png in Resources */,
+				DF3F010617E3E5E200530A4D /* trashbag@2x.png in Resources */,
+				DF3F010A17E3FEED00530A4D /* check.png in Resources */,
+				DF3F010B17E3FEED00530A4D /* check@2x.png in Resources */,
+				DF3F010C17E3FEED00530A4D /* notCheck.png in Resources */,
+				DF3F010E17E3FF2A00530A4D /* notCheck@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

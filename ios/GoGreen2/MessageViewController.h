@@ -10,7 +10,7 @@
 #import "NetworkMessage.h"
 #import "MessageTypeSelectionView.h"
 
-@interface MessageViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate>
+@interface MessageViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray *messages;
 @property (weak, nonatomic) IBOutlet UITableView *theTableView;
@@ -21,6 +21,7 @@
 @property (strong, nonatomic) MessageTypeSelectionView *messageTypePopoverView;
 @property (strong, nonatomic) NSString *currentMessageType;
 @property (strong, nonatomic) NSString *nextPageURL;
+@property (strong, nonatomic) NetworkMessage *toggledMessageRef;
 
 @property BOOL keyboardIsOut;
 

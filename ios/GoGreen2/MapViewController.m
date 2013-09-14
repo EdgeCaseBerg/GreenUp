@@ -14,7 +14,6 @@
 #import "MapPinSelectorView.h"
 #import "HeatMapPin.h"
 #import "MapPinCommentView.h"
-
 #import <netdb.h>
 #include <arpa/inet.h>
 
@@ -150,6 +149,28 @@
 {
     return [[HeatMapView alloc] initWithOverlay:overlay];
 }
+- (MKAnnotationView *)mapView:(MKMapView *)map viewForAnnotation:(HeatMapPin<MKAnnotation>*)annotation
+{
+    if([annotation.type isEqualToString:Message_Cell_Type_A])
+    {
+        static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
+        
+        MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
+        
+        if (annotationView == nil)
+        {
+            annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
+        }
+        
+        annotationView.image = [UIImage imageNamed:@"trashbag.png"];
+        
+        annotationView.annotation = annotation;
+        
+        return annotationView;
+    }
+    else
+        return nil;
+}
 
 #pragma mark - GPS Location Methods
 
@@ -244,7 +265,7 @@
             [self.locationManager stopUpdatingLocation];
             
             //Create Pin For Current Location
-            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andTitle:@"Location Pin"];
+            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:Message_Cell_Type_B];
             self.tempPinRef = currentLocationPin;
             [self.mapView addAnnotation:currentLocationPin];
             
@@ -274,7 +295,7 @@
             [self.mapView regionThatFits:region];
             
             //Create Pin For Current Location
-            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andTitle:@"Location Pin"];
+            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:Message_Cell_Type_B];
             self.tempPinRef = currentLocationPin;
             [self.mapView addAnnotation:currentLocationPin];
             
@@ -414,7 +435,7 @@
             CGPoint point = [sender locationInView:self.mapView];
             CLLocationCoordinate2D coord = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
             
-            HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andTitle:@"Custom Pin"];
+            HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andValiditity:TRUE andTitle:@"Custom Pin" andType:Message_Cell_Type_A];
             self.tempPinRef = customPin;
             [self.mapView addAnnotation:customPin];
             
@@ -434,17 +455,29 @@
 
 -(void)getMapPins
 {
-#warning ADD NETWORKING TO DOWNLOAD PINS
-    
-    for(NetworkMessage *message in [[[ContainerViewController sharedContainer] theMessageViewController] messages])
-    {
-        if(message.pinID != nil)
-        {
-            HeatMapPin *newPin = nil;
-            newPin.pinID = message.pinID;
-            newPin.message = message.messageContent;
-        }
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+        //Background Process Block
+        NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
+        
+        NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:self.mapView.region.center.latitude], [NSNumber numberWithFloat:self.mapView.region.center.longitude], [NSNumber numberWithFloat:self.mapView.region.span.latitudeDelta], [NSNumber numberWithFloat:self.mapView.region.span.longitudeDelta], nil];
+        
+        NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+
+        NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+        
+        dispatch_async(dispatch_get_main_queue(),^{
+            //Completion Block
+            NSString *statusCode = [response objectForKey:@"status_code"];
+            
+            if([statusCode integerValue] == 200)
+            {
+                for(NSDictionary *networkPin in [response objectForKey:@"pins"])
+                {
+                    NSLog(@"%@", networkPin);
+                }
+            }
+        });
+    });
 }
 
 -(void)pushHeatMapDataToServer

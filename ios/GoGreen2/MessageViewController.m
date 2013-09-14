@@ -17,6 +17,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
 
+#define ALERT_VIEW_TOGGLE_ON 0
+#define ALERT_VIEW_TOGGLE_OFF 1
+
 @interface MessageViewController () <UITextViewDelegate>
 
 @end
@@ -107,8 +110,12 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewWillAppear:) name:@"switchedToMessages" object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMessageValidity:) name:@"toggleMessageValidity" object:nil];
+    
     return self;
 }
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -155,6 +162,14 @@
                         newMessage.messageTimeStamp = [comment objectForKey:@"timestamp"];
                         newMessage.messageType = [comment objectForKey:@"type"];
                         newMessage.pinID = [comment objectForKey:@"pin"];
+                        if(arc4random() % 2 == 0)
+                        {
+                            newMessage.isValid = TRUE;
+                        }
+                        else
+                        {
+                            newMessage.isValid = FALSE;
+                        }
                         
                         [self.messages addObject:newMessage];
                     }
@@ -257,22 +272,22 @@
     {
         if(indexPath.row == 0)
         {
-            cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:TRUE isFirstCell:TRUE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+            cell = [[MessageCell alloc] initWithMessage:msg isBackwards:TRUE isFirst:TRUE andResueIdentifier:CellIdentifier];
         }
         else
         {
-            cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:TRUE isFirstCell:FALSE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+            cell = [[MessageCell alloc] initWithMessage:msg isBackwards:TRUE isFirst:FALSE andResueIdentifier:CellIdentifier];
         }
     }
     else
     {
         if(indexPath.row == 0)
         {
-            cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:FALSE isFirstCell:TRUE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+            cell = [[MessageCell alloc] initWithMessage:msg isBackwards:FALSE isFirst:TRUE andResueIdentifier:CellIdentifier];
         }
         else
         {
-            cell = [[MessageCell alloc] initWithMessageType:msg.messageType isBackwards:FALSE isFirstCell:FALSE withText:msg.messageContent andResueIdentifier:CellIdentifier];
+            cell = [[MessageCell alloc] initWithMessage:msg isBackwards:FALSE isFirst:FALSE andResueIdentifier:CellIdentifier];
         }
     }
     return cell;
@@ -304,7 +319,7 @@
 {
     NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
     
-    CGSize size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(280, CGFLOAT_MAX)];
+    CGSize size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
     size.height += + 20 + 6;
     NSLog(@"SIZE HEIGHT: %f - WIDTH: %f", size.height, size.width);
     //return size;
@@ -515,6 +530,52 @@
     {
         return TRUE;
     }
+}
+
+#pragma mark - Toggle Message Validity
+-(void)toggleMessageValidity:(NSNotification *)notification
+{
+    NetworkMessage *msg = notification.object;
+    self.toggledMessageRef = msg;
+    if(msg.isValid)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Are you sure you have cleaned up this location?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        alert.tag = ALERT_VIEW_TOGGLE_OFF;
+        [alert show];
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Are you sure you want to remark this message as unattended to?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        alert.tag = ALERT_VIEW_TOGGLE_ON;
+        [alert show];
+    }
+}
+
+#pragma mark - Alert View Delegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alertView.tag == ALERT_VIEW_TOGGLE_ON)
+    {
+        if(buttonIndex == 1)
+        {
+#warning PERFORM PUT REQUEST TO UPDATE PIN
+            [self.toggledMessageRef setIsValid:TRUE];
+            int row = [self.messages indexOfObject:self.toggledMessageRef];
+            [self.theTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+        }
+    }
+    else if(alertView.tag == ALERT_VIEW_TOGGLE_OFF)
+    {
+        if(buttonIndex == 1)
+        {
+#warning PERFORM PUT REQUEST TO UPDATE PIN
+            [self.toggledMessageRef setIsValid:FALSE];
+            int row = [self.messages indexOfObject:self.toggledMessageRef];
+            [self.theTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+        }
+    }
+    
+    self.toggledMessageRef = nil;
 }
 
 @end

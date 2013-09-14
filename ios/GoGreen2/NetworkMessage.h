@@ -15,5 +15,6 @@
 @property (strong, nonatomic) NSNumber *pinID;
 @property (strong, nonatomic) NSNumber *messageID;
 @property (strong, nonatomic) NSNumber *messageTimeStamp;
+@property BOOL isValid;
 
 @end
