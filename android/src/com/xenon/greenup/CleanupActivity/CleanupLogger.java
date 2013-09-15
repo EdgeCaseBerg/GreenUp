@@ -1,0 +1,21 @@
+package com.xenon.greenup.CleanupActivity;
+
+import java.util.ArrayList;
+import java.util.Stack;
+
+/**
+ * Created by ddcjoshuad on 9/15/13.
+ * Singleton class for maintaining the clean-up logging
+ */
+public class CleanupLogger {
+    private Stack<CleanupEvent> eventsList = new Stack<CleanupEvent>();
+    private boolean isLogging = false;
+
+    private CleanupLogger(){}
+
+    public CleanupLogger getInstance(){
+        return this;
+    }
+
+
+}

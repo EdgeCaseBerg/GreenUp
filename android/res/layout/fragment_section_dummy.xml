@@ -14,23 +14,37 @@
   limitations under the License.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-    
-   	<TextView
-    	android:id="@android:id/text1"
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:gravity="center"
-    	android:textSize="24sp"
-    	android:padding="32dp" />
+        >
 
-   	<Button
-   	    android:id="@+id/testButton"
-   	    android:layout_width="wrap_content"
-   	    android:layout_height="wrap_content"
-   	    android:text="Button" />
+    <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
-</LinearLayout>
+        <TextView
+         android:id="@android:id/text1"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:gravity="center"
+         android:textSize="24sp"
+         android:padding="32dp" />
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Cleaning"
+                android:id="@+id/button"
+                android:layout_column="1"
+                android:enabled="true"
+                android:onClick="toggleCleaning()"/>
+    </TableRow>
+
+    <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+    </TableRow>
+
+</TableLayout>
