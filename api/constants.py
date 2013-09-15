@@ -16,7 +16,7 @@ PAGE_SIZE = 20
 
 """ Validation Constants """
 PIN_TYPES = ('COMMENT', 'MARKER', 'ADMIN')
-COMMENT_TYPES = ('COMMENT','','MARKER', 'ADMIN') #The blank is neccesary for plain /comments to work
+COMMENT_TYPES = ("COMMENT",'','MARKER', 'ADMIN') #The blank is neccesary for plain /comments to work
 COMMENTS_RESOURCE_PATH = "/comments"
 DEBUG_RESOURCE_PATH = "/debug"
 

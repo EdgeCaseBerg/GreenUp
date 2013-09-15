@@ -117,6 +117,7 @@ class Pins(webapp2.RequestHandler):
 			info['lonDegrees']
 			info['type']
 			info['message']
+			info['addressed']
 		except Exception, e:
 			#Improper request
 			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
@@ -127,12 +128,21 @@ class Pins(webapp2.RequestHandler):
 		latDegrees = info['latDegrees']
 		lonDegrees = info['lonDegrees']
 		message = info['message']
+		addressed = info['addressed']
 
 		#Catch nulls
 		if pinType is None or latDegrees is None or lonDegrees is None or message is None:
 			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
 			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM, "Cannot accept null data for required parameters"))
 			return
+
+		if addressed is None or addressed == "":
+			addressed = False
+		else:
+			if addressed:
+				addressed = True
+			else:
+				addressed = False
 
 		#Determine if the type is correct:
 		if pinType.upper() not in PIN_TYPES:
@@ -176,10 +186,61 @@ class Pins(webapp2.RequestHandler):
 
 		#Place the pin into the datastore
 		layer = AbstractionLayer()
-		pid = layer.submitPin(latDegrees=latDegrees, lonDegrees=lonDegrees, pinType=pinType.upper(), message=message)
+		pid = layer.submitPin(latDegrees=latDegrees, lonDegrees=lonDegrees, pinType=pinType.upper(), message=message,addressed=addressed)
 
 		#self.response.set_status(HTTP_OK)		
 		self.response.write('{  "pin_id" : %i,  "status_code" : 200,  "message" : "Successful submit"}' % pid)
+
+	def put(self):
+		#expecting a put request like: /api/pins?id=id with http body of {"address" : True|False}
+		self.response.set_status(HTTP_OK)
+
+		try:
+			json.loads(self.request.body)
+		except Exception, e:
+			#The request body is malformed. 
+			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SYNTAX_PROBLEM, "Request body is malformed"))
+			#Don't allow execution to proceed any further than this
+			return
+		info = json.loads(self.request.body)
+
+		try:
+			info['addressed']
+		except Exception, e:
+			#Improper request
+			self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SYNTAX_PROBLEM, "Required key 'addressed' not present in request body"))
+			return
+
+		addressed = info['addressed']
+
+
+		pinID = self.request.get("id")
+		if pinID is None or pinID == "":
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM, "Required key id not present in request url"))
+			return
+
+		try:
+			pinId = int(pinID)
+		except Exception, e:
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM, "id must be a numeric identifier"))
+			return
+
+		#Now go find the pin and update it!
+		layer = AbstractionLayer()
+		if layer.addressPin(int(pinID), addressed):
+			self.response.set_status(HTTP_OK)
+			self.response.write('{ "status_code" : 200,  "message" : "Successful"}')
+		else:
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % (HTTP_NOT_FOUND, "Id not found and pin not updated"))
+
+		
+
+
 
 		
 

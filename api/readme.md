@@ -316,14 +316,16 @@ If no latitude or longitude are specified then all pins will be returned.
             "latDegrees" : 24.53, 
             "lonDegrees" : 43.2, 
             "type" : "COMMENT", 
-            "message", "I need help with the trash on Colchester ave"
+            "message", "I need help with the trash on Colchester ave",
+            "addressed"  : false
         },
         {
             "id" : 5246234532534,
             "latDegrees" : 25.13, 
             "lonDegrees" : 41.2, 
             "type" : "MARKER", 
-            "message", "There's a lot of trash on Pearl St, I could use some help!"
+            "message", "There's a lot of trash on Pearl St, I could use some help!",
+            "addressed"  : true
         }
     ]
 }
@@ -348,6 +350,7 @@ URL: **/api/pins**
         <tr><td>lonDegrees</td><td>float</td><td>The longitude coordinate of the pin in Decimal Degrees, values must range between -180.0 and 180.0</td></tr>
         <tr><td> type </td><td>String </td><td> Can be either `COMMENT`, `MARKER`, or `ADMIN` </td></tr>
         <tr><td>message</td><td>String</td><td>The message associated with this pin. May not be empty or a semantic error will occur</td></tr>
+        <tr><td>addressed</td><td>Boolean</td><td>Whether or not a marker has been addressed or not by the community</td></tr>
     </tbody>
 </table>
 
@@ -360,7 +363,8 @@ URL: **/api/pins**
     "latDegrees" : 24.53, 
     "lonDegrees" : 43.2, 
     "type" : "ADMIN", 
-    "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?"
+    "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?",
+    "addressed" : true
 }
 ```
 
@@ -373,6 +377,56 @@ URL: **/api/pins**
 ```
 
 If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
+
+
+--------------------------
+
+###Mark pin addressed
+
+Method: **PUT**
+
+URL: **/api/pins?id=<ID of the pin>**
+
+####Required URL parameter
+<table>
+    <thead>
+        <tr><th>Name</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>id</td>
+            <td>The id of the pin to be updated</td>
+        </tr>
+    </tbody>
+</table>
+
+####Required PUT data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>addressed</td><td>Boolean</td><td>Whether or not a marker has been addressed or not by the community</td></tr>
+    </tbody>
+</table>
+
+
+####Example Request
+`http://greenup.xenonapps.com/api/pins?id=32424j23k4j2kldsafasdf`  
+
+####Request Body
+```
+{
+    "addressed" : true
+}
+```
+
+####Example Response
+```
+{
+    "status_code" : 200
+}
+```
 
 ----------------------------
 
@@ -744,6 +798,36 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
             <td>The message to be associated with the pin was empty or null</td>
         </tr>
     </tbody>
+     <tr>
+        <td colspan="3" style="text-align: center;">PUT Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td>400</td>
+            <td>Request body is malformed</td>
+            <td>The JSON array sent to the server was not valid</td>
+        </tr>
+        <tr>
+            <td>400</td>
+            <td>Required key 'addressed' not present in request body</td>
+            <td>The key-value pair for addressed is missing from the put body</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>Required key id not present in request url</td>
+            <td>The id of the pin to be updated was not passed in the url parameters</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>id must be a numeric identifier</td>
+            <td>The id passed through the url parameters was not a numeric value</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>Id not found and pin not updated</td>
+            <td>The pin identified by the id could not be found</td>
+        </tr>
+        <tr>
 </table>
 
 

@@ -30,10 +30,11 @@ class Pins(Greenup):
 	# these must be stored precisely
 	lat = db.FloatProperty()
 	lon = db.FloatProperty()
+	addressed = db.BooleanProperty()
 
 	@classmethod
 	def by_id(cls, pinId):
-		return Pins.get_by_id(pinId, parent = app_key())
+		return Pins.get_by_id(pinId, parent = Greenup.app_key())
 
 	@classmethod
 	def by_message(cls, message):
@@ -105,7 +106,7 @@ class GridPoints(Greenup):
 
 	@classmethod
 	def by_id(cls, gridId):
-		return GridPoints.get_by_id(gridId, parent = app_key())
+		return GridPoints.get_by_id(gridId, parent = Greenup.app_key())
 
 	@classmethod
 	def by_lat(cls,lat):
@@ -210,13 +211,24 @@ class AbstractionLayer():
 		# datastore read
 		return pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset)
 
-	def submitPin(self, latDegrees, lonDegrees, pinType, message):
+	def submitPin(self, latDegrees, lonDegrees, pinType, message,addressed=False):
 		# datastore write
-		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
+		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message,addressed=addressed).put()
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
 		memcache.flush_all()
 		initialPage(None,"comment")
 		return p.id()
+
+	def addressPin(self, pinId, addressed):
+		p = Pins.by_id(pinId)
+		if p is not None:
+			p.addressed = addressed
+			p.put()
+			return True
+		else:
+			return False
+
+
 
 
 	def submitDebug(self, errorMessage, debugInfo,origin):
@@ -515,7 +527,8 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 							'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
-							'message'	 : pin.message }
+							'message'	 : pin.message,
+							'addressed'  : pin.addressed }
 						)
 		return pins
 
@@ -530,7 +543,8 @@ def pinFormatter(dbPins):
 						'latDegrees' : pin.lat,
 						'lonDegrees' : pin.lon,
 						'type'		 : pin.pinType,
-						'message'	 : pin.message }
+						'message'	 : pin.message,
+						'addressed'  : pin.addressed }
 					)
 	return pins
 def debugFormatter(dbBugs):
