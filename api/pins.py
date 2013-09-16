@@ -81,13 +81,13 @@ class Pins(webapp2.RequestHandler):
 		#the choice of lon is arbitrary, either lat or lon offset would work here
 		if lonOffset:
 			try:
-				lonOffset = abs(int(lonOffset))
-				latOffset = abs(int(latOffset))
+				lonOffset = abs(float(lonOffset))
+				latOffset = abs(float(latOffset))
 				parameters+=2
 				#We could check to see if the offsets cause us to go out of range for our queries, but really that's unneccesary and would cause unneccesary calculation on the clientside to deal making sure they're within range.
 			except ValueError, e:
 				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
-				self.response.write(ERROR_STR % (HTTP_REQUEST_SYNTAX_PROBLEM, "Offsets defined must both be integers"))
+				self.response.write(ERROR_STR % (HTTP_REQUEST_SYNTAX_PROBLEM, "Offsets defined must both be numeric"))
 				return
 
 		#If no parameters are specified we'll return everything we have for them
