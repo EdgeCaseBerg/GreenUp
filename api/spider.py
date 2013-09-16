@@ -527,6 +527,17 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
+	#Test deleting a pin:
+	tester.followLink(endPoints['pins'])
+	response = tester.getJSON()
+	tester.followLink(endPoints['pins'],withData={'id':response['pins'][0]['id'] }, httpMethod="DELETE")
+	assert tester.getCode() == HTTP_DELETED
+	tester.followLink(endPoints['pins'],withData={'id':response['pins'][0]['id'] }, httpMethod="DELETE")
+	print  tester.getCode()
+	assert tester.getCode() == HTTP_NOT_FOUND
+	
+
+
 	print "\tPins endpoint passed all assertion tests"
 
 

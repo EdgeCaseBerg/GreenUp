@@ -224,11 +224,25 @@ class AbstractionLayer():
 		if p is not None:
 			p.addressed = addressed
 			p.put()
+			memcache.flush_all()
+			initialPage(None,"comment")
 			return True
 		else:
 			return False
 
-
+	def deletePin(self,pinId):
+		pin = Pins.by_id(int(pinId))
+		if pin is None:
+			return False
+		else:
+			#Remove any comments attached:
+			cs = Comments.all().ancestor(Comments.app_key()).filter('pin =', pin).get()
+			if cs:
+				cs.delete
+			pin.delete()
+			memcache.flush_all()
+			initialPage(None,"comment")
+			return True
 
 
 	def submitDebug(self, errorMessage, debugInfo,origin):
