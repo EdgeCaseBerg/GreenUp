@@ -235,10 +235,33 @@ class Pins(webapp2.RequestHandler):
 			self.response.set_status(HTTP_OK)
 			self.response.write('{ "status_code" : 200,  "message" : "Successful"}')
 		else:
-			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.set_status(HTTP_NOT_FOUND)
 			self.response.write(ERROR_STR % (HTTP_NOT_FOUND, "Id not found and pin not updated"))
 
-		
+				
+	def delete(self):
+		#responds to DELETE /api/pins?id=<id number> 
+		pinID = self.request.get("id")
+		if pinID is None or pinID == "":
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM, "Required key id not present in request url"))
+			return
+
+		try:
+			pinId = int(pinID)
+		except Exception, e:
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM, "id must be a numeric identifier"))
+			return
+
+		layer = AbstractionLayer()
+		if layer.deletePin(pinID):
+			self.response.set_status(HTTP_DELETED)
+			self.response.write('{ "status_code" : %i,  "message" : "Successful"}' % HTTP_DELETED)
+		else:
+			self.response.set_status(HTTP_NOT_FOUND)
+			self.response.write(ERROR_STR % (HTTP_NOT_FOUND, "Id not found and pin not updated"))
+
 
 
 

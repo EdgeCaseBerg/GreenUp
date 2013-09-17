@@ -10,6 +10,7 @@
 from google.appengine.ext import db
 from handlerBase import *
 from google.appengine.api import memcache
+from google.appengine.api import datastore_errors
 from google.appengine.datastore import entity_pb
 import logging
 import hashlib
@@ -187,7 +188,15 @@ class AbstractionLayer():
 		#Convert comments to simple dictionaries for the comments endpoint to use
 		dictComments = []
 		for comment in comments:
-			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "0" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+			try:
+				dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "0" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+			except datastore_errors.Error, e:
+				#Give 0 shits about reference properties being broken becuase the pin deletion wont work right
+				if e.args[0][0:40] == "ReferenceProperty failed to be resolved:":
+					comment.delete()
+				else: 
+					raise
+				
 		return sorted(dictComments, key=lambda k: k['timestamp'], reverse=True) 
 		
 
@@ -224,11 +233,26 @@ class AbstractionLayer():
 		if p is not None:
 			p.addressed = addressed
 			p.put()
+			memcache.flush_all()
+			initialPage(None,"comment")
 			return True
 		else:
 			return False
 
-
+	def deletePin(self,pinId):
+		pin = Pins.by_id(int(pinId))
+		if pin is None:
+			return False
+		else:
+			#Remove any comments attached:
+			cs = Comments.all().filter('Pins=', pin.key().id())
+			for c in cs:
+				logging.info("deleting c")
+				c.delete()
+			pin.delete()
+			memcache.flush_all()
+			initialPage(None,"comment")
+			return True
 
 
 	def submitDebug(self, errorMessage, debugInfo,origin):
@@ -242,14 +266,11 @@ class AbstractionLayer():
 		# retrieve information about a bug by id, hash, or get them all with optional since time
 		# add JSON Formatting to the returns such that {  "errror_message" : "Stack trace or debugging information here", "id":id, "time":timestamp } 
 		if debugId is not None:
-			logging.info("by id")
 			bugs = DebugReports.by_id(debugId) 
 		elif theHash is not None:
-			logging.info("by hash")
 			bugs = DebugReports.by_hash(theHash)
 		else:
 			bugs = paging(page,None,"debug",since)
-		logging.info(bugs)
 		return debugFormatter(bugs)	
 
 	def deleteDebug(self,origin,theHash):
