@@ -533,7 +533,6 @@ if __name__ == "__main__":
 	tester.followLink(endPoints['pins'],withData={'id':response['pins'][0]['id'] }, httpMethod="DELETE")
 	assert tester.getCode() == HTTP_DELETED
 	tester.followLink(endPoints['pins'],withData={'id':response['pins'][0]['id'] }, httpMethod="DELETE")
-	print  tester.getCode()
 	assert tester.getCode() == HTTP_NOT_FOUND
 	
 
