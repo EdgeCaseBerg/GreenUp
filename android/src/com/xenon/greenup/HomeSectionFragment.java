@@ -27,5 +27,11 @@ public class HomeSectionFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         Log.i("startStop", "clicked");
         cleanupLogger.toggleLogging();
+        Button clickedButton = (Button) view;
+        if(cleanupLogger.isLogging()){
+            clickedButton.setText("Stop Cleaning");
+        }else{
+            clickedButton.setText("Start Cleaning");
+        }
     }
 }

@@ -22,6 +22,15 @@ public class CleanupLogger {
 
     public void toggleLogging(){
         Log.v("cleanup logger", "logging active");
+        if(this.isLogging){
+            this.isLogging = false;
+        }else{
+            this.isLogging = true;
+        }
+    }
+
+    public boolean isLogging(){
+        return this.isLogging;
     }
 
 
