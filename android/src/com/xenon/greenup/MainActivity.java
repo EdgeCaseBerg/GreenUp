@@ -31,10 +31,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.xenon.greenup.CleanupActivity.CleanupLogger;
 import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Heatmap;
 import com.xenon.greenup.api.HeatmapPoint;
@@ -257,7 +255,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 Bundle savedInstanceState) {
 
             Log.i("dummy fragment created", "blah");
-            View rootView = inflater.inflate(R.layout.fragment_section_dummy, container, false);
+            View rootView = inflater.inflate(R.layout.home, container, false);
             Bundle args = getArguments();
             ((TextView) rootView.findViewById(android.R.id.text1)).setText(
                     getString(R.string.dummy_section_text, args.getInt(ARG_SECTION_NUMBER)));

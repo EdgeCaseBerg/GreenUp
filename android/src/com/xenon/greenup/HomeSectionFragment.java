@@ -17,7 +17,7 @@ public class HomeSectionFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
         Log.v("working", "inflating home section fragment");
-        View rootView = inflater.inflate(R.layout.fragment_section_dummy, container, false);
+        View rootView = inflater.inflate(R.layout.home, container, false);
         Button button = (Button)rootView.findViewById(R.id.startStop);
         button.setOnClickListener(this);
         return rootView;
