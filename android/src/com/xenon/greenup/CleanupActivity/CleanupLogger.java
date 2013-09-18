@@ -1,5 +1,7 @@
 package com.xenon.greenup.CleanupActivity;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -8,13 +10,18 @@ import java.util.Stack;
  * Singleton class for maintaining the clean-up logging
  */
 public class CleanupLogger {
+    private static CleanupLogger logger = new CleanupLogger();
     private Stack<CleanupEvent> eventsList = new Stack<CleanupEvent>();
     private boolean isLogging = false;
 
     private CleanupLogger(){}
 
-    public CleanupLogger getInstance(){
-        return this;
+    static public CleanupLogger getInstance(){
+        return logger;
+    }
+
+    public void toggleLogging(){
+        Log.v("cleanup logger", "logging active");
     }
 
 
