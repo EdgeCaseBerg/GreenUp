@@ -337,6 +337,15 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
+	#Test delete a comment
+	tester.followLink(endPoints['comments'])
+	response = tester.getJSON()
+	tester.followLink(endPoints['comments'],withData={"id" : response['comments'][0]['id']},httpMethod="DELETE")
+	assert tester.getCode() == HTTP_DELETED
+	tester.followLink(endPoints['comments'],withData={"id" : response['comments'][0]['id']},httpMethod="DELETE")
+	assert tester.getCode() == HTTP_NOT_FOUND
+
+
 	print "\tComments Endpoint Passed all asserted tests"
 
 	#Default GET + no parameters
