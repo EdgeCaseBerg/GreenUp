@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/comment_grid_center_time_stamp"
-        android:layout_width="wrap_content"
+        android:layout_width="100px"
         android:layout_height="wrap_content"
         android:layout_marginTop="0px"
         android:layout_marginBottom="0px"
