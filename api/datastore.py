@@ -88,7 +88,7 @@ class Comments(Greenup):
 
 	@classmethod
 	def by_id(cls, commentId):
-		return Comments.get_by_id(commentId, parent = app_key())
+		return Comments.get_by_id(commentId, parent = Comments.app_key())
 	
 	@classmethod
 	def by_type(cls,cType):
@@ -206,6 +206,17 @@ class AbstractionLayer():
 		#Clear the memcache then recreate the initial page.
 		memcache.flush_all()
 		initialPage(None,"comment")
+
+	def deleteComment(self,commentId):
+		c = Comments.by_id(commentId)
+		if c is None:
+			return False
+		else:
+			#Delete any pins associated
+			if c.pin is not None:
+				c.pin.delete()
+			c.delete()
+		return True
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None,raw=False):
 		return heatmapFiltering(latDegrees,lonDegrees,latOffset,lonOffset,precision,raw)
