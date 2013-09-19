@@ -1,6 +1,7 @@
 package com.xenon.greenup;
 
 import com.xenon.greenup.util.Storage;
+import com.xenon.greenup.util.Storage.ChronoTime;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -44,21 +45,23 @@ public class HomeSectionFragment extends Fragment {
     	 */
     	chrono.setActivated(chronoState);		
     	if(HomeSectionFragment.currentTime == 0){
+    		/* current==0  => we should load from the db */
     		final Storage database = new Storage( this.getActivity() );
-    		String [] chronoStuff = database.getSecondsWorked();
-    		String secondsWorkedString = chronoStuff[0];
-    		if(chronoStuff[1].compareTo("OFF") == 0){
-    			chrono.setActivated(false);
-    			chrono.stop();
-    		}else{
-    	  		String strStopSign = chronoStuff[2];
-    	  		long baseTime =  Long.parseLong(strStopSign);
-    	  		chrono.setBase(baseTime);
-    			chrono.setActivated(true);
+    		ChronoTime ct = database.getSecondsWorked();
+    		
+    		chrono.setActivated(ct.state);
+    		toggleState = ct.state;
+    		if(toggleState){
     			chrono.start();
+        		startStopButton.setBackgroundResource(R.drawable.start);	
+    		}else{
+    			chrono.stop();
+        		startStopButton.setBackgroundResource(R.drawable.stop);	
     		}
-    		if( secondsWorkedString != null)
-    			HomeSectionFragment.currentTime = getChronoTime(secondsWorkedString);
+    
+    	  	chrono.setBase(ct.stoppedTime);
+  			HomeSectionFragment.currentTime = ct.secondsWorked;
+  			
     		chrono.setText(getChronoString()); 
     	}else{
     		chrono.setText(getChronoString()); /* Once storage implemented set this accordingly */
@@ -124,10 +127,18 @@ public class HomeSectionFragment extends Fragment {
 	public long getChronoTime(String timeForm){
 		//The chronometer doesn't actually have a 'getTime' function. So here's one
 		String[] pieces = timeForm.split(":");
-		long hours = Long.parseLong(pieces[0]);
-		long minutes = Long.parseLong(pieces[1]);
-		long seconds = Long.parseLong(pieces[2]);
-		return seconds + minutes*60 + hours*3600;
+		long t=0;
+		for(int i=0; i < pieces.length; i++ ){
+			try{
+				long temp = Long.parseLong(pieces[i]);
+				t += temp * Math.pow(60,i); 
+			}catch(Exception e){
+				//Fuck off chronometer for being a piece of shit that doesn't work! 
+				//What do we got?
+				Log.i("stupidChrono:",pieces[i]);
+			}
+		}
+		return t;
 	}
 	
 	public String getChronoString(){
