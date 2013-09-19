@@ -153,7 +153,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         background.setTileModeXY(TileMode.REPEAT,TileMode.REPEAT);
         holder.text.setBackground(background);
         holder.text.setPadding(10,3,3,3);
-
+        holder.timeStamp.setPadding(0, 0, 8, 0);
         holder.top.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         holder.bottom.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         holder.text.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
