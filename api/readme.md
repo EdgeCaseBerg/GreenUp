@@ -178,6 +178,35 @@ If the post data is malformed, the server will return a `400 bad request` respon
 }
 ```
 
+-------------------------------------------------
+
+###Delete Comment
+
+Method: **DELETE**
+
+URL: **/api/comments**
+
+####Required DELETE data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>id</td><td>Integer</td><td>The unique id identifying a comment. Can be found through GET requests on the comments</td></tr>
+    </tbody>
+</table>
+
+####Example Request
+`http://greenup.xenonapps.com/api/comments?id=4543252345345`
+
+####Example Response
+```
+{
+    "status_code" : 204,
+    "message" : "Successfuly deleted comment"
+}
+```
+
 ---------------------------------
 
 
@@ -428,6 +457,34 @@ URL: **/api/pins?id=<ID of the pin>**
 }
 ```
 
+
+###Delete Comment
+
+Method: **DELETE**
+
+URL: **/api/pins**
+
+####Required DELETE data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>id</td><td>Integer</td><td>The unique id identifying a pin. Can be found through GET requests on the pins</td></tr>
+    </tbody>
+</table>
+
+####Example Request
+`http://greenup.xenonapps.com/api/comments?id=4543252345345`
+
+####Example Response
+```
+{
+    "status_code" : 204,
+    "message" : "Successful"
+}
+```
+
 ----------------------------
 
 ###Retrieve log messages
@@ -612,6 +669,26 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
             <td>422</td>
             <td>Message exceeds 140 characters</td>
             <td>The message submitted is longer that the maximum length of 140 characters</td>
+        </tr>
+    </tbody>
+    <tr>
+        <td colspan="3" style="text-align: center;">DELETE Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td>422</td>
+            <td>Required key id not present in request url</td>
+            <td>The id field was not passed in the url.</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>id must be a numeric identifier</td>
+            <td>The Id was present, but was not a valid numeric integer</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>Could not find comment matching id</td>
+            <td>The requested comment to delete was not found</td>
         </tr>
     </tbody>
 </table>
@@ -828,6 +905,27 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
             <td>The pin identified by the id could not be found</td>
         </tr>
         <tr>
+    </tbody>
+    <tr>
+        <td colspan="3" style="text-align: center;">DELETE Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td>422</td>
+            <td>Required key id not present in request url</td>
+            <td>The id field was not passed in the url.</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>id must be a numeric identifier</td>
+            <td>The Id was present, but was not a valid numeric integer</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>Id not found and pin not updated</td>
+            <td>The requested pin to delete was not found</td>
+        </tr>
+    </tbody>
 </table>
 
 
