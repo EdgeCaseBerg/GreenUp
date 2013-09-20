@@ -54,11 +54,13 @@ public class HomeSectionFragment extends Fragment {
     		if(toggleState){
     			chrono.setBase(ct.stoppedTime);
     			chrono.start();
+    			chronoState = true;
     			startStopButton.setBackgroundResource(R.drawable.stop);	
     		}else{
     			chrono.setBase(System.currentTimeMillis()/1000L);
     			chrono.stop();
-        		startStopButton.setBackgroundResource(R.drawable.start);	
+        		startStopButton.setBackgroundResource(R.drawable.start);
+        		chronoState = false;
     		}
     		
     	  	
@@ -152,6 +154,7 @@ public class HomeSectionFragment extends Fragment {
 		sb.append(hours > 10 ? "" : "0").append(hours).append(":");
 		sb.append(minutes > 10 ? "" : "0").append(minutes).append(":");
 		sb.append(seconds > 10 ? "" : "0").append(seconds);
+		Log.i("getChronoString",sb.toString());
 		return sb.toString();
 	}
 

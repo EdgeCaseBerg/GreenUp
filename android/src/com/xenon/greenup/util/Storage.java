@@ -33,7 +33,7 @@ public class Storage extends SQLiteOpenHelper{
 	
 	public Storage(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		//context.deleteDatabase(DATABASE_NAME);
+		context.deleteDatabase(DATABASE_NAME);
 	}
 	
 	public void onCreate(SQLiteDatabase db){
