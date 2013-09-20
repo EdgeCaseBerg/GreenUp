@@ -33,7 +33,7 @@ public class Storage extends SQLiteOpenHelper{
 	
 	public Storage(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		context.deleteDatabase(DATABASE_NAME);
+		//context.deleteDatabase(DATABASE_NAME);
 	}
 	
 	public void onCreate(SQLiteDatabase db){
@@ -68,12 +68,12 @@ public class Storage extends SQLiteOpenHelper{
 	}
 	
 	
-	public void setSecondsWorked(String formattedTime,boolean onOff){
+	public void setSecondsWorked(long seconds,boolean onOff){
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
 		/* For now just test persitent time, otherwise we'd be stored a better key here*/
-		values.put(KEY_TIME, formattedTime);
+		values.put(KEY_TIME, String.valueOf(seconds));
 		values.put(KEY_CHRONO_STATE,  onOff ? 1 : 0 );
 		values.put(KEY_STOP_TIME, String.valueOf(System.currentTimeMillis()/1000L));
 		

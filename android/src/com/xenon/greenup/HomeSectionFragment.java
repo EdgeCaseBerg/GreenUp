@@ -29,7 +29,7 @@ public class HomeSectionFragment extends Fragment {
 	public void onPause(){
 		super.onPause();
     	final Storage database = new Storage( this.getActivity() ); 
-    	database.setSecondsWorked( getChronoString(), chronoState);
+    	database.setSecondsWorked( HomeSectionFragment.currentTime, chronoState);
 	}
 	
     @Override
@@ -52,14 +52,16 @@ public class HomeSectionFragment extends Fragment {
     		chrono.setActivated(ct.state);
     		toggleState = ct.state;
     		if(toggleState){
+    			chrono.setBase(ct.stoppedTime);
     			chrono.start();
-        		startStopButton.setBackgroundResource(R.drawable.start);	
+    			startStopButton.setBackgroundResource(R.drawable.stop);	
     		}else{
+    			chrono.setBase(System.currentTimeMillis()/1000L);
     			chrono.stop();
-        		startStopButton.setBackgroundResource(R.drawable.stop);	
+        		startStopButton.setBackgroundResource(R.drawable.start);	
     		}
-    
-    	  	chrono.setBase(ct.stoppedTime);
+    		
+    	  	
   			HomeSectionFragment.currentTime = ct.secondsWorked;
   			
     		chrono.setText(getChronoString()); 
@@ -127,11 +129,12 @@ public class HomeSectionFragment extends Fragment {
 	public long getChronoTime(String timeForm){
 		//The chronometer doesn't actually have a 'getTime' function. So here's one
 		String[] pieces = timeForm.split(":");
+	
 		long t=0;
-		for(int i=0; i < pieces.length; i++ ){
+		for(int i= pieces.length-1; i >= 0; i-- ){
 			try{
 				long temp = Long.parseLong(pieces[i]);
-				t += temp * Math.pow(60,i); 
+				t += temp * (temp == 0  ? 0 :  Math.pow(60,pieces.length - i -1)); 
 			}catch(Exception e){
 				//Fuck off chronometer for being a piece of shit that doesn't work! 
 				//What do we got?
