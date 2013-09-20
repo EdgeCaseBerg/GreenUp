@@ -168,7 +168,34 @@ class DebugReports(Greenup):
 	def get_all_delayed(cls):
 		return DebugReports.all().ancestor(DebugReports.app_key())
 
+class EntityCounter(Greenup):
+	entityType = db.StringProperty() # for now, this will probably be only 'comments'
+	entityCount = db.IntegerProperty()
 
+	@classmethod 
+	def by_id(cls, counterId):
+		return DebugReports.get_by_id(counterId, parent=app_key())
+
+	@classmethod
+	def by_type(cls,eType):
+		et = Comments.all().ancestor(Comments.app_key()).filter('commentType =', eType).get()	
+		return et
+
+	@classmethod
+	def addEntityType(cls, newType):
+		pass
+
+	@classmethod
+	def removeEntityType(cls, targetType):
+		pass
+
+	@classmethod
+	def getEntityCount(cls, targetType):
+		pass
+
+	@classmethod
+	def updateEntityCount(cls, targetType):
+		pass
 
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
@@ -193,6 +220,9 @@ class AbstractionLayer():
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
 		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
+
+		# write to entitycounter of comments type
+
 		#Clear the memcache then recreate the initial page.
 		memcache.flush_all()
 		initialPage(None,"comment")

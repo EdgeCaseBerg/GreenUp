@@ -253,6 +253,17 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 			assert val == HTTP_NOT_FOUND
 	return True
 
+def validateEntityCountPOST():
+	pass
+
+def validateEntityCountPUT():
+	pass
+
+def validateEntityCountDELETE():
+	pass
+
+def validateEntityCountDELETE404Response():
+	pass
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='Test the API.')
@@ -620,18 +631,16 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 	
-
-
-
-
-
-
-
-
-
-
 	print "\tDebug endpoint passed all assertion tests"
 
+
+	'''
+		****************** EntityCounter SECTION ****************** 
+	'''
+	# add several comments and see if they are counted correctly
+	# remove several comments and see if the count is updated correctly
+	# delete an entityCounter entity type and verify its deletion
+	# print "\tEntity Count endpoint passed all assertion tests"
 
 
 	print "Spider API Test complete. All tests passed"
