@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class Storage extends SQLiteOpenHelper{
 	private static final int DATABASE_VERSION = 1;
@@ -102,9 +103,11 @@ public class Storage extends SQLiteOpenHelper{
 			
 			try{
 				stopped = Long.valueOf(cursor.getString(2));
-			}catch(Exception e){/* http://www.youtube.com/watch?v=JWdZEumNRmI */}
+			}catch(Exception e){/* http://www.youtube.com/watch?feature=player_detailpage&v=JWdZEumNRmI#t=50*/}
 			
 		}
+		Log.i("dbLoad","secWorkd: "+secWorkd+" cState: "+cState+" stopped: "+stopped);
+		
 		return new ChronoTime(secWorkd,cState,stopped);
 		
 	}
