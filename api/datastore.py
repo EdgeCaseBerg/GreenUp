@@ -17,12 +17,82 @@ from datetime import date
 from constants import *
 
 class Campaign(db.Model):
-	pass
+	# specify callbacks (and callforwards?) as well as override all of the put and delete methods provided by db.model so we can use them for counting
+	def before_put(self):
+		logging.info("before put")
+
+	def after_put(self):
+		logging.info("after put")
+		# this is where we do the counting
+
+	def before_delete(self):
+		logging.info("before delete")
+
+	def after_delete(self):
+		logging.info("after delete")
+		# this is where we do the counting
+
+	def put_async(self):
+		return db.put_async(self)
+
+	def delete_async(self):
+		return db.delete_async(self)
+
+	def put(self):
+		# call get_result() on the return value to block on the call (returns an object containing the response data)
+		return self.put_async().get_result()
+
+	def delete(self):
+		# call get_result() on the return value to block on the call (returns an object containing the response data)
+		return self.delete_async().get_result()
+
+def normalize_entities(entities):
+	# used to convert an entity_pb (protocol buffer, which is what entities is right now) into an actual entity (an instance of db.model)
+	if not isinstance(entities, (list, tuple)):
+		entities = (entities,)
+	return [e for e in entities if hasattr(e, 'before_put')]
+'''
+	monkeypatching thusly:
+	1) Rename the old version of the function we're replacing so we can still access it
+	2) define the replacement for the function
+	3) replace the original with our replacement  
+'''
+# monkeypatch put_async to call entity.before_put
+db_put_async = db.put_async
+def db_put_async_hooked(entities, **kwargs):
+	ents = normalize_entities(entities)
+	for entity in ents:
+		entity.before_put()
+	a = db_put_async(entities, **kwargs)
+	get_result = a.get_result
+	def get_result_with_callback():
+		for entity in ents:
+			entity.after_put()
+		return get_result()
+	a.get_result = get_result_with_callback
+	return a
+db.put_async = db_put_async_hooked
+
+# monkeypatch delete_async to call entity.before_delete
+db_delete_async = db.delete_async
+def db_delete_async_hooked(entities, **kwargs):
+	ents = normalize_entities(entities)
+	for entity in ents:
+		entity.before_delete()
+	a = db_delete_async(entities, **kwargs)
+	get_result = a.get_result
+	def get_result_with_callback():
+		for entity in ents:
+			entity.after_delete()
+		return get_result()
+	a.get_result = get_result_with_callback
+	return a
+db.delete_async = db_delete_async_hooked
 
 class Greenup(Campaign):	
 	@classmethod
 	def app_key(cls):
-	    return db.Key.from_path('apps', 'greenup')
+		return db.Key.from_path('apps', 'greenup')
 
 class Pins(Greenup):
 	message = db.TextProperty()
