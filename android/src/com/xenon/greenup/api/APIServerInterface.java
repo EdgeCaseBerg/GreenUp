@@ -12,7 +12,7 @@ import android.util.Log;
 
 public final class APIServerInterface {
 		
-	private static final String BASE_URL = "https://greenupapp.appspot.com/api";
+	private static final String BASE_URL = "http://192.168.1.20:8080/api";
 	
 	//Class to serve as the main interface to the API server
 	//The application will invoke methods defined here to perform 
