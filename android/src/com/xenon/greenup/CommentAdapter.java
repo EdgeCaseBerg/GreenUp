@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xenon.greenup.api.Comment;
@@ -34,6 +35,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	
 	static class ViewHolder {
 		public TextView text; //icon is center
+        public TextView timeStamp;
 		public ImageView bottom;
 		public ImageView top;
 	}
@@ -84,11 +86,11 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	      rowView = inflater.inflate(R.layout.comment, null);
 	      ViewHolder viewHolder = new ViewHolder();
 	      viewHolder.text = (TextView) rowView.findViewById(R.id.comment_grid_center_text);
+          viewHolder.timeStamp = (TextView) rowView.findViewById(R.id.comment_grid_center_time_stamp);
 	      viewHolder.bottom= (ImageView) rowView.findViewById(R.id.comment_grid_bottom);
 	      viewHolder.top = (ImageView) rowView.findViewById(R.id.comment_grid_top);
 	      rowView.setTag(viewHolder);
 	    }
-
 	    ViewHolder holder = (ViewHolder) rowView.getTag();
 	    
 	    Comment comment= comments.get(position);
@@ -136,7 +138,10 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    	//Also check for null in the case one was never set above
 	    	difference = comment.getTimestamp() == null ? "" : comment.getTimestamp();
 	    }	    
-	    sb.append(difference);
+//	    sb.append(difference);
+        holder.timeStamp.setText(difference);
+        holder.timeStamp.setBackgroundResource(R.drawable.bubble_blue_center);
+
 	    holder.text.setText(sb.toString());
 	   
 	    //Use the type of the comment to determine what color it shall be
@@ -147,6 +152,12 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    BitmapDrawable background = (BitmapDrawable)this.context.getResources().getDrawable(topCenterBottomResourceIds[1]);
         background.setTileModeXY(TileMode.REPEAT,TileMode.REPEAT);
         holder.text.setBackground(background);
+        holder.text.setPadding(10,3,3,3);
+        holder.timeStamp.setPadding(0, 0, 8, 0);
+        holder.top.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        holder.bottom.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        holder.text.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        holder.timeStamp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
 	    //holder.text.setBackgroundResource(();
 	    if(position % 2 == 0) {  
 	    	holder.bottom.setBackgroundResource(getReverseOf(topCenterBottomResourceIds[2]));
