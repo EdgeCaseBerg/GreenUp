@@ -16,6 +16,32 @@ import hashlib
 from datetime import date
 from constants import *
 
+# manage the EntityCounter class
+def increment(caller):
+	ec = EntityCounter()
+	ec.setType(caller)
+	q = EntityCounter.all().filter('entityType =', caller).get()
+
+	if q is not None:
+		# an entityCounter object with this type does exist. all is well
+		ec.increment(q.key())
+	else:
+		# and EntityCounter for this type doesn't exist in the datastore yet. So make it.
+		ec.put()
+
+def decrement(caller):
+	ec = EntityCounter()
+	ec.setType(caller)
+	q = EntityCounter.all().filter('entityType =', caller).get()
+
+	if q is not None:
+		# an entityCounter object with this type does exist. all is well
+		ec.decrement(q.key())
+	else:
+		# and EntityCounter for this type doesn't exist in the datastore. How did this happen?
+		raise Exception("Trying to decrement from a non-existant entityCounter type")	
+
+
 class Campaign(db.Model):
 	# specify callbacks (and callforwards?) as well as override all of the put and delete methods provided by db.model so we can use them for counting
 	def before_put(self):
@@ -24,9 +50,7 @@ class Campaign(db.Model):
 	def after_put(self):
 		logging.info("after put")
 		# this is where we do the counting
-		ec = EntityCounter(self.__class__.__name__)
-		ec.increment()
-		# putme = ec.put()
+		increment(self.__class__.__name__)
 		
 	def before_delete(self):
 		logging.info("before delete")
@@ -34,8 +58,7 @@ class Campaign(db.Model):
 	def after_delete(self):
 		logging.info("after delete")
 		# this is where we do the counting
-		ec = EntityCounter(self.__class__.__name__)
-		ec.decrement()
+		decrement(self.__class__.__name__)
 
 	def put_async(self):
 		return db.put_async(self)
@@ -246,18 +269,23 @@ class DebugReports(Greenup):
 class EntityCounter(db.Model):
 	# inherits from db.model to avoid running the counting callbacks on itself
 	entityType = db.StringProperty()
-	entityCount = db.IntegerProperty()
+	entityCount = db.IntegerProperty(default=1)
 
-	def __init__(self, callerType):
+	def setType(self, callerType):
 		self.entityType = callerType
-		
-	@classmethod
-	def increment(cls):
-		pass
 
-	@classmethod
-	def decrement(cls):
-		pass
+	@db.transactional
+	def increment(self, key, amount=1):
+		# Doing the read, calculation, and write in a single transaction ensures that no other process can interfere with the increment
+		obj = db.get(key)
+		obj.entityCount += amount
+		obj.put()
+
+	@db.transactional
+	def decrement(self, key, amount=1):
+		obj = db.get(key)
+		obj.entityCount -= amount
+		obj.put()
 
 	@classmethod
 	def count(cls):
