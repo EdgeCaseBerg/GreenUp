@@ -253,6 +253,8 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 			assert val == HTTP_NOT_FOUND
 	return True
 
+# entityCounter test methods
+
 def validateEntityCountPOST():
 	pass
 
@@ -633,11 +635,35 @@ if __name__ == "__main__":
 	
 	print "\tDebug endpoint passed all assertion tests"
 
+	'''
+		****************** EntityCounter SECTION ******************
+		To test that the entity counter is working:
+		We should count the comments in the datastore with the built in count method. We should then compare this result to the amount in the entityCounter for 
+		comments. These should match.
+		We then want to delete several items from the datastore to make sure that the deletion is working. We have 3 operations to test.
 
+		1) add item to datastore (should increment automatically). Each time a write is performed, the entityCounter counter should increase for that entity type.
+		2) remove item from the datastore (should decrement automatically)
+		3) count the items in the datastore (the entityCounter method, and purpose of it!)
+		If any of these fail, we should throw an assertion error. 
+
+		** To do this, I may need to add an entityCounter endpoint
+
+		Pseudocode as follows:
+
+		for i in range(0,5):
+			add comments(i)
+
+		assert entityCounter().count(comments) == 5
+
+		for i in range(1,5):
+			remove comment(i)
+
+		assert entityCounter().count(comments) == 4
 	'''
-		****************** EntityCounter SECTION ****************** 
-	'''
-	# add several comments and see if they are counted correctly
+
+	# count the number of comments in the datastore
+
 	# remove several comments and see if the count is updated correctly
 	# delete an entityCounter entity type and verify its deletion
 	# print "\tEntity Count endpoint passed all assertion tests"

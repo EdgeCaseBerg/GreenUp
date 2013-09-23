@@ -24,13 +24,18 @@ class Campaign(db.Model):
 	def after_put(self):
 		logging.info("after put")
 		# this is where we do the counting
-
+		ec = EntityCounter(self.__class__.__name__)
+		ec.increment()
+		# putme = ec.put()
+		
 	def before_delete(self):
 		logging.info("before delete")
 
 	def after_delete(self):
 		logging.info("after delete")
 		# this is where we do the counting
+		ec = EntityCounter(self.__class__.__name__)
+		ec.decrement()
 
 	def put_async(self):
 		return db.put_async(self)
@@ -238,33 +243,24 @@ class DebugReports(Greenup):
 	def get_all_delayed(cls):
 		return DebugReports.all().ancestor(DebugReports.app_key())
 
-class EntityCounter(Greenup):
-	entityType = db.StringProperty() # for now, this will probably be only 'comments'
+class EntityCounter(db.Model):
+	# inherits from db.model to avoid running the counting callbacks on itself
+	entityType = db.StringProperty()
 	entityCount = db.IntegerProperty()
 
-	@classmethod 
-	def by_id(cls, counterId):
-		return DebugReports.get_by_id(counterId, parent=app_key())
-
+	def __init__(self, callerType):
+		self.entityType = callerType
+		
 	@classmethod
-	def by_type(cls,eType):
-		et = Comments.all().ancestor(Comments.app_key()).filter('commentType =', eType).get()	
-		return et
-
-	@classmethod
-	def addEntityType(cls, newType):
+	def increment(cls):
 		pass
 
 	@classmethod
-	def removeEntityType(cls, targetType):
+	def decrement(cls):
 		pass
 
 	@classmethod
-	def getEntityCount(cls, targetType):
-		pass
-
-	@classmethod
-	def updateEntityCount(cls, targetType):
+	def count(cls):
 		pass
 
 '''
