@@ -663,7 +663,6 @@ if __name__ == "__main__":
 	'''
 
 	# count the number of comments in the datastore
-
 	# remove several comments and see if the count is updated correctly
 	# delete an entityCounter entity type and verify its deletion
 	# print "\tEntity Count endpoint passed all assertion tests"
