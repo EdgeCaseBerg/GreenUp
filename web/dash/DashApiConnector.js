@@ -292,25 +292,30 @@ function MapHandle(){
 	    centerPoint = new google.maps.LatLng(this.currentLat, this.currentLon); 
 	    var mapOptions = {
 		    center: centerPoint,
-		    mapTypeId: google.maps.MapTypeId.ROADMAP, 
+		    mapTypeId: google.maps.MapTypeId.ROADMAP,
+		    panControl: false, 
 		    mapTypeControl: true,
    			mapTypeControlOptions: {
       			position: google.maps.ControlPosition.TOP_CENTER,
       			style: google.maps.MapTypeControlStyle.DEFAULT
-    		}, 
+    		},
+    		zoomControl: true,
+    		zoomControlOptions: {
+        		style: google.maps.ZoomControlStyle.LARGE,
+        		position: google.maps.ControlPosition.LEFT_CENTER
+    		},
     		zoom: window.MAP.currentZoom,
     		streetViewControl: false
 		  };
 
-		  // google.maps.MapTypeControlOptions
-		  // google.maps.StreetViewControlOptions
-		  // google.maps.ZoomControlOptions
-		  // this.toggleHeatmap();
-
-		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-		  // for activating the loading screen while map loads
-		  google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
-		  // our comment selector initializers
+		  // instanciate our map
+		window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+		// get our bounds and set our map as loaded
+		google.maps.event.addListener(window.MAP.map, 'idle', function(ev){
+		  	window.UI.setMapLoaded
+		  	window.MAP.updateBounds();	
+			
+		});
 
 		  // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
 		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.mapTouchDown);
@@ -435,6 +440,16 @@ function MapHandle(){
 			window.UI.isMapLoaded = false;
 		    var newcenter = new google.maps.LatLng(lat, lon);
         	window.MAP.map.panTo(newcenter);
+
+	}
+	MapHandle.prototype.updateBounds = function updateBounds(){
+		window.MAP.bounds = window.MAP.map.getBounds();
+		window.MAP.bounds_ne = window.MAP.bounds.getNorthEast(); // LatLng of the north-east corner
+		window.MAP.bounds_sw = window.MAP.bounds.getSouthWest(); // LatLng of the south-west corder
+		window.MAP.bounds_nw = new google.maps.LatLng(window.MAP.bounds_ne.lat(), window.MAP.bounds_sw.lng());
+		window.MAP.bounds_se = new google.maps.LatLng(window.MAP.bounds_sw.lat(), window.MAP.bounds_ne.lng());
+
+		console.log("new NE bounds: "+window.MAP.bounds_ne.lat());
 	}
 
 	MapHandle.prototype.toggleIcons = function toggleIcons(){
@@ -598,6 +613,8 @@ function UiHandle(){
 
 	this.textInputIsVisible = false;
 
+	this.isOptionsVisible = false;
+
 	this.isClockRunning = false;
 	this.clockHrs = 00;
 	this.clockMins = 00;
@@ -627,7 +644,23 @@ function UiHandle(){
     		$('.row').hide();
     		$('.commentsAdminContainer').show();	
     	});
+
+    	$('#infoIcon').click(function(){
+    		window.UI.toggleMapOptions();
+    	});
 	} // end init
+
+	UiHandle.prototype.toggleMapOptions = function toggleMapOptions(){
+		if(window.UI.isOptionsVisible){
+			$('.markerTypeSelectDialog').css({"top":"-300px"});
+			// $('#map-canvas').css({"height:100%"});
+			window.UI.isOptionsVisible = false;
+		}else{
+			$('.markerTypeSelectDialog').css({"top":"0%"});
+			// $('#map-canvas').css({"height:80%"});
+			window.UI.isOptionsVisible = true;
+		}
+	}
 
 	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
 		document.getElementById("markerTypeDialog").style.display = "none";
@@ -706,14 +739,7 @@ function UiHandle(){
 	    // if it was a short touch
 	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
 	    	// check if the marker select menu is showing and toggle appropriately
-	        if(this.isMarkerDisplayVisible){
-	        	window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.MARKER;
-	        	window.UI.hideMarkerTypeSelect();
-	        }else{
-	        	window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.MARKER;
-	        	window.UI.showMarkerTypeSelect();
-	        }
-
+	        window.UI.toggleMapOptions()
 	        this.MOUSEDOWN_TIME =0;
 	        this.MOUSEDOWN_TIME =0;
 	    }else{
