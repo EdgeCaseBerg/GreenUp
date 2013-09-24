@@ -43,7 +43,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	public CommentAdapter(Activity feedSectionFragment, ArrayList<Comment> comments){
 		super(feedSectionFragment, R.layout.comment,comments);
 		this.context = feedSectionFragment;
-		this.comments  = comments;
+		this.comments = comments;
 	}
 	
 	/**
