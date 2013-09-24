@@ -40,6 +40,8 @@ ul{
 #map-canvas{
 /*    min-height:450px;
     min-width:500px;*/
+    position:relative;
+    z-index: 225;
     margin-top: -20px;
 	width:100%;
 	height:80%;
@@ -64,7 +66,7 @@ ul{
 	float:right;
 	position:absolute;
 	top:-300px;
-	z-index: 200;
+	z-index: 230;
 	width: 100%;
 	height: 30%;
 	background: #eee;
@@ -85,7 +87,7 @@ ul{
 }
 
 #analyticsDialog{
-    height:100px;
+    min-height:100px;
     width:100%;
     background: #eee;
 }
@@ -128,8 +130,18 @@ ul{
 }
 
 .usageDataNestColumn{
-    width: 50%;
+    width: 48%;
     display: inline-block;
+    vertical-align: top;
+}
+
+#usageDataChart{
+    position:relative;
+    z-index:100;
+    display:inline-block;
+    float:right;
+    vertical-align: top;
+    margin-top: -20px;
 }
 
 #markerTypeDialog{
