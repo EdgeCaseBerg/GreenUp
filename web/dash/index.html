@@ -5,14 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="styles.css" rel="stylesheet" media="screen">
+        <link href="styles.css" rel="stylesheet" media="screen">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="//code.jquery.com/jquery.js"></script>
+    
 
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
+    <script type="text/javascript" 
+src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'ru'}]}">
+</script>
+
     <script src="DashApiConnector.js"></script>
 
 
@@ -55,11 +62,47 @@
   </nav>
 
   <div class="row mapAdminContainer">
-    <img id="infoIcon" src="images/info-icon.png" height="40" width="40"/>
+    <img id="infoIcon" src="images/info-icon-dark.png" height="40" width="40"/>
     <div id="map-canvas">
 	  </div>
 
         <div id="analyticsDialog">
+          <div class="analyticsColumnContainer">
+            <div class="nestedAnalyticsColumn">
+              <div class="analyticsHeader">
+                Total Users
+              </div>
+              <div class="analyticsData">
+                <div class="analyticsDataNestColumn usageDataNestColumn">
+                  <ul>
+                    <li>iPhone  <span class="analyticsDataPoint">25%</span></li>
+                    <li>Android <span class="analyticsDataPoint">25%</span></li>
+                    <li>Web <span class="analyticsDataPoint">50%</span></li>
+                  </ul>
+                </div>
+                <div class="analyticsDataNestColumn usageDataNestColumn" id="usageDataChart">
+
+        
+
+
+
+
+
+                </div>
+
+              </div>
+            </div>
+            <div class="nestedAnalyticsColumn">
+              <div class="analyticsHeader">
+                Total Time Worked
+              </div>
+            </div>
+            <div class="nestedAnalyticsColumn">
+              <div class="analyticsHeader">
+                Total Area Cleaned
+              </div>
+            </div>
+          </div>
         </div>
 
 		<div id="markerTypeDialog" class="markerTypeSelectDialog">

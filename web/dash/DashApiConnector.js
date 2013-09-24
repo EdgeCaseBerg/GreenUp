@@ -313,7 +313,12 @@ function MapHandle(){
 		// get our bounds and set our map as loaded
 		google.maps.event.addListener(window.MAP.map, 'idle', function(ev){
 		  	window.UI.setMapLoaded
-		  	window.MAP.updateBounds();	
+		  	window.MAP.updateBounds();
+
+		  	// google.load("visualization", "1", {packages:["corechart"]});
+      		// google.setOnLoadCallback(function(){
+      			window.UI.drawVisualisation();
+      		// });	
 			
 		});
 
@@ -648,7 +653,46 @@ function UiHandle(){
     	$('#infoIcon').click(function(){
     		window.UI.toggleMapOptions();
     	});
+
+    	$('#infoIcon').mouseenter(function(){
+    		$(this).attr("src", "images/info-icon-light.png");	
+    	});
+
+    	$('#infoIcon').mouseleave(function(){
+    		$(this).attr("src", "images/info-icon-dark.png");	
+    	});
+
+
+  
+
 	} // end init
+
+	UiHandle.prototype.drawVisualisation = function drawVisualization(){
+
+		// google.load("visualization", "1", {packages:["corechart"]});
+      	// google.setOnLoadCallback(function(){
+      			// window.UI.drawVisualisation();	
+		console.log("gggg");
+	  // Create and populate the data table.
+	  	var data =  new google.visualization.arrayToDataTable([
+	    	['Task', 'Hours per Day'],
+	    	['iPhone', 25],
+	    	['Android', 25],
+	    	['Web', 50],
+	  	]);
+
+	  	var options = {
+	  		backgroundColor: "#eee",
+	  		height: 120,
+	  		width: 120,
+	  		legend: {position: 'none'}
+	  	}
+	  	  new google.visualization.PieChart(document.getElementById('usageDataChart')).draw(data, options);
+
+	  // });
+
+	  // Create and draw the visualization.
+	}
 
 	UiHandle.prototype.toggleMapOptions = function toggleMapOptions(){
 		if(window.UI.isOptionsVisible){
