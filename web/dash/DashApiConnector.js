@@ -674,20 +674,37 @@ function UiHandle(){
       			// window.UI.drawVisualisation();	
 		console.log("gggg");
 	  // Create and populate the data table.
-	  	var data =  new google.visualization.arrayToDataTable([
+	  	var pieData =  new google.visualization.arrayToDataTable([
 	    	['Task', 'Hours per Day'],
 	    	['iPhone', 25],
 	    	['Android', 25],
 	    	['Web', 50],
 	  	]);
 
-	  	var options = {
+	  	var lineData = new google.visualization.arrayToDataTable([
+          ['Year', 'Sales'],
+          ['2004',  1000],
+          ['2005',  1170],
+          ['2006',  660],
+          ['2007',  1030]
+        ]);
+
+        var lineOptions = {
+        	backgroundColor: "#eee",
+          	legend: {position: 'none'}, 
+          	height: 100
+        };
+
+        var lineChart = new google.visualization.LineChart(document.getElementById('usageDataLineChart'));
+        lineChart.draw(lineData, lineOptions);
+
+	  	var pieOptions = {
 	  		backgroundColor: "#eee",
 	  		height: 120,
 	  		width: 120,
 	  		legend: {position: 'none'}
 	  	}
-	  	  new google.visualization.PieChart(document.getElementById('usageDataChart')).draw(data, options);
+	  	var pieChart = new google.visualization.PieChart(document.getElementById('usageDataPieChart')).draw(pieData, pieOptions);
 
 	  // });
 
