@@ -1,5 +1,6 @@
 body{
     overflow-x:hidden;
+    background: #eee;
 }
 
 ul{
@@ -107,6 +108,8 @@ ul{
 .analyticsHeader{
     font-size: 1.2em;
     font-weight: bold;
+    position: relative;
+    z-index: 120;
 }
 
 .nestedAnalyticsColumn{
@@ -140,13 +143,19 @@ ul{
     vertical-align: top;
 }
 
-#usageDataChart{
+.usageDataChart{
     position:relative;
     z-index:100;
     display:inline-block;
     float:right;
     vertical-align: top;
     margin-top: -27px;
+}
+
+#usageDataLineChart{
+    float:left; 
+    width: 90%;
+    margin-top: -10px;
 }
 
 #markerTypeDialog{
