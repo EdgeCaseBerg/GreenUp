@@ -19,6 +19,7 @@ public class CommentPage {
 		int i;
 		JSONObject object,pageInfo;
 		JSONArray comments;
+		this.commentsList = new ArrayList<Comment>();
 		try {
 			object = new JSONObject(jsonString);
 			pageInfo = object.getJSONObject("page");
@@ -27,7 +28,6 @@ public class CommentPage {
 			Log.i("prevPage",this.prevPage);
 			Log.i("nextPage",this.nextPage);
 			comments = object.getJSONArray("comments");
-			this.commentsList = new ArrayList<Comment>();
 			for (i = 0; i < comments.length(); i++){
 				this.commentsList.add(new Comment(comments.getString(i)));
 				/*
