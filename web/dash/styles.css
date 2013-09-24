@@ -13,6 +13,11 @@ ul{
 
 }
 
+.navBar{
+    position:relative;
+    z-index: 300;
+}
+
 .col-md-8{
 }
 
@@ -23,6 +28,7 @@ ul{
 #map-canvas{
     min-height:650px;
     min-width:500px;
+    margin-top: -20px;
 	width:100%;
 	height:120%;
 	border:solid 1px #999;
@@ -43,7 +49,7 @@ ul{
 .markerTypeSelectDialog{
 	float:right;
 	position:absolute;
-	top:140%;
+	top:-300px;
 	z-index: 200;
 	width: 100%;
 	height: 30%;
@@ -54,8 +60,8 @@ ul{
 	/*-webkit-box-shadow:  0px 6px 20px -8px rgba(3, 3, 3, 0.7);
     box-shadow:  0px 6px 20px -8px rgba(3, 3, 3, 0.7);*/
 
-    -webkit-box-shadow: inset 0px 10px 6px 0px rgba(3, 3, 3, 0.2);    
-    box-shadow: inset 0px 10px 6px 0px rgba(3, 3, 3, 0.2);
+    -webkit-box-shadow: 0px 10px 6px 0px rgba(3, 3, 3, 0.2);    
+    box-shadow: 0px 10px 6px 0px rgba(3, 3, 3, 0.2);
 
     -webkit-transition: all .4s ease;
     -moz-transition: all .4s ease;
