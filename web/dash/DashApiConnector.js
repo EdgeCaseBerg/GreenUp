@@ -308,32 +308,14 @@ function MapHandle(){
     		streetViewControl: false
 		  };
 
-		  // google.maps.MapTypeControlOptions
-		  // google.maps.StreetViewControlOptions
-		  // google.maps.ZoomControlOptions
-		  // this.toggleHeatmap();
-
-		  
-
-		  	window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-
-		  	google.maps.event.addListener(window.MAP.map, 'idle', function(ev){
-		  		window.MAP.updateBounds();	
+		  // instanciate our map
+		window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+		// get our bounds and set our map as loaded
+		google.maps.event.addListener(window.MAP.map, 'idle', function(ev){
+		  	window.UI.setMapLoaded
+		  	window.MAP.updateBounds();	
 			
-			});
-
-		  	// var bounds = window.MAP.map.getBounds();
-		  	// console.log(bounds);
-			// this.bounds_ne = bounds.getNorthEast(); // LatLng of the north-east corner
-			// this.bounds_sw = bounds.getSouthWest(); // LatLng of the south-west corder
-			// this.bounds_nw = new google.maps.LatLng(ne.lat(), sw.lng());
-			// this.bounds_se = new google.maps.LatLng(sw.lat(), ne.lng());
-			// console.log("initial NE bounds: "+window.MAP.bounds.ne.lat());
-
-
-		  // for activating the loading screen while map loads
-		  google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
-		  // our comment selector initializers
+		});
 
 		  // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
 		  google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.mapTouchDown);
