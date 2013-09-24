@@ -598,6 +598,8 @@ function UiHandle(){
 
 	this.textInputIsVisible = false;
 
+	this.isOptionsVisible = false;
+
 	this.isClockRunning = false;
 	this.clockHrs = 00;
 	this.clockMins = 00;
@@ -627,7 +629,23 @@ function UiHandle(){
     		$('.row').hide();
     		$('.commentsAdminContainer').show();	
     	});
+
+    	$('#infoIcon').click(function(){
+    		window.UI.toggleMapOptions();
+    	});
 	} // end init
+
+	UiHandle.prototype.toggleMapOptions = function toggleMapOptions(){
+		if(window.UI.isOptionsVisible){
+			$('.markerTypeSelectDialog').css({"top":"100%"});
+			// $('#map-canvas').css({"height:100%"});
+			window.UI.isOptionsVisible = false;
+		}else{
+			$('.markerTypeSelectDialog').css({"top":"140%"});
+			// $('#map-canvas').css({"height:80%"});
+			window.UI.isOptionsVisible = true;
+		}
+	}
 
 	UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
 		document.getElementById("markerTypeDialog").style.display = "none";
