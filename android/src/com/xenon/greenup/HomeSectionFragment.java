@@ -46,8 +46,9 @@ public class HomeSectionFragment extends Fragment {
 		/* Set Chronometer from database stuff */
 		chrono.setActivated(ct.state);
 		
-		
-		chrono.setBase(SystemClock.elapsedRealtime() - ((SystemClock.elapsedRealtime() - ct.stoppedTime ) + ct.secondsWorked));
+		long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;
+		chrono.setBase(SystemClock.elapsedRealtime() - stopped);
+		//chrono.setBase(SystemClock.elapsedRealtime() - ((SystemClock.elapsedRealtime() - ct.stoppedTime ) + ct.secondsWorked));
 		
 		if(ct.state){
 			/* If the chronometer is on */
@@ -65,9 +66,10 @@ public class HomeSectionFragment extends Fragment {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				active = isChecked;
-				
 				ChronoTime ct = database.getSecondsWorked();
-				chrono.setBase(SystemClock.elapsedRealtime() - ((SystemClock.elapsedRealtime() - ct.stoppedTime ) + ct.secondsWorked));
+				
+				long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;
+				chrono.setBase(SystemClock.elapsedRealtime() - stopped);
 				
 				if(isChecked) {
 
@@ -79,6 +81,7 @@ public class HomeSectionFragment extends Fragment {
 					long gct = getChronoTime(chrono.getText().toString());
 					database.setSecondsWorked(gct, false);
 					chrono.stop();
+					chrono.setText( getChronoString(gct) );
 				}		
 			}
 		});
