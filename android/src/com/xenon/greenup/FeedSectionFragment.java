@@ -3,6 +3,9 @@ package com.xenon.greenup;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -19,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Comment;
@@ -84,9 +88,15 @@ public class FeedSectionFragment extends ListFragment implements DrawerListener,
     @Override
     public void onResume(){
     	super.onResume();
-    	drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-		AsyncCommentLoadTask task = new AsyncCommentLoadTask(this,getActivity());
-		task.execute();
+    	//if we have a network connection, load the comments from the server
+    	if (isConnected()) {
+    		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    		AsyncCommentLoadTask task = new AsyncCommentLoadTask(this,getActivity());
+    		task.execute();
+    	}
+    	else {
+    		Toast.makeText(getActivity(), "No network connection :(", Toast.LENGTH_SHORT).show();
+    	}
     }
     
 	private class AsyncCommentLoadTask extends AsyncTask<Void,Void,Void>{
@@ -164,5 +174,16 @@ public class FeedSectionFragment extends ListFragment implements DrawerListener,
 
 	@Override
 	public void onDrawerStateChanged(int state) {
+	}
+	
+    //Possibly check more network types and/or connection states
+	private boolean isConnected() {
+		ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (cm.getNetworkInfo(0) != null && cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED)
+			return true;
+		else if (cm.getNetworkInfo(1) != null && cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED)
+			return true;
+		else
+			return false;
 	}
 }
