@@ -35,6 +35,10 @@ public class Storage extends SQLiteOpenHelper{
 	
 	public Storage(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
+	
+	public Storage(Context context, boolean deleteDatabase){
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		context.deleteDatabase(DATABASE_NAME);
 	}
 	
@@ -93,6 +97,7 @@ public class Storage extends SQLiteOpenHelper{
 		long stopped = SystemClock.elapsedRealtime();
 		
 		if(cursor != null){
+			Log.i("numrows",""+cursor.getCount());
 			cursor.moveToFirst();
 			
 			try{

@@ -16,16 +16,18 @@ import android.widget.ToggleButton;
 
 public class HomeSectionFragment extends Fragment {
 	private boolean active = false;
+	private  Storage database;
 	
 	@Override
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
+    	database = new Storage( this.getActivity() );
 	}
 	
 	@Override
 	public void onPause(){
 		super.onPause();
-    	final Storage database = new Storage( this.getActivity() ); 
+    	database = new Storage( this.getActivity() ); 
     	//database.setSecondsWorked( , chronoState);
 	}
 	
@@ -40,13 +42,14 @@ public class HomeSectionFragment extends Fragment {
     	 * you're going for a uniform look between all applications and really want to 
     	 * have one specific format for all timers. Which we do. So here's the default:
     	 */
-    	final Storage database = new Storage( this.getActivity() );
+
 		ChronoTime ct = database.getSecondsWorked();		
 		
 		/* Set Chronometer from database stuff */
 		chrono.setActivated(ct.state);
 		
 		long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;
+		Log.i("initialize view: ", ""+stopped);
 		chrono.setBase(SystemClock.elapsedRealtime() - stopped);
 		//chrono.setBase(SystemClock.elapsedRealtime() - ((SystemClock.elapsedRealtime() - ct.stoppedTime ) + ct.secondsWorked));
 		
