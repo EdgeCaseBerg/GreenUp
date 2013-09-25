@@ -39,7 +39,9 @@ def decrement(caller):
 		ec.decrement(q.key())
 	else:
 		# and EntityCounter for this type doesn't exist in the datastore. How did this happen?
-		raise Exception("Trying to decrement from a non-existant entityCounter type")	
+		# it can happen because we can ask to delete something that doesn't exist. -E. --the spider does it
+		#raise Exception("Trying to decrement from a non-existant entityCounter type")	
+		pass #removed raise becuase it causes a problem with spider.
 
 
 class Campaign(db.Model):
@@ -85,37 +87,6 @@ def normalize_entities(entities):
 	2) define the replacement for the function
 	3) replace the original with our replacement  
 '''
-# monkeypatch put_async to call entity.before_put
-db_put_async = db.put_async
-def db_put_async_hooked(entities, **kwargs):
-	ents = normalize_entities(entities)
-	for entity in ents:
-		entity.before_put()
-	a = db_put_async(entities, **kwargs)
-	get_result = a.get_result
-	def get_result_with_callback():
-		for entity in ents:
-			entity.after_put()
-		return get_result()
-	a.get_result = get_result_with_callback
-	return a
-db.put_async = db_put_async_hooked
-
-# monkeypatch delete_async to call entity.before_delete
-db_delete_async = db.delete_async
-def db_delete_async_hooked(entities, **kwargs):
-	ents = normalize_entities(entities)
-	for entity in ents:
-		entity.before_delete()
-	a = db_delete_async(entities, **kwargs)
-	get_result = a.get_result
-	def get_result_with_callback():
-		for entity in ents:
-			entity.after_delete()
-		return get_result()
-	a.get_result = get_result_with_callback
-	return a
-db.delete_async = db_delete_async_hooked
 
 class Greenup(Campaign):	
 	@classmethod
@@ -313,9 +284,11 @@ class AbstractionLayer():
 
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
-		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
+		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin)
+		cmt.put()
 
 		# write to entitycounter of comments type
+		increment(cmt.__class__.__name__)
 
 		#Clear the memcache then recreate the initial page.
 		memcache.flush_all()
@@ -328,7 +301,9 @@ class AbstractionLayer():
 		# datastore write
 		for point in heatmapList:
 			#We may want to consider some error checking here.
-			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
+			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked'])
+			gp.put()
+			increment(gp.__class__.__name__)
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None):
 		# datastore read
@@ -336,8 +311,13 @@ class AbstractionLayer():
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
-		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
-		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
+		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message)
+		increment(p.__class__.__name__)
+		p = p.put()
+		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p)
+		c.put()
+		increment(c.__class__.__name__)
+		
 		memcache.flush_all()
 		initialPage(None,"comment")
 		return p.id()
@@ -346,8 +326,10 @@ class AbstractionLayer():
 	def submitDebug(self, errorMessage, debugInfo,origin):
 		# submit information about a bug
 		authhash = hashlib.sha256(errorMessage + debugInfo).hexdigest()
-		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin).put()
+		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin)
+		debug.put()
 		memcache.flush_all()
+		increment(debug.__class__.__name__)
 		initialPage(None,"comment")
 
 	def getDebug(self, debugId=None, theHash=None,since=None,page=1):
@@ -367,6 +349,7 @@ class AbstractionLayer():
 	def deleteDebug(self,origin,theHash):
 		# remove a bug from the datastore (if only we could remove all the bugs from the datastore! )
 		debugReport = DebugReports.by_hash(theHash)
+		decrement(debugReport.__class__.__name__)
 		msg = "Succesful Deletion"
 		if debugReport is None:
 			stat = HTTP_NOT_FOUND
