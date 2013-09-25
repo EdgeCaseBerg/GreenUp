@@ -713,11 +713,11 @@ function UiHandle(){
 
 	UiHandle.prototype.toggleMapOptions = function toggleMapOptions(){
 		if(window.UI.isOptionsVisible){
-			$('.markerTypeSelectDialog').css({"top":"-300px"});
+			$('.markerTypeSelectDialog').css({"top":"-200px"});
 			// $('#map-canvas').css({"height:100%"});
 			window.UI.isOptionsVisible = false;
 		}else{
-			$('.markerTypeSelectDialog').css({"top":"0%"});
+			$('.markerTypeSelectDialog').css({"top":"55px"});
 			// $('#map-canvas').css({"height:80%"});
 			window.UI.isOptionsVisible = true;
 		}
