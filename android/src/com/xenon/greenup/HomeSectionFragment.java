@@ -49,8 +49,9 @@ public class HomeSectionFragment extends Fragment {
 		chrono.setActivated(ct.state);
 		active = ct.state;
 		
-		long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;;
-		chrono.setBase(SystemClock.elapsedRealtime() - stopped);
+		long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;
+		long pausedTime = ct.state ? (SystemClock.elapsedRealtime() - ct.stoppedTime) : 0;
+		chrono.setBase(SystemClock.elapsedRealtime() - pausedTime - stopped);
 
 		if(ct.state){
 			/* If the chronometer is on */
