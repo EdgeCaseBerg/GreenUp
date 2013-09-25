@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.SystemClock;
 import android.util.Log;
 
 public class Storage extends SQLiteOpenHelper{
@@ -34,6 +35,10 @@ public class Storage extends SQLiteOpenHelper{
 	
 	public Storage(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
+	
+	public Storage(Context context, boolean deleteDatabase){
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		context.deleteDatabase(DATABASE_NAME);
 	}
 	
@@ -57,7 +62,7 @@ public class Storage extends SQLiteOpenHelper{
 		values.put(KEY_ID, SINGLETON_PK);
 		values.put(KEY_TIME, "0");
 		values.put(KEY_CHRONO_STATE, 0);
-		values.put(KEY_STOP_TIME, String.valueOf(System.currentTimeMillis()/1000L));
+		values.put(KEY_STOP_TIME, String.valueOf(SystemClock.elapsedRealtime()));
 		
 		db.insert(SECONDS_WORKED_TABLE_NAME, null,values);
 	}
@@ -76,19 +81,20 @@ public class Storage extends SQLiteOpenHelper{
 		/* For now just test persitent time, otherwise we'd be stored a better key here*/
 		values.put(KEY_TIME, String.valueOf(seconds));
 		values.put(KEY_CHRONO_STATE,  onOff ? 1 : 0 );
-		values.put(KEY_STOP_TIME, String.valueOf(System.currentTimeMillis()/1000L));
-		
+		values.put(KEY_STOP_TIME, String.valueOf(SystemClock.elapsedRealtime()));
+		Log.i("saveToDB","time: " + seconds + " onOff: " + onOff + " stopTime: " + String.valueOf(SystemClock.elapsedRealtime()));
 		db.update(SECONDS_WORKED_TABLE_NAME, values, KEY_ID + "= ?", new String[]{SINGLETON_PK});
 		db.close();
 	}
+	
 	public ChronoTime getSecondsWorked(){
 		SQLiteDatabase db = this.getReadableDatabase();
-		String selectQuery = "SELECT " +  KEY_TIME + "," + KEY_CHRONO_STATE + ", " +  KEY_STOP_TIME + " FROM " + SECONDS_WORKED_TABLE_NAME + " LIMIT 1";
+		String selectQuery = "SELECT " +  KEY_TIME + "," + KEY_CHRONO_STATE + ", " +  KEY_STOP_TIME + " FROM " + SECONDS_WORKED_TABLE_NAME + " WHERE " + KEY_ID + " = " + SINGLETON_PK;
 		Cursor cursor = db.rawQuery(selectQuery,null);
 		
 		long secWorkd = 0L;
 		boolean cState = false;
-		long stopped = System.currentTimeMillis()/1000L;
+		long stopped = SystemClock.elapsedRealtime();
 		
 		if(cursor != null){
 			cursor.moveToFirst();
@@ -107,6 +113,7 @@ public class Storage extends SQLiteOpenHelper{
 			
 		}
 		Log.i("dbLoad","secWorkd: "+secWorkd+" cState: "+cState+" stopped: "+stopped);
+		cursor.close();
 		
 		return new ChronoTime(secWorkd,cState,stopped);
 		

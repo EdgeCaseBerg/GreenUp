@@ -192,7 +192,6 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        	Log.i("time",""+HomeSectionFragment.currentTime);
     	    
             for (int i=0; i<mTabs.size(); i++) {
             	if (mTabs.get(i) == tab) {
