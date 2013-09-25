@@ -47,12 +47,11 @@ public class HomeSectionFragment extends Fragment {
 		
 		/* Set Chronometer from database stuff */
 		chrono.setActivated(ct.state);
+		active = ct.state;
 		
-		long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;
-		Log.i("initialize view: ", ""+stopped);
+		long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;;
 		chrono.setBase(SystemClock.elapsedRealtime() - stopped);
-		//chrono.setBase(SystemClock.elapsedRealtime() - ((SystemClock.elapsedRealtime() - ct.stoppedTime ) + ct.secondsWorked));
-		
+
 		if(ct.state){
 			/* If the chronometer is on */
 			startStopButton.setBackgroundResource(R.drawable.stop);
@@ -61,9 +60,7 @@ public class HomeSectionFragment extends Fragment {
 			startStopButton.setBackgroundResource(R.drawable.start);
 			chrono.stop();
 		}
-	  	
-		//Set the initial format:
-		chrono.setText(getChronoString(0));
+		chrono.setText(getChronoString(ct.secondsWorked));
 		
     	startStopButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
@@ -75,7 +72,7 @@ public class HomeSectionFragment extends Fragment {
 				chrono.setBase(SystemClock.elapsedRealtime() - stopped);
 				
 				if(isChecked) {
-
+					chrono.setText( getChronoString(ct.secondsWorked));
 					chrono.start();
 					startStopButton.setBackgroundResource(R.drawable.stop);
 				} else {  

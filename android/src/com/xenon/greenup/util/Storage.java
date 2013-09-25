@@ -97,11 +97,9 @@ public class Storage extends SQLiteOpenHelper{
 		long stopped = SystemClock.elapsedRealtime();
 		
 		if(cursor != null){
-			Log.i("numrows",""+cursor.getCount());
 			cursor.moveToFirst();
 			
 			try{
-				Log.i("in DA BASE" , cursor.getString(0));
 				secWorkd = Long.parseLong(cursor.getString(0));
 			}catch(Exception e){/* Die silently and default sw=0*/}
 			
