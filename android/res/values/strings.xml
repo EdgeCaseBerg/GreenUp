@@ -26,7 +26,9 @@
 	<string name="welcome_text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis congue est. Cras volutpat.</string>
 	<string name="start_toggle_text">Start Greening Up</string>
 	<string name="stop_toggle_text">Stop Greening Up</string>
-	<string name="show_forum">Forum</string>
-	<string name="show_general">General Message</string>
-	<string name="show_trash">Trash Pickup</string>
+	<string name="forum_switch_text">Forum</string>
+	<string name="general_switch_text">General Message</string>
+	<string name="trash_switch_text">Trash Pickup</string>
+	<string name="show">Show</string>
+	<string name="hide">Hide</string>
 </resources>
