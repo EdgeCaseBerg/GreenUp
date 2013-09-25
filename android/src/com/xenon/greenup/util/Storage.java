@@ -65,12 +65,13 @@ public class Storage extends SQLiteOpenHelper{
 		values.put(KEY_STOP_TIME, String.valueOf(SystemClock.elapsedRealtime()));
 		
 		db.insert(SECONDS_WORKED_TABLE_NAME, null,values);
+		db.close();
 	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
 		db.execSQL("DROP TABLE IF EXISTS " + SECONDS_WORKED_TABLE_NAME);
 		onCreate(db);
-		
+		db.close();
 	}
 	
 	
@@ -110,59 +111,14 @@ public class Storage extends SQLiteOpenHelper{
 			try{
 				stopped = Long.valueOf(cursor.getString(2));
 			}catch(Exception e){/* http://www.youtube.com/watch?feature=player_detailpage&v=JWdZEumNRmI#t=50*/}
-			
+			cursor.close();
 		}
 		Log.i("dbLoad","secWorkd: "+secWorkd+" cState: "+cState+" stopped: "+stopped);
-		cursor.close();
+		
 		
 		return new ChronoTime(secWorkd,cState,stopped);
 		
 	}
-	
-	/* This is an example from a previous project of mine on how to use the storage*/
-	/*public List<Task> getAllTasks(){ 
-		List<Task> taskList = new ArrayList<Task>();
-		String selectQuery = "SELECT * FROM " + table_name;
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery,null);
-		
-		if(cursor.moveToFirst()){
-			do{
-				Task task = new Task();
-				task.setName(cursor.getString(0));
-				task.setTime(cursor.getString(1));
-				task.setState(cursor.getString(2));
-				taskList.add(task);
-			}while(cursor.moveToNext());
-		}
-		
-		return taskList;
-		
-	}
-	
-	public int getTaskCount(){
-		String sq = "SELECT * FROM " + table_name;
-		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(sq, null);
-		cursor.close();
-		return cursor.getCount();
-	}
-	
-	public int updateTask(Task task){
-		SQLiteDatabase db = this.getWritableDatabase();
-		ContentValues values = new ContentValues();
-		values.put(KEY_ID,task.getTaskName());
-		values.put(KEY_TIME,task.getTime());
-		values.put(KEY_STATE,task.getState());
-		
-		return db.update(table_name, values, KEY_ID + " = ? ", new String[]{task.getTaskName()});
-	}
-	
-	public void deleteTask(Task task){
-		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(table_name,KEY_ID + " = ?", new String[]{task.getTaskName()});
-		db.close();
-	}*/
 	
 	public void closeDatabase(Storage database){
 		database.close();
