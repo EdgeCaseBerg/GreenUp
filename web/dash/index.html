@@ -62,62 +62,59 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
   </nav>
 
   <div class="row mapAdminContainer">
+    
     <img id="infoIcon" src="images/info-icon-dark.png" height="40" width="40"/>
+    
     <div id="map-canvas">
-	  </div>
-
-        <div id="analyticsDialog">
-          <div class="analyticsColumnContainer">
-            <div class="nestedAnalyticsColumn">
-              <div class="analyticsHeader">
-                Total Users
-              </div>
-              <div class="analyticsData">
-                <div class="analyticsDataNestColumn usageDataNestColumn">
-                  <ul>
-                    <li>iPhone  <span class="analyticsDataPoint">25%</span></li>
-                    <li>Android <span class="analyticsDataPoint">25%</span></li>
-                    <li>Web <span class="analyticsDataPoint">50%</span></li>
-                  </ul>
-                </div>
-                <div class="analyticsDataNestColumn usageDataNestColumn usageDataChart" id="usageDataPieChart">
-                </div>
-
-              </div>
+    </div>
+    
+    <div id="markerTypeDialog" class="markerTypeSelectDialog">
+    <div id="analyticsDialog">
+      <div class="analyticsColumnContainer">
+        <div class="nestedAnalyticsColumn">
+          <div class="analyticsHeader">
+            Total Users
+          </div>
+          <div class="analyticsData">
+            <div class="analyticsDataNestColumn usageDataNestColumn">
+              <ul>
+                <li>iPhone  <span class="analyticsDataPoint">25%</span></li>
+                <li>Android <span class="analyticsDataPoint">25%</span></li>
+                <li>Web <span class="analyticsDataPoint">50%</span></li>
+              </ul>
             </div>
-            <div class="nestedAnalyticsColumn">
-              <div class="analyticsHeader">
-                Total Time Worked
-              </div>
-              <div class="analyticsData">
-                <div class="usageDataChart" id="usageDataLineChart">
-                </div>
-
-              </div>
+            <div class="analyticsDataNestColumn usageDataNestColumn usageDataChart" id="usageDataPieChart"></div>
+          </div>
+        </div>
+        <div class="nestedAnalyticsColumn">
+          <div class="analyticsHeader">
+            Total Time Worked
+          </div>
+          <div class="analyticsData">
+            <div class="usageDataChart" id="usageDataLineChart"></div>
             </div>
-            <div class="nestedAnalyticsColumn">
-              <div class="analyticsHeader">
-                Total Area Cleaned
+          </div>
+          <div class="nestedAnalyticsColumn">
+            <div class="analyticsHeader">
+              Total Area Cleaned
+            </div>
+            <div class="analyticsData">
+              <div class="analyticsDataNestColumn usageDataNestColumn">
+                <ul>
+                  <li>iPhone  <span class="analyticsDataPoint">25%</span></li>
+                  <li>Android <span class="analyticsDataPoint">25%</span></li>
+                  <li>Web <span class="analyticsDataPoint">50%</span></li>
+                </ul>
               </div>
-              <div class="analyticsData">
-                <div class="analyticsDataNestColumn usageDataNestColumn">
-                  <ul>
-                    <li>iPhone  <span class="analyticsDataPoint">25%</span></li>
-                    <li>Android <span class="analyticsDataPoint">25%</span></li>
-                    <li>Web <span class="analyticsDataPoint">50%</span></li>
-                  </ul>
-                </div>
-                <div class="analyticsDataNestColumn usageDataNestColumn" id="usageDataChart">
-                </div>
-
-              </div>
+              <div class="analyticsDataNestColumn usageDataNestColumn" id="usageDataChart"></div>
             </div>
           </div>
         </div>
+      </div>
 
-		<div id="markerTypeDialog" class="markerTypeSelectDialog">
-        
-	</div>
+	
+  </div>
+
 	<div class="row commentsAdminContainer">
     	<div class="col-xs-6 col-sm-6 col-md-4">
     		<div class="col-xs-7 col-sm-4 col-md-4">
