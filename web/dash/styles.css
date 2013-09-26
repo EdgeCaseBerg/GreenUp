@@ -95,6 +95,8 @@ ul{
     vertical-align: bottom;
 }
 
+
+
 #analyticsDialog{
     min-height:100px;
     width:100%;
@@ -161,6 +163,12 @@ ul{
     margin-top: -10px;
 }
 
+#addMarkerDialog{
+    display:none;
+    font-size: 0.9em;
+    text-align: center;
+}
+
 #markerTypeDialog{
 	/*display:none;*/
 	padding-top:25px;
@@ -170,7 +178,7 @@ ul{
 	display:inline-block;
 	font-size:1.3em;
 	/*margin-left: -30px;*/
-	height:150px;
+	height:110px;
 	width:350px;
 }
 
@@ -190,9 +198,11 @@ ul{
 }
 
 .markerTypeNestColumn{
+    text-align: left;
 	vertical-align: top;
 	display:inline-block;
-	/*border:solid 1px green;*/
+    width: 30%;
+	border:solid 1px green;
 	/*margin:0px 20px 0px 0px;*/
 }
 

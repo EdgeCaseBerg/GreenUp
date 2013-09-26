@@ -651,6 +651,9 @@ function UiHandle(){
     	});
 
     	$('#infoIcon').click(function(){
+    		$('#addMarkerDialog').hide();
+    		$('#analyticsDialog').show();
+
     		window.UI.toggleMapOptions();
     	});
 
@@ -800,6 +803,8 @@ function UiHandle(){
 	    // if it was a short touch
 	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
 	    	// check if the marker select menu is showing and toggle appropriately
+	    	$('#analyticsDialog').hide();
+	    	$('#addMarkerDialog').show();
 	        window.UI.toggleMapOptions()
 	        this.MOUSEDOWN_TIME =0;
 	        this.MOUSEDOWN_TIME =0;
