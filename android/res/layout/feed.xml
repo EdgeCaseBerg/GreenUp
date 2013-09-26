@@ -18,7 +18,8 @@
             android:layout_width="330dp"
             android:layout_height="wrap_content"
             android:id="@+id/scrollView"
-            android:layout_weight="0.75">
+            android:layout_weight="0.75"
+            android:layout_marginTop="10px">
 
             <ListView
 android:id="@android:id/list"
