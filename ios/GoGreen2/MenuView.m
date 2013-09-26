@@ -167,55 +167,48 @@
     [self setBackgroundColor:[UIColor clearColor]];
     
     //Init the Pin Icons
-    UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-    UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-    UIImageView *pin3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
+    UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"currentLocation.png"]];
+    UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"currentLocation@2x.png"]];
+    UIImageView *currentLocationImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"currentLocation.png"]];
     UIButton *dropPinButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [dropPinButton setFrame:CGRectMake(10, 100, self.frame.size.width - 20, 30)];
+    //[dropPinButton setBackgroundImage:[UIImage imageNamed:@"currentLocationButtonBackground.png"] forState:UIControlStateNormal];
+    [dropPinButton setFrame:CGRectMake(60, 100, self.frame.size.width - 80, 30)];
     [dropPinButton setTitle:@"Drop Pickup Marker" forState:UIControlStateNormal];
     [dropPinButton addTarget:self action:@selector(dropMarker:) forControlEvents:UIControlEventTouchUpInside];
     
     //Set Pin Image Frames
-    [pin1Image setFrame:CGRectMake(10, 5, 80, 30)];
-    [pin2Image setFrame:CGRectMake(10, 35, 80, 30)];
-    [pin3Image setFrame:CGRectMake(10, 65, 80, 30)];
+    [pin1Image setFrame:CGRectMake(10, 5, 80, 40)];
+    [pin2Image setFrame:CGRectMake(10, 50, 80, 40)];
+    [currentLocationImage setFrame:CGRectMake(10, 95, 40, 40)];
     
     //Add pin images to view
     //[self addSubview:pin1Image];
     //[self addSubview:pin2Image];
-    //[self addSubview:pin3Image];
-    
+    [self addSubview:currentLocationImage];
     
     //Init Pin Labels
-    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 30)];
-    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(90, 35, 220, 30)];
-    UILabel *pin3 = [[UILabel alloc] initWithFrame:CGRectMake(90, 65, 220, 30)];
+    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 40)];
+    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(90, 50, 220, 40)];
     
     //Set Pins Text
     [pin1 setText:@"Pickup Point"];
     [pin2 setText:@"Comment Point"];
-    [pin3 setText:@"Trash Point"];
     
     //Set Text Color
     [pin1 setTextColor:[UIColor blackColor]];
     [pin2 setTextColor:[UIColor blackColor]];
-    [pin3 setTextColor:[UIColor blackColor]];
     
     //Set Text Alignment
     [pin1 setTextAlignment:NSTextAlignmentCenter];
     [pin2 setTextAlignment:NSTextAlignmentCenter];
-    [pin3 setTextAlignment:NSTextAlignmentCenter];
-    
     
     //Set Background Color
     [pin1 setBackgroundColor:[UIColor clearColor]];
     [pin2 setBackgroundColor:[UIColor clearColor]];
-    [pin3 setBackgroundColor:[UIColor clearColor]];
     
     //Add the pins to the view
     [self.contentView addSubview:pin1];
     [self.contentView addSubview:pin2];
-    [self.contentView addSubview:pin3];
     [self.contentView addSubview:dropPinButton];
 }
 

@@ -57,7 +57,7 @@
     [self.sendMessageView addSubview:messageBackgroundView];
     */
     
-    self.messageTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, 10, 200, 30)];
+    self.messageTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, 10, 255, 30)];
     self.messageTextView.delegate = self;
     [self.messageTextView setEditable:TRUE];
     [self.messageTextView setScrollEnabled:TRUE];
@@ -80,11 +80,6 @@
     [self.messageSendButton setFrame:CGRectMake(265, 10, 50, 35)];
     [self.messageViewContainer addSubview:self.messageSendButton];
     
-    self.messageTypeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.messageTypeButton setTitle:@"Type" forState:UIControlStateNormal];
-    [self.messageTypeButton addTarget:self action:@selector(changeType:) forControlEvents:UIControlEventTouchUpInside];
-    [self.messageTypeButton setFrame:CGRectMake(210, 10, 50, 35)];
-    [self.messageViewContainer addSubview:self.messageTypeButton];
     
     //Keyboard CallBacks
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -162,13 +157,15 @@
                         newMessage.messageTimeStamp = [comment objectForKey:@"timestamp"];
                         newMessage.messageType = [comment objectForKey:@"type"];
                         newMessage.pinID = [comment objectForKey:@"pin"];
+                        
+#warning GET ACTUAL VALUE!
                         if(arc4random() % 2 == 0)
                         {
-                            newMessage.isValid = TRUE;
+                            newMessage.addressed = TRUE;
                         }
                         else
                         {
-                            newMessage.isValid = FALSE;
+                            newMessage.addressed = FALSE;
                         }
                         
                         [self.messages addObject:newMessage];
@@ -196,15 +193,9 @@
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Blank Message" message:@"Cannot post blank message" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
             [alert show];
         }
-        else if(self.currentMessageType == nil || [self.currentMessageType isEqualToString:@""])
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Type Selected" message:@"Cannot post a message with no type" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-            [alert show];
-        }
         else
         {
-            if(self.currentMessageType == nil)
-                self.currentMessageType = Message_Cell_Type_A;
+            self.currentMessageType = Message_Type_COMMENT;
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
                 //Background Process Block
@@ -216,7 +207,7 @@
                     NSString *statusCode = [response objectForKey:@"status_code"];
                     if([statusCode integerValue] != 200)
                     {
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post Failed" message:@"An unknown error occured please try again" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post Failed" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
                         [alert show];
                     }
                     else
@@ -366,11 +357,6 @@
                 newFrame.origin.y += (heightDiff / 2);
                 [self.messageSendButton setFrame:newFrame];
                 
-                //Reposition Type Button
-                CGRect newFrame5 = self.messageTypeButton.frame;
-                newFrame5.origin.y += (heightDiff / 2);
-                [self.messageTypeButton setFrame:newFrame5];
-                
                 //Reposition MessageBackground
                 CGRect newFrame4 = self.messageViewContainer.frame;
                 newFrame4.origin.y -= heightDiff;
@@ -424,24 +410,6 @@
 
 #pragma mark - Message Methods
 
--(IBAction)changeType:(id)sender
-{
-    //Remove Keyboard
-    [self.messageTextView resignFirstResponder];
-    
-    //Create Popover View and Animate It In
-    self.messageTypePopoverView = [[MessageTypeSelectionView alloc] initWithWindowFrame:self.view.window.frame andCurrent:self.currentMessageType];
-    [self.messageTypePopoverView setAlpha:0];
-    [self.view.window addSubview:self.messageTypePopoverView];
-    
-    VoidBlock animationBlock =
-    ^{
-        [self.messageTypePopoverView setAlpha:1];
-    };
-    
-    [UIView animateWithDuration:.25 animations: animationBlock];
-}
-
 -(IBAction)setMessageType:(NSNotification *)notificationRecieved
 {
     self.currentMessageType = notificationRecieved.object;
@@ -473,7 +441,6 @@
     self.keyboardIsOut = FALSE;
     
     NSLog(@"HIDE KEYBORAD: %f", self.messageTextView.frame.size.height);
-    
     
     //Shift Subviews For Keyboard
     CGRect currentTableFrame = self.theTableView.frame;
@@ -537,7 +504,7 @@
 {
     NetworkMessage *msg = notification.object;
     self.toggledMessageRef = msg;
-    if(msg.isValid)
+    if(msg.addressed)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Are you sure you have cleaned up this location?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         alert.tag = ALERT_VIEW_TOGGLE_OFF;
@@ -554,26 +521,51 @@
 #pragma mark - Alert View Delegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    NSDictionary *parameters = nil;
     if(alertView.tag == ALERT_VIEW_TOGGLE_ON)
     {
         if(buttonIndex == 1)
         {
-#warning PERFORM PUT REQUEST TO UPDATE PIN
-            [self.toggledMessageRef setIsValid:TRUE];
-            int row = [self.messages indexOfObject:self.toggledMessageRef];
-            [self.theTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            parameters = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:TRUE], nil] forKeys:[NSArray arrayWithObjects:@"addressed", nil]];
         }
     }
     else if(alertView.tag == ALERT_VIEW_TOGGLE_OFF)
     {
         if(buttonIndex == 1)
         {
-#warning PERFORM PUT REQUEST TO UPDATE PIN
-            [self.toggledMessageRef setIsValid:FALSE];
-            int row = [self.messages indexOfObject:self.toggledMessageRef];
-            [self.theTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            parameters = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:FALSE], nil] forKeys:[NSArray arrayWithObjects:@"addressed", nil]];
         }
     }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+        //Background Process Block
+        NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:[NSArray arrayWithObject:parameters]];
+        
+        dispatch_async(dispatch_get_main_queue(),^{
+            //Completion Block
+            NSString *statusCode = [response objectForKey:@"status_code"];
+            if([statusCode integerValue] == 200)
+            {
+                //COMPLETED!
+                if(alertView.tag == ALERT_VIEW_TOGGLE_ON)
+                {
+                    [self.toggledMessageRef setAddressed:TRUE];
+                }
+                else if(alertView.tag == ALERT_VIEW_TOGGLE_OFF)
+                {
+                    [self.toggledMessageRef setAddressed:FALSE];
+                }
+                int row = [self.messages indexOfObject:self.toggledMessageRef];
+                [self.theTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            }
+            else
+            {
+                //FAILED!
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Request Failed" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+        });
+    });
     
     self.toggledMessageRef = nil;
 }
