@@ -159,7 +159,6 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         holder.bottom.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         holder.text.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         holder.timeStamp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-	    //holder.text.setBackgroundResource(();
 	    if(position % 2 == 0) {  
 	    	holder.bottom.setBackgroundResource(getReverseOf(topCenterBottomResourceIds[2]));
 	    } else {
