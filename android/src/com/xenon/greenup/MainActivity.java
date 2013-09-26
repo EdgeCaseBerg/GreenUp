@@ -18,6 +18,8 @@ package com.xenon.greenup;
 
 import java.util.ArrayList;
 
+import com.xenon.greenup.util.Storage;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
@@ -46,8 +48,16 @@ public class MainActivity extends FragmentActivity {
      * time.
      */
     ViewPager _ViewPager;
-
+    static long secondsWorked = 0L;
+    
+    @Override
+    public void onStop(){
+    	super.onStop();
+    	//Save secondsWorked
+    }
+    
     public void onCreate(Bundle savedInstanceState) {
+    	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -182,6 +192,7 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
+    	    
             for (int i=0; i<mTabs.size(); i++) {
             	if (mTabs.get(i) == tab) {
                 	Log.i("onTabSelected","Setting i="+i+" to be mViewPager current item");

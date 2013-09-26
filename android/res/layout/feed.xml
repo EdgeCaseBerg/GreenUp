@@ -2,22 +2,29 @@
 	xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/comment_feed"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:layout_gravity="top" android:gravity="top" android:orientation="vertical">
-
-	<LinearLayout android:id="@+id/comment_layout"
-		android:layout_width="match_parent" android:layout_height="match_parent"
-		android:orientation="vertical">
-
-		<ListView android:id="@android:id/list" android:layout_width="match_parent"
-			android:layout_height="352dp" android:layout_weight="0.42"
-			android:footerDividersEnabled="false" android:headerDividersEnabled="false">
+   <LinearLayout
+    	android:id="@+id/comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.75"
+        android:orientation="vertical" >
+        <ListView
+			android:id="@android:id/list"
+			android:layout_width="match_parent"
+			android:layout_height="352dp"
+			android:layout_weight="0.42"
+			android:headerDividersEnabled="false"
+			android:footerDividersEnabled="false">
 		</ListView>
-
-		<EditText android:id="@+id/text_entry_comments"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:hint="Submit your comment here" android:imeOptions="actionSend"
-			android:inputType="text" />
-	</LinearLayout>
-
+     	<EditText
+			android:id="@+id/text_entry_comments"
+          	android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Submit your comment here"
+            android:imeOptions="actionSend"
+            android:inputType="text" />
+    </LinearLayout>
 	<LinearLayout android:id="@+id/filter_list" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:layout_gravity="right"
 		android:layout_weight="0.42" android:background="@color/white"
@@ -41,5 +48,4 @@
 		    android:textOn="@string/show"
 		    android:textOff="@string/hide"/>
 	</LinearLayout>
-
 </android.support.v4.widget.DrawerLayout>

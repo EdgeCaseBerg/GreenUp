@@ -3,9 +3,14 @@ package com.xenon.greenup;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,18 +22,21 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Comment;
 import com.xenon.greenup.api.CommentPage;
 
-public class FeedSectionFragment extends ListFragment implements OnCheckedChangeListener{
+public class FeedSectionFragment extends ListFragment implements DrawerListener, OnCheckedChangeListener{
 	private int lastPageLoaded = 1;
+	private DrawerLayout drawer;
 	private EditText editText;
 	private Switch forumSwitch, generalSwitch, trashSwitch;
 	private boolean forumFilterToggle = true;
 	private boolean generalFilterToggle = true;
 	private boolean trashFilterToggle = true;
+	private CommentPage page;
 	
 	public FeedSectionFragment(){
 	}
@@ -44,6 +52,11 @@ public class FeedSectionFragment extends ListFragment implements OnCheckedChange
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     		
     	View rootView = inflater.inflate(R.layout.feed, container, false);
+    	//initialize the drawer listener
+    	
+    	drawer = (DrawerLayout)rootView.findViewById(R.id.comment_feed);
+    	drawer.setDrawerListener(this);
+    	
     	editText =  (EditText)rootView.findViewById(R.id.text_entry_comments);
     	editText.setOnEditorActionListener(new OnEditorActionListener() {
     	    @Override
@@ -75,7 +88,15 @@ public class FeedSectionFragment extends ListFragment implements OnCheckedChange
     @Override
     public void onResume(){
     	super.onResume();
-		new AsyncCommentLoadTask(this,getActivity()).execute();
+    	//if we have a network connection, load the comments from the server
+    	if (isConnected()) {
+    		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    		AsyncCommentLoadTask task = new AsyncCommentLoadTask(this,getActivity());
+    		task.execute();
+    	}
+    	else {
+    		Toast.makeText(getActivity(), "No network connection :(", Toast.LENGTH_SHORT).show();
+    	}
     }
     
 	private class AsyncCommentLoadTask extends AsyncTask<Void,Void,Void>{
@@ -83,6 +104,7 @@ public class FeedSectionFragment extends ListFragment implements OnCheckedChange
 		private final Activity act;
 		private ArrayList<Comment> cmts;
 		private final FeedSectionFragment fsf;
+		private CommentPage page;
 		
 		/**
 		 * AsyncCommentLoadTask is the default constructor to create an asynchronous task
@@ -106,7 +128,8 @@ public class FeedSectionFragment extends ListFragment implements OnCheckedChange
 		 */
 		protected Void doInBackground(Void...voids) {
 	    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded);
-			this.cmts = cp.getCommentsList(forumFilterToggle,generalFilterToggle,trashFilterToggle);
+	    	this.page = cp;
+			this.cmts = this.page.getCommentsList(forumFilterToggle,generalFilterToggle,trashFilterToggle);
 			if(this.cmts == null)
 				this.cmts = new ArrayList<Comment>(60);
 			//Java makes no sense. It requires the capital version of Void because there simply
@@ -120,6 +143,8 @@ public class FeedSectionFragment extends ListFragment implements OnCheckedChange
 		@Override
 		protected void onPostExecute(Void v) {
 			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
+			this.fsf.page = page;
+			drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 		}
 	}
 
@@ -131,5 +156,34 @@ public class FeedSectionFragment extends ListFragment implements OnCheckedChange
 			generalFilterToggle = isChecked;
 		if (buttonView == trashSwitch)
 			trashFilterToggle = isChecked;
+	}
+
+	@Override
+	public void onDrawerClosed(View arg0) {
+		ArrayList<Comment> comments = this.page.getCommentsList(forumFilterToggle,generalFilterToggle,trashFilterToggle);
+		this.setListAdapter(new CommentAdapter(getActivity(),comments));
+	}
+
+	@Override
+	public void onDrawerOpened(View view) {
+	}
+
+	@Override
+	public void onDrawerSlide(View view, float offset) {
+	}
+
+	@Override
+	public void onDrawerStateChanged(int state) {
+	}
+	
+    //Possibly check more network types and/or connection states
+	private boolean isConnected() {
+		ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (cm.getNetworkInfo(0) != null && cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED)
+			return true;
+		else if (cm.getNetworkInfo(1) != null && cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED)
+			return true;
+		else
+			return false;
 	}
 }

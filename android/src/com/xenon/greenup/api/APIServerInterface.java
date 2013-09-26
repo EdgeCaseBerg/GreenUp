@@ -8,7 +8,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 public final class APIServerInterface {
 		
@@ -47,7 +46,7 @@ public final class APIServerInterface {
 		return new CommentPage(response);
 	}
 	
-	//Submits a comment (POST), the pin is optional.  Returns an integer status code (codes TBD)
+	//Submits a comment (POST), the pin is optional.
 	public static void submitComments(String type, String message, int pin) {
 		Comment newComment = new Comment(type, message, pin);
 		String data = newComment.toJSON().toString();
@@ -116,7 +115,7 @@ public final class APIServerInterface {
 			e.printStackTrace();
 			response = "Error, see stack trace";
 		}
-		Log.i("response",response);
+		//Log.i("response",response);
 	}
 	
 	private static String sendRequest(String url) {
@@ -128,7 +127,7 @@ public final class APIServerInterface {
 			e.printStackTrace();
 			response = "Error, see stack trace";
 		}
-		Log.i("response",response);
+		//Log.i("response",response);
 		return response;
 	}
 
@@ -176,8 +175,8 @@ public final class APIServerInterface {
 			response = sb.toString();
 		}
 		catch(IOException e) {
-			e.printStackTrace();
-			response = "Error occurred, see stack trace";
+			//e.printStackTrace();
+			response = "Error, see stack trace";
 		}
 		return response;
 	}
