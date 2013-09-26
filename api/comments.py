@@ -20,7 +20,7 @@ class Comments(webapp2.RequestHandler):
 
 		if commentType:
 			#We have an optional parameter. Is it well formed?
-
+			
 			if commentType.upper() in COMMENT_TYPES:
 				#Yes it is well formed and we may execute a datastore query for the comments
 				pass
@@ -140,6 +140,29 @@ class Comments(webapp2.RequestHandler):
 		AbstractionLayer().submitComments(commentType=typeOfComment.upper(), message=commentMessage, pin=pin)
 
 		self.response.write('{ "status_code" : %i, "message" : "Successfuly submitted new comment" }' % HTTP_OK)
+
+	def delete(self):
+		#Need an id. Get it from the url and respond to: DELETE /api/comments?id=<comment id>
+		commentId = self.request.get("id")
+		if commentId is None or commentId == "":
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM, "Required key id not present in request url"))
+			return
+
+		try:
+			commentId = int(commentId)
+		except Exception, e:
+			self.response.set_status(HTTP_REQUEST_SEMANTICS_PROBLEM)
+			self.response.write(ERROR_STR % (HTTP_REQUEST_SEMANTICS_PROBLEM, "id must be a numeric identifier"))
+			return
+
+		layer = AbstractionLayer()
+		if layer.deleteComment(commentId):
+			self.response.set_status(HTTP_DELETED)
+			self.response.write('{ "status_code" : %i, "message" : "Successfuly deleted comment" }' % HTTP_DELETED)
+		else:
+			self.response.set_status(HTTP_NOT_FOUND)
+			self.response.write(ERROR_STR % (HTTP_NOT_FOUND, "Could not find comment matching id"))
 
 		
 
