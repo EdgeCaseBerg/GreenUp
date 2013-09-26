@@ -140,12 +140,13 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	    }	    
 //	    sb.append(difference);
         holder.timeStamp.setText(difference);
-        holder.timeStamp.setBackgroundResource(R.drawable.bubble_blue_center);
+//        holder.timeStamp.setBackgroundResource(R.drawable.bubble_blue_center);
 
 	    holder.text.setText(sb.toString());
 	   
 	    //Use the type of the comment to determine what color it shall be
 	    int [] topCenterBottomResourceIds = getResourceByType(comment.getType());
+        holder.timeStamp.setBackground((BitmapDrawable)this.context.getResources().getDrawable(topCenterBottomResourceIds[1]));
 
 	    holder.top.setBackgroundResource(topCenterBottomResourceIds[0]);
 	    //Tile the center background
