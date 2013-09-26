@@ -75,7 +75,7 @@ ul{
 	top:-300px;
 	z-index: 230;
 	width: 100%;
-	height: 180px;
+	height: 260px;
 	background: #bbb;
 	margin:auto;
 	/*margin-top: 60%;*/
@@ -98,7 +98,7 @@ ul{
 
 
 #analyticsDialog{
-    min-height:100px;
+    min-height:220px;
     width:100%;
     background: #eee;
     padding-top:30px;
@@ -124,6 +124,12 @@ ul{
     height: 100%;
     display:inline-block;
 }
+
+.nestedAnalyticsColumn:last-child{
+    border:0px;
+}
+
+
 
 .nestedAnalyticsColumn div{
     text-align: left;
@@ -164,6 +170,10 @@ ul{
 }
 
 #addMarkerDialog{
+    min-height:220px;
+    width:100%;
+    background: #eee;
+    padding:30px 0px 10px 0px;
     display:none;
     font-size: 0.9em;
     text-align: center;
@@ -178,7 +188,7 @@ ul{
 	display:inline-block;
 	font-size:1.3em;
 	/*margin-left: -30px;*/
-	height:110px;
+	height:70px;
 	width:350px;
 }
 
@@ -206,10 +216,50 @@ ul{
 	/*margin:0px 20px 0px 0px;*/
 }
 
+.markerTypeNestColumnNest{
+    /*display:none;*/
+}
+
+.locationType{
+    vertical-align: top;
+}
+
+.locationTypeBtn{
+    float:left;
+    background: #eee;
+}
+
+
+
+.locationTypeDropdown{
+    background: white;
+}
+
+.locationTypeMenu{
+    cursor:pointer;
+    padding: 1px 5px 0px 5px;
+}
+
+.locationTypeMenuItem:hover{
+    color: blue;
+}
+
+.locationTypeMenuItem:first-child{
+    border-bottom: solid 1px #ddd; 
+}
+
+.locationTypeInputContainer{
+    display:none;
+
+}
+
+.markerInputNest{
+    float:right;
+}
+
 #markerIconNest{
 	/*margin-left: -30px;*/
 	text-align: left;
-
 }
 
 #markerIconNest ul{

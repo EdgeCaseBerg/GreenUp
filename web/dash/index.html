@@ -66,26 +66,54 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
     <div id="markerTypeDialog" class="markerTypeSelectDialog">
 
       <div id="addMarkerDialog">
+
+        <div class="markerTypeNestColumn">
+          <!-- <div class="markerTypeNestColumnNest"> -->
+            <div class="btn-group locationType">
+              <a class="btn dropdown-toggle locationTypeBtn" data-toggle="dropdown" href="#">
+                Location Type <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu locationTypeMenu">
+                <li class="locationTypeMenuItem" id="latLonSelect"> Latitude / Longitude </li>
+                <li class="locationTypeMenuItem" id="streetSelect"> Street Address </li>
+              </ul>
+            </div>
+            <div id="coordsInputContainer" class="locationTypeInputContainer">
+              <ul id="coordsInputNest" class="markerInputNest">
+                <li>Lat<input type="text" name="coords" id="markerLat" /></li>
+                <li>Lon<input type="text" name="coords" id="markerLon" /></li>
+              </ul>
+            </div>
+
+            <div id="streetInputContainer" class="locationTypeInputContainer">
+              <ul id="streetInputNest" class="markerInputNest">
+                <li>Address 1<input type="text" name="coords" id="markerLat" /></li>
+                <li>Address 2<input type="text" name="coords" id="markerLon" /></li>
+                <li>City<input type="text" name="coords" id="markerLat" /></li>
+                <li>State<input type="text" name="coords" id="markerLon" /></li>
+                <li>Zip<input type="text" name="coords" id="markerLat" /></li>
+              </ul>
+            </div>
+          <!-- </div> -->
+        </div>
+
+
         <div class="markerTextareaNest markerTypeNestColumn">
-          <div class="markerTypeInputLabel">
-            Comment
+          <div class="markerTypeNestColumnNest">
+            <div class="markerTypeInputLabel">
+              Comment
+            </div>
+            <textarea id="markerTextarea"></textarea>
           </div>
-          <textarea id="markerTextarea"></textarea>
         </div>
         
+      
         <div class="markerTypeNestColumn">
-          <div class="markerTypeInputLabel">
-            Coords
+          <div class="markerTypeNestColumnNest">
+            <div class="markerTypeInputLabel">Icon</div>
           </div>
-          <ul id="coordsInputNest">
-            <li>Lat<input type="text" name="coords" id="markerLat" /></li>
-            <li>Lon<input type="text" name="coords" id="markerLon" /></li>
-          </ul>
         </div>
-        <div class="markerTypeNestColumn">
-          <div class="markerTypeInputLabel">Icon</div>
-        </div>
-        
+
       </div>
 
       <div id="analyticsDialog">

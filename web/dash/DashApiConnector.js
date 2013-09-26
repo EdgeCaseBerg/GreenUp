@@ -148,6 +148,7 @@ function ApiConnector(){
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
+		console.log("pullMarkerData");
 		var pinsURI = "/pins";
 		var URL = BASE+pinsURI;
 		//Clear the markers
@@ -651,10 +652,17 @@ function UiHandle(){
     	});
 
     	$('#infoIcon').click(function(){
-    		$('#addMarkerDialog').hide();
-    		$('#analyticsDialog').show();
-
-    		window.UI.toggleMapOptions();
+    		if(window.UI.isOptionsVisible){
+    			window.UI.toggleMapOptions(function(){
+	    			$('#addMarkerDialog').hide();
+	    			$('#analyticsDialog').show();
+	    			window.UI.toggleMapOptions();
+	    		});
+    		}else{
+    			$('#addMarkerDialog').hide();
+    			$('#analyticsDialog').show();
+    			window.UI.toggleMapOptions();
+    		}
     	});
 
     	$('#infoIcon').mouseenter(function(){
@@ -663,6 +671,27 @@ function UiHandle(){
 
     	$('#infoIcon').mouseleave(function(){
     		$(this).attr("src", "images/info-icon-dark.png");	
+    	});
+
+    	$('#latLonSelect').click(function(){
+    		$('.locationTypeInputContainer').slideUp().removeClass("visible");
+
+    		if($('#coordsInputContainer').hasClass("visible")){
+    			$('#coordsInputContainer').slideUp().removeClass("visible");
+
+    		}else{
+    			$('#coordsInputContainer').slideDown().addClass("visible");
+    		}
+    	});
+
+    	$('#streetSelect').click(function(){
+    		$('.locationTypeInputContainer').slideUp().removeClass("visible");
+
+    		if($('#streetInputContainer').hasClass("visible")){
+    			$('#streetInputContainer').slideUp().removeClass("visible");
+    		}else{
+    			$('#streetInputContainer').slideDown().addClass("visible");
+    		}
     	});
 
 
@@ -716,13 +745,13 @@ function UiHandle(){
 
 	UiHandle.prototype.toggleMapOptions = function toggleMapOptions(){
 		if(window.UI.isOptionsVisible){
-			$('.markerTypeSelectDialog').css({"top":"-200px"});
-			// $('#map-canvas').css({"height:100%"});
 			window.UI.isOptionsVisible = false;
+			$('.markerTypeSelectDialog').css({"top":"-200px"});
+			
 		}else{
-			$('.markerTypeSelectDialog').css({"top":"55px"});
-			// $('#map-canvas').css({"height:80%"});
 			window.UI.isOptionsVisible = true;
+			$('.markerTypeSelectDialog').css({"top":"55px"});
+			
 		}
 	}
 
@@ -803,9 +832,19 @@ function UiHandle(){
 	    // if it was a short touch
 	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
 	    	// check if the marker select menu is showing and toggle appropriately
-	    	$('#analyticsDialog').hide();
-	    	$('#addMarkerDialog').show();
-	        window.UI.toggleMapOptions()
+	    	if(window.UI.isOptionsVisible){
+	    		window.UI.toggleMapOptions(function(){
+	    			$('#analyticsDialog').hide();
+	    			$('#addMarkerDialog').show(function(){
+	    				window.UI.toggleMapOptions();
+	    			});	
+	    		});
+	    	}else{
+	    		$('#analyticsDialog').hide();
+	    		$('#addMarkerDialog').show();
+	    		window.UI.toggleMapOptions();
+
+	        }
 	        this.MOUSEDOWN_TIME =0;
 	        this.MOUSEDOWN_TIME =0;
 	    }else{
