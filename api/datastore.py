@@ -189,7 +189,17 @@ class AbstractionLayer():
 		dictComments = []
 		for comment in comments:
 			try:
-				dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "0" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+				pinId = comment.pin.key().id() if comment.pin is not None else "0"
+				addressed = False
+				if pinId != "0":
+					addressed = comment.pin.addressed
+				dictComments.append({
+					'type' : comment.commentType, 
+					'message' : comment.message, 
+					'pin' : pinId , 
+					'addressed' : addressed,
+					'timestamp' : comment.timeSent.ctime(), 
+					'id' : comment.key().id()})
 			except datastore_errors.Error, e:
 				#Give 0 shits about reference properties being broken becuase the pin deletion wont work right
 				if e.args[0][0:40] == "ReferenceProperty failed to be resolved:":
