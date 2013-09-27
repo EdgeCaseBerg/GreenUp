@@ -460,7 +460,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  point.lon and point.lon < (lonDegrees + lonOffset)):
 				continue
-		key = "%.*f_%.*f" % (int(latOffset),point.lat,int(lonOffset),point.lon)
+		key = "%.*f_%.*f" % (int(precision),point.lat,int(precision),point.lon)
 		if key in buckets:
 			buckets[key]['secondsWorked'] += point.secondsWorked
 			if buckets[key]['secondsWorked'] > highestVal:
