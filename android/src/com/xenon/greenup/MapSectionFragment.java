@@ -15,6 +15,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.xenon.greenup.api.Heatmap;
+import com.xenon.greenup.api.PinList;
 
 public class MapSectionFragment extends Fragment {
 	
@@ -22,6 +24,8 @@ public class MapSectionFragment extends Fragment {
 	private GoogleMap map;
 	private Bundle bundle;
 	private LocationManager mLocationManager;
+	private Heatmap heatmap;
+	private PinList pins;
 	
 	//Have Montpelier be the default center point for the map
 	private final double DEFAULT_LAT = 44.260059;
