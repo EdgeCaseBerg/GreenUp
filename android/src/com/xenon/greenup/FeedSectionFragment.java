@@ -86,8 +86,7 @@ public class FeedSectionFragment extends ListFragment implements DrawerListener,
     public void onResume(){
     	super.onResume();
     	//if we have a network connection, load the comments from the server
-    	
-    	if (((MainActivity)getActivity()).isConnected()) { //lisp programmer lost his way....
+    	if (((MainActivity)getActivity()).isConnected()) { //a lisp programmer lost his way....
     		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     		AsyncCommentLoadTask task = new AsyncCommentLoadTask(this,getActivity());
     		task.execute();
@@ -128,8 +127,6 @@ public class FeedSectionFragment extends ListFragment implements DrawerListener,
 	    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded);
 	    	this.page = cp;
 			this.cmts = this.page.getCommentsList(forumFilterToggle,generalFilterToggle,trashFilterToggle);
-			if(this.cmts == null)
-				this.cmts = new ArrayList<Comment>(60);
 			//Java makes no sense. It requires the capital version of Void because there simply
 			//must be something returned and you have to use java's bastard children, the wrapper 
 			//types instead of primitives because it's an async task. But yet, the primitive

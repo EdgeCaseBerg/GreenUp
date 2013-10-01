@@ -1,7 +1,10 @@
 package com.xenon.greenup;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,8 +17,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Heatmap;
+import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
 
 public class MapSectionFragment extends Fragment {
@@ -26,6 +34,7 @@ public class MapSectionFragment extends Fragment {
 	private LocationManager mLocationManager;
 	private Heatmap heatmap;
 	private PinList pins;
+	private ArrayList<Marker> markers;
 	
 	//Have Montpelier be the default center point for the map
 	private final double DEFAULT_LAT = 44.260059;
@@ -43,7 +52,7 @@ public class MapSectionFragment extends Fragment {
             e.printStackTrace();
         }
 
-        mMapView = (MapView) inflatedView.findViewById(R.id.map);
+        mMapView = (MapView)inflatedView.findViewById(R.id.map);
         mMapView.onCreate(bundle);
         map = mMapView.getMap();
         mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -54,6 +63,8 @@ public class MapSectionFragment extends Fragment {
         map.moveCamera(center);
         map.moveCamera(zoom);
         
+        markers = new ArrayList<Marker>();
+        
         return inflatedView;
     }
     
@@ -61,6 +72,7 @@ public class MapSectionFragment extends Fragment {
     public void onResume() {
     	super.onResume();
     	mMapView.onResume();
+    	new AsyncPinLoadTask(this).execute();
     }
     
     @Override
@@ -86,5 +98,40 @@ public class MapSectionFragment extends Fragment {
     public void onSaveInstanceState(Bundle args) {
     	super.onSaveInstanceState(args);
     	mMapView.onSaveInstanceState(args);
+    }
+    
+    private class AsyncPinLoadTask extends AsyncTask<Void,Void,Void> {
+		private final MapSectionFragment fragment;
+		
+		public AsyncPinLoadTask(MapSectionFragment fragment) {
+			this.fragment = fragment;
+		}
+		
+		@Override
+		protected Void doInBackground(Void...voids) {
+			this.fragment.pins = APIServerInterface.getPins(null,null,null,null);
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void v) {
+			//draw the pins on the map
+			drawPins();
+		}
+    }
+    
+    private void drawPins() {
+    	Marker newMarker;
+    	LatLng coords;
+    	MarkerOptions options;
+    	ArrayList<Pin> pins = this.pins.getPinList();
+    	for(int i = 0; i < pins.size(); i++) {
+    		coords = new LatLng(pins.get(i).getLatDegrees(),pins.get(i).getLonDegrees());
+    		options = new MarkerOptions();
+    		options.position(coords);
+    		options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+    		newMarker = map.addMarker(options);
+    		markers.add(newMarker);    	
+    	}
     }
 }

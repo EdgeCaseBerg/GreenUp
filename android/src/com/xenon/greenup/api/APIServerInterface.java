@@ -11,7 +11,7 @@ import android.os.AsyncTask;
 
 public final class APIServerInterface {
 		
-	private static final String BASE_URL = "http://192.168.1.20:8080/api";
+	private static final String BASE_URL = "https://greenupapp.appspot.com/api";
 	
 	//Class to serve as the main interface to the API server
 	//The application will invoke methods defined here to perform 
@@ -79,14 +79,14 @@ public final class APIServerInterface {
 	}
 	
 	//Get a list of pins, all parameters are optional
-	public static PinList getPins(float latDegrees, float latOffset, float lonDegrees, float lonOffset){
+	public static PinList getPins(Double latDegrees, Integer latOffset, Double lonDegrees, Integer lonOffset){
 		StringBuilder sb = new StringBuilder(BASE_URL + "/pins?");
 		//Wrapper class casting is neccesary to compare to null (Java is silly like that)
-		if((Float)latDegrees != null) { sb.append(("latDegrees=")).append(latDegrees); }
-		if((Float)latOffset != null)  { sb.append("&latOffset=").append(latOffset); }
-		if((Float)lonDegrees != null) { sb.append("&lonDegrees=").append(lonDegrees); }
-		if((Float)lonOffset != null)  { sb.append("&lonOffset=").append(lonOffset); }
-		
+		if((Double)latDegrees != null) { sb.append(("latDegrees=")).append(latDegrees); }
+		if((Integer)latOffset != null)  { sb.append("&latOffset=").append(latOffset); }
+		if((Double)lonDegrees != null) { sb.append("&lonDegrees=").append(lonDegrees); }
+		if((Integer)lonOffset != null)  { sb.append("&lonOffset=").append(lonOffset); }
+
 		String response = sendRequest(sb.toString());
 		return new PinList(response);
 	}
@@ -175,7 +175,7 @@ public final class APIServerInterface {
 			response = sb.toString();
 		}
 		catch(IOException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			response = "Error, see stack trace";
 		}
 		return response;

@@ -19,6 +19,7 @@ public class CommentPage {
 		int i;
 		JSONObject object,pageInfo;
 		JSONArray comments;
+		//Log.i("comment json",jsonString);
 		this.commentsList = new ArrayList<Comment>();
 		try {
 			object = new JSONObject(jsonString);

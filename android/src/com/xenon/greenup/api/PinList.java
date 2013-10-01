@@ -16,6 +16,7 @@ public class PinList {
 		int i;
 		JSONObject object;
 		JSONArray pins;
+		//Log.i("json string",jsonString);
 		this.pinList = new ArrayList<Pin>();
 		try {
 			object = new JSONObject(jsonString);
