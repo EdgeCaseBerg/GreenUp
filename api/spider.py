@@ -88,7 +88,7 @@ class Spider(object):
 def validateCommentsGETRequest(comments_response_to_get):
 	#define filters
 	comment_response_keys = ['comments','page','status_code']
-	comment_response_inner_keys = {'comments' : ['type','message','timestamp','pin','id'],
+	comment_response_inner_keys = {'comments' : ['addressed', 'type','message','timestamp','pin','id'],
 									'page' : ['next','previous']
 	}
 	
