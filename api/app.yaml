@@ -21,9 +21,6 @@ handlers:
 - url: /api/debug
   script: controllers.debug.application
 
-- url: /api 
-  script: api.application
-
 - url: /.*
   script: api.application
 
