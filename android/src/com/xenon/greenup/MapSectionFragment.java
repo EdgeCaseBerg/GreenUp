@@ -134,7 +134,14 @@ public class MapSectionFragment extends Fragment {
     		options.position(coords);
     		options.snippet(pinMessage);
     		options.title(pinType);
-    		options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+    		if(pinType.equalsIgnoreCase("GENERAL MESSAGE"))
+    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+    		else if(pinType.equalsIgnoreCase("HELP NEEDED"))
+    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+    		else if(pinType.equalsIgnoreCase("TRASH PICKUP"))
+    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+    		else
+    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
     		newMarker = map.addMarker(options);
     		markers.add(newMarker);    	
     	}
