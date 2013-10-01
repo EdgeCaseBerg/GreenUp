@@ -124,11 +124,16 @@ public class MapSectionFragment extends Fragment {
     	Marker newMarker;
     	LatLng coords;
     	MarkerOptions options;
+    	String pinType,pinMessage;
     	ArrayList<Pin> pins = this.pins.getPinList();
     	for(int i = 0; i < pins.size(); i++) {
     		coords = new LatLng(pins.get(i).getLatDegrees(),pins.get(i).getLonDegrees());
+    		pinType = pins.get(i).getType();
+    		pinMessage = pins.get(i).getMessage();
     		options = new MarkerOptions();
     		options.position(coords);
+    		options.snippet(pinMessage);
+    		options.title(pinType);
     		options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
     		newMarker = map.addMarker(options);
     		markers.add(newMarker);    	
