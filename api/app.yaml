@@ -22,7 +22,7 @@ handlers:
   script: controllers.debug.application
 
 - url: /.*
-  script: api.application
+  script: controllers.api.application
 
 libraries:
 - name: webapp2
