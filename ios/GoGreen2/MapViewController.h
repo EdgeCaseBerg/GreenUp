@@ -34,7 +34,6 @@
 @property (strong, nonatomic) HeatMap *heatMap;
 @property (strong, nonatomic) NSDate *startedCleaning;
 
-
 @property (strong, nonatomic) NSMutableArray *downloadedMapPoints;
 @property (strong, nonatomic) NSMutableArray *gatheredMapPoints;
 @property (strong, nonatomic) NSMutableArray *gatheredMapPointsQueue;

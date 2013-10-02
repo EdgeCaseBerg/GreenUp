@@ -139,7 +139,6 @@
 		DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */; };
 		DFA9C39317E22FA000FBE61F /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39117E22F9900FBE61F /* logo.png */; };
 		DFA9C39417E22FA000FBE61F /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39217E22F9D00FBE61F /* logo@2x.png */; };
-		DFA9C39617E2332300FBE61F /* testingCStacks.c in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C39517E2332300FBE61F /* testingCStacks.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -311,7 +310,6 @@
 		DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPinCommentView.m; sourceTree = "<group>"; };
 		DFA9C39117E22F9900FBE61F /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Images/logo.png; sourceTree = SOURCE_ROOT; };
 		DFA9C39217E22F9D00FBE61F /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo@2x.png"; path = "Images/logo@2x.png"; sourceTree = SOURCE_ROOT; };
-		DFA9C39517E2332300FBE61F /* testingCStacks.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = testingCStacks.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -514,7 +512,6 @@
 			isa = PBXGroup;
 			children = (
 				392E74741798B79E00C71680 /* AppDelegate.h */,
-				DFA9C39517E2332300FBE61F /* testingCStacks.c */,
 				392E74751798B79E00C71680 /* AppDelegate.m */,
 			);
 			name = AppDelegate;
@@ -918,7 +915,6 @@
 				DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */,
 				DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */,
 				DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */,
-				DFA9C39617E2332300FBE61F /* testingCStacks.c in Sources */,
 				DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

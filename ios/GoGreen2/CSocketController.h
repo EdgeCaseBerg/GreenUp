@@ -16,7 +16,7 @@
 -(id)performGETRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSDictionary *)properties;
 
 //PUT
--(id)performPUTRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSArray *)properties;
+-(id)performPUTRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(id)properties;
 
 //POST
 -(id)performPOSTRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSDictionary *)properties;

@@ -121,15 +121,19 @@
     [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
     [self getMapPins];
     [self updateHeatMapOverlay];
+    [self updateHeatMapWithNewPins];
 }
 
 
 #pragma mark - MKMapViewDelegate
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
-    //Get heatmap data and pins from server
-    [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-    [self getMapPins];
+    if([[[ContainerViewController sharedContainer] theMapViewController] view].frame.origin.x == 0 && [[[ContainerViewController sharedContainer] theMapViewController] view].frame.size.width != 0)
+    {
+        //Get heatmap data and pins from server
+        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+        [self getMapPins];
+    }
 }
 -(void)updateHeatMapOverlay
 {
@@ -292,6 +296,8 @@
             //Save pin
             [self.gatheredMapPins addObject:currentLocationPin];
 
+            //Add Pin To Map
+            [self.mapView addAnnotation:currentLocationPin];
             
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
@@ -324,6 +330,9 @@
             
             //Save pin
             [self.gatheredMapPins addObject:currentLocationPin];
+            
+            //Add Pin To Map
+            [self.mapView addAnnotation:currentLocationPin];
             
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
@@ -402,9 +411,6 @@
                 else
                 {
                     //Worked
-                    
-                    //Update HeatMap Pins
-                    [self updateHeatMapWithNewPins];
                 }
             }
             
@@ -443,38 +449,129 @@
     }
 }
 
+-(void)updateMapWithPins:(NSMutableArray *)pins
+{
+    NSArray *currentPins = self.mapView.annotations;
+    for(HeatMapPin *pinToCheck in pins)
+    {
+        BOOL found = FALSE;
+        for(HeatMapPin *mapPin in currentPins)
+        {
+            if([mapPin.pinID isEqualToNumber:pinToCheck.pinID])
+            {
+                found = TRUE;
+                if(pinToCheck.addressed)
+                {
+                    [self.mapView removeAnnotation:pinToCheck];
+                }
+            }
+        }
+        if(!found)
+        {
+            if(!pinToCheck.addressed)
+            {
+                [self.mapView addAnnotation:pinToCheck];
+            }
+        }
+    }
+}
+
 -(void)updateHeatMapWithNewPins
 {
-    NSMutableArray *pinsToAdd = [[NSMutableArray alloc] init];
-    NSArray *currentPins = self.mapView.annotations;
-    for(HeatMapPin *currentPin in currentPins)
+    //Check In Downloaded Pins
+    [self updateMapWithPins:self.downloadedMapPins];
+    //Check in Gathered Pins
+    [self updateMapWithPins:self.gatheredMapPins];
+    //Remove Pins That Have Been Deleted
+    for(HeatMapPin *currentPin in self.mapView.annotations)
     {
         BOOL found = FALSE;
         for(HeatMapPin *downloadedPin in self.downloadedMapPins)
         {
-            if(downloadedPin.pinID == currentPin.pinID)
+            if([downloadedPin.pinID isEqualToNumber:currentPin.pinID])
             {
                 found = TRUE;
+            }
+        }
+        for(HeatMapPin *gatheredPin in self.downloadedMapPins)
+        {
+            if([gatheredPin.pinID isEqualToNumber:currentPin.pinID])
+            {
+                found = TRUE;
+            }
+        }
+        if(!found)
+        {
+            [self.mapView removeAnnotation:currentPin];
+        }
+    }
+    
+    
+    
+    
+    NSMutableArray *pinsToMarkAsAddressed = [[NSMutableArray alloc] init];
+    NSMutableArray *pinsToMarkAsNotAddressed = [[NSMutableArray alloc] init];
+    NSArray *currentPins = self.mapView.annotations;
+    
+    //Update Pins I already Have and Add New Pins I Dont
+    for(HeatMapPin *downloadedPin in self.downloadedMapPins)
+    {
+        //Make Upates If Changed
+        if(downloadedPin.addressed)
+        {
+            [pinsToMarkAsAddressed addObject:downloadedPin];
+        }
+        else
+        {
+            [pinsToMarkAsNotAddressed addObject:downloadedPin];
+        }
+        break;
+    }
+    for(HeatMapPin *gatheredPin in self.gatheredMapPins)
+    {
+        //Make Upates If Changed
+        if(gatheredPin.addressed)
+        {
+            [pinsToMarkAsAddressed addObject:gatheredPin];
+        }
+        else
+        {
+            [pinsToMarkAsNotAddressed addObject:gatheredPin];
+        }
+        break;
+    }
+    
+    
+    
+    //Update Addressed Pins
+    for(HeatMapPin *updatedPin in pinsToMarkAsAddressed)
+    {
+        for(HeatMapPin *currentPin in currentPins)
+        {
+            if([currentPin.pinID isEqualToNumber:updatedPin.pinID])
+            {
+                updatedPin.addressed = TRUE;
+                currentPin.addressed = TRUE;
+                [self.mapView removeAnnotation:updatedPin];
                 break;
             }
         }
-        
-        for(HeatMapPin *gatheredPin in self.gatheredMapPins)
-        {
-            if(gatheredPin.pinID == currentPin.pinID)
-            {
-                found = TRUE;
-            }
-        }
-        
-        if(!found)
-            [pinsToAdd addObject:currentPin];
     }
     
-    for(HeatMapPin *newPin in pinsToAdd)
+    //Update UnAddressed Pins
+    for(HeatMapPin *updatedPin in pinsToMarkAsNotAddressed)
     {
-        [self.mapView addAnnotation:newPin];
-    }
+        for(HeatMapPin *currentPin in currentPins)
+        {
+            if([currentPin.pinID isEqualToNumber:updatedPin.pinID])
+            {
+                updatedPin.addressed = FALSE;
+                currentPin.addressed = FALSE;
+                [self.mapView addAnnotation:updatedPin];
+                break;
+            }
+        }
+    }    
 }
 -(IBAction)dropMarkerAtCurrentLocation:(id)sender
 {
@@ -520,6 +617,9 @@
             //Save pin
             [self.gatheredMapPins addObject:customPin];
             
+            //Add Pin To Map
+            [self.mapView addAnnotation:customPin];
+            
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
             [self.view.window addSubview:commentView];
@@ -536,8 +636,11 @@
 
 -(void)getMapPins
 {
+    NSMutableArray *newDownloadedPins = [[NSMutableArray alloc] init];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
         //Background Process Block
+        
+        NSLog(@"&&&&&&&&&&&&&&&&&&&&&&& MAKING REQUEST!");
         NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
         
         NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:self.mapView.region.center.latitude], [NSNumber numberWithFloat:self.mapView.region.center.longitude], [NSNumber numberWithFloat:self.mapView.region.span.latitudeDelta], [NSNumber numberWithFloat:self.mapView.region.span.longitudeDelta], nil];
@@ -548,22 +651,88 @@
         
         dispatch_async(dispatch_get_main_queue(),^{
             //Completion Block
+            
             NSString *statusCode = [response objectForKey:@"status_code"];
             
             if([statusCode integerValue] == 200)
             {
                 for(NSDictionary *networkPin in [response objectForKey:@"pins"])
                 {
+                    //Add New Pins
                     HeatMapPin *newPin = [[HeatMapPin alloc] init];
-                    newPin.pinID = [[networkPin objectForKey:@"id"] integerValue];
+                    NSString *stringPinID = [[networkPin objectForKey:@"id"] stringValue];
+                    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                    [f setNumberStyle:NSNumberFormatterDecimalStyle];
+                    newPin.pinID = [f numberFromString:stringPinID];
                     newPin.message = [networkPin objectForKey:@"message"];
                     newPin.coordinate = CLLocationCoordinate2DMake([[networkPin objectForKey:@"latDegrees"] doubleValue], [[networkPin objectForKey:@"lonDegrees"] doubleValue]);
                     newPin.type = [networkPin objectForKey:@"type"];
                     newPin.message = [networkPin objectForKey:@"message"];
                     newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
+                
+                    [newDownloadedPins addObject:newPin];
                     
-                    [self.downloadedMapPins addObject:newPin];
-                    [self.mapView addAnnotation:newPin];
+                    
+                    
+                    BOOL found = FALSE;
+                    for(HeatMapPin *downloadPin in self.downloadedMapPins)
+                    {
+                        if([downloadPin.pinID isEqualToNumber:newPin.pinID])
+                        {
+                            //Update existing Pins with new addressed status
+                            found = TRUE;
+                            downloadPin.addressed = newPin.addressed;
+                            break;
+                        }
+                    }
+                    
+                    if(!found)
+                    {
+                        //Add new pin to downloadMapPins array
+                        [self.downloadedMapPins addObject:newPin];
+                    }
+                }
+                
+                NSMutableArray *pinsToRemoveFromDownloaded = [[NSMutableArray alloc] init];
+                NSMutableArray *pinsToRemoveFromGathered = [[NSMutableArray alloc] init];
+                for(HeatMapPin *downloadedPin in self.downloadedMapPins)
+                {
+                    BOOL foundInDownloads = FALSE;
+                    for(HeatMapPin *newPin in newDownloadedPins)
+                    {
+                        if([newPin.pinID isEqualToNumber:downloadedPin.pinID])
+                        {
+                            foundInDownloads = TRUE;
+                        }
+                    }
+                    if(!foundInDownloads)
+                    {
+                        [pinsToRemoveFromDownloaded addObject:downloadedPin];
+                    }
+                }
+                for(HeatMapPin *gatheredPin in self.gatheredMapPins)
+                {
+                    BOOL foundInGathered = FALSE;
+                    for(HeatMapPin *newPin in newDownloadedPins)
+                    {
+                        if([newPin.pinID isEqualToNumber:gatheredPin.pinID])
+                        {
+                            foundInGathered = TRUE;
+                        }
+                    }
+                    if(!foundInGathered)
+                    {
+                        [pinsToRemoveFromGathered addObject:gatheredPin];
+                    }
+                }
+                
+                for(HeatMapPin *pin in pinsToRemoveFromDownloaded)
+                {
+                    [self.downloadedMapPins removeObject:pin];
+                }
+                for(HeatMapPin *pin in pinsToRemoveFromGathered)
+                {
+                    [self.gatheredMapPins removeObject:pin];
                 }
             }
         });

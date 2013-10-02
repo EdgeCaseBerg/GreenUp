@@ -14,7 +14,7 @@
 {
     if(self = [super init])
     {
-        self.pinID = -1;
+        self.pinID = @420;
         self.message = nil;
         self.coordinate = coordinate;
         self.type = type;

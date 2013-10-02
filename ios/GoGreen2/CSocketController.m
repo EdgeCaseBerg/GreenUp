@@ -79,7 +79,7 @@ static CSocketController* theCSocketController = nil;
 }
 
 #pragma mark - PUT REQUESTS
--(id)performPUTRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSArray *)properties
+-(id)performPUTRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(id)properties
 {
     BOOL parseFailed = FALSE;
     
@@ -129,6 +129,7 @@ static CSocketController* theCSocketController = nil;
         return @"Could Not Parse Properties Dictionary";
     }
 }
+
 
 #pragma mark - POST REQUESTS
 -(id)performPOSTRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSDictionary *)properties

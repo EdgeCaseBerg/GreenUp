@@ -134,8 +134,6 @@ static ContainerViewController* theContainerView = nil;
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
 {
-    //NSLog(@"View: X: %f - Y: %f - Width: %f - Height: %f", self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
-    //NSLog(@"Home: X: %f - Y: %f - Width: %f - Height: %f", self.theHomeViewController.view.frame.origin.x, self.theHomeViewController.view.frame.origin.y, self.theHomeViewController.view.frame.size.width, self.theHomeViewController.view.frame.size.height);
     [self.theMenuView removeFromSuperview];
     
     if(item.tag == HOME_VIEW)

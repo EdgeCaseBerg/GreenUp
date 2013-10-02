@@ -16,6 +16,7 @@
 #import "NetworkMessage.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
+#import "HeatMapPin.h"
 
 #define ALERT_VIEW_TOGGLE_ON 0
 #define ALERT_VIEW_TOGGLE_OFF 1
@@ -157,16 +158,7 @@
                         newMessage.messageTimeStamp = [comment objectForKey:@"timestamp"];
                         newMessage.messageType = [comment objectForKey:@"type"];
                         newMessage.pinID = [comment objectForKey:@"pin"];
-                        
-#warning GET ACTUAL VALUE!
-                        if(arc4random() % 2 == 0)
-                        {
-                            newMessage.addressed = TRUE;
-                        }
-                        else
-                        {
-                            newMessage.addressed = FALSE;
-                        }
+                        newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
                         
                         [self.messages addObject:newMessage];
                     }
@@ -506,13 +498,13 @@
     self.toggledMessageRef = msg;
     if(msg.addressed)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Are you sure you have cleaned up this location?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Are you sure you want to remark this message as unattended to?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         alert.tag = ALERT_VIEW_TOGGLE_OFF;
         [alert show];
     }
     else
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Are you sure you want to remark this message as unattended to?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Are you sure you have cleaned up this location?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         alert.tag = ALERT_VIEW_TOGGLE_ON;
         [alert show];
     }
@@ -539,7 +531,8 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
         //Background Process Block
-        NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:[NSArray arrayWithObject:parameters]];
+    
+        NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:[NSString stringWithFormat:@"%@?id=%@",PINS_RELATIVE_URL, self.toggledMessageRef.pinID.stringValue] withPort:API_PORT withProperties:parameters];
         
         dispatch_async(dispatch_get_main_queue(),^{
             //Completion Block
@@ -550,24 +543,62 @@
                 if(alertView.tag == ALERT_VIEW_TOGGLE_ON)
                 {
                     [self.toggledMessageRef setAddressed:TRUE];
+                    
+                    //Update Current Downloaded Pins Array
+                    for(HeatMapPin *downloadedPin in [[[ContainerViewController sharedContainer] theMapViewController] downloadedMapPins])
+                    {
+                        if([self.toggledMessageRef.pinID isEqualToNumber:downloadedPin.pinID])
+                        {
+                            downloadedPin.addressed = TRUE;
+                        }
+                    }
+                    
+                    //Update Current Gathered Pins Array
+                    for(HeatMapPin *gatheredPin in [[[ContainerViewController sharedContainer] theMapViewController] gatheredMapPins])
+                    {
+                        if([self.toggledMessageRef.pinID isEqualToNumber:gatheredPin.pinID])
+                        {
+                            gatheredPin.addressed = TRUE;
+                        }
+                    }
                 }
                 else if(alertView.tag == ALERT_VIEW_TOGGLE_OFF)
                 {
                     [self.toggledMessageRef setAddressed:FALSE];
+                    
+                    //Update Current Downloaded Pins Array
+                    for(HeatMapPin *downloadedPin in [[[ContainerViewController sharedContainer] theMapViewController] downloadedMapPins])
+                    {
+                        if([self.toggledMessageRef.pinID isEqualToNumber:downloadedPin.pinID])
+                        {
+                            downloadedPin.addressed = FALSE;
+                        }
+                    }
+                    
+                    //Update Current Gathered Pins Array
+                    for(HeatMapPin *gatheredPin in [[[ContainerViewController sharedContainer] theMapViewController] gatheredMapPins])
+                    {
+                        if([self.toggledMessageRef.pinID isEqualToNumber:gatheredPin.pinID])
+                        {
+                            gatheredPin.addressed = FALSE;
+                        }
+                    }
                 }
                 int row = [self.messages indexOfObject:self.toggledMessageRef];
                 [self.theTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                
+                self.toggledMessageRef = nil;
             }
             else
             {
                 //FAILED!
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Request Failed" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
                 [alert show];
+                
+                self.toggledMessageRef = nil;
             }
         });
     });
-    
-    self.toggledMessageRef = nil;
 }
 
 @end

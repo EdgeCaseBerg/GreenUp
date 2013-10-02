@@ -93,11 +93,11 @@
             UIImageView *validationBox = nil;
             if(messageObject.addressed)
             {
-                validationBox = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"notCheck.png"]];
+                validationBox = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"check.png"]];
             }
             else
             {
-                validationBox = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"check.png"]];
+                validationBox = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"notCheck.png"]];
             }
             [validationBox setFrame:CGRectMake(280, extraTop + ((self.topBackgroundImage.frame.size.height + self.middleBackgroundImage.frame.size.height + (self.bottomBackgroundImage.frame.size.height - 14)) / 2) - 13, 26, 26)];
             self.toggleValidity = [UIButton buttonWithType:UIButtonTypeCustom];

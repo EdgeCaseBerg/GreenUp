@@ -13,7 +13,7 @@
 
 @property CLLocationCoordinate2D coordinate;
 @property (nonatomic, strong) NSString *message;
-@property int pinID;
+@property (nonatomic, strong) NSNumber *pinID;
 @property (nonatomic, strong) NSString *type;
 @property BOOL addressed;
 
