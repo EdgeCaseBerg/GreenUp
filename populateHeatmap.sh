@@ -1,9 +1,18 @@
 #!/bin/bash
+# HMURL=honda
+if [ -z $1 ]
+	then
+		HMURL="http://localhost:30002/api/heatmap"
+	else
+		HMURL="$1"
+	fi
+# echo $HMURL
+
 echo "working..."
 result=$(
 for z in {1..9}
 	do
-		for i in {1..2}
+		for i in {1..9}
 			do
 				# echo "123"$i"456\n"
 				curl -d '[
@@ -13,7 +22,7 @@ for z in {1..9}
 			        	"secondsWorked" : 4'$i'120, 
 			        	"precision" : 4
 			    	}
-				]' http://localhost:30002/api/heatmap 2>&1
+				]' $HMURL 2>&1
 			done
 
 		for i in {9..1}
@@ -26,7 +35,7 @@ for z in {1..9}
 			        	"secondsWorked" : 1'$i'120, 
 			        	"precision" : 4
 			    	}
-				]' http://localhost:30002/api/heatmap 2>&1
+				]' $HMURL 2>&1
 			done
 	done
 )
@@ -41,6 +50,9 @@ elif [[ "$result" == *"404"* ]];
 elif [[ "$result" == *"couldn"* ]];
 	then
 	echo "couldn't connect to host"
-else
+elif [[ "$result" == *"uccess"* ]];
+	then
 	echo "Success"
+else
+	echo "Undetermined Error"
 fi
