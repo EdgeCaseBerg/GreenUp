@@ -21,6 +21,7 @@
 @property (nonatomic, strong) UIButton *toggleValidity;
 @property (nonatomic, strong) NetworkMessage *messageObject;
 @property (nonatomic, strong) UILabel *textContentLabel;
+@property (nonatomic, strong) UILabel *timeStampLabel;
 
 -(id)initWithMessage:(NetworkMessage *)messageObject isBackwards:(BOOL)backwards isFirst:(BOOL)first andResueIdentifier:(NSString *)reuseIdentifier;
 

@@ -150,17 +150,43 @@
                     [self.messages removeAllObjects];
                     
                     NSArray *comments = [response objectForKey:@"comments"];
+                    NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
                     for(NSDictionary *comment in comments)
                     {
                         NetworkMessage *newMessage = [[NetworkMessage alloc] init];
                         newMessage.messageContent = [comment objectForKey:@"message"];
                         newMessage.messageID = [comment objectForKey:@"id"];
-                        newMessage.messageTimeStamp = [comment objectForKey:@"timestamp"];
+                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                        [dateFormatter setDateFormat:@"E M d H:m:s y"];
+                        newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
+                        
                         newMessage.messageType = [comment objectForKey:@"type"];
                         newMessage.pinID = [comment objectForKey:@"pin"];
                         newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
                         
                         [self.messages addObject:newMessage];
+                        [newDownloadedMessages addObject:newMessage];
+                    }
+                    
+                    NSMutableArray *messagesToRemove = [[NSMutableArray alloc] init];
+                    for(NetworkMessage *messages in self.messages)
+                    {
+                        BOOL foundInDownloads = FALSE;
+                        for(NetworkMessage *newMessage in newDownloadedMessages)
+                        {
+                            if([newMessage.messageID isEqualToNumber:messages.messageID])
+                            {
+                                foundInDownloads = TRUE;
+                            }
+                        }
+                        if(!foundInDownloads)
+                        {
+                            [messagesToRemove addObject:messages];
+                        }
+                    }
+                    for(NetworkMessage *messageToDelete in messagesToRemove)
+                    {
+                        [self.messages removeObject:messageToDelete];
                     }
                     
                     NSDictionary *pages = [response objectForKey:@"nextPage"];
@@ -172,7 +198,6 @@
                 
             });
         });
-#warning SORT MESSAGES BY TIME STAMP!
     }
 }
 
@@ -309,11 +334,11 @@
     
     if(indexPath.row == 0)
     {
-        return size.height + 25;
+        return size.height + 25 + 20;
     }
     else
     {
-        return size.height + 5;
+        return size.height + 5 + 20;
     }
 }
 /*

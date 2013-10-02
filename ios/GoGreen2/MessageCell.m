@@ -33,6 +33,19 @@
         CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
         
         [self.textContentLabel setFrame:CGRectMake(15, 6 + extraTop, 260, contentSize.height)];
+        
+        self.timeStampLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.textContentLabel.frame.origin.y + self.textContentLabel.frame.size.height , 260, 20)];
+        NSDate *currentDate = [NSDate date];
+        NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:messageObject.messageTimeStamp];
+        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:elaspedTime];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"EEE MMM dd yyyy hh:mm:ss a"];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        NSString *formattedDate = [dateFormatter stringFromDate:date];
+        [self.timeStampLabel setText:[NSString stringWithFormat:@"Posted %@", formattedDate]];
+        [self.timeStampLabel setBackgroundColor:[UIColor clearColor]];
+        [self.timeStampLabel setFont:[self.timeStampLabel.font fontWithSize:10]];
+        [self.timeStampLabel setTextAlignment:NSTextAlignmentLeft];
 
         NSLog(@"MESSAGE TYPE: %@", messageObject.messageType);
         if([messageObject.messageType isEqualToString:Message_Type_ADMIN])
@@ -42,7 +55,7 @@
             [self.topBackgroundImage setFrame:CGRectMake(10, extraTop, 300, 6)];
             
             //Variable Middle Slice
-            self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height)];
+            self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height + 20)];
             [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_red_center.png"]]];
         
             //Buttom Slice
@@ -54,13 +67,14 @@
             {
                 self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_bottom.png"]];
             }
-            [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop, 300, 20)];
+            [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
             
             //Add Subviews to ContentView
             [self.contentView addSubview:self.topBackgroundImage];
             [self.contentView addSubview:self.middleBackgroundImage];
             [self.contentView addSubview:self.bottomBackgroundImage];
             [self.contentView addSubview:self.textContentLabel];
+            [self.contentView addSubview:self.timeStampLabel];
         }
         else if([messageObject.messageType isEqualToString:Message_Type_MARKER])
         {
@@ -69,7 +83,7 @@
             [self.topBackgroundImage setFrame:CGRectMake(10, extraTop, 300, 6)];
             
             //Variable Middle Slice
-            self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height)];
+            self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height + 20)];
             [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_green_center.png"]]];
             
             //Buttom Slice
@@ -81,13 +95,14 @@
             {
                 self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom.png"]];
             }
-            [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop, 300, 20)];
+            [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
             
             //Add Subviews to ContentView
             [self.contentView addSubview:self.topBackgroundImage];
             [self.contentView addSubview:self.middleBackgroundImage];
             [self.contentView addSubview:self.bottomBackgroundImage];
             [self.contentView addSubview:self.textContentLabel];
+            [self.contentView addSubview:self.timeStampLabel];
             
             //Check If Selected
             UIImageView *validationBox = nil;
@@ -113,7 +128,7 @@
             [self.topBackgroundImage setFrame:CGRectMake(10, extraTop, 300, 6)];
             
             //Variable Middle Slice
-            self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height)];
+            self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height + 20)];
             [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_orange_center.png"]]];
             
             //Buttom Slice
@@ -125,13 +140,14 @@
             {
                 self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_orange_bottom.png"]];
             }
-            [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop, 300, 20)];
+            [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
             
             //Add Subviews to ContentView
             [self.contentView addSubview:self.topBackgroundImage];
             [self.contentView addSubview:self.middleBackgroundImage];
             [self.contentView addSubview:self.bottomBackgroundImage];
             [self.contentView addSubview:self.textContentLabel];
+            [self.contentView addSubview:self.timeStampLabel];
         }
     }
     

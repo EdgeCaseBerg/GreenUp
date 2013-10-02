@@ -14,7 +14,7 @@
 @property (strong, nonatomic) NSString *messageType;
 @property (strong, nonatomic) NSNumber *pinID;
 @property (strong, nonatomic) NSNumber *messageID;
-@property (strong, nonatomic) NSNumber *messageTimeStamp;
+@property (strong, nonatomic) NSDate *messageTimeStamp;
 @property BOOL addressed;
 
 @end

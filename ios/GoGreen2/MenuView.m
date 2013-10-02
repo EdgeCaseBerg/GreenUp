@@ -184,7 +184,7 @@
     //Add pin images to view
     //[self addSubview:pin1Image];
     //[self addSubview:pin2Image];
-    [self addSubview:currentLocationImage];
+    [self.contentView addSubview:currentLocationImage];
     
     //Init Pin Labels
     UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 40)];
