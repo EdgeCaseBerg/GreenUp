@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 
@@ -123,22 +123,22 @@ function ApiConnector(){
 			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
 			but there is an implicit cast against undefined defined for double equals in javascript
 		*/
-		var heatmapURI = "/heatmap";
+		var heatmapURI = "/heatmap?precision=4";
 		var params = "";
 		if(latDegrees != null){
-			params = "?";
+			params = "&";
 			params += "latDegrees=" + latDegrees + "&";
 		}
 		if(latOffset != null){
-			params = "?";
+			params = "&";
 			params += "latOffset=" + latOffset + "&";
 		}
 		if(lonDegrees != null){
-			params = "?";
+			params = "&";
 			params += "lonDegrees" + lonDegrees + "&";
 		}
 		if(lonOffset != null){
-			params = "?";
+			params = "&";
 			params += "lonOffset" + lonOffset + "&";
 		}
 		console.log("Preparing to pull heatmap data");
