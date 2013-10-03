@@ -323,7 +323,7 @@ function MapHandle(){
 
 		  	// google.load("visualization", "1", {packages:["corechart"]});
       		// google.setOnLoadCallback(function(){
-      			window.UI.drawVisualisation();
+      			// window.UI.drawVisualisation();
       		// });	
 			
 		});
@@ -704,27 +704,7 @@ function UiHandle(){
 
 	} // end init
 
-	UiHandle.prototype.drawVisualisation = function drawVisualization(){
-
-		// google.load("visualization", "1", {packages:["corechart"]});
-      	// google.setOnLoadCallback(function(){
-      			// window.UI.drawVisualisation();	
-		console.log("gggg");
-	  // Create and populate the data table.
-	  	var pieData =  new google.visualization.arrayToDataTable([
-	    	['Task', 'Hours per Day'],
-	    	['iPhone', 25],
-	    	['Android', 25],
-	    	['Web', 50],
-	  	]);
-
-	  	var lineData = new google.visualization.arrayToDataTable([
-          ['Year', 'Sales'],
-          ['2004',  1000],
-          ['2005',  1170],
-          ['2006',  660],
-          ['2007',  1030]
-        ]);
+	UiHandle.prototype.drawVisualisation = function drawVisualization(pieData, lineData){	  	
 
         var lineOptions = {
         	backgroundColor: "#eee",
@@ -1006,6 +986,24 @@ function UiHandle(){
 
 } // end UiHandle class def
 
+function Helper(){
+	Helper.prototype.getGoogleFormattedDate = function getGoogleFormattedDate(dateObj){
+		var monthString = dateObj.getMonth().toString();
+  		var dayString = dateObj.getDay().toString();  
+  		if(dateObj.getMonth() < 10){
+  			monthString = "0"+monthString;
+  		}
+  		if(dateObj.getDay() < 10){
+  			dayString = "0"+dayString;
+  		}
+
+  		var result = dateObj.getFullYear().toString() + "-"+
+  					monthString + "-" + dayString;
+
+  		return result;	
+	}	
+}
+
 // prototype objects for posting to API
 function Pin(){
 	this.latDegrees; 
@@ -1036,6 +1034,8 @@ function ClientLogger(){
 	}
 }
 
+// --------- Auth and Load Google Shit -----
+
 function loadAnalytics(){
 	// alert("analytics");
 	var clientId = '326012990067.apps.googleusercontent.com';
@@ -1050,6 +1050,7 @@ function loadAnalytics(){
 
 function analyticsLoaded(){
 	// alert("analytics loaded");
+	mainLoad();
 	gapi.client.analytics.management.accounts.list().execute(handleAccounts);
 }
 
@@ -1059,6 +1060,7 @@ function handleAuthResult(authResult) {
 
     gapi.client.load('analytics', 'v3', analyticsLoaded);
     $('#loginContainer').fadeOut(1000);
+
 
   } else {
     console.log('*** User is not Authenticated or Authorized **');
@@ -1143,30 +1145,52 @@ function handleProfiles(results) {
 
 function queryCoreReportingApi(profileId) {
   console.log('Querying Core Reporting API.');
+  var HELPER = new Helper();
+  var endDate = HELPER.getGoogleFormattedDate(new Date());
+  var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 1, 1, 2, 3, 4, 567));
 
   // Use the Analytics Service Object to query the Core Reporting API
   gapi.client.analytics.data.ga.get({
     'ids': 'ga:' + profileId,
-    'start-date': '2012-03-03',
-    'end-date': '2012-03-03',
+    'start-date': startDate,
+    'end-date': endDate,
     'metrics': 'ga:visits, ga:newVisits'
   }).execute(handleCoreReportingResults);
 }
 
 function handleCoreReportingResults(results) {
   if (results.error) {
+  	// TODO error message in place of analytics
     console.log('There was an error querying core reporting API: ' + results.message);
   } else {
   	console.log("core reporting results");
     console.log(results);
-  }
+  
+
+  var pieData =  new google.visualization.arrayToDataTable([
+	    	['Task', 'Hours per Day'],
+	    	['iPhone', 25],
+	    	['Android', 25],
+	    	['Web', 50],
+	  	]);
+
+	  	var lineData = new google.visualization.arrayToDataTable([
+          ['Year', 'Sales'],
+          ['2004',  1000],
+          ['2005',  1170],
+          ['2006',  660],
+          ['2007',  1030]
+        ]);
+
+        window.UI.drawVisualisation(pieData, lineData);
+    }
 }
 
 // https://developers.google.com/analytics/resources/concepts/gaConceptsAccounts
 // https://developers.google.com/analytics/solutions/articles/hello-analytics-api
 // https://developers.google.com/api-client-library/javascript/features/authentication#popup
 
-
+// -------- end Google Shit ---------
 
 
 
@@ -1175,7 +1199,9 @@ function handleCoreReportingResults(results) {
 * This is where all the action begins (once content is loaded)
 * @author Josh
 */
-document.addEventListener('DOMContentLoaded',function(){
+
+function mainLoad(){
+	window.HELPER = new Helper();
 	window.LOGGER = new ClientLogger();
 	window.INPUT_TYPE = new INPUT_TYPE();
 	window.DEBUG = false;
@@ -1196,5 +1222,28 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.ApiConnector.pullMarkerData();
 	window.ApiConnector.pullHeatmapData();
 
-});
+}
+
+// document.addEventListener('DOMContentLoaded',function(){
+// 	window.LOGGER = new ClientLogger();
+// 	window.INPUT_TYPE = new INPUT_TYPE();
+// 	window.DEBUG = false;
+
+
+// 	// instansiate the api
+// 	window.ApiConnector = new ApiConnector();
+// 	// instansiate the forum
+// 	window.Comments = new CommentsHandle();
+// 	// instansiate /initialize the UI controls
+// 	window.UI = new UiHandle();
+// 	window.UI.init();
+// 	// build out the google map
+// 	window.MAP = new MapHandle();
+// 	window.MAP.initMap();
+// 	// grab our comments, map markers, and heatmap data
+// 	window.ApiConnector.pullCommentData();
+// 	window.ApiConnector.pullMarkerData();
+// 	window.ApiConnector.pullHeatmapData();
+
+// });
 
