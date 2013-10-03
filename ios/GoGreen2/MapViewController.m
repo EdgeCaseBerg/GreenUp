@@ -490,7 +490,9 @@
 }
 -(IBAction)removeFadeView:(id)sender
 {
+    [[self.fadeView.subviews objectAtIndex:0] removeFromSuperview];
     [self.fadeView removeFromSuperview];
+    self.pinIDToShow = nil;
 }
 
 

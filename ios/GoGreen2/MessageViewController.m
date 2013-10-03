@@ -123,8 +123,11 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [self getMessages];
-    [self.theTableView reloadData];
+    if(self.pinIDToShow == nil)
+    {
+        [self getMessages];
+        [self.theTableView reloadData];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -462,13 +465,37 @@
         count++;
     }
     
-    [self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:TRUE];
+    [self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:FALSE];
     
     for(int i = 0; i < self.messages.count; i++)
     {
-        MessageCell *cell = (MessageCell *)[self.theTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-        [cell setHidden:TRUE];
+        if(i != indexOfSelectedMessage.row)
+        {
+            MessageCell *cell = (MessageCell *)[self.theTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            [cell.contentView setAlpha:0];
+        }
     }
+    
+    VoidBlock animate = ^
+    {
+        for(int i = 0; i < self.messages.count; i++)
+        {
+            if(i != indexOfSelectedMessage.row)
+            {
+                MessageCell *cell = (MessageCell *)[self.theTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                [cell.contentView setAlpha:1];
+            }
+        }
+    };
+    //Perform Animations
+    [UIView animateWithDuration:3 animations:animate];
+    
+    [self performSelector:@selector(removePinIDReference:) withObject:nil afterDelay:3];
+}
+
+-(IBAction)removePinIDReference:(id)sender
+{
+    self.pinIDToShow = nil;
 }
 
 #pragma mark - KEYBOARD CALL BACKS
