@@ -625,6 +625,7 @@ function UiHandle(){
 	this.textInputIsVisible = false;
 
 	this.isOptionsVisible = false;
+	this.isCommentsSliderVisible = false;
 
 	this.isClockRunning = false;
 	this.clockHrs = 00;
@@ -670,12 +671,30 @@ function UiHandle(){
     		}
     	});
 
+    	$('#commentsIcon').click(function(){
+    		if(window.UI.isCommentsSliderVisible){
+    			window.UI.toggleCommentsSlider(function(){
+	    			window.UI.toggleCommentsSlider();
+	    		});
+    		}else{
+    			window.UI.toggleCommentsSlider();
+    		}
+    	});
+
     	$('#infoIcon').mouseenter(function(){
     		$(this).attr("src", "images/info-icon-light.png");	
     	});
 
     	$('#infoIcon').mouseleave(function(){
     		$(this).attr("src", "images/info-icon-dark.png");	
+    	});
+
+    	$('#commentsIcon').mouseenter(function(){
+    		$(this).attr("src", "images/comment-icon-hover.png");	
+    	});
+
+    	$('#commentsIcon').mouseleave(function(){
+    		$(this).attr("src", "images/comment-icon.png");	
     	});
 
     	$('#latLonSelect').click(function(){
@@ -736,6 +755,18 @@ function UiHandle(){
 		}else{
 			window.UI.isOptionsVisible = true;
 			$('.markerTypeSelectDialog').css({"top":"55px"});
+			
+		}
+	}
+
+	UiHandle.prototype.toggleCommentsSlider = function toggleCommentsSlider(){
+		if(window.UI.isCommentsSliderVisible){
+			window.UI.isCommentsSliderVisible = false;
+			$('#commentsDialog').css({"right":"-230px"});
+			
+		}else{
+			window.UI.isCommentsSliderVisible = true;
+			$('#commentsDialog').css({"right":"-3px"});
 			
 		}
 	}
