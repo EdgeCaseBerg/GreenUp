@@ -1058,6 +1058,7 @@ function handleAuthResult(authResult) {
     console.log('The user has authorized access');
 
     gapi.client.load('analytics', 'v3', analyticsLoaded);
+    $('#loginContainer').fadeOut(1000);
 
   } else {
     console.log('*** User is not Authenticated or Authorized **');
@@ -1137,6 +1138,27 @@ function handleProfiles(results) {
     }
   } else {
     console.log('There was an error querying views (profiles): ' + results.message);
+  }
+}
+
+function queryCoreReportingApi(profileId) {
+  console.log('Querying Core Reporting API.');
+
+  // Use the Analytics Service Object to query the Core Reporting API
+  gapi.client.analytics.data.ga.get({
+    'ids': 'ga:' + profileId,
+    'start-date': '2012-03-03',
+    'end-date': '2012-03-03',
+    'metrics': 'ga:visits, ga:newVisits'
+  }).execute(handleCoreReportingResults);
+}
+
+function handleCoreReportingResults(results) {
+  if (results.error) {
+    console.log('There was an error querying core reporting API: ' + results.message);
+  } else {
+  	console.log("core reporting results");
+    console.log(results);
   }
 }
 
