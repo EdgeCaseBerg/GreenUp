@@ -19,6 +19,7 @@
 @property (strong, nonatomic) NSString *currentMessageType;
 @property (strong, nonatomic) NSString *nextPageURL;
 @property (strong, nonatomic) NetworkMessage *toggledMessageRef;
+@property (strong, nonatomic) NSNumber *pinIDToShow;
 
 @property BOOL keyboardIsOut;
 

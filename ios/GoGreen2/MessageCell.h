@@ -19,6 +19,7 @@
 @property (nonatomic, strong) UIView *middleBackgroundImage;
 @property (nonatomic, strong) UIImageView *bottomBackgroundImage;
 @property (nonatomic, strong) UIButton *toggleValidity;
+@property (nonatomic, strong) UIButton *showPinOnMap;
 @property (nonatomic, strong) NetworkMessage *messageObject;
 @property (nonatomic, strong) UILabel *textContentLabel;
 @property (nonatomic, strong) UILabel *timeStampLabel;

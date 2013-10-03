@@ -57,6 +57,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewWillAppear:) name:@"switchedToMap" object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(goToMapPin:) name:@"showMapPin" object:nil];
+    
     return self;
 }
 
@@ -195,6 +197,14 @@
     }
     else
         return nil;
+}
+
+-(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+{
+    HeatMapPin *selectedMapPin = view.annotation;
+    [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:selectedMapPin.pinID];
+    [[ContainerViewController sharedContainer] switchMessageView];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"showSeletedMessage" object:nil];
 }
 
 #pragma mark - GPS Location Methods
@@ -429,6 +439,60 @@
 }
 
 #pragma mark - Map Pin Methods
+
+-(void)goToMapPin:(NSNotification *)sender
+{
+    NSLog(@"INTEGER OF ID: %llu", self.pinIDToShow.longLongValue);
+    HeatMapPin *pinToShow = nil;
+    for(HeatMapPin *pin in self.downloadedMapPins)
+    {
+        if([pin.pinID isEqualToNumber:self.pinIDToShow])
+        {
+            pinToShow = pin;
+        }
+    }
+    for(HeatMapPin *pin in self.gatheredMapPins)
+    {
+        if([pin.pinID isEqualToNumber:self.pinIDToShow])
+        {
+            pinToShow = pin;
+        }
+    }
+    
+    //Center The Map
+    [self.mapView setCenterCoordinate:pinToShow.coordinate];
+
+    //Add Fade View
+    self.fadeView = [[UIView alloc] initWithFrame:self.mapView.frame];
+    [self.fadeView setBackgroundColor:[UIColor blackColor]];
+    [self.fadeView setAlpha:.8];
+    [self.view addSubview:self.fadeView];
+
+    //Add Fake Pin Overlay
+    CGPoint pinPointInSuperView = [self.mapView convertCoordinate:pinToShow.coordinate toPointToView:self.view];
+    UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashbag.png"]];
+    [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 15, pinPointInSuperView.y - 13, 30, 26)];
+    [self.fadeView addSubview:fakePin];
+
+    //Remove View
+    [self performSelector:@selector(fadeOutFadeView:) withObject:nil afterDelay:2];
+}
+
+-(IBAction)fadeOutFadeView:(id)sender
+{
+    VoidBlock animate = ^
+    {
+        [self.fadeView setAlpha:0];
+    };
+    //Perform Animations
+    [UIView animateWithDuration:.25 animations:animate];
+    [self performSelector:@selector(removeFadeView:) withObject:nil afterDelay:.25];
+}
+-(IBAction)removeFadeView:(id)sender
+{
+    [self.fadeView removeFromSuperview];
+}
+
 
 -(void)addNewDownloadedPins:(NSArray *)pins
 {

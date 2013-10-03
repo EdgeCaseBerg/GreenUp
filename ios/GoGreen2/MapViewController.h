@@ -44,6 +44,8 @@
 @property (strong, nonatomic) NSDate *longPressTimer;
 @property (strong, nonatomic) MapPinSelectorView *mapSpinner;
 @property (strong, nonatomic) HeatMapPin *tempPinRef;
+@property (strong, nonatomic) NSNumber *pinIDToShow;
+@property (strong, nonatomic) UIView *fadeView;
 @property BOOL pushOverdue;
 
 

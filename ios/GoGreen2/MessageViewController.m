@@ -108,6 +108,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMessageValidity:) name:@"toggleMessageValidity" object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSelectedMessage:) name:@"showSeletedMessage" object:nil];
+    
     return self;
 }
 
@@ -161,7 +163,16 @@
                         newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                         
                         newMessage.messageType = [comment objectForKey:@"type"];
-                        newMessage.pinID = [comment objectForKey:@"pin"];
+                        id pinID = [comment objectForKey:@"pin"];
+                        if([pinID isKindOfClass:[NSNumber class]])
+                        {
+                            newMessage.pinID = [comment objectForKey:@"pin"];
+                        }
+                        else
+                        {
+                            newMessage.pinID = nil;
+                        }
+                        
                         newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
                         
                         [self.messages addObject:newMessage];
@@ -430,6 +441,34 @@
 -(IBAction)setMessageType:(NSNotification *)notificationRecieved
 {
     self.currentMessageType = notificationRecieved.object;
+}
+
+-(IBAction)showSelectedMessage:(id)sender
+{
+    NetworkMessage *selectedMessage = nil;
+    NSIndexPath *indexOfSelectedMessage = nil;
+    int count = 0;
+    for(NetworkMessage *message in self.messages)
+    {
+        if(message.pinID != nil)
+        {
+            if([message.pinID isEqualToNumber:self.pinIDToShow])
+            {
+                selectedMessage = message;
+                indexOfSelectedMessage = [NSIndexPath indexPathForRow:count inSection:0];
+                break;
+            }
+        }
+        count++;
+    }
+    
+    [self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:TRUE];
+    
+    for(int i = 0; i < self.messages.count; i++)
+    {
+        MessageCell *cell = (MessageCell *)[self.theTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        [cell setHidden:TRUE];
+    }
 }
 
 #pragma mark - KEYBOARD CALL BACKS
