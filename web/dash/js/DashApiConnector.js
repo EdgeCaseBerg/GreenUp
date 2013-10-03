@@ -345,15 +345,15 @@ function MapHandle(){
 		switch(window.MAP.markerType){
 			case "general message":
 				pin.type = "general message";
-				iconUrl = "img/icons/orangeCircle.png";
+				iconUrl = "images/icons/orangeCircle.png";
 				break;
 			case "help needed":
 				pin.type = "help needed";
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "images/icons/blueCircle.png";
 				break;
 			case "trash pickup":
 				pin.type = "trash pickup";
-				iconUrl = "img/icons/greenCircle.png";
+				iconUrl = "images/icons/greenCircle.png";
 				break;
 			default:
 				pin.type = "general message";
@@ -419,19 +419,19 @@ function MapHandle(){
 		switch(markerType){
 			case "GENERAL MESSAGE":
 				pin.type = "GENERAL MESSAGE";
-				iconUrl = "img/icons/orangeCircle.png";
+				iconUrl = "images/icons/orangeCircle.png";
 				break;
 			case "HELP NEEDED":
 				pin.type = "HELP NEEDED";
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "images/icons/blueCircle.png";
 				break;
 			case "TRASH PICKUP":
 				pin.type = "TRASH PICKUP";
-				iconUrl = "img/icons/greenCircle.png";
+				iconUrl = "images/icons/greenCircle.png";
 				break;
 			default:
 				pin.type = "GENERAL MESSAGE";
-				iconUrl = "img/icons/orangeCircle.png";
+				iconUrl = "images/icons/orangeCircle.png";
 				break;
 		}
 
@@ -717,10 +717,6 @@ function UiHandle(){
     			$('#streetInputContainer').slideDown().addClass("visible");
     		}
     	});
-
-
-  
-
 	} // end init
 
 	UiHandle.prototype.drawVisualisation = function drawVisualization(pieData, lineData){	  	
@@ -808,16 +804,16 @@ function UiHandle(){
 		var iconUrl = "";
 		switch(markerType){
 			case "forum":
-				iconUrl = "img/icons/orangeCircle.png";
+				iconUrl = "images/icons/orangeCircle.png";
 				break;
 			case "trash pickup":
-				iconUrl = "img/icons/blueCircle.png";
+				iconUrl = "images/icons/blueCircle.png";
 				break;
 			case "help needed":
-				iconUrl = "img/icons/greenCircle.png";
+				iconUrl = "images/icons/greenCircle.png";
 				break;
 			default:
-				iconUrl = "img/icons/orangeCircle.png";
+				iconUrl = "images/icons/orangeCircle.png";
 				break;
 		}
 
@@ -886,7 +882,10 @@ function UiHandle(){
 
 	// markers coming from the apiconnector comes here to be added to the UI
 	UiHandle.prototype.updateMarker = function updateMarker(data){
-		console.log("marker response: "+data);
+		console.log("marker response: ");
+		console.log(data);
+
+		window.PINS = data.pins;
 		// var dataArr = JSON.parse(data);
 		var dataArr = data;
         for(ii=0; ii<dataArr.pins.length; ii++){
@@ -902,6 +901,7 @@ function UiHandle(){
 		// console.log("Comment data: "+data);
 		// document.getElementById("bubbleContainer").innerHTML = "";
 		console.log(data);
+		window.COMMENTS = data;
 		dataObj = data;
 		// var dataObj = JSON.parse(data);
 		var comments = dataObj.comments;
@@ -927,6 +927,10 @@ function UiHandle(){
 
 				var div = document.createElement("div");
 				var timeDiv = document.createElement("div");
+				var pinIdHolder = document.createElement("input");
+				pinIdHolder.type = "hidden";
+				pinIdHolder.value = comments[ii].pin;
+				div.appendChild(pinIdHolder);
 				var messageContent = document.createElement("span");
 				var currentDate = new Date();
 				var timezoneOffsetMillis = currentDate.getTimezoneOffset()*60*1000;
@@ -942,6 +946,9 @@ function UiHandle(){
 				messageContent.innerHTML = comments[ii]['message'];
 				timeDiv.innerHTML = timeSinceMessage;
 				timeDiv.className = "bubbleTime";
+
+
+
 				if(ii % 2 == 0){
 					div.className = "bubbleRight bubble"; 
 				}else{
@@ -967,6 +974,18 @@ function UiHandle(){
 				document.getElementById("bubbleContainer").appendChild(div);
 
 		}
+
+		$('.bubble').click(function(){
+			var pinId = $(this).find("input").val();
+			for(var ii=0; ii<window.PINS.length; ii++){
+				if(window.PINS[ii].id == pinId){
+					var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees); 	
+					window.MAP.map.setCenter(centerPoint);
+					window.MAP.map.setZoom(window.MAP.currentZoom);
+				}
+			}
+			// console.log(pinId);
+		});
 	}
 
 
@@ -1116,6 +1135,8 @@ function handleAccounts(results) {
     console.log('There was an error querying accounts: ' + results.message);
   }
 }
+
+
 
 function queryWebproperties(accountId) {
   console.log('Querying Webproperties.');
