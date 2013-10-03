@@ -7,6 +7,7 @@
 //
 
 #import "MenuView.h"
+#import "ContainerViewController.h"
 
 @implementation MenuView
 
@@ -33,6 +34,7 @@
         [self.toggleButton setBackgroundImage:[UIImage imageNamed:@"hamburger_icon.png"] forState:UIControlStateNormal];
         [self addSubview:self.toggleButton];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateHomeView:) name:@"updateHomeMenuWithNewPreviousTimes" object:nil];
         
         if([view isEqualToString:MENU_HOME_VIEW])
         {
@@ -46,7 +48,6 @@
         {
             [self fadeViewToView:MENU_MESSAGE_VIEW];
         }
-        
     }
     return self;
 }
@@ -54,6 +55,10 @@
 -(IBAction)toggleMenu:(id)sender
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"toggleMenu" object:nil];
+    if([[[[ContainerViewController sharedContainer] theHomeViewController] view] frame].origin.x == 0 && [[[[ContainerViewController sharedContainer] theHomeViewController] view] frame].size.width != 0)
+    {
+        [self clearView:MENU_HOME_VIEW];
+    }
 }
 
 -(void)fadeViewToView:(NSString *)view
@@ -81,7 +86,7 @@
     
     if([view isEqualToString:MENU_HOME_VIEW])
     {
-        [self swtichHomeView];
+        [self switchToHomeView];
     }
     else if([view isEqualToString:MENU_MAP_VIEW])
     {
@@ -108,57 +113,47 @@
     [self fadeViewToView:MENU_MESSAGE_VIEW];
 }
 
--(void)swtichHomeView
+-(IBAction)updateHomeView:(id)sender
 {
+    [self fadeViewToView:MENU_HOME_VIEW];
+}
+
+-(void)switchToHomeView
+{
+    //Update Previous Time Intervals
+    self.previousTimeIntervals = [[[ContainerViewController sharedContainer] theHomeViewController] previousLoggingTimes];
+    
+    UIScrollView *previousTimesScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(5, 30, self.frame.size.width - 10, 100)];
+    int height = 0;
+    
+    for(int i = self.previousTimeIntervals.count - 1; i >= 0; i--)
+    {
+        NSNumber *intervalNumber = [self.previousTimeIntervals objectAtIndex:i];
+        NSTimeInterval interval = intervalNumber.doubleValue;
+        float hours = floor(interval/60/60);
+        float min = floor(interval/60);
+        float sec = round(interval - min * 60);
+        
+        NSString *time = [NSString stringWithFormat:@"%d \t - \t %02d:%02d:%02d", i + 1, (int)hours, (int)min, (int)sec];
+        UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, height, previousTimesScrollView.frame.size.width - 10, 30)];
+        [timeLabel setText:time];
+        [timeLabel setTextAlignment:NSTextAlignmentCenter];
+        [previousTimesScrollView addSubview:timeLabel];
+        
+        height += timeLabel.frame.size.height + 5;
+    }
+    
+    [previousTimesScrollView setContentSize:CGSizeMake(previousTimesScrollView.frame.size.width, height)];
+    [self.contentView addSubview:previousTimesScrollView];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, self.frame.size.width - 10, 20)];
+    [titleLabel setText:@"My Clean Up Times"];
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [titleLabel setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:titleLabel];
+    
     //Set Background Color
     [self setBackgroundColor:[UIColor clearColor]];
-    
-    //Init the Pin Icons
-    UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-    UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-    UIImageView *pin3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-    
-    //Set Pin Image Frames
-    [pin1Image setFrame:CGRectMake(10, 5, 80, 40)];
-    [pin2Image setFrame:CGRectMake(10, 50, 80, 40)];
-    [pin3Image setFrame:CGRectMake(10, 95, 80, 40)];
-    
-    //Add pin images to view
-    //[self addSubview:pin1Image];
-    //[self addSubview:pin2Image];
-    //[self addSubview:pin3Image];
-    
-    
-    //Init Pin Labels
-    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 40)];
-    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(90, 50, 220, 40)];
-    UILabel *pin3 = [[UILabel alloc] initWithFrame:CGRectMake(90, 95, 220, 40)];
-    
-    //Set Pins Text
-    [pin1 setText:@"Pickup Point"];
-    [pin2 setText:@"Comment Point"];
-    [pin3 setText:@"Trash Point"];
-    
-    //Set Text Color
-    [pin1 setTextColor:[UIColor blackColor]];
-    [pin2 setTextColor:[UIColor blackColor]];
-    [pin3 setTextColor:[UIColor blackColor]];
-    
-    //Set Text Alignment
-    [pin1 setTextAlignment:NSTextAlignmentCenter];
-    [pin2 setTextAlignment:NSTextAlignmentCenter];
-    [pin3 setTextAlignment:NSTextAlignmentCenter];
-    
-    
-    //Set Background Color
-    [pin1 setBackgroundColor:[UIColor clearColor]];
-    [pin2 setBackgroundColor:[UIColor clearColor]];
-    [pin3 setBackgroundColor:[UIColor clearColor]];
-    
-    //Add the pins to the view
-    [self.contentView addSubview:pin1];
-    [self.contentView addSubview:pin2];
-    [self.contentView addSubview:pin3];
 }
 
 -(void)switchToMapView

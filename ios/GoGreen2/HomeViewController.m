@@ -8,6 +8,7 @@
 
 #import "HomeViewController.h"
 #import "ContainerViewController.h"
+#import "MenuView.h"
 
 @interface HomeViewController ()
 
@@ -56,6 +57,8 @@
         [self.cleanUpToggleButton setTitle:@"Start Cleaning" forState:UIControlStateNormal];
         [self.cleanUpToggleButton addTarget:self action:@selector(toggleCleanUp:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.cleanUpToggleButton];
+        
+        self.previousLoggingTimes = [[NSMutableArray alloc] init];
     }
 
     return self;
@@ -68,9 +71,18 @@
     if([[[ContainerViewController sharedContainer] theMapViewController] logging])
     {
         self.startDate = [NSDate date];
+        
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(cleanUpCounter:) userInfo:nil repeats:YES];
 
         [[ContainerViewController sharedContainer] switchMapView];
+    }
+    else
+    {
+        [self.previousLoggingTimes addObject:[NSNumber numberWithDouble:(-1 * [self.startDate timeIntervalSinceNow])]];
+        if([[[[ContainerViewController sharedContainer] theHomeViewController] view] frame].origin.x == 0 && [[[[ContainerViewController sharedContainer] theHomeViewController] view] frame].size.width != 0)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateHomeMenuWithNewPreviousTimes" object:nil];
+        }
     }
 }
 
