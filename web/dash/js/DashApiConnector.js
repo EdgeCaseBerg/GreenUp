@@ -1213,6 +1213,8 @@ function handleCoreReportingResults(results) {
           ['2007',  1030]
         ]);
 
+        $('#infoIcon').show();
+
         window.UI.drawVisualisation(pieData, lineData);
     }
 }
