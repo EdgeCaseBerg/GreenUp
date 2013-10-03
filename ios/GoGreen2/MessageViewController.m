@@ -17,6 +17,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
 #import "HeatMapPin.h"
+#import "ContainerViewController.h"
 
 #define ALERT_VIEW_TOGGLE_ON 0
 #define ALERT_VIEW_TOGGLE_OFF 1
@@ -341,10 +342,21 @@
 {
     NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
     
-    CGSize size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
-    size.height += + 20 + 6;
-    NSLog(@"SIZE HEIGHT: %f - WIDTH: %f", size.height, size.width);
-    //return size;
+    CGSize size;
+    if([msg.messageType isEqualToString:Message_Type_ADMIN] || [msg.messageType isEqualToString:Message_Type_MARKER])
+    {
+        size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(230, CGFLOAT_MAX)];
+        size.height += + 20 + 6;
+        NSLog(@"SIZE HEIGHT: %f - WIDTH: %f", size.height, size.width);
+        //return size;
+    }
+    else
+    {
+        size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(290, CGFLOAT_MAX)];
+        size.height += + 20 + 6;
+        NSLog(@"SIZE HEIGHT: %f - WIDTH: %f", size.height, size.width);
+        //return size;
+    }
     
     if(indexPath.row == 0)
     {
@@ -489,13 +501,6 @@
     };
     //Perform Animations
     [UIView animateWithDuration:3 animations:animate];
-    
-    [self performSelector:@selector(removePinIDReference:) withObject:nil afterDelay:3];
-}
-
--(IBAction)removePinIDReference:(id)sender
-{
-    self.pinIDToShow = nil;
 }
 
 #pragma mark - KEYBOARD CALL BACKS

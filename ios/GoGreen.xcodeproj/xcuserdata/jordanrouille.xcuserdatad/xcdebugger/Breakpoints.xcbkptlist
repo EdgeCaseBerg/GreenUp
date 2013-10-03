@@ -8,25 +8,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MessageViewController.m"
-         timestampString = "402453963.7526"
+         timestampString = "402510195.201319"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "210"
-         endingLineNumber = "210"
+         startingLineNumber = "211"
+         endingLineNumber = "211"
          landmarkName = "-getMessages"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "GoGreen2/MessageViewController.m"
-         timestampString = "402454680.08839"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "477"
-         endingLineNumber = "477"
-         landmarkName = "-showSelectedMessage:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -34,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MessageViewController.m"
-         timestampString = "402454377.890865"
+         timestampString = "402510195.201319"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "129"
-         endingLineNumber = "129"
+         startingLineNumber = "130"
+         endingLineNumber = "130"
          landmarkName = "-viewWillAppear:"
          landmarkType = "5">
       </FileBreakpoint>

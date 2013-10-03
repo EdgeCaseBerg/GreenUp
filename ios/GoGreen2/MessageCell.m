@@ -35,7 +35,7 @@
             [self.textContentLabel setFont:[UIFont messageFont]];
             
             //Get Height of Text With Font And Set Frame
-            CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
+            CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(230, CGFLOAT_MAX)];
             
             [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 230, contentSize.height)];
             
@@ -71,7 +71,11 @@
             [self.timeStampLabel setFont:[self.timeStampLabel.font fontWithSize:10]];
             [self.timeStampLabel setTextAlignment:NSTextAlignmentLeft];
             
-            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(15, 5 + (contentSize.height) - 12, 24, 30)];
+            int height = self.textContentLabel.frame.size.height + self.timeStampLabel.frame.size.height;
+            int origin = self.textContentLabel.frame.origin.y;
+            origin += (height / 2) - 15;
+            
+            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(15, origin, 24, 30)];
             [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"trasbag.png"] forState:UIControlStateNormal];
             
             //Add Subviews to ContentView
@@ -92,7 +96,7 @@
             [self.textContentLabel setFont:[UIFont messageFont]];
             
             //Get Height of Text With Font And Set Frame
-            CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
+            CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(230, CGFLOAT_MAX)];
             
             [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 230, contentSize.height)];
             
@@ -128,7 +132,11 @@
             [self.timeStampLabel setFont:[self.timeStampLabel.font fontWithSize:10]];
             [self.timeStampLabel setTextAlignment:NSTextAlignmentLeft];
             
-            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(15, 5 + (contentSize.height) - 12, 24, 30)];
+            int height = self.textContentLabel.frame.size.height + self.timeStampLabel.frame.size.height;
+            int origin = self.textContentLabel.frame.origin.y;
+            origin += (height / 2) - 15;
+            
+            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(15, origin, 24, 30)];
             [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"trasbag.png"] forState:UIControlStateNormal];
             [self.showPinOnMap addTarget:self action:@selector(bringMeToMapPin:) forControlEvents:UIControlEventTouchUpInside];
             
