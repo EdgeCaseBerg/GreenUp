@@ -762,7 +762,7 @@ function UiHandle(){
 	UiHandle.prototype.toggleCommentsSlider = function toggleCommentsSlider(){
 		if(window.UI.isCommentsSliderVisible){
 			window.UI.isCommentsSliderVisible = false;
-			$('#commentsDialog').css({"right":"-230px"});
+			$('#commentsDialog').css({"right":"-330px"});
 			
 		}else{
 			window.UI.isCommentsSliderVisible = true;
