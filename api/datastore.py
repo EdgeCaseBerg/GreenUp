@@ -20,14 +20,9 @@ from constants import *
 def increment(caller):
 	ec = EntityCounter()
 	ec.setType(caller)
-	q = EntityCounter.all().filter('entityType =', caller).get()
-
-	if q is not None:
-		# an entityCounter object with this type does exist. all is well
-		ec.increment(q.key())
-	else:
-		# and EntityCounter for this type doesn't exist in the datastore yet. So make it.
-		ec.put()
+	keyName = "caller_%s" %(caller)
+	q = EntityCounter.get_or_insert(key_name=keyName, entityType=caller)
+	ec.increment(q.key())
 
 def decrement(caller):
 	ec = EntityCounter()
@@ -240,7 +235,7 @@ class DebugReports(Greenup):
 class EntityCounter(db.Model):
 	# inherits from db.model to avoid running the counting callbacks on itself
 	entityType = db.StringProperty()
-	entityCount = db.IntegerProperty(default=1)
+	entityCount = db.IntegerProperty(default=0)
 
 	def setType(self, callerType):
 		self.entityType = callerType
