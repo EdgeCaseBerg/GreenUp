@@ -17,23 +17,36 @@ for z in {1..9}
 				# echo "123"$i"456\n"
 				curl -d '[
 			    	{
-			        	"latDegrees" : 44.4'$i'51, 
-			        	"lonDegrees" : -73.2'$z'7'$i', 
+			        	"latDegrees" : 44.481'$i'51'$z', 
+			        	"lonDegrees" : -73.192'$z'7'$i'1, 
 			        	"secondsWorked" : 4'$i'120, 
-			        	"precision" : 4
+			        	"precision" : 6
 			    	}
 				]' $HMURL 2>&1
 			done
 
-		for i in {9..1}
+		for i in {1..9}
 			do
 				# echo "123"$i"456\n"
 				curl -d '[
 			    	{
-			        	"latDegrees" : 44.4'$z'1'$i', 
-			        	"lonDegrees" : -72.89'$i'17, 
+			        	"latDegrees" : 44.481'$i''$z', 
+			        	"lonDegrees" : -73.189'$i'17, 
 			        	"secondsWorked" : 1'$i'120, 
-			        	"precision" : 4
+			        	"precision" : 6
+			    	}
+				]' $HMURL 2>&1
+			done
+
+			for i in {1..9}
+			do
+				# echo "123"$i"456\n"
+				curl -d '[
+			    	{
+			        	"latDegrees" : 44.4811'$i', 
+			        	"lonDegrees" : -73.181'$i$z'117, 
+			        	"secondsWorked" : 1'$i'120, 
+			        	"precision" : 6
 			    	}
 				]' $HMURL 2>&1
 			done
