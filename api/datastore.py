@@ -254,8 +254,11 @@ class EntityCounter(db.Model):
 		obj.put()
 
 	@classmethod
-	def count(cls):
-		pass
+	def count(cls, eType):
+		ec = EntityCounter.all().filter('entityType =', eType).get()	
+		if ec:
+			return ec.entityCount
+		return 1
 
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
@@ -361,8 +364,9 @@ class AbstractionLayer():
 		if memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(None,"comment",None, page+1) ):
 			return page+1
 		else:
-			q = Comments.all()
-			total = q.count()
+			# count comments using entity count.
+			ec = EntityCounter()
+			total = ec.count('Comments')
 			if (((page-1) * PAGE_SIZE) < total):
 				return page+1
 			else:
