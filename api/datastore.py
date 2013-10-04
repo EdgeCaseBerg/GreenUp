@@ -427,7 +427,7 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 		return pins
 
 	else:
-		return "Something bad happened"
+		return "[]"
 
 def pinFormatter(dbPins):
 	# properly format pins in json and return
