@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
@@ -51,7 +53,15 @@ public class MapSectionFragment extends Fragment {
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
-
+        
+        //Populate the spinner with choices
+        Spinner spinner  = (Spinner)inflatedView.findViewById(R.id.pin_type_selection);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.pin_types, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        
+        //get a reference to the map and the location service
         mMapView = (MapView)inflatedView.findViewById(R.id.map);
         mMapView.onCreate(bundle);
         map = mMapView.getMap();
