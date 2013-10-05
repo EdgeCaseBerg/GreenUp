@@ -935,19 +935,21 @@ function UiHandle(){
 		console.log("raw heatmap data: ");
 		console.log(data);
 		var HELPER = new Helper();
-		var approxAreaWorkedMetersPerPoint = 21;
-		var sqMeters = (data.grid.length * approxAreaWorkedMetersPerPoint);
-		var acresWorked = HELPER.metersToAcres(sqMeters);
 		var totalSecondsWorked = 0;
 		for(var ii=0; ii<data.grid.length; ii++){
 			totalSecondsWorked += data.grid[ii].secondsWorked;
 		}
+
+		var metersPerSecond = 0.25; // this is a guess
+		var sqMeters = (totalSecondsWorked * metersPerSecond);
+		var acresWorked = HELPER.metersToAcres(sqMeters);
 		// alert(acresWorked.toFixed(3));
 		var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
 		$('#acresWorked').html(acresWorked.toFixed(4));
 		$('#totalHoursWorked').html(timeWorked['hours']);
 		$('#totalMinutesWorked').html(timeWorked['minutes']);
 		$('#totalSecondsWorked').html(timeWorked['seconds']);
+		$('#totalDaysWorked').html(timeWorked['days']);
 	}
 
 	// markers coming from the apiconnector comes here to be added to the UI
@@ -1179,7 +1181,10 @@ function Helper(){
 		var minutes = ((seconds - remainderSeconds) / 60);
 		var remainderMinutes = (minutes % 60);
 		var hours = ((minutes - remainderMinutes) / 60);
-		var results = {"hours" : hours, "minutes" : remainderMinutes, "seconds" : remainderSeconds};
+		var remainderHours = (hours % 24); 
+		var days = ((hours - remainderHours) / 24)
+
+		var results = {"days": days, "hours" : remainderHours, "minutes" : remainderMinutes, "seconds" : remainderSeconds};
 		console.log(results);
 		return results;
 	}	
