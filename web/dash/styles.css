@@ -135,6 +135,7 @@ ul{
 
 
 #analyticsDialog{
+    border-bottom: solid 1px #444;
     min-height:220px;
     position:relative;
     z-index: 232;
@@ -146,6 +147,7 @@ ul{
 }
 
 #extendedAnalyticsDialog{
+    border-bottom: solid 1px #444;
     min-height:220px;
     position: absolute;
     top: -250px;

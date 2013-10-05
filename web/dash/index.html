@@ -131,30 +131,27 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
           
           <div class="nestedAnalyticsColumn">
             <div class="analyticsHeader">
-              XXXXXXX
+              Time Worked
             </div>
             <div class="analyticsData">
               <ul>
-                <li>Start Date:&nbsp;<input type="text" class="datePicker" id="startDateInput"/></li>
-                <li> End Date: &nbsp;&nbsp;<input type="text" class="datePicker" id="endDateInput"/></li>
-                <li><input type="button" value="update" id="updateAnalyticsButton" /></li>
+                <li>Hours: <span id="totalHoursWorked"></span></li>
+                <li>Minutes: <span id="totalMinutesWorked"></span></li>
+                <li>Seconds: <span id="totalSecondsWorked"></span></li>
               </ul>
             </div>
           </div>
 
           <div class="nestedAnalyticsColumn">
             <div class="analyticsHeader">
-              XXXXXXXX
+              Ground Covered
             </div>
             <div class="analyticsData">
               <div class="analyticsDataNestColumn usageDataNestColumn">
                 <ul>
-                  <li>iPhone  <span class="analyticsDataPoint" id="pctIphone"></span></li>
-                  <li>Android <span class="analyticsDataPoint" id="pctAndroid"></span></li>
-                  <li>Web <span class="analyticsDataPoint" id="pctOther"></span></li>
+                  <li>Acres: <span id="acresWorked"></span></li>
                 </ul>
               </div>
-              <div class="analyticsDataNestColumn usageDataNestColumn usageDataChart" id="usageDataPieChart"></div>
             </div>
           </div>
           

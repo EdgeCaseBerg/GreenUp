@@ -151,6 +151,19 @@ function ApiConnector(){
 
 	}
 
+	// ********** specific data pullers *************
+	ApiConnector.prototype.pullRawHeatmapData = function pullRawHeatmapData(){
+		/*
+			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
+			but there is an implicit cast against undefined defined for double equals in javascript
+		*/
+		var heatmapURI = "/heatmap";
+		var params = "?raw=true";
+		console.log("Preparing to pull RAW heatmap data");
+		var URL = BASE+heatmapURI+params;
+		this.pullApiData(URL, "JSON", "GET", window.UI.updateRawHeatmapData);
+	}
+
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
 		console.log("pullMarkerData");
 		var pinsURI = "/pins";
@@ -918,6 +931,25 @@ function UiHandle(){
 		window.MAP.applyHeatMap(data);
 	}
 
+	UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
+		console.log("raw heatmap data: ");
+		console.log(data);
+		var HELPER = new Helper();
+		var approxAreaWorkedMetersPerPoint = 21;
+		var sqMeters = (data.grid.length * approxAreaWorkedMetersPerPoint);
+		var acresWorked = HELPER.metersToAcres(sqMeters);
+		var totalSecondsWorked = 0;
+		for(var ii=0; ii<data.grid.length; ii++){
+			totalSecondsWorked += data.grid[ii].secondsWorked;
+		}
+		// alert(acresWorked.toFixed(3));
+		var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
+		$('#acresWorked').html(acresWorked.toFixed(4));
+		$('#totalHoursWorked').html(timeWorked['hours']);
+		$('#totalMinutesWorked').html(timeWorked['minutes']);
+		$('#totalSecondsWorked').html(timeWorked['seconds']);
+	}
+
 	// markers coming from the apiconnector comes here to be added to the UI
 	UiHandle.prototype.updateMarker = function updateMarker(data){
 		console.log("marker response: ");
@@ -1136,6 +1168,20 @@ function Helper(){
   					monthString + "-" + dayString;
 
   		return result;	
+	}
+
+	Helper.prototype.metersToAcres = function metersToAcres(sqMeters){
+		return (sqMeters * 0.000247105);
+	}
+
+	Helper.prototype.secondsToHoursMinutesSeconds = function secondsToHoursMinutesSeconds(seconds){
+		var remainderSeconds = (seconds % 60);
+		var minutes = ((seconds - remainderSeconds) / 60);
+		var remainderMinutes = (minutes % 60);
+		var hours = ((minutes - remainderMinutes) / 60);
+		var results = {"hours" : hours, "minutes" : remainderMinutes, "seconds" : remainderSeconds};
+		console.log(results);
+		return results;
 	}	
 }
 
@@ -1392,6 +1438,7 @@ function mainLoad(){
 	window.ApiConnector.pullCommentData();
 	window.ApiConnector.pullMarkerData();
 	window.ApiConnector.pullHeatmapData();
+	window.ApiConnector.pullRawHeatmapData();
 
 }
 
