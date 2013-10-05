@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html style="height: 100%; background: #eee">
+<head>
+  <title>GreenUp-VT Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+  <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="styles.css" rel="stylesheet" media="screen">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- <script src="//code.jquery.com/jquery.js"></script> -->
+  <!--<script src="js/analytics_auth.js"></script> -->
+  <script src="js/lib/jquery/jquery.js"></script>
+  <script src="js/DashApiConnector.js"></script>
+  
+    
+
+  <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
+
+    
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
+     <script type="text/javascript" 
+src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'ru'}]}"></script>
+
+ <script src="https://apis.google.com/js/client.js?onload=loadAnalytics"></script>
+ 
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --> 
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+  <nav class="navbar navbar-default" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"><img src="images/greenup-logo-redux.png" height="50" id="navLogo" /></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav">
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li id="pageLabel">Administrative Dashboard</li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </nav>
+  <div class="row mapAdminContainer">
+    <div id="iconContainer">
+      <img id="infoIcon" src="images/info-icon-dark.png" height="40" width="40"/>
+
+      <img id="commentsIcon" src="images/comment-icon.png" height="40" width="40"/>
+    </div>
+    <div id="map-canvas">
+    </div>
+    <div id="markerTypeDialog" class="markerTypeSelectDialog">
+
+      <div id="addMarkerDialog">
+
+        <div class="markerTypeNestColumn">
+          <!-- <div class="markerTypeNestColumnNest"> -->
+            <div class="btn-group locationType">
+              <a class="btn dropdown-toggle locationTypeBtn" data-toggle="dropdown" href="#">
+                Location Type <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu locationTypeMenu">
+                <li class="locationTypeMenuItem" id="latLonSelect"> Latitude / Longitude </li>
+                <li class="locationTypeMenuItem" id="streetSelect"> Street Address </li>
+              </ul>
+            </div>
+            <div id="coordsInputContainer" class="locationTypeInputContainer">
+              <ul id="coordsInputNest" class="markerInputNest">
+                <li>Lat<input type="text" name="coords" id="markerLat" /></li>
+                <li>Lon<input type="text" name="coords" id="markerLon" /></li>
+              </ul>
+            </div>
+
+            <div id="streetInputContainer" class="locationTypeInputContainer">
+              <ul id="streetInputNest" class="markerInputNest">
+                <li>Address 1<input type="text" name="coords" id="markerLat" /></li>
+                <li>Address 2<input type="text" name="coords" id="markerLon" /></li>
+                <li>City<input type="text" name="coords" id="markerLat" /></li>
+                <li>State<input type="text" name="coords" id="markerLon" /></li>
+                <li>Zip<input type="text" name="coords" id="markerLat" /></li>
+              </ul>
+            </div>
+          <!-- </div> -->
+        </div>
+
+
+        <div class="markerTextareaNest markerTypeNestColumn">
+          <div class="markerTypeNestColumnNest">
+            <div class="markerTypeInputLabel">
+              Comment
+            </div>
+            <textarea id="markerTextarea"></textarea>
+          </div>
+        </div>
+        
+      
+        <div class="markerTypeNestColumn">
+          <div class="markerTypeNestColumnNest">
+            <div class="markerTypeInputLabel">Icon</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="analyticsDialog">
+        <div class="analyticsColumnContainer">
+          <div class="nestedAnalyticsColumn">
+            <div class="analyticsHeader">
+              Total Users
+            </div>
+            <div class="analyticsData">
+              <div class="analyticsDataNestColumn usageDataNestColumn">
+                <ul>
+                  <li>iPhone  <span class="analyticsDataPoint" id="pctIphone"></span></li>
+                  <li>Android <span class="analyticsDataPoint" id="pctAndroid"></span></li>
+                  <li>Web <span class="analyticsDataPoint" id="pctOther"></span></li>
+                </ul>
+              </div>
+              <div class="analyticsDataNestColumn usageDataNestColumn usageDataChart" id="usageDataPieChart"></div>
+            </div>
+          </div>
+          
+          <div class="nestedAnalyticsColumn">
+            <div class="analyticsHeader">
+              Total Time Worked
+            </div>
+            <div class="analyticsData">
+              <div class="usageDataChart" id="usageDataLineChart"></div>
+            </div>
+          </div>
+          
+          <div class="nestedAnalyticsColumn">
+            <div class="analyticsHeader">
+              Total Area Cleaned
+            </div>
+            <div class="analyticsData">
+              <div class="analyticsDataNestColumn usageDataNestColumn">
+                <ul>
+                  
+                </ul>
+              </div>
+              <div class="analyticsDataNestColumn usageDataNestColumn" id="usageDataChart"></div>
+            </div>
+          </div>
+        </div>
+      
+      </div> <!-- end analyticsDialog -->
+    </div>
+  </div>
+
+  <div id="commentsDialog">
+    <div id="bubbleContainer">
+    </div>
+  </div>
+
+  <div id="loginContainer">
+  </div>
+</body>
+
+
+</html>

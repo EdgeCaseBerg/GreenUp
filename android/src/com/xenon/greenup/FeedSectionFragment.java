@@ -54,7 +54,7 @@ public class FeedSectionFragment extends ListFragment {
     	    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
     	        boolean handled = false;
     	        if (actionId == EditorInfo.IME_ACTION_SEND) {
-    	            Log.i("text","i send!");
+    	            //Log.i("text","i send!");
     	            APIServerInterface.submitComments("forum", editText.getText().toString(), 0);
     	            handled = true;
     	        }

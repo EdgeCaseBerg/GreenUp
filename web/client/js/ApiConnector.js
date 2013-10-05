@@ -9,8 +9,8 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
+	// var BASE = "http://greenupapp.appspot.com/api";
+	var BASE = "http://localhost:30002/api";
 	this.BASE = BASE;
 
 
@@ -123,22 +123,22 @@ function ApiConnector(){
 			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
 			but there is an implicit cast against undefined defined for double equals in javascript
 		*/
-		var heatmapURI = "/heatmap";
+		var heatmapURI = "/heatmap?precision=4";
 		var params = "";
 		if(latDegrees != null){
-			params = "?";
+			params = "&";
 			params += "latDegrees=" + latDegrees + "&";
 		}
 		if(latOffset != null){
-			params = "?";
+			params = "&";
 			params += "latOffset=" + latOffset + "&";
 		}
 		if(lonDegrees != null){
-			params = "?";
+			params = "&";
 			params += "lonDegrees" + lonDegrees + "&";
 		}
 		if(lonOffset != null){
-			params = "?";
+			params = "&";
 			params += "lonOffset" + lonOffset + "&";
 		}
 		console.log("Preparing to pull heatmap data");
@@ -331,7 +331,9 @@ function GpsHandle(){
 	    	// console.log("getting position data");
 	    	 if(navigator.geolocation){
 	    	 	var options = {timeout:29000};
-	    	 	navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+	    	 	// navigator.geolocation.getCurrentPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	var watchID = navigator.geolocation.watchPosition(window.GPS.updateLocation, window.GPS.gpsErrorHandler, options);
+		     	var timeout = setTimeout( function() { navigator.geolocation.clearWatch( watchID ); }, 5000 );
 		     	window.updateCounter++;
 	    	 }else{
 	    	 	console.log("Geolocation is not supported by this browser.");
@@ -400,6 +402,8 @@ function MapHandle(){
 	this.markerType;
 	this.map;
 	this.pickupMarkers = [];
+	this.isHeatmapVisible = true;
+
 	// fire up our google map
 	MapHandle.prototype.initMap = function initMap(){
 		window.LS.setLoadingText("Please wait while the map loads");
@@ -421,6 +425,7 @@ function MapHandle(){
 		  // google.maps.MapTypeControlOptions
 		  // google.maps.StreetViewControlOptions
 		  // google.maps.ZoomControlOptions
+		  // this.toggleHeatmap();
 
 		  window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 		  // for activating the loading screen while map loads
@@ -436,16 +441,11 @@ function MapHandle(){
 
 	MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message, lat, lon){
 		// console.log("in addMarker()");
-		console.log("message");
+		console.log(message);
 
 		var pin = new Pin();
 		pin.message = message;
 		pin.type = window.MAP.markerType;
-		// alert(pin.type);
-		
-		// heres the issue (bug)
-		// pin.latDegrees = lat;
-		// pin.lonDegrees = lon;
 
 		var iconUrl; 
 		switch(window.MAP.markerType){
@@ -469,24 +469,30 @@ function MapHandle(){
 	
 		var eventLatLng = window.MAP.markerEvent;
 		console.log(eventLatLng.latLng);
-		pin.latDegrees = eventLatLng.latLng.mb;
-		pin.lonDegrees = eventLatLng.latLng.nb;
-		alert(pin.latDegrees);
+		pin.latDegrees = eventLatLng.latLng.lat();
+		pin.lonDegrees = eventLatLng.latLng.lng();
+
+		var marker = new google.maps.Marker({
+        	position: new google.maps.LatLng(pin.latDegrees, pin.lonDegrees),
+        	map: window.MAP.map,
+        	icon: iconUrl
+    	});
+		marker.setVisible(window.UI.isMarkerVisible);
+    	window.MAP.pickupMarkers.push(marker);
 
 		var serializedPin = JSON.stringify(pin);
-		console.log(serializedPin);
     	window.ApiConnector.pushNewPin(serializedPin);
-
 	}
 
 	MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
 		console.log("Heatmap data to be applied to map: ");
 		console.log(data);
-		var dataObj = eval(data);
+		// var dataObj = eval(data);
+		var dataObj = JSON.parse(data);
 		var heatmapData = [];
 			// console.log(dataObj[ii].latDegrees);
-		for(var ii=0; ii<dataObj.length; ii++){
-			heatmapData.push({location: new google.maps.LatLng(dataObj[ii].latDegrees, dataObj[ii].lonDegrees), weight: dataObj[ii].secondsWorked});
+		for(var ii=0; ii<dataObj.grid.length; ii++){
+			heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
 			
 		}
 
@@ -496,13 +502,13 @@ function MapHandle(){
   		if(heatmapData.length > 0){
 	        var pointArray = new google.maps.MVCArray(heatmapData);
 
-			heatmap = new google.maps.visualization.HeatmapLayer({
+			window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
 			    data: pointArray,
 			    dissipating: true, 
 			    radius: 5
 			});
 
-	  		heatmap.setMap(window.MAP.map);
+	  		window.MAP.heatmap.setMap(window.MAP.map);
 	  	}
 	}
 
@@ -565,7 +571,13 @@ function MapHandle(){
 	}
 
 	MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
-
+		if(window.MAP.isHeatmapVisible){
+			window.MAP.heatmap.setMap(null);
+			window.MAP.isHeatmapVisible = false;
+		}else{
+			window.MAP.heatmap.setMap(window.MAP.map);
+			window.MAP.isHeatmapVisible = true ;
+		}
 	}
 
 	MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){
@@ -624,47 +636,51 @@ function CommentsHandle(){
 			case('forum'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleForum');
 				if(document.getElementById("toggleForum").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleForum");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleForum");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 			case('needs'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
 				if(document.getElementById("toggleNeeds").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleNeeds");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleNeeds");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 			case('message'):
 				var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
 				if(document.getElementById("toggleMessages").checked){
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "1";
- 						bubbleNodeList[i].style.display = "block";
+					var forumBubbles = document.getElementsByClassName("bubbleMessage");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "block";
 					}
 				}else{
-					for (var i = 0; i < bubbleNodeList.length; ++i) {
-						// bubbleNodeList[i].style.opacity = "0";
- 						bubbleNodeList[i].style.display = "none";
+					var forumBubbles = document.getElementsByClassName("bubbleMessage");
+					for(var i=0; i<forumBubbles.length; i++){
+						forumBubbles[i].style.display = "none";
 					}
 				}
 			break;
 		}
 	} // end toggleComments()
+
+	CommentsHandle.prototype.goToMarker = function goToMarker(marker){
+	// when the user clicks a comment box
+	}
 
 	//  The user presses the submit button on the comment submission screen
 	CommentsHandle.prototype.commentSubmission = function commentSubmission(commentType, commentMessage){
@@ -719,15 +735,18 @@ function UiHandle(){
 
     UiHandle.prototype.init = function init(){
 
+
     	// top slider dropdown
     	document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
-
+    	document.getElementById("topSlideDown").className = "sliderHidden";
 	    // controls the main panel movement
 	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
 	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
 	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
 	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
 	    document.getElementById("panel1SlideDownContent").style.display = "block";
+
+	    window.UI.setActiveDisplay(0);
 
 	    document.getElementById("navbarPullUpTab").addEventListener('mousedown', function(){
 	    	window.UI.navbarSlideUp();
@@ -805,10 +824,11 @@ function UiHandle(){
 
 	// shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
 	UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(type){
-		if(type = "comment"){
+		if(type == "comment"){
 			window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.COMMENT;	
 		}
 		if(window.CURRENT_USER_INPUT_TYPE == window.INPUT_TYPE.COMMENT){
+			console.log("comment");
 			window.UI.topSliderToggle();
 			// add marker type selectors
 			// alert("comment");
@@ -830,6 +850,7 @@ function UiHandle(){
 		    });
 
 		}else{
+			console.log("marker");
 			// add marker type selectors
 			// alert("marker");
 			document.getElementById("markerTypeDialog").className = "markerTypePanel2";
@@ -879,6 +900,10 @@ function UiHandle(){
 		switch(displayNum){
 			case 0:
 				this.currentDisplay = 1;
+				document.getElementById("homeNavButton").src="img/home_active.png";
+				document.getElementById("mapNavButton").src="img/map.png";
+				document.getElementById("commentsNavButton").src="img/comments.png";
+				document.getElementById("topSlideDown").className = "sliderHidden";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "none";
 				document.getElementById("panel1SlideDownContent").style.display = "block";
@@ -886,6 +911,10 @@ function UiHandle(){
 			break;
 			case 1:
 				this.currentDisplay = 2;
+				document.getElementById("mapNavButton").src="img/map_active.png";
+				document.getElementById("homeNavButton").src="img/home.png";
+				document.getElementById("commentsNavButton").src="img/comments.png";
+				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel1SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "none";
 				document.getElementById("panel2SlideDownContent").style.display = "block";
@@ -893,14 +922,20 @@ function UiHandle(){
 			break;
 			case 2:
 				this.currentDisplay = 3;
+				document.getElementById("commentsNavButton").src="img/comments_active.png";
+				document.getElementById("mapNavButton").src="img/map.png";
+				document.getElementById("homeNavButton").src="img/home.png";
+				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel1SlideDownContent").style.display = "none";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "block";
+				window.ApiConnector.updateComments();
 				this.navbarSlideDown();
 				container.className = "panel3Center";
 			break;
 			default:
 				this.currentDisplay = 1;
+				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "none";
 				document.getElementById("panel1SlideDownContent").style.display = "block";
@@ -1036,15 +1071,16 @@ function UiHandle(){
 	// markers coming from the apiconnector comes here to be added to the UI
 	UiHandle.prototype.updateMarker = function updateMarker(data){
 		console.log("marker response: "+data);
-		var dataArr = eval("("+data+")");
-        for(ii=0; ii<dataArr.length; ii++){
-            window.MAP.addMarkerFromApi(dataArr[ii].type, dataArr[ii].message, dataArr[ii].latDegrees, dataArr[ii].lonDegrees);
+		var dataArr = JSON.parse(data);
+        for(ii=0; ii<dataArr.pins.length; ii++){
+            window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
         }
 
 	}
 
 	// data is passed from the api connector to here to update the forum.
 	UiHandle.prototype.updateForum = function updateForum(data){
+		document.getElementById("bubbleContainer").innerHTML = "";
 		console.log("In Update forum");
 		// console.log("Comment data: "+data);
 		// document.getElementById("bubbleContainer").innerHTML = "";
@@ -1065,7 +1101,11 @@ function UiHandle(){
 			window.UI.commentsPrevPageUrl = null;
 		}
 
+		console.log("comments: ");
+		console.log(comments);
+
 		for(var ii=0; ii<comments.length; ii++){
+
 				var div = document.createElement("div");
 				var timeDiv = document.createElement("div");
 				var messageContent = document.createElement("span");
@@ -1093,10 +1133,10 @@ function UiHandle(){
 					case 'FORUM':
 						div.className += " bubbleForum";
 					break;
-					case 'needs':
+					case 'TRASH PICKUP':
 						div.className += " bubbleNeeds";
 					break;
-					case 'message':
+					case 'GENERAL MESSAGE':
 						div.className += " bubbleMessage";
 					break;
 					default:

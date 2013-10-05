@@ -187,7 +187,8 @@ class AbstractionLayer():
 		dictComments = []
 		for comment in comments:
 			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "0" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
-		return dictComments
+		return sorted(dictComments, key=lambda k: k['timestamp'], reverse=True) 
+		
 
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
@@ -213,19 +214,26 @@ class AbstractionLayer():
 		# datastore write
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
+		memcache.flush_all()
+		initialPage(None,"comment")
+		return p.id()
+
 
 	def submitDebug(self, errorMessage, debugInfo,origin):
 		# submit information about a bug
 		authhash = hashlib.sha256(errorMessage + debugInfo).hexdigest()
 		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin).put()
 		memcache.flush_all()
+		initialPage(None,"comment")
 
 	def getDebug(self, debugId=None, theHash=None,since=None,page=1):
 		# retrieve information about a bug by id, hash, or get them all with optional since time
 		# add JSON Formatting to the returns such that {  "errror_message" : "Stack trace or debugging information here", "id":id, "time":timestamp } 
-		if debugId:
+		if debugId is not None:
+			logging.info("by id")
 			bugs = DebugReports.by_id(debugId) 
-		elif theHash:
+		elif theHash is not None:
+			logging.info("by hash")
 			bugs = DebugReports.by_hash(theHash)
 		else:
 			bugs = paging(page,None,"debug",since)
@@ -245,6 +253,20 @@ class AbstractionLayer():
 			else:
 				stat = HTTP_NOT_FOUND
 		return stat,msg
+
+	def checkNextPage(self, page):
+		# check for the presence of a next page in memecache
+		if memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(None,"comment",None, page+1) ):
+			return page+1
+		else:
+			q = Comments.all()
+			total = q.count()
+			if (((page-1) * PAGE_SIZE) < total):
+				return page+1
+			else:
+				return None
+
+		return None	
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
@@ -298,7 +320,7 @@ def initialPage(typeFilter=None, endpoint="comment",sinceTime=None):
 	initialCursorKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter,1)
 	initialPageKey = 'greenup_%s_%ss_page_%s_%s' %(sinceTime,endpoint,typeFilter,1)
 
-	results = querySet[0:20]
+	results = querySet[0:PAGE_SIZE]
 	# sort, newest to oldest
 	results = sorted(results, key=lambda dataPoint: dataPoint.timeSent, reverse=True)
 	memcache.set(initialPageKey, serialize_entities(results))
@@ -314,7 +336,7 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 		When a hit occurs (and a hit must occur, as the first cursor and page is always read into memcache), build each page
 		and their cursors up until we reach the page requested. Then, return that page of results.
 	'''
-	resultsPerPage = 20
+	resultsPerPage = PAGE_SIZE
 	querySet = None
 	if typeFilter is not None and typeFilter is not "":
 		#typeFilter must always by null when coming from debug endpoint
@@ -338,6 +360,8 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 		initialPage(typeFilter,endpoint,sinceTime)
 
 	if not pageInCache:
+		if page is None:
+			page = 1
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
@@ -356,7 +380,7 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 			oldKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, oldNum)
 			cursor = memcache.get(oldKey)
 
-			# get 20 results from where we left off
+			# get PAGE_SIZE results from where we left off
 			results = querySet.with_cursor(start_cursor=cursor)
 			results = results.run(limit=resultsPerPage)
 
@@ -436,7 +460,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  point.lon and point.lon < (lonDegrees + lonOffset)):
 				continue
-		key = "%.*f_%.*f" % (latOffset,point.lat,lonOffset,point.lon)
+		key = "%.*f_%.*f" % (int(precision),point.lat,int(precision),point.lon)
 		if key in buckets:
 			buckets[key]['secondsWorked'] += point.secondsWorked
 			if buckets[key]['secondsWorked'] > highestVal:
@@ -487,7 +511,8 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  pin.lon and pin.lon < (lonDegrees + lonOffset)):
 				continue
-			pins.append( {  'latDegrees' : pin.lat,
+			pins.append( {  'id' : pin.key().id(),
+							'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
 							'message'	 : pin.message }
@@ -501,7 +526,8 @@ def pinFormatter(dbPins):
 	# properly format pins in json and return
 	pins = []
 	for pin in dbPins:		
-		pins.append( {  'latDegrees' : pin.lat,
+		pins.append( {  'id' : pin.key().id(),
+						'latDegrees' : pin.lat,
 						'lonDegrees' : pin.lon,
 						'type'		 : pin.pinType,
 						'message'	 : pin.message }

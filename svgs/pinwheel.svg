@@ -9,11 +9,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448819"
-   height="1052.3622047"
+   width="148.64278"
+   height="156.92848"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="pinwheel.svg">
   <defs
      id="defs4">
@@ -23,7 +23,8 @@
        x="-0.10933346"
        width="1.2186669"
        y="-0.060625553"
-       height="1.1212511">
+       height="1.1212511"
+       color-interpolation-filters="sRGB">
       <feGaussianBlur
          inkscape:collect="always"
          stdDeviation="1.6552478"
@@ -76,17 +77,21 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="132.85139"
-     inkscape:cy="511.10257"
+     inkscape:zoom="2"
+     inkscape:cx="41.519482"
+     inkscape:cy="78.255794"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1366"
-     inkscape:window-height="718"
+     inkscape:window-height="696"
      inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -95,14 +100,15 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-235.46433,-418.68366)">
     <path
        style="opacity:0.78600003;fill:#000000;stroke:#333333;stroke-width:0.1;stroke-miterlimit:4;filter:url(#filter3872)"
        d="m 310.7936,422.74167 c 6.01033,31.28222 16.40015,22.66073 16.65945,42.58293 -0.003,7.1469 -6.52476,19.76678 -18.92486,22.94381 -36.57093,-24.79457 -5.36282,-59.74843 2.26541,-65.52674 z"
@@ -110,7 +116,7 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc" />
     <path
-       style="fill:#0088aa;stroke:#333333;stroke-width:0.1;stroke-miterlimit:4"
+       style="fill:#009444;stroke:none;stroke-width:0.10000000000000001;stroke-miterlimit:4;fill-opacity:1"
        d="m 309.08247,419.67865 c 2.4389,31.99651 16.40014,22.66073 16.65945,42.58293 -0.003,7.1469 -6.52477,19.76678 -18.92487,22.94381 -36.57092,-24.79457 -5.36282,-59.74843 2.26542,-65.52674 z"
        id="rect3059"
        inkscape:connector-curvature="0"
@@ -123,7 +129,7 @@
        sodipodi:nodetypes="cccc"
        transform="matrix(0,1,-1,0,896.79075,566.21933)" />
     <path
-       style="fill:#008000;stroke:#333333;stroke-width:0.1;stroke-miterlimit:4"
+       style="fill:#fdba29;stroke:none;stroke-width:0.10000000000000001;stroke-miterlimit:4;fill-opacity:1"
        d="m 380.33795,493.9499 c -31.99651,2.4389 -22.66073,16.40015 -42.58293,16.65945 -7.1469,-0.003 -19.76678,-6.52476 -22.94381,-18.92486 24.79457,-36.57092 59.74843,-5.36282 65.52674,2.26541 z"
        id="rect3059-3"
        inkscape:connector-curvature="0"
@@ -136,7 +142,7 @@
        sodipodi:nodetypes="cccc"
        transform="matrix(-1,0,0,-1,239.57142,1088.2958)" />
     <path
-       style="fill:#ffcc00;stroke:#333333;stroke-width:0.1;stroke-miterlimit:4"
+       style="fill:#00aef0;stroke:none;stroke-width:0.10000000000000001;stroke-miterlimit:4;fill-opacity:1"
        d="m 307.06671,568.4911 c -2.4389,-31.99651 -16.40015,-22.66073 -16.65945,-42.58293 0.003,-7.1469 6.52476,-19.76678 18.92486,-22.94381 36.57092,24.79457 5.36282,59.74843 -2.26541,65.52674 z"
        id="rect3059-3-4"
        inkscape:connector-curvature="0"
@@ -149,9 +155,34 @@
        sodipodi:nodetypes="cccc"
        transform="matrix(0,-1,1,0,-277.21933,426.07647)" />
     <path
-       style="fill:#aa0000;stroke:#333333;stroke-width:0.1;stroke-miterlimit:4"
+       style="fill:#ee1c25;stroke:none;stroke-width:0.10000000000000001;stroke-miterlimit:4;fill-opacity:1"
        d="m 237.81122,492.21985 c 31.99651,-2.4389 22.66073,-16.40015 42.58293,-16.65945 7.1469,0.003 19.76678,6.52476 22.94381,18.92486 -24.79457,36.57092 -59.74843,5.36282 -65.52674,-2.26541 z"
        id="rect3059-3-4-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:#39b64a;fill-opacity:1;stroke:none"
+       d="M 73.21875,2.28125 C 63.253271,25.895051 66.342407,51.245688 71.424107,66.392857 86.483631,62.375 94.39443,45.021543 88.066964,33.455357 83.667584,26.743406 75.040571,21.704066 73.21875,2.28125 z"
+       transform="translate(235.46433,418.68366)"
+       id="path2998"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:#f26623;fill-opacity:1;stroke:none"
+       d="m 380.24801,494.0473 c -23.6138,-9.96548 -50.19331,-7.34126 -65.34048,-2.25956 1.96429,13.9881 21.23607,23.81273 33.49673,16.34885 6.71195,-4.39938 10.63522,-12.84783 31.84375,-14.08929 z"
+       id="path2998-6"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:#1875bc;fill-opacity:1;stroke:none"
+       d="m 306.87706,568.58826 c 9.96548,-23.6138 7.34126,-50.19331 2.25956,-65.34048 -13.9881,1.96429 -23.81273,21.23607 -16.34885,33.49673 4.39938,6.71195 12.84783,10.63522 14.08929,31.84375 z"
+       id="path2998-6-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:#b5212f;fill-opacity:1;stroke:none"
+       d="m 237.88967,492.23517 c 23.6138,9.96548 50.19331,7.34126 65.34048,2.25956 -1.96429,-13.9881 -21.23607,-23.81273 -33.49673,-16.34885 -6.71195,4.39938 -10.63522,12.84783 -31.84375,14.08929 z"
+       id="path2998-6-9-1"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc" />
   </g>

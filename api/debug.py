@@ -32,11 +32,6 @@ class Debug(webapp2.RequestHandler):
 			#No sense here either, but we can just ignore since in this case
 			since = None
 
-		#If we have a hash then we retrieve a single message by its hash
-		if msgHash is not None:
-			#Ask the abstraction layer for it and return it or a 404
-			pass
-
 		if page is not None and page != "":
 			#If page is not none then we will retrieve the given page! Validate!
 			try:
@@ -48,7 +43,7 @@ class Debug(webapp2.RequestHandler):
 				return
 		else:
 			page = 1
-		
+
 		#Next check the since parameter to see if we're using time at all
 		if since is not None and since != "":
 			try:
@@ -62,7 +57,20 @@ class Debug(webapp2.RequestHandler):
 			#Since is nothing
 			since = datetime.datetime(2013,1,1)
 
+		#If we have a hash then we retrieve a single message by its hash
+		if msgHash is not None:
+			#Ask the abstraction layer for it and return it or a 404
+			layer = AbstractionLayer()
+			messages = layer.getDebug(None,msgHash,None,None)
+			page = int(page)
+			prevPage = page -1 if page != 1 else 1
+			response={"status_code" : "%s" % status_code, "messages" :  messages, "page" : { "next" : "%s%s%s?page=%i&since=%s" % (BASE_URL, CONTEXT_PATH, DEBUG_RESOURCE_PATH, page+1, since.strftime(SINCE_TIME_FORMAT)), "previous" : "%s%s%s?page=%i&since=%s" % (BASE_URL, CONTEXT_PATH, DEBUG_RESOURCE_PATH, prevPage, since.strftime(SINCE_TIME_FORMAT))}}
 
+			#Send out the response
+			self.response.set_status(HTTP_OK,"")
+			self.response.write(json.dumps(response))	
+			return
+			
 		#If we've made it this far it means we have a page and possibly a time to filter with
 		#Pass that down to the abstraction layer and let it return the messages to us
 		layer = AbstractionLayer()

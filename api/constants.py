@@ -12,6 +12,7 @@ CONTEXT_PATH = "/api"
 
 """ Miscellaneous Constants """
 DEFAULT_ROUNDING_PRECISION = 6
+PAGE_SIZE = 20
 
 """ Validation Constants """
 PIN_TYPES = ('GENERAL MESSAGE', 'HELP NEEDED', 'TRASH PICKUP')

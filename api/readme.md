@@ -312,12 +312,14 @@ If no latitude or longitude are specified then all pins will be returned.
     "status_code" : 200,
     "pins" : [
         {
+            "id" : 3324523452345,
             "latDegrees" : 24.53, 
             "lonDegrees" : 43.2, 
             "type" : "general message", 
             "message", "I need help with the trash on Colchester ave"
         },
         {
+            "id" : 5246234532534,
             "latDegrees" : 25.13, 
             "lonDegrees" : 41.2, 
             "type" : "help needed", 
