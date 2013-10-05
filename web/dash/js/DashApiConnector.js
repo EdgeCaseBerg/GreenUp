@@ -726,7 +726,8 @@ function UiHandle(){
 
         var lineOptions = {
         	backgroundColor: "#fff",
-          	legend: {position: 'none'}, 
+          	// legend: {position: 'none'},
+          	hAxisTitle: "hour", 
           	height: 120
         };
 
