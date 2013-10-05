@@ -777,11 +777,18 @@ function UiHandle(){
 	UiHandle.prototype.toggleMapOptions = function toggleMapOptions(){
 		if(window.UI.isOptionsVisible){
 			window.UI.isOptionsVisible = false;
-			$('.markerTypeSelectDialog').css({"top":"-200px"});
+			$('#extendedAnalyticsDialog').css({"top":"-235px"});
+			
+			window.setTimeout(function(){
+				$('.markerTypeSelectDialog').css({"top":"-200px"});	
+			}, 100);
 			
 		}else{
 			window.UI.isOptionsVisible = true;
 			$('.markerTypeSelectDialog').css({"top":"35px"});
+			setTimeout(function(){
+				$('#extendedAnalyticsDialog').css({"top":"235px"});
+			}, 100);	
 			
 		}
 	}
@@ -1293,7 +1300,7 @@ function queryCoreReportingApi(profileId, startDate, endDate) {
     'start-date': startDate,
     'end-date': endDate,
     'metrics': 'ga:visits, ga:newVisits', 
-    'dimensions': 'ga:hour, ga:operatingSystem'
+    'dimensions': 'ga:date, ga:operatingSystem'
   }).execute(handleCoreReportingResults);
 }
 
