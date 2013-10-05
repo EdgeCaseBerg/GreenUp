@@ -762,7 +762,7 @@ function UiHandle(){
 	UiHandle.prototype.toggleCommentsSlider = function toggleCommentsSlider(){
 		if(window.UI.isCommentsSliderVisible){
 			window.UI.isCommentsSliderVisible = false;
-			$('#commentsDialog').css({"right":"-330px"});
+			$('#commentsDialog').css({"right":"-530px"});
 			
 		}else{
 			window.UI.isCommentsSliderVisible = true;
@@ -930,11 +930,32 @@ function UiHandle(){
 		for(var ii=0; ii<comments.length; ii++){
 
 				var div = document.createElement("div");
+				var controlDiv = document.createElement("div");
+				var commentNest = document.createElement("div");
+
+				controlDiv.className = "bubbleControls";
+
+				controlDiv.innerHTML = '<div class="iconWrapper closeIconWrapper"><img title="Delete Comment" src="images/icons/Cross.png"></div>';
+				controlDiv.innerHTML += '<div class="iconWrapper addressIconWrapper"><img title="Address Comment" src="images/icons/Tick.png"></div>';
+
+				if(comments[ii].pin != "0"){
+					controlDiv.innerHTML += '<div class="iconWrapper gotoIconWrapper"><img title="Go To Pin" src="images/icons/Flag.png"></div>';
+				}
+
+
+
+				commentNest.className = "commentTextNest";
+
 				var timeDiv = document.createElement("div");
 				var pinIdHolder = document.createElement("input");
+				var commentIdHolder = document.createElement("input");
 				pinIdHolder.type = "hidden";
+				pinIdHolder.className = "pinIdHolder";
 				pinIdHolder.value = comments[ii].pin;
-				div.appendChild(pinIdHolder);
+				commentIdHolder.type = "hidden";
+				commentIdHolder.className = "commentIdHolder";
+				commentIdHolder.value = comments[ii].id;
+				
 				var messageContent = document.createElement("span");
 				var currentDate = new Date();
 				var timezoneOffsetMillis = currentDate.getTimezoneOffset()*60*1000;
@@ -973,14 +994,29 @@ function UiHandle(){
 						div.className += " bubbleForum";
 					break;
 				}
+
+				div.appendChild(pinIdHolder);
+				div.appendChild(commentIdHolder);
+				div.appendChild(controlDiv);
+				
+				commentNest.appendChild(messageContent);
+				div.appendChild(commentNest);
 				div.appendChild(timeDiv);
-				div.appendChild(messageContent);
+				
 				document.getElementById("bubbleContainer").appendChild(div);
 
 		}
 
-		$('.bubble').click(function(){
-			var pinId = $(this).find("input").val();
+		$('.commentTextNest').mouseenter(function(){
+			$(this).parent().css({"border" : "solid 2px red"});
+		});
+
+		$('.commentTextNest').mouseleave(function(){
+			$(this).parent().css({"border" : "solid 2px #333"});
+		});
+
+		$('.gotoIconWrapper').click(function(){
+			var pinId = $(this).parent().parent().find(".pinIdHolder").val();
 			for(var ii=0; ii<window.PINS.length; ii++){
 				if(window.PINS[ii].id == pinId){
 					var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees); 	
@@ -989,6 +1025,17 @@ function UiHandle(){
 				}
 			}
 			// console.log(pinId);
+		});
+
+		$('.closeIconWrapper').click(function(){
+			var commentId = $(this).parent().parent().find(".commentIdHolder").val();
+			alert(commentId);
+			$(this).parent().parent().fadeOut();
+		});
+
+		$('.addressIconWrapper').click(function(){
+			var commentId = $(this).parent().parent().find(".commentIdHolder").val();
+			alert(commentId);
 		});
 	}
 
