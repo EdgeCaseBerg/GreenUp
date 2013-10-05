@@ -372,8 +372,15 @@ function MapHandle(){
 		var marker = new google.maps.Marker({
         	position: new google.maps.LatLng(pin.latDegrees, pin.lonDegrees),
         	map: window.MAP.map,
-        	icon: iconUrl
+        	icon: iconUrl,
+        	title: message
     	});
+
+    	google.maps.event.addListener(marker, 'click', function() {
+    		window.MAP.map.setZoom(20);
+    		window.MAP.map.setCenter(marker.getPosition());
+  		});
+
 		marker.setVisible(window.UI.isMarkerVisible);
     	window.MAP.pickupMarkers.push(marker);
 
@@ -444,8 +451,15 @@ function MapHandle(){
 		 var marker = new google.maps.Marker({
         	position: new google.maps.LatLng(pin.latDegrees, pin.lonDegrees),
         	map: window.MAP.map,
-        	icon: iconUrl
+        	icon: iconUrl,
+        	title: message
     	});
+
+		google.maps.event.addListener(marker, 'click', function() {
+    		window.MAP.map.setZoom(20);
+    		window.MAP.map.setCenter(marker.getPosition());
+  		});
+
 		marker.setVisible(window.UI.isMarkerVisible);
     	window.MAP.pickupMarkers.push(marker);
 	}
@@ -645,6 +659,7 @@ function UiHandle(){
 	this.commentsPrevPageUrl = "";
 
     UiHandle.prototype.init = function init(){
+
     	$(".navLink").click(function(){
     		$('.navLi').removeClass("active");
     		$(this).parent().addClass("active");
@@ -668,6 +683,9 @@ function UiHandle(){
 	    			window.UI.toggleMapOptions();
 	    		});
     		}else{
+    			if(window.UI.isCommentsSliderVisible){
+    				window.UI.toggleCommentsSlider();
+    			}
     			$('#addMarkerDialog').hide();
     			$('#analyticsDialog').show();
     			window.UI.toggleMapOptions();
@@ -680,9 +698,14 @@ function UiHandle(){
 	    			window.UI.toggleCommentsSlider();
 	    		});
     		}else{
+    			if(window.UI.isOptionsVisible){
+    				window.UI.toggleMapOptions();
+    			}
     			window.UI.toggleCommentsSlider();
     		}
     	});
+
+    	$('.datePicker').datepicker({ dateFormat: "yy-mm-dd" });
 
     	$('#infoIcon').mouseenter(function(){
     		$(this).attr("src", "images/info-icon-light.png");	
@@ -720,6 +743,10 @@ function UiHandle(){
     			$('#streetInputContainer').slideDown().addClass("visible");
     		}
     	});
+
+    	$('#updateAnalyticsButton').click(function(){
+    		queryCoreReportingApi(window.ANALYTICS_PROFILE, $('#startDateInput').val(), $('#endDateInput').val());
+    	});
 	} // end init
 
 	UiHandle.prototype.drawVisualisation = function drawVisualization(pieData, lineData){	  	
@@ -750,11 +777,18 @@ function UiHandle(){
 	UiHandle.prototype.toggleMapOptions = function toggleMapOptions(){
 		if(window.UI.isOptionsVisible){
 			window.UI.isOptionsVisible = false;
-			$('.markerTypeSelectDialog').css({"top":"-200px"});
+			$('#extendedAnalyticsDialog').css({"top":"-235px"});
+			
+			window.setTimeout(function(){
+				$('.markerTypeSelectDialog').css({"top":"-200px"});	
+			}, 100);
 			
 		}else{
 			window.UI.isOptionsVisible = true;
 			$('.markerTypeSelectDialog').css({"top":"35px"});
+			setTimeout(function(){
+				$('#extendedAnalyticsDialog').css({"top":"235px"});
+			}, 100);	
 			
 		}
 	}
@@ -762,7 +796,7 @@ function UiHandle(){
 	UiHandle.prototype.toggleCommentsSlider = function toggleCommentsSlider(){
 		if(window.UI.isCommentsSliderVisible){
 			window.UI.isCommentsSliderVisible = false;
-			$('#commentsDialog').css({"right":"-330px"});
+			$('#commentsDialog').css({"right":"-530px"});
 			
 		}else{
 			window.UI.isCommentsSliderVisible = true;
@@ -930,11 +964,32 @@ function UiHandle(){
 		for(var ii=0; ii<comments.length; ii++){
 
 				var div = document.createElement("div");
+				var controlDiv = document.createElement("div");
+				var commentNest = document.createElement("div");
+
+				controlDiv.className = "bubbleControls";
+
+				controlDiv.innerHTML = '<div class="iconWrapper closeIconWrapper"><img title="Delete Comment" src="images/icons/Cross.png"></div>';
+				controlDiv.innerHTML += '<div class="iconWrapper addressIconWrapper"><img title="Address Comment" src="images/icons/Tick.png"></div>';
+
+				if(comments[ii].pin != "0"){
+					controlDiv.innerHTML += '<div class="iconWrapper gotoIconWrapper"><img title="Go To Pin" src="images/icons/Flag.png"></div>';
+				}
+
+
+
+				commentNest.className = "commentTextNest";
+
 				var timeDiv = document.createElement("div");
 				var pinIdHolder = document.createElement("input");
+				var commentIdHolder = document.createElement("input");
 				pinIdHolder.type = "hidden";
+				pinIdHolder.className = "pinIdHolder";
 				pinIdHolder.value = comments[ii].pin;
-				div.appendChild(pinIdHolder);
+				commentIdHolder.type = "hidden";
+				commentIdHolder.className = "commentIdHolder";
+				commentIdHolder.value = comments[ii].id;
+				
 				var messageContent = document.createElement("span");
 				var currentDate = new Date();
 				var timezoneOffsetMillis = currentDate.getTimezoneOffset()*60*1000;
@@ -973,22 +1028,48 @@ function UiHandle(){
 						div.className += " bubbleForum";
 					break;
 				}
+
+				div.appendChild(pinIdHolder);
+				div.appendChild(commentIdHolder);
+				div.appendChild(controlDiv);
+				
+				commentNest.appendChild(messageContent);
+				div.appendChild(commentNest);
 				div.appendChild(timeDiv);
-				div.appendChild(messageContent);
+				
 				document.getElementById("bubbleContainer").appendChild(div);
 
 		}
 
-		$('.bubble').click(function(){
-			var pinId = $(this).find("input").val();
+		$('.commentTextNest').mouseenter(function(){
+			$(this).parent().css({"border" : "solid 2px red"});
+		});
+
+		$('.commentTextNest').mouseleave(function(){
+			$(this).parent().css({"border" : "solid 2px #333"});
+		});
+
+		$('.gotoIconWrapper').click(function(){
+			var pinId = $(this).parent().parent().find(".pinIdHolder").val();
 			for(var ii=0; ii<window.PINS.length; ii++){
 				if(window.PINS[ii].id == pinId){
 					var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees); 	
 					window.MAP.map.setCenter(centerPoint);
-					window.MAP.map.setZoom(window.MAP.currentZoom);
+					window.MAP.map.setZoom(20);
 				}
 			}
 			// console.log(pinId);
+		});
+
+		$('.closeIconWrapper').click(function(){
+			var commentId = $(this).parent().parent().find(".commentIdHolder").val();
+			alert(commentId);
+			$(this).parent().parent().fadeOut();
+		});
+
+		$('.addressIconWrapper').click(function(){
+			var commentId = $(this).parent().parent().find(".commentIdHolder").val();
+			alert(commentId);
 		});
 	}
 
@@ -1193,8 +1274,12 @@ function handleProfiles(results) {
       // Get the first View (Profile) ID
       var firstProfileId = results.items[0].id;
 
+      var HELPER = new Helper();
+  	var endDate = HELPER.getGoogleFormattedDate(new Date());
+  var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 2, 2, 3, 4, 567));
+
       // Step 3. Query the Core Reporting API
-      queryCoreReportingApi(firstProfileId);
+      queryCoreReportingApi(firstProfileId, startDate, endDate);
 
     } else {
       console.log('No views (profiles) found for this user.');
@@ -1204,11 +1289,10 @@ function handleProfiles(results) {
   }
 }
 
-function queryCoreReportingApi(profileId) {
+function queryCoreReportingApi(profileId, startDate, endDate) {
+  window.ANALYTICS_PROFILE = profileId;
   console.log('Querying Core Reporting API.');
-  var HELPER = new Helper();
-  var endDate = HELPER.getGoogleFormattedDate(new Date());
-  var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 2, 2, 3, 4, 567));
+  
 
   // Use the Analytics Service Object to query the Core Reporting API
   gapi.client.analytics.data.ga.get({
@@ -1216,7 +1300,7 @@ function queryCoreReportingApi(profileId) {
     'start-date': startDate,
     'end-date': endDate,
     'metrics': 'ga:visits, ga:newVisits', 
-    'dimensions': 'ga:hour, ga:operatingSystem'
+    'dimensions': 'ga:date, ga:operatingSystem'
   }).execute(handleCoreReportingResults);
 }
 
