@@ -372,8 +372,15 @@ function MapHandle(){
 		var marker = new google.maps.Marker({
         	position: new google.maps.LatLng(pin.latDegrees, pin.lonDegrees),
         	map: window.MAP.map,
-        	icon: iconUrl
+        	icon: iconUrl,
+        	title: message
     	});
+
+    	google.maps.event.addListener(marker, 'click', function() {
+    		window.MAP.map.setZoom(20);
+    		window.MAP.map.setCenter(marker.getPosition());
+  		});
+
 		marker.setVisible(window.UI.isMarkerVisible);
     	window.MAP.pickupMarkers.push(marker);
 
@@ -444,8 +451,15 @@ function MapHandle(){
 		 var marker = new google.maps.Marker({
         	position: new google.maps.LatLng(pin.latDegrees, pin.lonDegrees),
         	map: window.MAP.map,
-        	icon: iconUrl
+        	icon: iconUrl,
+        	title: message
     	});
+
+		google.maps.event.addListener(marker, 'click', function() {
+    		window.MAP.map.setZoom(20);
+    		window.MAP.map.setCenter(marker.getPosition());
+  		});
+
 		marker.setVisible(window.UI.isMarkerVisible);
     	window.MAP.pickupMarkers.push(marker);
 	}
@@ -668,6 +682,9 @@ function UiHandle(){
 	    			window.UI.toggleMapOptions();
 	    		});
     		}else{
+    			if(window.UI.isCommentsSliderVisible){
+    				window.UI.toggleCommentsSlider();
+    			}
     			$('#addMarkerDialog').hide();
     			$('#analyticsDialog').show();
     			window.UI.toggleMapOptions();
@@ -680,6 +697,9 @@ function UiHandle(){
 	    			window.UI.toggleCommentsSlider();
 	    		});
     		}else{
+    			if(window.UI.isOptionsVisible){
+    				window.UI.toggleMapOptions();
+    			}
     			window.UI.toggleCommentsSlider();
     		}
     	});
@@ -1021,7 +1041,7 @@ function UiHandle(){
 				if(window.PINS[ii].id == pinId){
 					var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees); 	
 					window.MAP.map.setCenter(centerPoint);
-					window.MAP.map.setZoom(window.MAP.currentZoom);
+					window.MAP.map.setZoom(20);
 				}
 			}
 			// console.log(pinId);
