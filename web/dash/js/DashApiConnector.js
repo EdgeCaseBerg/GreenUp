@@ -659,6 +659,7 @@ function UiHandle(){
 	this.commentsPrevPageUrl = "";
 
     UiHandle.prototype.init = function init(){
+
     	$(".navLink").click(function(){
     		$('.navLi').removeClass("active");
     		$(this).parent().addClass("active");
@@ -704,6 +705,8 @@ function UiHandle(){
     		}
     	});
 
+    	$('.datePicker').datepicker({ dateFormat: "yy-mm-dd" });
+
     	$('#infoIcon').mouseenter(function(){
     		$(this).attr("src", "images/info-icon-light.png");	
     	});
@@ -739,6 +742,10 @@ function UiHandle(){
     		}else{
     			$('#streetInputContainer').slideDown().addClass("visible");
     		}
+    	});
+
+    	$('#updateAnalyticsButton').click(function(){
+    		queryCoreReportingApi(window.ANALYTICS_PROFILE, $('#startDateInput').val(), $('#endDateInput').val());
     	});
 	} // end init
 
@@ -1260,8 +1267,12 @@ function handleProfiles(results) {
       // Get the first View (Profile) ID
       var firstProfileId = results.items[0].id;
 
+      var HELPER = new Helper();
+  	var endDate = HELPER.getGoogleFormattedDate(new Date());
+  var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 2, 2, 3, 4, 567));
+
       // Step 3. Query the Core Reporting API
-      queryCoreReportingApi(firstProfileId);
+      queryCoreReportingApi(firstProfileId, startDate, endDate);
 
     } else {
       console.log('No views (profiles) found for this user.');
@@ -1271,11 +1282,10 @@ function handleProfiles(results) {
   }
 }
 
-function queryCoreReportingApi(profileId) {
+function queryCoreReportingApi(profileId, startDate, endDate) {
+  window.ANALYTICS_PROFILE = profileId;
   console.log('Querying Core Reporting API.');
-  var HELPER = new Helper();
-  var endDate = HELPER.getGoogleFormattedDate(new Date());
-  var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 2, 2, 3, 4, 567));
+  
 
   // Use the Analytics Service Object to query the Core Reporting API
   gapi.client.analytics.data.ga.get({

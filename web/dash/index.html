@@ -6,10 +6,15 @@
     <!-- Bootstrap -->
   <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link href="styles.css" rel="stylesheet" media="screen">
+  <link href="js/lib/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" media="screen">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!-- <script src="//code.jquery.com/jquery.js"></script> -->
   <!--<script src="js/analytics_auth.js"></script> -->
   <script src="js/lib/jquery/jquery.js"></script>
+
+ <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
+  <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
+  <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.datepicker.js"> </script>
   <script src="js/DashApiConnector.js"></script>
   
     
@@ -121,6 +126,20 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
 
       <div id="analyticsDialog">
         <div class="analyticsColumnContainer">
+          
+          <div class="nestedAnalyticsColumn">
+            <div class="analyticsHeader">
+              Analytics Controls
+            </div>
+            <div class="analyticsData">
+              <ul>
+                <li>Start Date: <input type="text" class="datePicker" id="startDateInput"/></li>
+                <li>End Date: <input type="text" class="datePicker" id="endDateInput"/></li>
+                <li><input type="button" value="update" id="updateAnalyticsButton" /></li>
+              </ul>
+            </div>
+          </div>
+
           <div class="nestedAnalyticsColumn">
             <div class="analyticsHeader">
               Total Users
@@ -143,20 +162,6 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
             </div>
             <div class="analyticsData">
               <div class="usageDataChart" id="usageDataLineChart"></div>
-            </div>
-          </div>
-          
-          <div class="nestedAnalyticsColumn">
-            <div class="analyticsHeader">
-              Total Area Cleaned
-            </div>
-            <div class="analyticsData">
-              <div class="analyticsDataNestColumn usageDataNestColumn">
-                <ul>
-                  
-                </ul>
-              </div>
-              <div class="analyticsDataNestColumn usageDataNestColumn" id="usageDataChart"></div>
             </div>
           </div>
         </div>

@@ -143,6 +143,11 @@ ul{
     padding-top:30px;
 }
 
+.datePicker{
+    position: relative;
+    z-index: 1000;
+}
+
 #commentsDialog{
     padding: 5px 0px 5px 3px;
     background: #eee;
