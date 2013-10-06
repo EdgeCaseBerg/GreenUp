@@ -58,7 +58,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.pin_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);       
+        spinner.setAdapter(adapter);     
         
         //get a reference to the map and the location service and set the listener for the map
         mMapView = (MapView)inflatedView.findViewById(R.id.map);
