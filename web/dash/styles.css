@@ -322,7 +322,7 @@ ul{
     width:100%;
     background: #eee;
     padding:30px 0px 10px 0px;
-    display:none;
+    /*display:none;*/
     font-size: 0.9em;
     text-align: center;
 }
@@ -388,21 +388,41 @@ ul{
     padding: 1px 5px 0px 5px;
 }
 
-.locationTypeMenuItem:hover{
-    color: blue;
-}
-
-.locationTypeMenuItem:first-child{
-    border-bottom: solid 1px #ddd; 
-}
 
 .locationTypeInputContainer{
     display:none;
 
 }
 
+#coordsInputContainer{
+    display: block;
+    width: 100%;
+}
+
 .markerInputNest{
-    float:right;
+    width: 100%;
+    max-width: 300px;
+}
+
+.markerInputNest .inputLabel{
+    width: 45%;
+    display: inline-block;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.inputLocationTypeLi{
+    font-size: 1.2em;
+    font-weight: bold;   
+}
+
+.markerInputNest .inputInput{
+    width: 45%;
+    display: inline-block;
+}
+
+.inputInput input{
+    width: 200px;
 }
 
 #markerIconNest{
@@ -441,9 +461,6 @@ ul{
   background: #c7c7c7;
 }
 
-#coordsInputNest li{
-	text-align:right;
-}
 
 #coordsInputNest input{
 	margin:0px 0px 0px 10px;
@@ -680,3 +697,59 @@ input[type=checkbox] {
 .slideToggle input[type=checkbox]:checked + label {
     left: 70px;
 }
+
+
+#addMarkerDashContainer{
+    display:none;
+    float:left;
+    position: absolute;
+    top: 70px;
+    height: 100%;
+    width: 100%;
+    z-index: 700;
+    background: #111;
+    /*opacity: 0.7;*/
+}
+
+#addMarkerDashNest{
+    width: 40%;
+    min-width: 570px;
+    height: 30%;
+    min-height: 420px;
+    background: #eee;
+    margin: auto;
+    margin-top: 60px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+
+#addMarkerDashHeader{
+    vertical-align: middle;
+    font-size: 2.5em;
+    font-weight: bold;
+    text-align: center;
+
+}
+
+#addMarkerDashHeader img{
+    display:inline-block;
+    margin: 1% 2% 1% 1%;
+}
+
+#addMarkerDashContent{
+    text-align: left;
+    width: 50%;
+    margin: auto;
+    margin-top: 20px;
+    /*border:solid 1px red;*/
+}
+
+#addMarkerDashContent div{
+    /*width: 90%;*/
+    text-align: left;
+
+}
+
+
