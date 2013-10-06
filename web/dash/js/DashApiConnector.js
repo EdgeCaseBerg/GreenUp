@@ -250,7 +250,7 @@ function ApiConnector(){
 		this.pullMarkerData();
 	}
 
-	ApiConnector.prototype.getStreetFromLatLng = function getStreetFromLatLng(lat, lng){
+	ApiConnector.prototype.getStreetFromLatLng = function getStreetFromLatLng(lat, lng, callback){
 		var baseGeocodeUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=";
 		baseGeocodeUrl += lat + ",";
 		baseGeocodeUrl += lng;
@@ -258,7 +258,7 @@ function ApiConnector(){
 
 		// URL, DATATYPE, QUERYTYPE, CALLBACK
 
-		this.pullApiData(baseGeocodeUrl, json, GET, window.UI.updateMarkerAddStreetAddr(data));
+		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.UI.updateMarkerAddStreetAddr);
 
 	}
 
@@ -938,7 +938,6 @@ function UiHandle(){
 	}
 
 	UiHandle.prototype.toggleAddMarkerOptions = function toggleAddMarkerOptions(point){
-		console.log(point);
 		if(window.UI.isAddMarkerDialogVisible){
 			$('#addMarkerDashContainer').fadeOut(500);
 			window.UI.isAddMarkerDialogVisible = false;
@@ -949,6 +948,8 @@ function UiHandle(){
 
 			$('#markerLat').val(lat);
 			$('#markerLng').val(lng);
+
+			window.ApiConnector.getStreetFromLatLng(lat, lng)
 
 			$('#addMarkerDashContainer').fadeIn(500);
 			window.UI.isAddMarkerDialogVisible = true;	
