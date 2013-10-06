@@ -164,6 +164,30 @@ ul{
     transition: all .5s ease;
 }
 
+.timeComponentNest{
+    border:solid 1px #555;
+    display:inline-block;
+    text-align: center;
+    margin:0px 3px 0px 0px;
+}
+
+.timeComponent{
+    margin:0px 5px 0px -5px;
+    padding:0px 5px 0px 0px;
+    font-size: 2.7em;
+    font-weight: bold;
+    text-align: center;
+    /*border:solid 1px black;*/
+}
+
+.timeComponentLabel{
+    margin:0px 0px 0px 5px;
+    font-size: 0.7em;
+    font-weight: bold;
+    text-align: center;
+}
+
+
 .datePicker{
     position: relative;
     z-index: 1000;

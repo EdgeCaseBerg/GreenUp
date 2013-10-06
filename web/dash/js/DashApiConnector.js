@@ -935,10 +935,13 @@ function UiHandle(){
 		console.log("raw heatmap data: ");
 		console.log(data);
 		var HELPER = new Helper();
-		var totalSecondsWorked = 0;
+		var totalSecondsWorked = new BigNumber(0);
 		for(var ii=0; ii<data.grid.length; ii++){
-			totalSecondsWorked += data.grid[ii].secondsWorked;
+			totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
+			console.log(ii + "-" + totalSecondsWorked);
 		}
+
+		// alert(data.grid[0].secondsWorked + " - " + data.grid[(data.grid.length - 1)].secondsWorked);
 
 		var metersPerSecond = 0.25; // this is a guess
 		var sqMeters = (totalSecondsWorked * metersPerSecond);
@@ -957,6 +960,7 @@ function UiHandle(){
 		console.log("marker response: ");
 		console.log(data);
 
+		window.PINS = [];
 		window.PINS = data.pins;
 		// var dataArr = JSON.parse(data);
 		var dataArr = data;
@@ -1097,13 +1101,13 @@ function UiHandle(){
 
 		$('.closeIconWrapper').click(function(){
 			var commentId = $(this).parent().parent().find(".commentIdHolder").val();
-			alert(commentId);
+			// alert(commentId);
 			$(this).parent().parent().fadeOut();
 		});
 
 		$('.addressIconWrapper').click(function(){
 			var commentId = $(this).parent().parent().find(".commentIdHolder").val();
-			alert(commentId);
+			// alert(commentId);
 		});
 	}
 
@@ -1177,12 +1181,23 @@ function Helper(){
 	}
 
 	Helper.prototype.secondsToHoursMinutesSeconds = function secondsToHoursMinutesSeconds(seconds){
+
 		var remainderSeconds = (seconds % 60);
 		var minutes = ((seconds - remainderSeconds) / 60);
 		var remainderMinutes = (minutes % 60);
 		var hours = ((minutes - remainderMinutes) / 60);
 		var remainderHours = (hours % 24); 
-		var days = ((hours - remainderHours) / 24)
+		var days = ((hours - remainderHours) / 24);
+
+		if(remainderHours < 10){
+			remainderHours = ("0"+remainderHours);
+		}
+		if(remainderMinutes < 10){
+			remainderMinutes = ("0"+remainderMinutes);
+		}
+		if(remainderSeconds < 10){
+			remainderSeconds = ("0"+remainderSeconds);
+		}
 
 		var results = {"days": days, "hours" : remainderHours, "minutes" : remainderMinutes, "seconds" : remainderSeconds};
 		console.log(results);
@@ -1327,7 +1342,7 @@ function handleProfiles(results) {
 
       var HELPER = new Helper();
   	var endDate = HELPER.getGoogleFormattedDate(new Date());
-  var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 2, 2, 3, 4, 567));
+  var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 3, 3, 3, 4, 567));
 
       // Step 3. Query the Core Reporting API
       queryCoreReportingApi(firstProfileId, startDate, endDate);
