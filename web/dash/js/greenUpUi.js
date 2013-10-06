@@ -315,11 +315,12 @@ function UiHandle(){
 				pin.message = $('#markerTextarea').val();
 				pin.type = "TRASH PICKUP";
 
+				// we're using normal latlng for our pin
 				if(pin.latDegrees.length > 1 && pin.lonDegrees.length >1 && pin.message.length >1){
 					window.ApiConnector.pushNewPin(JSON.stringify(pin));
-				}else{
-
+				}else{ // we're using a street address
 					var fieldCount = 0;
+					// check we've got the needed fields
 					for(prop in streetAddr){
 						if(prop.length > 0){
 							fieldCount++;
@@ -327,12 +328,11 @@ function UiHandle(){
 					}
 
 					if(fieldCount > 2){
-					// 	console.log("new pin");
-					// 	var pin = new Pin();
-					// 	pin.message = $('#markerTextarea').val();
-
-					// 	window.ApiConnector.getLatLngFromStreet(streetAddr, pin, window.ApiConnector.pushNewPin);
-					// }
+						console.log("new pin");
+						var pin = new Pin();
+						pin.message = $('#markerTextarea').val();
+						window.streetAddr = streetAddr;
+						window.ApiConnector.getLatLngFromStreet(streetAddr, pin, window.ApiConnector.buildNewPin);
 					}
 				}
 

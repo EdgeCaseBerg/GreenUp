@@ -270,6 +270,11 @@ function ApiConnector(){
 
 	}
 
+	ApiConnector.prototype.buildNewPin = function buildNewPin(data){
+		console.log("build new pin");
+		console.log(data);
+	}
+
 
 
 	//Uploads all local database entries to the Server

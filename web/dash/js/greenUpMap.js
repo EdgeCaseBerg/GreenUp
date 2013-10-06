@@ -72,7 +72,7 @@ function MapHandle(){
 				break;
 			case "trash pickup":
 				pin.type = "trash pickup";
-				iconUrl = "images/icons/greenCircle.png";
+				iconUrl = "images/icons/new_trash1.png";
 				break;
 			default:
 				pin.type = "general message";
@@ -153,7 +153,7 @@ function MapHandle(){
 				break;
 			case "TRASH PICKUP":
 				pin.type = "TRASH PICKUP";
-				iconUrl = "images/icons/greenCircle.png";
+				iconUrl = "images/icons/new_trash1_sm_test.png";
 				break;
 			default:
 				pin.type = "GENERAL MESSAGE";
