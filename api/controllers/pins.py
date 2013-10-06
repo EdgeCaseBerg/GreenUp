@@ -5,9 +5,9 @@ import webapp2
 import json
 import api
 
-from datastore import Pins as DBPins
-from constants import *
-from datastore import *
+from ..datastore import Pins as DBPins
+from ..constants import *
+from ..datastore import *
 
 import logging
 

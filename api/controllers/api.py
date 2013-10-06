@@ -1,15 +1,15 @@
 #Import google sign in
-from handlerBase import Handler
-from datastore import *
+from ..handlerBase import Handler
+from ..datastore import *
 
 import webapp2
 
-from constants import *
+from ..constants import *
 
 TESTING = True
 
 if TESTING:
-	from testHarness import *
+	from ..testHarness import *
 	import logging
 
 
