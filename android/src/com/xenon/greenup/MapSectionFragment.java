@@ -17,6 +17,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -28,7 +29,7 @@ import com.xenon.greenup.api.Heatmap;
 import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
 
-public class MapSectionFragment extends Fragment {
+public class MapSectionFragment extends Fragment implements OnMapLongClickListener {
 	
 	private MapView mMapView;
 	private GoogleMap map;
@@ -47,24 +48,23 @@ public class MapSectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
         View inflatedView = inflater.inflate(R.layout.map_page, container, false);
-
         try {
             MapsInitializer.initialize(getActivity());
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
-        
         //Populate the spinner with choices
         Spinner spinner  = (Spinner)inflatedView.findViewById(R.id.pin_type_selection);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.pin_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        spinner.setAdapter(adapter);       
         
-        //get a reference to the map and the location service
+        //get a reference to the map and the location service and set the listener for the map
         mMapView = (MapView)inflatedView.findViewById(R.id.map);
         mMapView.onCreate(bundle);
         map = mMapView.getMap();
+        map.setOnMapLongClickListener(this);
         mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         
         //center the camera, use the default coordinates and zoom for now
@@ -129,31 +129,39 @@ public class MapSectionFragment extends Fragment {
 			drawPins();
 		}
     }
-    
+
+	@Override
+	public void onMapLongClick(LatLng coords) {	
+	}
+	
     private void drawPins() {
-    	Marker newMarker;
-    	LatLng coords;
-    	MarkerOptions options;
-    	String pinType,pinMessage;
     	ArrayList<Pin> pins = this.pins.getPinList();
+    	Pin pin;
+    	LatLng coords;
     	for(int i = 0; i < pins.size(); i++) {
-    		coords = new LatLng(pins.get(i).getLatDegrees(),pins.get(i).getLonDegrees());
-    		pinType = pins.get(i).getType();
-    		pinMessage = pins.get(i).getMessage();
-    		options = new MarkerOptions();
-    		options.position(coords);
-    		options.snippet(pinMessage);
-    		options.title(pinType);
-    		if(pinType.equalsIgnoreCase("GENERAL MESSAGE"))
-    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-    		else if(pinType.equalsIgnoreCase("HELP NEEDED"))
-    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-    		else if(pinType.equalsIgnoreCase("TRASH PICKUP"))
-    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-    		else
-    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-    		newMarker = map.addMarker(options);
-    		markers.add(newMarker);    	
+    		pin = pins.get(i);
+    		coords = new LatLng(pin.getLatDegrees(),pin.getLonDegrees());
+    		addMarker(coords,pin.getType(),pin.getMessage());
     	}
+    }
+    
+    //Draws a marker, given the coordinates in a LatLng object, plus the title and message to use
+    private void addMarker(LatLng coords,String title,String message) {
+    	Marker newMarker;
+    	MarkerOptions options;
+   		options = new MarkerOptions();
+		options.position(coords);
+		options.snippet(title);
+		options.title(message);
+		if(title.equalsIgnoreCase("GENERAL MESSAGE"))
+			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+		else if(title.equalsIgnoreCase("HELP NEEDED"))
+			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+		else if(title.equalsIgnoreCase("TRASH PICKUP"))
+			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+		else
+			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+		newMarker = map.addMarker(options);
+		this.markers.add(newMarker);    	
     }
 }
