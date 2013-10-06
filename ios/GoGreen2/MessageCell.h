@@ -13,12 +13,11 @@
 #define Message_Type_MARKER @"MARKER"
 #define Message_Type_COMMENT @"COMMENT"
 
-@interface MessageCell : UITableViewCell
+@interface MessageCell : UITableViewCell <UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIImageView *topBackgroundImage;
 @property (nonatomic, strong) UIView *middleBackgroundImage;
 @property (nonatomic, strong) UIImageView *bottomBackgroundImage;
-@property (nonatomic, strong) UIButton *toggleValidity;
 @property (nonatomic, strong) UIButton *showPinOnMap;
 @property (nonatomic, strong) NetworkMessage *messageObject;
 @property (nonatomic, strong) UILabel *textContentLabel;

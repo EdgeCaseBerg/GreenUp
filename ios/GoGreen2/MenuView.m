@@ -24,13 +24,13 @@
         [self.contentView setBackgroundColor:[UIColor whiteColor]];
         [self addSubview:self.contentView];
         
-        self.topBarImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"top_bar.png"]];
+        self.topBarImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"topBar.png"]];
         [self.topBarImageView setFrame:CGRectMake(0, self.frame.size.height - 32, 320, 32)];
         [self addSubview:self.topBarImageView];
         
     
         self.toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.toggleButton setFrame:CGRectMake(17, frame.size.height - 22, 30, 21)];
+        [self.toggleButton setFrame:CGRectMake(17, frame.size.height - 25, 30, 21)];
         [self.toggleButton addTarget:self action:@selector(toggleMenu:) forControlEvents:UIControlEventTouchUpInside];
         [self.toggleButton setBackgroundImage:[UIImage imageNamed:@"hamburger_icon.png"] forState:UIControlStateNormal];
         [self addSubview:self.toggleButton];
@@ -125,13 +125,13 @@
     self.previousTimeIntervals = [[[ContainerViewController sharedContainer] theHomeViewController] previousLoggingTimes];
     
     UIView *scrollViewContainerView = [[UIView alloc] initWithFrame:CGRectMake(5, 30, self.frame.size.width - 10, 100)];
-    [scrollViewContainerView setBackgroundColor:[UIColor blackColor]];
+    [scrollViewContainerView setBackgroundColor:[UIColor greenColor]];
     [scrollViewContainerView.layer setCornerRadius:5];
     
     UILabel *keyLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, scrollViewContainerView.frame.size.width - 10, 20)];
     [keyLabel setText:@"Session \t - \t Time Spent Cleaning"];
     [keyLabel setBackgroundColor:[UIColor clearColor]];
-    [keyLabel setTextColor:[UIColor whiteColor]];
+    [keyLabel setTextColor:[UIColor blackColor]];
     [keyLabel setTextAlignment:NSTextAlignmentCenter];
     [scrollViewContainerView addSubview:keyLabel];
     
@@ -151,14 +151,14 @@
         if(i % 2 == 0)
         {
             UIView *highLightedBackground = [[UIView alloc] initWithFrame:CGRectMake(5, height, previousTimesScrollView.frame.size.width - 10, 35)];
-            [highLightedBackground setBackgroundColor:[UIColor darkGrayColor]];
+            [highLightedBackground setBackgroundColor:[UIColor whiteColor]];
             [previousTimesScrollView addSubview:highLightedBackground];
             
-            fontColor = [UIColor whiteColor];
+            fontColor = [UIColor blackColor];
         }
         else
         {
-            fontColor = [UIColor whiteColor];
+            fontColor = [UIColor blackColor];
         }
         UILabel *sessionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, height, 70, 30)];
         [sessionLabel setText:[NSString stringWithFormat:@"%d", i + 1]];

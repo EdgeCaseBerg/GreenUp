@@ -126,8 +126,6 @@
 		DFA9ABF217D63C5B006F58A5 /* Start@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9ABB917D63C5B006F58A5 /* Start@2x.png */; };
 		DFA9ABF317D63C5B006F58A5 /* Stop.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9ABBA17D63C5B006F58A5 /* Stop.png */; };
 		DFA9ABF417D63C5B006F58A5 /* Stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9ABBB17D63C5B006F58A5 /* Stop@2x.png */; };
-		DFA9ABF517D63C5B006F58A5 /* top_bar.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9ABBC17D63C5B006F58A5 /* top_bar.png */; };
-		DFA9ABF617D63C5B006F58A5 /* top_bar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9ABBD17D63C5B006F58A5 /* top_bar@2x.png */; };
 		DFA9ABF917D653B0006F58A5 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9ABF817D653AF006F58A5 /* MessageCell.m */; };
 		DFA9ABFF17D66518006F58A5 /* UIFont+methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9ABFE17D66518006F58A5 /* UIFont+methods.m */; };
 		DFA9AC0217D66543006F58A5 /* UIColor+methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9AC0117D66543006F58A5 /* UIColor+methods.m */; };
@@ -139,6 +137,18 @@
 		DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */; };
 		DFA9C39317E22FA000FBE61F /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39117E22F9900FBE61F /* logo.png */; };
 		DFA9C39417E22FA000FBE61F /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39217E22F9D00FBE61F /* logo@2x.png */; };
+		DFD73A241800824800202D57 /* blueLeaf.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A181800824700202D57 /* blueLeaf.png */; };
+		DFD73A251800824800202D57 /* blueLeaf@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A191800824700202D57 /* blueLeaf@2x.png */; };
+		DFD73A261800824800202D57 /* greenLeaf.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A1A1800824700202D57 /* greenLeaf.png */; };
+		DFD73A271800824800202D57 /* greenLeaf@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A1B1800824700202D57 /* greenLeaf@2x.png */; };
+		DFD73A281800824800202D57 /* orangeLeaf.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A1C1800824700202D57 /* orangeLeaf.png */; };
+		DFD73A291800824800202D57 /* orangeLeaf@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A1D1800824700202D57 /* orangeLeaf@2x.png */; };
+		DFD73A2A1800824800202D57 /* redLeaf.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A1E1800824700202D57 /* redLeaf.png */; };
+		DFD73A2B1800824800202D57 /* redLeaf@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A1F1800824700202D57 /* redLeaf@2x.png */; };
+		DFD73A2C1800824800202D57 /* topBar.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A201800824700202D57 /* topBar.png */; };
+		DFD73A2D1800824800202D57 /* topBar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A211800824700202D57 /* topBar@2x.png */; };
+		DFD73A2E1800824800202D57 /* trashMarker.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A221800824800202D57 /* trashMarker.png */; };
+		DFD73A2F1800824800202D57 /* trashMarker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A231800824800202D57 /* trashMarker@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -290,8 +300,6 @@
 		DFA9ABB917D63C5B006F58A5 /* Start@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Start@2x.png"; path = "Images/Start@2x.png"; sourceTree = SOURCE_ROOT; };
 		DFA9ABBA17D63C5B006F58A5 /* Stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stop.png; path = Images/Stop.png; sourceTree = SOURCE_ROOT; };
 		DFA9ABBB17D63C5B006F58A5 /* Stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Stop@2x.png"; path = "Images/Stop@2x.png"; sourceTree = SOURCE_ROOT; };
-		DFA9ABBC17D63C5B006F58A5 /* top_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = top_bar.png; path = Images/top_bar.png; sourceTree = SOURCE_ROOT; };
-		DFA9ABBD17D63C5B006F58A5 /* top_bar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "top_bar@2x.png"; path = "Images/top_bar@2x.png"; sourceTree = SOURCE_ROOT; };
 		DFA9ABF717D653AF006F58A5 /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		DFA9ABF817D653AF006F58A5 /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		DFA9ABFD17D66518006F58A5 /* UIFont+methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+methods.h"; sourceTree = "<group>"; };
@@ -310,6 +318,18 @@
 		DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPinCommentView.m; sourceTree = "<group>"; };
 		DFA9C39117E22F9900FBE61F /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Images/logo.png; sourceTree = SOURCE_ROOT; };
 		DFA9C39217E22F9D00FBE61F /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo@2x.png"; path = "Images/logo@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFD73A181800824700202D57 /* blueLeaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueLeaf.png; path = Images/blueLeaf.png; sourceTree = SOURCE_ROOT; };
+		DFD73A191800824700202D57 /* blueLeaf@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blueLeaf@2x.png"; path = "Images/blueLeaf@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFD73A1A1800824700202D57 /* greenLeaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = greenLeaf.png; path = Images/greenLeaf.png; sourceTree = SOURCE_ROOT; };
+		DFD73A1B1800824700202D57 /* greenLeaf@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "greenLeaf@2x.png"; path = "Images/greenLeaf@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFD73A1C1800824700202D57 /* orangeLeaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = orangeLeaf.png; path = Images/orangeLeaf.png; sourceTree = SOURCE_ROOT; };
+		DFD73A1D1800824700202D57 /* orangeLeaf@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "orangeLeaf@2x.png"; path = "Images/orangeLeaf@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFD73A1E1800824700202D57 /* redLeaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = redLeaf.png; path = Images/redLeaf.png; sourceTree = SOURCE_ROOT; };
+		DFD73A1F1800824700202D57 /* redLeaf@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "redLeaf@2x.png"; path = "Images/redLeaf@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFD73A201800824700202D57 /* topBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topBar.png; path = Images/topBar.png; sourceTree = SOURCE_ROOT; };
+		DFD73A211800824700202D57 /* topBar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "topBar@2x.png"; path = "Images/topBar@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFD73A221800824800202D57 /* trashMarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trashMarker.png; path = Images/trashMarker.png; sourceTree = SOURCE_ROOT; };
+		DFD73A231800824800202D57 /* trashMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trashMarker@2x.png"; path = "Images/trashMarker@2x.png"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -364,6 +384,18 @@
 		390415AD1798DC50005EC308 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DFD73A181800824700202D57 /* blueLeaf.png */,
+				DFD73A191800824700202D57 /* blueLeaf@2x.png */,
+				DFD73A1A1800824700202D57 /* greenLeaf.png */,
+				DFD73A1B1800824700202D57 /* greenLeaf@2x.png */,
+				DFD73A1C1800824700202D57 /* orangeLeaf.png */,
+				DFD73A1D1800824700202D57 /* orangeLeaf@2x.png */,
+				DFD73A1E1800824700202D57 /* redLeaf.png */,
+				DFD73A1F1800824700202D57 /* redLeaf@2x.png */,
+				DFD73A201800824700202D57 /* topBar.png */,
+				DFD73A211800824700202D57 /* topBar@2x.png */,
+				DFD73A221800824800202D57 /* trashMarker.png */,
+				DFD73A231800824800202D57 /* trashMarker@2x.png */,
 				DF60D5EF17F4FD3200105121 /* currentLocation.png */,
 				DF60D5F017F4FD3200105121 /* currentLocation@2x.png */,
 				DF60D5F117F4FD3200105121 /* currentLocationButtonBackground.png */,
@@ -433,8 +465,6 @@
 				DFA9ABB917D63C5B006F58A5 /* Start@2x.png */,
 				DFA9ABBA17D63C5B006F58A5 /* Stop.png */,
 				DFA9ABBB17D63C5B006F58A5 /* Stop@2x.png */,
-				DFA9ABBC17D63C5B006F58A5 /* top_bar.png */,
-				DFA9ABBD17D63C5B006F58A5 /* top_bar@2x.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -840,8 +870,6 @@
 				DFA9ABF217D63C5B006F58A5 /* Start@2x.png in Resources */,
 				DFA9ABF317D63C5B006F58A5 /* Stop.png in Resources */,
 				DFA9ABF417D63C5B006F58A5 /* Stop@2x.png in Resources */,
-				DFA9ABF517D63C5B006F58A5 /* top_bar.png in Resources */,
-				DFA9ABF617D63C5B006F58A5 /* top_bar@2x.png in Resources */,
 				DFA9C38517D94ABE00FBE61F /* pinwheel.png in Resources */,
 				DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */,
 				DFA9C39317E22FA000FBE61F /* logo.png in Resources */,
@@ -856,6 +884,18 @@
 				DF60D5F417F4FD3200105121 /* currentLocation@2x.png in Resources */,
 				DF60D5F517F4FD3200105121 /* currentLocationButtonBackground.png in Resources */,
 				DF60D5F617F4FD3200105121 /* currentLocationButtonBackground@2x.png in Resources */,
+				DFD73A241800824800202D57 /* blueLeaf.png in Resources */,
+				DFD73A251800824800202D57 /* blueLeaf@2x.png in Resources */,
+				DFD73A261800824800202D57 /* greenLeaf.png in Resources */,
+				DFD73A271800824800202D57 /* greenLeaf@2x.png in Resources */,
+				DFD73A281800824800202D57 /* orangeLeaf.png in Resources */,
+				DFD73A291800824800202D57 /* orangeLeaf@2x.png in Resources */,
+				DFD73A2A1800824800202D57 /* redLeaf.png in Resources */,
+				DFD73A2B1800824800202D57 /* redLeaf@2x.png in Resources */,
+				DFD73A2C1800824800202D57 /* topBar.png in Resources */,
+				DFD73A2D1800824800202D57 /* topBar@2x.png in Resources */,
+				DFD73A2E1800824800202D57 /* trashMarker.png in Resources */,
+				DFD73A2F1800824800202D57 /* trashMarker@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

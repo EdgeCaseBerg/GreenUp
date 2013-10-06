@@ -134,66 +134,65 @@
     {
         //Get heatmap data and pins from server
         [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+        [self updateHeatMapOverlay];
         [self getMapPins];
     }
-}
--(void)updateHeatMapOverlay
-{
-    //remove old overlay
-    [self.mapView removeOverlay:self.heatMap];
-    
-    //create array of all points gathered and downloaded!
-    NSMutableArray *allPoints = [[NSMutableArray alloc] initWithArray:self.downloadedMapPoints];
-    [allPoints addObjectsFromArray:self.gatheredMapPoints];
-    
-    NSLog(@"DOWNLOADED POINTS: %d", self.downloadedMapPoints.count);
-    NSLog(@"GATHERED POINTS: %d", self.gatheredMapPoints.count);
-    
-    //create new heatmap overlay and display it
-    self.heatMap = [[HeatMap alloc] initWithData:[self convertPointsToHeatMapFormat:allPoints]];
-    [self.mapView addOverlay:self.heatMap];
-    //[self.mapView setVisibleMapRect:[self.heatMap boundingMapRect] animated:YES];
 }
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
 {
     return [[HeatMapView alloc] initWithOverlay:overlay];
 }
-- (MKAnnotationView *)mapView:(MKMapView *)map viewForAnnotation:(HeatMapPin<MKAnnotation>*)annotation
-{
-    if([annotation.type isEqualToString:Message_Type_ADMIN])
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
+{    
+    if ([annotation isKindOfClass:[MKUserLocation class]])
     {
-        static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
-        
-        MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
-        
-        if (annotationView == nil)
-        {
-            annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
-        }
-        
-        annotationView.image = [UIImage imageNamed:@"trashbag.png"];
-        
-        annotationView.annotation = annotation;
-        
-        return annotationView;
+        return nil;
     }
-    else if([annotation.type isEqualToString:Message_Type_MARKER])
+    else if([annotation isKindOfClass:[HeatMapPin class]])
     {
-        static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
-        
-        MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
-        
-        if (annotationView == nil)
+        if([((HeatMapPin *)annotation).type isEqualToString:Message_Type_ADMIN])
         {
-            annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
+            static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
+            
+            MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
+            
+            if (annotationView == nil)
+            {
+                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
+            }
+            
+            annotationView.image = [UIImage imageNamed:@"trashbag.png"];
+            CGRect test = annotationView.frame;
+            NSLog(@"%f - %f - %f - %f", test.origin.x, test.origin.y, test.size.width, test.size.height);
+            [annotationView setFrame:CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y - annotationView.frame.size.height, annotationView.frame.size.height, annotationView.frame.size.width)];
+            
+            annotationView.annotation = annotation;
+            
+            return annotationView;
         }
-        
-        annotationView.image = [UIImage imageNamed:@"trashbag.png"];
-        
-        annotationView.annotation = annotation;
-        
-        return annotationView;
+        else if([((HeatMapPin *)annotation).type isEqualToString:Message_Type_MARKER])
+        {
+            static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
+            
+            MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
+            
+            if (annotationView == nil)
+            {
+                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
+            }
+            
+            annotationView.image = [UIImage imageNamed:@"trashMarker.png"];
+            
+            annotationView.centerOffset = CGPointMake(0, -17);
+            
+            annotationView.annotation = annotation;
+            
+            return annotationView;
+        }
+        else
+            return nil;
     }
     else
         return nil;
@@ -286,6 +285,7 @@
             //-------------- We Are Not Logging But Want To Drop Marker At Our Current Location ---------
             self.loggingForMarker = FALSE;
             
+            /*
             //Get Current Location
             MKCoordinateRegion region;
             MKCoordinateSpan span;
@@ -295,6 +295,7 @@
             region.center = location.coordinate;
             [self.mapView setRegion:region animated:TRUE];
             [self.mapView regionThatFits:region];
+            */
             
             //Stop Getting Updates
             [self.locationManager stopUpdatingLocation];
@@ -324,6 +325,7 @@
             [self pushHeatMapDataToServer];
             [self updateHeatMapOverlay];
             
+            /*
             //Update Map Location
             MKCoordinateRegion region;
             MKCoordinateSpan span;
@@ -333,6 +335,7 @@
             region.center = location.coordinate;
             [self.mapView setRegion:region animated:TRUE];
             [self.mapView regionThatFits:region];
+            */
             
             //Create Pin For Current Location
             HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:Message_Type_MARKER];
@@ -359,6 +362,7 @@
             [self pushHeatMapDataToServer];
             [self updateHeatMapOverlay];
             
+            /*
             //Update Map Location
             MKCoordinateRegion region;
             MKCoordinateSpan span;
@@ -368,6 +372,7 @@
             region.center = location.coordinate;
             [self.mapView setRegion:region animated:TRUE];
             [self.mapView regionThatFits:region];
+             */
         }
         
         //Turn Off Pin Flag
@@ -375,59 +380,27 @@
     }
 }
 
-
-#pragma mark - Map Pin Callbacks
--(IBAction)postMarker:(NSNotification *)sender
+#pragma mark - Heat Map Point Methods
+-(void)updateHeatMapOverlay
 {
-    NSString *message = sender.object;
-    self.tempPinRef.message = message;
+    //remove old overlay
+    [self.mapView removeOverlay:self.heatMap];
     
-    //Perform Post Code To Update With Server
-    NSMutableArray *objects = [[NSMutableArray alloc] init];
-    [objects addFloat:self.tempPinRef.coordinate.latitude];
-    [objects addFloat:self.tempPinRef.coordinate.longitude];
-    [objects addObject:Message_Type_MARKER];
-    [objects addObject:message];
-    [objects addBool:FALSE];
+    //create array of all points gathered and downloaded!
+    NSMutableArray *allPoints = [[NSMutableArray alloc] initWithArray:self.downloadedMapPoints];
+    [allPoints addObjectsFromArray:self.gatheredMapPoints];
     
-    NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", @"addressed", nil]];
+    NSLog(@"DOWNLOADED POINTS: %d", self.downloadedMapPoints.count);
+    NSLog(@"GATHERED POINTS: %d", self.gatheredMapPoints.count);
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-        //Background Process Block
-        NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
-
-        
-        dispatch_async(dispatch_get_main_queue(),^{
-            //Completion Block
-            NSString *statusCode = [response objectForKey:@"status_code"];
-            if([statusCode integerValue] != 200)
-            {
-                //Request Failed Remove Pin From Map
-                [self.mapView removeAnnotation:self.tempPinRef];
-                
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-                [alert show];
-            }
-            else
-            {
-                NSString *pinID = [response objectForKey:@"pin_id"];
-                if(pinID == nil)
-                {
-                    //Request Failed Remove Pin From Map
-                    [self.mapView removeAnnotation:self.tempPinRef];
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-                    [alert show];
-                }
-                else
-                {
-                    //Worked
-                }
-            }
-            
-            self.tempPinRef = nil;
-        });
-    });
+    //create new heatmap overlay and display it
+    self.heatMap = [[HeatMap alloc] initWithData:[self convertPointsToHeatMapFormat:allPoints]];
+    [self.mapView addOverlay:self.heatMap];
+    //[self.mapView setVisibleMapRect:[self.heatMap boundingMapRect] animated:YES];
 }
+
+#pragma mark - Map Pin Methods
+
 
 -(IBAction)markerWasCanceled:(id)sender
 {
@@ -435,10 +408,8 @@
     [self.mapView removeAnnotation:self.tempPinRef];
     
     //Clear Temp
-    self.tempPinRef = nil;
+    //self.tempPinRef = nil;
 }
-
-#pragma mark - Map Pin Methods
 
 -(void)goToMapPin:(NSNotification *)sender
 {
@@ -460,23 +431,24 @@
     }
     
     //Center The Map
-    [self.mapView setCenterCoordinate:pinToShow.coordinate];
-
+    [self.mapView setRegion:MKCoordinateRegionMake(pinToShow.coordinate, MKCoordinateSpanMake(.015, .15)) animated:FALSE];
+    
     //Add Fade View
     self.fadeView = [[UIView alloc] initWithFrame:self.mapView.frame];
     [self.fadeView setBackgroundColor:[UIColor blackColor]];
     [self.fadeView setAlpha:.8];
     [self.view addSubview:self.fadeView];
-
+    
     //Add Fake Pin Overlay
     CGPoint pinPointInSuperView = [self.mapView convertCoordinate:pinToShow.coordinate toPointToView:self.view];
-    UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashbag.png"]];
-    [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 15, pinPointInSuperView.y - 13, 30, 26)];
+    UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashMarker.png"]];
+    [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 15, pinPointInSuperView.y - 17, 30, 34)];
     [self.fadeView addSubview:fakePin];
-
+    
     //Remove View
-    [self performSelector:@selector(fadeOutFadeView:) withObject:nil afterDelay:2];
+    [self performSelector:@selector(fadeOutFadeView:) withObject:nil afterDelay:1];
 }
+
 
 -(IBAction)fadeOutFadeView:(id)sender
 {
@@ -515,127 +487,23 @@
 
 -(void)updateMapWithPins:(NSMutableArray *)pins
 {
-    NSArray *currentPins = self.mapView.annotations;
-    for(HeatMapPin *pinToCheck in pins)
+    //Add New
+    for(HeatMapPin *pin in pins)
     {
-        BOOL found = FALSE;
-        for(HeatMapPin *mapPin in currentPins)
+        if(!pin.addressed)
         {
-            if([mapPin.pinID isEqualToNumber:pinToCheck.pinID])
-            {
-                found = TRUE;
-                if(pinToCheck.addressed)
-                {
-                    [self.mapView removeAnnotation:pinToCheck];
-                }
-            }
-        }
-        if(!found)
-        {
-            if(!pinToCheck.addressed)
-            {
-                [self.mapView addAnnotation:pinToCheck];
-            }
+            [self.mapView addAnnotation:pin];
         }
     }
 }
 
 -(void)updateHeatMapWithNewPins
 {
-    //Check In Downloaded Pins
+    //Remove Old
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    
+    //Add Downloaded Pins
     [self updateMapWithPins:self.downloadedMapPins];
-    //Check in Gathered Pins
-    [self updateMapWithPins:self.gatheredMapPins];
-    //Remove Pins That Have Been Deleted
-    for(HeatMapPin *currentPin in self.mapView.annotations)
-    {
-        BOOL found = FALSE;
-        for(HeatMapPin *downloadedPin in self.downloadedMapPins)
-        {
-            if([downloadedPin.pinID isEqualToNumber:currentPin.pinID])
-            {
-                found = TRUE;
-            }
-        }
-        for(HeatMapPin *gatheredPin in self.downloadedMapPins)
-        {
-            if([gatheredPin.pinID isEqualToNumber:currentPin.pinID])
-            {
-                found = TRUE;
-            }
-        }
-        if(!found)
-        {
-            [self.mapView removeAnnotation:currentPin];
-        }
-    }
-    
-    
-    
-    
-    NSMutableArray *pinsToMarkAsAddressed = [[NSMutableArray alloc] init];
-    NSMutableArray *pinsToMarkAsNotAddressed = [[NSMutableArray alloc] init];
-    NSArray *currentPins = self.mapView.annotations;
-    
-    //Update Pins I already Have and Add New Pins I Dont
-    for(HeatMapPin *downloadedPin in self.downloadedMapPins)
-    {
-        //Make Upates If Changed
-        if(downloadedPin.addressed)
-        {
-            [pinsToMarkAsAddressed addObject:downloadedPin];
-        }
-        else
-        {
-            [pinsToMarkAsNotAddressed addObject:downloadedPin];
-        }
-        break;
-    }
-    for(HeatMapPin *gatheredPin in self.gatheredMapPins)
-    {
-        //Make Upates If Changed
-        if(gatheredPin.addressed)
-        {
-            [pinsToMarkAsAddressed addObject:gatheredPin];
-        }
-        else
-        {
-            [pinsToMarkAsNotAddressed addObject:gatheredPin];
-        }
-        break;
-    }
-    
-    
-    
-    //Update Addressed Pins
-    for(HeatMapPin *updatedPin in pinsToMarkAsAddressed)
-    {
-        for(HeatMapPin *currentPin in currentPins)
-        {
-            if([currentPin.pinID isEqualToNumber:updatedPin.pinID])
-            {
-                updatedPin.addressed = TRUE;
-                currentPin.addressed = TRUE;
-                [self.mapView removeAnnotation:updatedPin];
-                break;
-            }
-        }
-    }
-    
-    //Update UnAddressed Pins
-    for(HeatMapPin *updatedPin in pinsToMarkAsNotAddressed)
-    {
-        for(HeatMapPin *currentPin in currentPins)
-        {
-            if([currentPin.pinID isEqualToNumber:updatedPin.pinID])
-            {
-                updatedPin.addressed = FALSE;
-                currentPin.addressed = FALSE;
-                [self.mapView addAnnotation:updatedPin];
-                break;
-            }
-        }
-    }    
 }
 -(IBAction)dropMarkerAtCurrentLocation:(id)sender
 {
@@ -704,11 +572,11 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
         //Background Process Block
         
-        NSLog(@"&&&&&&&&&&&&&&&&&&&&&&& MAKING REQUEST!");
         NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
         
         NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:self.mapView.region.center.latitude], [NSNumber numberWithFloat:self.mapView.region.center.longitude], [NSNumber numberWithFloat:self.mapView.region.span.latitudeDelta], [NSNumber numberWithFloat:self.mapView.region.span.longitudeDelta], nil];
         
+         
         NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
 
         NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
@@ -720,6 +588,7 @@
             
             if([statusCode integerValue] == 200)
             {
+                [self.downloadedMapPins removeAllObjects];
                 for(NSDictionary *networkPin in [response objectForKey:@"pins"])
                 {
                     //Add New Pins
@@ -734,71 +603,61 @@
                     newPin.message = [networkPin objectForKey:@"message"];
                     newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
                 
-                    [newDownloadedPins addObject:newPin];
-                    
-                    
-                    
-                    BOOL found = FALSE;
-                    for(HeatMapPin *downloadPin in self.downloadedMapPins)
-                    {
-                        if([downloadPin.pinID isEqualToNumber:newPin.pinID])
-                        {
-                            //Update existing Pins with new addressed status
-                            found = TRUE;
-                            downloadPin.addressed = newPin.addressed;
-                            break;
-                        }
-                    }
-                    
-                    if(!found)
-                    {
-                        //Add new pin to downloadMapPins array
-                        [self.downloadedMapPins addObject:newPin];
-                    }
-                }
-                
-                NSMutableArray *pinsToRemoveFromDownloaded = [[NSMutableArray alloc] init];
-                NSMutableArray *pinsToRemoveFromGathered = [[NSMutableArray alloc] init];
-                for(HeatMapPin *downloadedPin in self.downloadedMapPins)
-                {
-                    BOOL foundInDownloads = FALSE;
-                    for(HeatMapPin *newPin in newDownloadedPins)
-                    {
-                        if([newPin.pinID isEqualToNumber:downloadedPin.pinID])
-                        {
-                            foundInDownloads = TRUE;
-                        }
-                    }
-                    if(!foundInDownloads)
-                    {
-                        [pinsToRemoveFromDownloaded addObject:downloadedPin];
-                    }
-                }
-                for(HeatMapPin *gatheredPin in self.gatheredMapPins)
-                {
-                    BOOL foundInGathered = FALSE;
-                    for(HeatMapPin *newPin in newDownloadedPins)
-                    {
-                        if([newPin.pinID isEqualToNumber:gatheredPin.pinID])
-                        {
-                            foundInGathered = TRUE;
-                        }
-                    }
-                    if(!foundInGathered)
-                    {
-                        [pinsToRemoveFromGathered addObject:gatheredPin];
-                    }
-                }
-                
-                for(HeatMapPin *pin in pinsToRemoveFromDownloaded)
-                {
-                    [self.downloadedMapPins removeObject:pin];
-                }
-                for(HeatMapPin *pin in pinsToRemoveFromGathered)
-                {
-                    [self.gatheredMapPins removeObject:pin];
+                    [self.downloadedMapPins addObject:newPin];
                 }
             }
+        });
+    });
+}
+
+-(IBAction)postMarker:(NSNotification *)sender
+{
+    NSString *message = sender.object;
+    self.tempPinRef.message = message;
+    
+    //Perform Post Code To Update With Server
+    NSMutableArray *objects = [[NSMutableArray alloc] init];
+    [objects addFloat:self.tempPinRef.coordinate.latitude];
+    [objects addFloat:self.tempPinRef.coordinate.longitude];
+    [objects addObject:Message_Type_MARKER];
+    [objects addObject:message];
+    [objects addBool:FALSE];
+    
+    NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", @"addressed", nil]];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+        //Background Process Block
+        NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+        
+        
+        dispatch_async(dispatch_get_main_queue(),^{
+            //Completion Block
+            NSString *statusCode = [response objectForKey:@"status_code"];
+            if([statusCode integerValue] != 200)
+            {
+                //Request Failed Remove Pin From Map
+                [self.mapView removeAnnotation:self.tempPinRef];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+            else
+            {
+                NSString *pinID = [response objectForKey:@"pin_id"];
+                if(pinID == nil)
+                {
+                    //Request Failed Remove Pin From Map
+                    [self.mapView removeAnnotation:self.tempPinRef];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+                    [alert show];
+                }
+                else
+                {
+                    //Worked
+                }
+            }
+            
+            //self.tempPinRef = nil;
         });
     });
 }
@@ -893,6 +752,7 @@
             
             if([statusCode integerValue] == 200)
             {
+                [self.downloadedMapPoints removeAllObjects];
                 for(NSDictionary *pointDictionary in [results objectForKey:@"grid"])
                 {
                     HeatMapPoint *newPoint = [[HeatMapPoint alloc] init];
@@ -904,41 +764,7 @@
                     newPoint.lon = lon;
                     newPoint.secWorked = secWorked;
                     
-                    //Remove Duplicates I've Already Gathered
-                    BOOL found = FALSE;
-                    for(HeatMapPoint *point in self.downloadedMapPoints)
-                    {
-                        /*
-                         NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
-                         NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
-                         NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
-                         */
-                        
-                        if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
-                        {
-                            NSLog(@"************ DUPLICATE FOUND DOWNLOAD");
-                            found = TRUE;
-                        }
-                    }
-                    for(HeatMapPoint *point in self.gatheredMapPoints)
-                    {
-                        /*
-                         NSLog(@"LAT: %f - %f", newPoint.lat, point.lon);
-                         NSLog(@"LON: %f - %f", newPoint.lon, point.lat);
-                         NSLog(@"SEC: %d - %d", newPoint.secWorked, point.secWorked);
-                         */
-                        
-                        if(newPoint.lat == point.lat && newPoint.lon == point.lon && newPoint.secWorked == point.secWorked)
-                        {
-                            NSLog(@"************ DUPLICATE FOUND IN GATHERED");
-                            found = TRUE;
-                        }
-                    }
-                    
-                    if(!found)
-                    {
-                        [self.downloadedMapPoints addObject:newPoint];
-                    }
+                    [self.downloadedMapPoints addObject:newPoint];
                 }
             }
             else
@@ -949,7 +775,7 @@
     });
 }
 
-
+#pragma mark - Utility Methods
 -(IBAction)clearAllPoints:(id)sender
 {
     [self.gatheredMapPoints removeAllObjects];
@@ -957,13 +783,6 @@
     [self.downloadedMapPoints removeAllObjects];
     
     [self updateHeatMapOverlay];
-}
-
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Network Reachability
@@ -980,5 +799,13 @@
         return TRUE;
     }        
 }
+
+#pragma mark - Other Methods
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 
 @end
