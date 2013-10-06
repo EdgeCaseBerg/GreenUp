@@ -13,10 +13,20 @@
   <script src="js/lib/jquery/jquery.js"></script>
   <script src="js/lib/BigNumber.js"></script>
 
+
  <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
   <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
   <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.datepicker.js"> </script>
-  <script src="js/DashApiConnector.js"></script>
+  <script src="js/lib/zepto.js"></script>
+  
+  <script src="js/apiConnector.js"></script>
+  <script src="js/greenUpMap.js"></script>
+  <script src="js/greenUpComments.js"></script>
+  <script src="js/greenUpHelper.js"></script>
+  <script src="js/greenUpUi.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- <script src="js/DashApiConnector.js"></script> -->
   
     
 
@@ -215,40 +225,42 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
           </div>
 
           <div id="streetInputContainer" class="locationTypeInputContainer">
+            <form id="streetInputForm">
             <ul id="streetInputNest" class="markerInputNest">
               <li>
                 <div class="inputLabel">Address 1</div>
                 <div class="inputInput">
-                  <input type="text" name="coords" />
+                  <input type="text" name="streetAddress1" />
                 </div>
               </li>
               <li>
                 <div class="inputLabel">Address 2</div>
                 <div class="inputInput">
-                  <input type="text" name="coords" />
+                  <input type="text" name="streetAddress2" />
                 </div>
               <li>
                 <div class="inputLabel">City</div>
                 <div class="inputInput">
-                  <input type="text" name="coords" />
+                  <input type="text" name="streetAddressCity" />
                 </div>
               <li>
                 <div class="inputLabel">State</div>
                 <div class="inputInput">
-                  <input type="text" name="coords" />
+                  <input type="text" name="streetAddressState" />
                 </div>
               <li>
                 <div class="inputLabel">Zip</div>
                 <div class="inputInput">
-                  <input type="text" name="coords" />
+                  <input type="text" name="streetAddressZip" />
               </div>
             </ul>
           </div>
           <ul>
             <li>Comment</li>
             <li><textarea id="markerTextarea"></textarea></li>
-            <li><input type="button" value="Add Marker" /><input type="button" id="addMarkerCaneclButton" value="Cancel" /></li>
+            <li><input type="button" value="Add Marker" id="addMarkerGoButton"/><input type="button" id="addMarkerCaneclButton" value="Cancel" /></li>
           </ul>
+        </form>
         </div>
       </div>
   </div>
