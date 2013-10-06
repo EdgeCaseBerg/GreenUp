@@ -442,7 +442,8 @@
     //Add Fake Pin Overlay
     CGPoint pinPointInSuperView = [self.mapView convertCoordinate:pinToShow.coordinate toPointToView:self.view];
     UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashMarker.png"]];
-    [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 15, pinPointInSuperView.y - 17, 30, 34)];
+    [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 15, pinPointInSuperView.y - 34, 30, 34)];
+
     [self.fadeView addSubview:fakePin];
     
     //Remove View
