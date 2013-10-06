@@ -255,9 +255,7 @@ function ApiConnector(){
 		baseGeocodeUrl += lat + ",";
 		baseGeocodeUrl += lng;
 		baseGeocodeUrl += "&sensor=false";
-
 		// URL, DATATYPE, QUERYTYPE, CALLBACK
-
 		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.UI.updateMarkerAddStreetAddr);
 
 	}

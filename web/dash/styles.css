@@ -705,6 +705,7 @@ input[type=checkbox] {
     position: absolute;
     top: 70px;
     height: 100%;
+    min-height: 620px;
     width: 100%;
     z-index: 700;
     background: #111;
