@@ -10,9 +10,9 @@ if [ -z $1 ]
 
 echo "working..."
 result=$(
-for z in {1..9}
+for z in `seq 1 9`
 	do
-		for i in {1..9}
+		for i in `seq 1 9`
 			do
 				# echo "123"$i"456\n"
 				curl -d '[
@@ -25,7 +25,7 @@ for z in {1..9}
 				]' $HMURL 2>&1
 			done
 
-		for i in {1..9}
+		for i in `seq 1 9`
 			do
 				# echo "123"$i"456\n"
 				curl -d '[
@@ -38,7 +38,7 @@ for z in {1..9}
 				]' $HMURL 2>&1
 			done
 
-			for i in {1..9}
+			for i in `seq 1 9`
 			do
 				# echo "123"$i"456\n"
 				curl -d '[
@@ -54,18 +54,19 @@ for z in {1..9}
 )
 
 
-if [[ "$result" == *"rror"* ]]; 
+if [ "$result" == *"rror"* ]; 
 	then
 	echo "your request produced an error"
-elif [[ "$result" == *"404"* ]];
+elif [ "$result" == *"404"* ];
 	then
 	echo "404"
-elif [[ "$result" == *"couldn"* ]];
+elif [ "$result" == *"couldn"* ];
 	then
 	echo "couldn't connect to host"
-elif [[ "$result" == *"uccess"* ]];
+elif [ "$result" == *"uccess"* ];
 	then
 	echo "Success"
 else
 	echo "Undetermined Error"
+	echo "$result"
 fi
