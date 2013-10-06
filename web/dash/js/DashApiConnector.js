@@ -1341,8 +1341,10 @@ function handleProfiles(results) {
       var firstProfileId = results.items[0].id;
 
       var HELPER = new Helper();
-  	var endDate = HELPER.getGoogleFormattedDate(new Date());
-  var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 3, 3, 3, 4, 567));
+  	// var endDate = HELPER.getGoogleFormattedDate(new Date());
+  	var endDate = "2013-09-01";
+  // var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 3, 3, 3, 4, 567));
+  var startDate = "2013-05-01";
 
       // Step 3. Query the Core Reporting API
       queryCoreReportingApi(firstProfileId, startDate, endDate);
