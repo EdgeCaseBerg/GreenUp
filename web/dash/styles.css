@@ -148,6 +148,7 @@ ul{
 
 #extendedAnalyticsDialog{
     border-bottom: solid 1px #444;
+    text-align: left;
     min-height:220px;
     position: absolute;
     top: -250px;
@@ -163,6 +164,66 @@ ul{
     -ms-transition: all .5s ease;
     transition: all .5s ease;
 }
+
+.row2AnalyticsColumn{
+    /*border: solid 1px green;*/
+    margin: auto;
+}
+
+.row2AnalyticsColumn:last-child{
+    padding-left: 50px;
+}
+
+/*.row2AnalyticsColumn:first-child{
+    padding-right: 5%;
+}*/
+
+
+#acresWorked{
+    vertical-align: top;
+    padding: 5px 0px 5px 0px;
+    font-weight: bold;
+    font-size: 3.7em;
+    background: #333;
+    color: #eee;
+    /*border: solid 1px red;*/
+    /*background: url("images/radar_gray.jpg");*/
+    background-size: 200px 200px;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px; 
+}
+
+.timeComponentNest{
+    /*border:solid 1px red;*/
+    display:inline-block;
+    text-align: center;
+    padding: 0px;
+    margin:0px 3px 0px 0px;
+}
+
+.timeComponent{
+    -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+    background: #333;
+    color: #eee;
+    padding: 0px 5px 0px 5px;
+    font-size: 3.7em;
+    font-weight: bold;
+    text-align: center;
+    border:solid 2px black;
+}
+
+.timeComponentLabel{
+    /*border:solid 1px green;*/
+    font-size: 1.7em;
+    font-weight: bold;
+    text-align: center;
+}
+
 
 .datePicker{
     position: relative;
@@ -213,12 +274,12 @@ ul{
 }
 
 .nestedAnalyticsColumn:last-child{
-    border:0px;
+    border-right:0px;
 }
 
 
 
-.nestedAnalyticsColumn div{
+.row1AnalyticsColumn div{
     text-align: left;
     padding: 0px 0px 0px 5px;
 }

@@ -11,6 +11,7 @@
     <!-- <script src="//code.jquery.com/jquery.js"></script> -->
   <!--<script src="js/analytics_auth.js"></script> -->
   <script src="js/lib/jquery/jquery.js"></script>
+  <script src="js/lib/BigNumber.js"></script>
 
  <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
   <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
@@ -127,41 +128,52 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
       </div>
 
       <div id="extendedAnalyticsDialog">
-              <div class="analyticsColumnContainer">
+        <div class="analyticsColumnContainer">
           
-          <div class="nestedAnalyticsColumn">
-            <div class="analyticsHeader">
-              Time Worked
+          <div class="nestedAnalyticsColumn row2AnalyticsColumn">
+            <div class="analyticsHeader extendedAnalyticsHeader">
+              Total Time Worked
             </div>
             <div class="analyticsData">
-              <ul>
-                <li>Days: <span id="totalDaysWorked"></span></li>
-                <li>Hours: <span id="totalHoursWorked"></span></li>
-                <li>Minutes: <span id="totalMinutesWorked"></span></li>
-                <li>Seconds: <span id="totalSecondsWorked"></span></li>
-              </ul>
+              <div class="timeComponentNest">
+                <!-- <div class="timeComponent" id="totalDaysWorked"></div> -->
+                <div class="timeComponent">100</div>
+                <div class="timeComponentLabel">DAYS</div>
+              </div>
+
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalHoursWorked">00</div>
+                <div class="timeComponentLabel">
+                  HRS
+                </div>
+              </div>
+
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalMinutesWorked">00</div>
+                <div class="timeComponentLabel">
+                  MINS
+                </div>
+              </div>
+
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalSecondsWorked">00</div>
+                <div class="timeComponentLabel">
+                  SECS
+                </div>
+              </div>
+
             </div>
           </div>
 
-          <div class="nestedAnalyticsColumn">
-            <div class="analyticsHeader">
-              Ground Covered
-            </div>
-            <div class="analyticsData">
-              <div class="analyticsDataNestColumn usageDataNestColumn">
-                <ul>
-                  <li>Acres: <span id="acresWorked"></span></li>
-                </ul>
-              </div>
-            </div>
-          </div>
           
-          <div class="nestedAnalyticsColumn">
-            <div class="analyticsHeader">
-              XXXXXX
+          <div class="nestedAnalyticsColumn row2AnalyticsColumn">
+            <div class="analyticsHeader extendedAnalyticsHeader">
+              Total Acres Cleaned
             </div>
             <div class="analyticsData">
-              
+     
+                    <div id="acresWorked"></div>
+   
             </div>
           </div>
         </div>
@@ -171,7 +183,7 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
       <div id="analyticsDialog">
         <div class="analyticsColumnContainer">
           
-          <div class="nestedAnalyticsColumn">
+          <div class="nestedAnalyticsColumn row1AnalyticsColumn">
             <div class="analyticsHeader">
               Analytics Sample Period
             </div>
@@ -184,7 +196,7 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
             </div>
           </div>
 
-          <div class="nestedAnalyticsColumn">
+          <div class="nestedAnalyticsColumn row1AnalyticsColumn">
             <div class="analyticsHeader">
               User Device Breakdown
             </div>
@@ -200,7 +212,7 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
             </div>
           </div>
           
-          <div class="nestedAnalyticsColumn">
+          <div class="nestedAnalyticsColumn row1AnalyticsColumn">
             <div class="analyticsHeader">
               Users Per Day
             </div>
