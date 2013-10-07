@@ -46,6 +46,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 	private Heatmap heatmap;
 	private PinList pins;
 	private ArrayList<Marker> markers;
+	private Marker newMarker; //reference to the most recently added marker
 	private boolean submitPinMode;
 	
 	//Have Montpelier be the default center point for the map
@@ -68,6 +69,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         submitButton = (Button)inflatedView.findViewById(R.id.pin_submit_button);
         clearButton = (Button)inflatedView.findViewById(R.id.pin_clear_button);
         messageEntry = (EditText)inflatedView.findViewById(R.id.edit_message_text);
+        pinLayout.setVisibility(View.INVISIBLE);
         submitButton.setOnClickListener(this);
         clearButton.setOnClickListener(this);
         
@@ -149,16 +151,17 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
     }
 
 	@Override
-	public void onMapLongClick(LatLng coords) {	
+	public void onMapLongClick(LatLng coords) {
+		if (!submitPinMode) {
+			addMarker(coords,"","");
+			newMarker.setDraggable(true);
+			pinLayout.setVisibility(View.VISIBLE);
+			submitPinMode = true;
+		}
 	}
 	
 	@Override
 	public void onClick(View view) {
-		submitPinMode = !submitPinMode;
-		if (submitPinMode)
-			pinLayout.setVisibility(View.VISIBLE);
-		else
-			pinLayout.setVisibility(View.INVISIBLE);
 	}
 	
     private void drawPins() {
@@ -178,8 +181,8 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
     	MarkerOptions options;
    		options = new MarkerOptions();
 		options.position(coords);
-		options.snippet(title);
-		options.title(message);
+		options.snippet(message);
+		options.title(title);
 		if(title.equalsIgnoreCase("GENERAL MESSAGE"))
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 		else if(title.equalsIgnoreCase("HELP NEEDED"))
@@ -187,8 +190,9 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 		else if(title.equalsIgnoreCase("TRASH PICKUP"))
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
 		else
-			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 		newMarker = map.addMarker(options);
+		this.newMarker = newMarker;
 		this.markers.add(newMarker);    	
     }
 }
