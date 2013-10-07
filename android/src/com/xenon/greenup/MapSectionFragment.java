@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -29,15 +33,20 @@ import com.xenon.greenup.api.Heatmap;
 import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
 
-public class MapSectionFragment extends Fragment implements OnMapLongClickListener {
+public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener {
 	
 	private MapView mMapView;
+	private Button submitButton,clearButton;
+	private EditText messageEntry;
+	private RelativeLayout pinLayout;
+	private Spinner typeSelect;
 	private GoogleMap map;
 	private Bundle bundle;
 	private LocationManager mLocationManager;
 	private Heatmap heatmap;
 	private PinList pins;
 	private ArrayList<Marker> markers;
+	private boolean submitPinMode;
 	
 	//Have Montpelier be the default center point for the map
 	private final double DEFAULT_LAT = 44.260059;
@@ -53,12 +62,21 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
+        
+        //Get references to the pin configuration controls and set listeners
+        pinLayout = (RelativeLayout)inflatedView.findViewById(R.id.add_pins_layout);
+        submitButton = (Button)inflatedView.findViewById(R.id.pin_submit_button);
+        clearButton = (Button)inflatedView.findViewById(R.id.pin_clear_button);
+        messageEntry = (EditText)inflatedView.findViewById(R.id.edit_message_text);
+        submitButton.setOnClickListener(this);
+        clearButton.setOnClickListener(this);
+        
         //Populate the spinner with choices
-        Spinner spinner  = (Spinner)inflatedView.findViewById(R.id.pin_type_selection);
+        typeSelect = (Spinner)inflatedView.findViewById(R.id.pin_type_selection);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.pin_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);     
+        typeSelect.setAdapter(adapter);     
         
         //get a reference to the map and the location service and set the listener for the map
         mMapView = (MapView)inflatedView.findViewById(R.id.map);
@@ -132,6 +150,15 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 
 	@Override
 	public void onMapLongClick(LatLng coords) {	
+	}
+	
+	@Override
+	public void onClick(View view) {
+		submitPinMode = !submitPinMode;
+		if (submitPinMode)
+			pinLayout.setVisibility(View.VISIBLE);
+		else
+			pinLayout.setVisibility(View.INVISIBLE);
 	}
 	
     private void drawPins() {
