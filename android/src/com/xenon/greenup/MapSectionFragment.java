@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +35,7 @@ import com.xenon.greenup.api.Heatmap;
 import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
 
-public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener {
+public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener,OnItemSelectedListener {
 	
 	private MapView mMapView;
 	private Button submitButton,clearButton;
@@ -44,10 +46,11 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 	private Bundle bundle;
 	private LocationManager mLocationManager;
 	private Heatmap heatmap;
-	private PinList pins;
-	private ArrayList<Marker> markers;
+	private PinList pins; //list of pins from the server, pins only added once they're submitted
+	private ArrayList<Marker> markers; //references to the map markers representing pins
 	private Marker newMarker; //reference to the most recently added marker
-	private boolean submitPinMode;
+	private boolean submitPinMode; //controls whether the additional buttons and stuff are displayed
+	private String currentType = "General Message"; //the type that is currently selected in the spinner
 	
 	//Have Montpelier be the default center point for the map
 	private final double DEFAULT_LAT = 44.260059;
@@ -68,10 +71,12 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         pinLayout = (RelativeLayout)inflatedView.findViewById(R.id.add_pins_layout);
         submitButton = (Button)inflatedView.findViewById(R.id.pin_submit_button);
         clearButton = (Button)inflatedView.findViewById(R.id.pin_clear_button);
+        typeSelect = (Spinner)inflatedView.findViewById(R.id.pin_type_selection);
         messageEntry = (EditText)inflatedView.findViewById(R.id.edit_message_text);
         pinLayout.setVisibility(View.INVISIBLE);
         submitButton.setOnClickListener(this);
         clearButton.setOnClickListener(this);
+        typeSelect.setOnItemSelectedListener(this);
         
         //Populate the spinner with choices
         typeSelect = (Spinner)inflatedView.findViewById(R.id.pin_type_selection);
@@ -154,7 +159,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 	public void onMapLongClick(LatLng coords) {
 		if (!submitPinMode) {
 			addMarker(coords,"","");
-			newMarker.setDraggable(true);
+			this.newMarker.setDraggable(true);
 			pinLayout.setVisibility(View.VISIBLE);
 			submitPinMode = true;
 		}
@@ -162,7 +167,32 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 	
 	@Override
 	public void onClick(View view) {
+		if (view == submitButton) {
+			double lat,lon;
+			lat = newMarker.getPosition().latitude;
+			lon = newMarker.getPosition().longitude;
+			String message = messageEntry.getText().toString();
+			APIServerInterface.submitPin(lat,lon,this.currentType, message);
+		}
+		else { //reset everything
+			messageEntry.setText("");
+			this.currentType = "General Message";
+			
+		}
+		pinLayout.setVisibility(View.INVISIBLE);
+		submitPinMode = false;
 	}
+	
+	@Override
+    public void onItemSelected(AdapterView<?> parent, View view, 
+            int pos, long id) {
+    	this.currentType = parent.getItemAtPosition(pos).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
+
 	
     private void drawPins() {
     	ArrayList<Pin> pins = this.pins.getPinList();
