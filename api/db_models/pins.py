@@ -1,5 +1,5 @@
 from google.appengine.ext import db
-from constants import *
+from ..constants import *
 from greenup import * 
 
 class Pins(Greenup):

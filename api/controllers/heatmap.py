@@ -5,8 +5,8 @@ import webapp2
 import json
 
 import api
-from constants import *
-from  datastore import *
+from ..constants import *
+from ..datastore import *
 
 import logging
 
