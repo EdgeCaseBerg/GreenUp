@@ -26,7 +26,7 @@ public class Pin {
 		}
 	}
 	
-	public Pin(float latDegrees, float lonDegrees, String type, String message) {
+	public Pin(double latDegrees, double lonDegrees, String type, String message) {
 		this.latDegrees = latDegrees;
 		this.lonDegrees = lonDegrees;
 		this.type = type;

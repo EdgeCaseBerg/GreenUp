@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 public final class APIServerInterface {
 		
@@ -92,11 +93,11 @@ public final class APIServerInterface {
 	}
 	
 	//Submit a pin (POST)
-	public static void submitPin(float latDegrees, float lonDegrees, String type, String message){
+	public static void submitPin(double latDegrees, double lonDegrees, String type, String message){
 		Pin pin = new Pin(latDegrees,lonDegrees,type,message);
 		String data = pin.toJSON().toString();
 		String url = new StringBuilder(BASE_URL + "/pins").toString();
-		sendRequestWithData(url,"PUT",data);		
+		sendRequestWithData(url,"POST",data);		
 	}
 	
 	public static int testConnection(){
@@ -115,7 +116,7 @@ public final class APIServerInterface {
 			e.printStackTrace();
 			response = "Error, see stack trace";
 		}
-		//Log.i("response",response);
+		Log.i("response",response);
 	}
 	
 	private static String sendRequest(String url) {

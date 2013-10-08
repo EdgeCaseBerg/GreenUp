@@ -9,12 +9,21 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -26,15 +35,22 @@ import com.xenon.greenup.api.Heatmap;
 import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
 
-public class MapSectionFragment extends Fragment {
+public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener,OnItemSelectedListener {
 	
 	private MapView mMapView;
+	private Button submitButton,clearButton;
+	private EditText messageEntry;
+	private RelativeLayout pinLayout;
+	private Spinner typeSelect;
 	private GoogleMap map;
 	private Bundle bundle;
 	private LocationManager mLocationManager;
 	private Heatmap heatmap;
-	private PinList pins;
-	private ArrayList<Marker> markers;
+	private PinList pins; //list of pins from the server, pins only added once they're submitted
+	private ArrayList<Marker> markers; //references to the map markers representing pins
+	private Marker newMarker; //reference to the most recently added marker
+	private boolean submitPinMode; //controls whether the additional buttons and stuff are displayed
+	private String currentType = "General Message"; //the type that is currently selected in the spinner
 	
 	//Have Montpelier be the default center point for the map
 	private final double DEFAULT_LAT = 44.260059;
@@ -45,16 +61,35 @@ public class MapSectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, 
         Bundle savedInstanceState) {
         View inflatedView = inflater.inflate(R.layout.map_page, container, false);
-
         try {
             MapsInitializer.initialize(getActivity());
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
-
+        
+        //Get references to the pin configuration controls and set listeners
+        pinLayout = (RelativeLayout)inflatedView.findViewById(R.id.add_pins_layout);
+        submitButton = (Button)inflatedView.findViewById(R.id.pin_submit_button);
+        clearButton = (Button)inflatedView.findViewById(R.id.pin_clear_button);
+        typeSelect = (Spinner)inflatedView.findViewById(R.id.pin_type_selection);
+        messageEntry = (EditText)inflatedView.findViewById(R.id.edit_message_text);
+        pinLayout.setVisibility(View.INVISIBLE);
+        submitButton.setOnClickListener(this);
+        clearButton.setOnClickListener(this);
+        typeSelect.setOnItemSelectedListener(this);
+        
+        //Populate the spinner with choices
+        typeSelect = (Spinner)inflatedView.findViewById(R.id.pin_type_selection);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.pin_types, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeSelect.setAdapter(adapter);     
+        
+        //get a reference to the map and the location service and set the listener for the map
         mMapView = (MapView)inflatedView.findViewById(R.id.map);
         mMapView.onCreate(bundle);
         map = mMapView.getMap();
+        map.setOnMapLongClickListener(this);
         mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         
         //center the camera, use the default coordinates and zoom for now
@@ -119,31 +154,83 @@ public class MapSectionFragment extends Fragment {
 			drawPins();
 		}
     }
-    
+
+	@Override
+	public void onMapLongClick(LatLng coords) {
+		if (!submitPinMode) {
+			addMarker(coords,"","");
+			this.newMarker.setDraggable(true);
+			pinLayout.setVisibility(View.VISIBLE);
+			submitPinMode = true;
+		}
+	}
+	
+	@Override
+	public void onClick(View view) {
+		if (view == submitButton) {
+			double lat,lon;
+			lat = newMarker.getPosition().latitude;
+			lon = newMarker.getPosition().longitude;
+			String message = messageEntry.getText().toString();
+			APIServerInterface.submitPin(lat,lon,this.currentType, message);
+			newMarker.setDraggable(false);
+		}
+		else { //reset everything
+			messageEntry.setText("");
+			this.currentType = "General Message";
+			removeMarker(this.markers.size() - 1);
+		}
+		pinLayout.setVisibility(View.INVISIBLE);
+		submitPinMode = false;
+	}
+	
+	@Override
+    public void onItemSelected(AdapterView<?> parent, View view, 
+            int pos, long id) {
+    	this.currentType = parent.getItemAtPosition(pos).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+	
     private void drawPins() {
-    	Marker newMarker;
-    	LatLng coords;
-    	MarkerOptions options;
-    	String pinType,pinMessage;
     	ArrayList<Pin> pins = this.pins.getPinList();
+    	Pin pin;
+    	LatLng coords;
     	for(int i = 0; i < pins.size(); i++) {
-    		coords = new LatLng(pins.get(i).getLatDegrees(),pins.get(i).getLonDegrees());
-    		pinType = pins.get(i).getType();
-    		pinMessage = pins.get(i).getMessage();
-    		options = new MarkerOptions();
-    		options.position(coords);
-    		options.snippet(pinMessage);
-    		options.title(pinType);
-    		if(pinType.equalsIgnoreCase("GENERAL MESSAGE"))
-    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-    		else if(pinType.equalsIgnoreCase("HELP NEEDED"))
-    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-    		else if(pinType.equalsIgnoreCase("TRASH PICKUP"))
-    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-    		else
-    			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-    		newMarker = map.addMarker(options);
-    		markers.add(newMarker);    	
+    		pin = pins.get(i);
+    		coords = new LatLng(pin.getLatDegrees(),pin.getLonDegrees());
+    		addMarker(coords,pin.getType(),pin.getMessage());
     	}
+    }
+    
+    //Draws a marker, given the coordinates in a LatLng object, plus the title and message to use
+    private void addMarker(LatLng coords,String title,String message) {
+    	Marker newMarker;
+    	MarkerOptions options;
+   		options = new MarkerOptions();
+		options.position(coords);
+		options.snippet(message);
+		options.title(title);
+		if(title.equalsIgnoreCase("GENERAL MESSAGE"))
+			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+		else if(title.equalsIgnoreCase("HELP NEEDED"))
+			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+		else if(title.equalsIgnoreCase("TRASH PICKUP"))
+			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+		else
+			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+		newMarker = map.addMarker(options);
+		this.newMarker = newMarker;
+		this.markers.add(newMarker);    	
+    }
+    
+    //removes a marker and all references to it
+    private void removeMarker(int i) {
+    	this.markers.get(i).remove();
+    	this.markers.remove(i);
+    	this.newMarker = null;
     }
 }
