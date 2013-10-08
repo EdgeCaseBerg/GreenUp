@@ -21,6 +21,24 @@ class Pins(webapp2.RequestHandler):
 		lonDegrees = self.request.get("lonDegrees")
 		latOffset = self.request.get("latOffset")
 		lonOffset = self.request.get("lonOffset")
+		pinId = self.request.get("id")
+
+		if pinId is not None and pinId is not "":
+			pinToReturn = AbstractionLayer().getSinglePin(pinId)
+			if pinToReturn is not None:
+				pin = {  'id' : pinToReturn.key().id(),
+							'latDegrees' : pinToReturn.lat,
+							'lonDegrees' : pinToReturn.lon,
+							'type'		 : pinToReturn.pinType,
+							'message'	 : pinToReturn.message,
+							'addressed'  : pinToReturn.addressed }
+				self.response.set_status(HTTP_OK)
+				self.response.write(json.dumps({'status_code' : HTTP_OK, 'pin' : pin}))
+				return
+			else:
+				self.response.set_status(HTTP_NOT_FOUND)
+				self.response.write(ERROR_STR % (HTTP_NOT_FOUND, "Could not find pin requested"))
+				return
 		
 		if latDegrees == "":
 			latDegrees = None
