@@ -173,11 +173,12 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 			lon = newMarker.getPosition().longitude;
 			String message = messageEntry.getText().toString();
 			APIServerInterface.submitPin(lat,lon,this.currentType, message);
+			newMarker.setDraggable(false);
 		}
 		else { //reset everything
 			messageEntry.setText("");
 			this.currentType = "General Message";
-			
+			removeMarker(this.markers.size() - 1);
 		}
 		pinLayout.setVisibility(View.INVISIBLE);
 		submitPinMode = false;
@@ -224,5 +225,12 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 		newMarker = map.addMarker(options);
 		this.newMarker = newMarker;
 		this.markers.add(newMarker);    	
+    }
+    
+    //removes a marker and all references to it
+    private void removeMarker(int i) {
+    	this.markers.get(i).remove();
+    	this.markers.remove(i);
+    	this.newMarker = null;
     }
 }
