@@ -11,19 +11,31 @@
     <!-- <script src="//code.jquery.com/jquery.js"></script> -->
   <!--<script src="js/analytics_auth.js"></script> -->
   <script src="js/lib/jquery/jquery.js"></script>
+  <script src="js/lib/BigNumber.js"></script>
+
 
  <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
   <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
   <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.datepicker.js"> </script>
-  <script src="js/DashApiConnector.js"></script>
+  <script src="js/lib/zepto.js"></script>
+  
+  <script src="js/apiConnector.js"></script>
+  <script src="js/greenUpMap.js"></script>
+  <script src="js/greenUpComments.js"></script>
+  <script src="js/greenUpHelper.js"></script>
+  <script src="js/greenUpUi.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- <script src="js/DashApiConnector.js"></script> -->
   
     
 
   <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
 
+
     
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- Include all compiled plugins (below), or include individual files as needed
   <script src="bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
 
     <!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
@@ -75,95 +87,53 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
     </div>
     <div id="markerTypeDialog" class="markerTypeSelectDialog">
 
-      <div id="addMarkerDialog">
-
-        <div class="markerTypeNestColumn">
-          <!-- <div class="markerTypeNestColumnNest"> -->
-            <div class="btn-group locationType">
-              <a class="btn dropdown-toggle locationTypeBtn" data-toggle="dropdown" href="#">
-                Location Type <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu locationTypeMenu">
-                <li class="locationTypeMenuItem" id="latLonSelect"> Latitude / Longitude </li>
-                <li class="locationTypeMenuItem" id="streetSelect"> Street Address </li>
-              </ul>
-            </div>
-            <div id="coordsInputContainer" class="locationTypeInputContainer">
-              <ul id="coordsInputNest" class="markerInputNest">
-                <li>Lat<input type="text" name="coords" id="markerLat" /></li>
-                <li>Lon<input type="text" name="coords" id="markerLon" /></li>
-              </ul>
-            </div>
-
-            <div id="streetInputContainer" class="locationTypeInputContainer">
-              <ul id="streetInputNest" class="markerInputNest">
-                <li>Address 1<input type="text" name="coords" id="markerLat" /></li>
-                <li>Address 2<input type="text" name="coords" id="markerLon" /></li>
-                <li>City<input type="text" name="coords" id="markerLat" /></li>
-                <li>State<input type="text" name="coords" id="markerLon" /></li>
-                <li>Zip<input type="text" name="coords" id="markerLat" /></li>
-              </ul>
-            </div>
-          <!-- </div> -->
-        </div>
-
-
-        <div class="markerTextareaNest markerTypeNestColumn">
-          <div class="markerTypeNestColumnNest">
-            <div class="markerTypeInputLabel">
-              Comment
-            </div>
-            <textarea id="markerTextarea"></textarea>
-          </div>
-        </div>
-        
-      
-        <div class="markerTypeNestColumn">
-          <div class="markerTypeNestColumnNest">
-            <div class="markerTypeInputLabel">Icon</div>
-          </div>
-        </div>
-
-      </div>
-
       <div id="extendedAnalyticsDialog">
-              <div class="analyticsColumnContainer">
+        <div class="analyticsColumnContainer">
           
-          <div class="nestedAnalyticsColumn">
-            <div class="analyticsHeader">
-              XXXXXXX
+          <div class="nestedAnalyticsColumn row2AnalyticsColumn">
+            <div class="analyticsHeader extendedAnalyticsHeader">
+              Total Time Worked
             </div>
             <div class="analyticsData">
-              <ul>
-                <li>Start Date:&nbsp;<input type="text" class="datePicker" id="startDateInput"/></li>
-                <li> End Date: &nbsp;&nbsp;<input type="text" class="datePicker" id="endDateInput"/></li>
-                <li><input type="button" value="update" id="updateAnalyticsButton" /></li>
-              </ul>
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalDaysWorked"></div>
+                <!-- <div class="timeComponent">100</div> -->
+                <div class="timeComponentLabel">DAYS</div>
+              </div>
+
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalHoursWorked">00</div>
+                <div class="timeComponentLabel">
+                  HRS
+                </div>
+              </div>
+
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalMinutesWorked">00</div>
+                <div class="timeComponentLabel">
+                  MINS
+                </div>
+              </div>
+
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalSecondsWorked">00</div>
+                <div class="timeComponentLabel">
+                  SECS
+                </div>
+              </div>
+
             </div>
           </div>
 
-          <div class="nestedAnalyticsColumn">
-            <div class="analyticsHeader">
-              XXXXXXXX
-            </div>
-            <div class="analyticsData">
-              <div class="analyticsDataNestColumn usageDataNestColumn">
-                <ul>
-                  <li>iPhone  <span class="analyticsDataPoint" id="pctIphone"></span></li>
-                  <li>Android <span class="analyticsDataPoint" id="pctAndroid"></span></li>
-                  <li>Web <span class="analyticsDataPoint" id="pctOther"></span></li>
-                </ul>
-              </div>
-              <div class="analyticsDataNestColumn usageDataNestColumn usageDataChart" id="usageDataPieChart"></div>
-            </div>
-          </div>
           
-          <div class="nestedAnalyticsColumn">
-            <div class="analyticsHeader">
-              XXXXXX
+          <div class="nestedAnalyticsColumn row2AnalyticsColumn">
+            <div class="analyticsHeader extendedAnalyticsHeader">
+              Total Acres Cleaned
             </div>
             <div class="analyticsData">
-              <div class="usageDataChart" id="usageDataLineChart"></div>
+     
+                    <div id="acresWorked"></div>
+   
             </div>
           </div>
         </div>
@@ -173,7 +143,7 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
       <div id="analyticsDialog">
         <div class="analyticsColumnContainer">
           
-          <div class="nestedAnalyticsColumn">
+          <div class="nestedAnalyticsColumn row1AnalyticsColumn">
             <div class="analyticsHeader">
               Analytics Sample Period
             </div>
@@ -186,7 +156,7 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
             </div>
           </div>
 
-          <div class="nestedAnalyticsColumn">
+          <div class="nestedAnalyticsColumn row1AnalyticsColumn">
             <div class="analyticsHeader">
               User Device Breakdown
             </div>
@@ -202,7 +172,7 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
             </div>
           </div>
           
-          <div class="nestedAnalyticsColumn">
+          <div class="nestedAnalyticsColumn row1AnalyticsColumn">
             <div class="analyticsHeader">
               Users Per Day
             </div>
@@ -223,8 +193,82 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
     </div>
   </div>
 
+  <div id="addMarkerDashContainer">
+      <div id="addMarkerDashNest">
+        <div id="addMarkerDashHeader">
+          <img src="images/icons/new_trash1.png" />
+          Add a marker to the map
+        </div>
+        <div id="addMarkerDashContent">
+          <ul>
+            <li class="inputLocationTypeLi">
+              <input type="radio" name="group" class="locationTypeMenuItem" id="latLonSelect" checked>&nbsp;&nbsp;&nbsp;Latitude / Longitude
+            </li>
+            <li class="inputLocationTypeLi">
+              <input type="radio" name="group" class="locationTypeMenuItem" id="streetSelect">&nbsp;&nbsp;&nbsp;Street Address
+            </li>
+          </ul>
+            
+          <div id="coordsInputContainer" class="locationTypeInputContainer">
+            <ul id="coordsInputNest" class="markerInputNest">
+              <li>
+                <div class="inputLabel">Latitude</div>
+                <div class="inputInput">
+                  <input type="text" name="coords" id="markerLat" />
+                </div>
+              <li>
+                <div class="inputLabel">Longitude</div>
+                <div class="inputInput">
+                  <input type="text" name="coords" id="markerLng" />
+              </div>
+            </ul>
+          </div>
+
+          <div id="streetInputContainer" class="locationTypeInputContainer">
+            <form id="streetInputForm">
+            <ul id="streetInputNest" class="markerInputNest">
+              <li>
+                <div class="inputLabel">Address 1</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddress1" />
+                </div>
+              </li>
+              <li>
+                <div class="inputLabel">Address 2</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddress2" />
+                </div>
+              <li>
+                <div class="inputLabel">City</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddressCity" />
+                </div>
+              <li>
+                <div class="inputLabel">State</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddressState" />
+                </div>
+              <li>
+                <div class="inputLabel">Zip</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddressZip" />
+              </div>
+            </ul>
+          </div>
+          <ul>
+            <li>Comment</li>
+            <li><textarea id="markerTextarea"></textarea></li>
+            <li><input type="button" value="Add Marker" id="addMarkerGoButton"/><input type="button" id="addMarkerCaneclButton" value="Cancel" /></li>
+          </ul>
+        </form>
+        </div>
+      </div>
+  </div>
+
   <div id="loginContainer">
   </div>
+
+
 </body>
 
 

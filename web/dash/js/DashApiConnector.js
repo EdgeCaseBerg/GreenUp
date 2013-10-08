@@ -120,6 +120,8 @@ function ApiConnector(){
 
 	}
 
+	
+
 
 	// ********** specific data pullers *************
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
@@ -149,6 +151,19 @@ function ApiConnector(){
 		var URL = BASE+heatmapURI+params;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
 
+	}
+
+	// ********** specific data pullers *************
+	ApiConnector.prototype.pullRawHeatmapData = function pullRawHeatmapData(){
+		/*
+			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
+			but there is an implicit cast against undefined defined for double equals in javascript
+		*/
+		var heatmapURI = "/heatmap";
+		var params = "?raw=true";
+		console.log("Preparing to pull RAW heatmap data");
+		var URL = BASE+heatmapURI+params;
+		this.pullApiData(URL, "JSON", "GET", window.UI.updateRawHeatmapData);
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
@@ -233,6 +248,16 @@ function ApiConnector(){
 		this.pullCommentData("", null);
 		this.pullHeatmapData();
 		this.pullMarkerData();
+	}
+
+	ApiConnector.prototype.getStreetFromLatLng = function getStreetFromLatLng(lat, lng, callback){
+		var baseGeocodeUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=";
+		baseGeocodeUrl += lat + ",";
+		baseGeocodeUrl += lng;
+		baseGeocodeUrl += "&sensor=false";
+		// URL, DATATYPE, QUERYTYPE, CALLBACK
+		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.UI.updateMarkerAddStreetAddr);
+
 	}
 
 	//Uploads all local database entries to the Server
@@ -321,8 +346,8 @@ function MapHandle(){
 		window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 		// get our bounds and set our map as loaded
 		google.maps.event.addListener(window.MAP.map, 'idle', function(ev){
-		  	window.UI.setMapLoaded
-		  	window.MAP.updateBounds();
+		window.UI.setMapLoaded
+		window.MAP.updateBounds();
 
 		  	// google.load("visualization", "1", {packages:["corechart"]});
       		// google.setOnLoadCallback(function(){
@@ -634,6 +659,8 @@ function UiHandle(){
 	this.isMarkerVisible = true;
 	this.isMapLoaded = false;
 
+	this.isAddMarkerDialogVisible = false
+
 	this.scrollPosition = 0;
 
 	this.isNavbarUp = true;
@@ -659,6 +686,10 @@ function UiHandle(){
 	this.commentsPrevPageUrl = "";
 
     UiHandle.prototype.init = function init(){
+
+    	$('#addMarkerCaneclButton').click(function(){
+    		window.UI.toggleAddMarkerOptions();
+    	});
 
     	$(".navLink").click(function(){
     		$('.navLi').removeClass("active");
@@ -875,42 +906,55 @@ function UiHandle(){
 		// (bug) here we need to prevent more map touches
 	}
 
-	// show the marker type select dialog
-	UiHandle.prototype.mapTouchUp = function mapTouchUp(){
-		// set the coords of the marker event
-	    MOUSEUP_TIME = new Date().getTime() / 1000;
-	    // if it was a short touch
-	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
-	    	// check if the marker select menu is showing and toggle appropriately
-	    	if(window.UI.isOptionsVisible){
-	    		window.UI.toggleMapOptions(function(){
-	    			$('#analyticsDialog').hide();
-	    			$('#addMarkerDialog').show(function(){
-	    				window.UI.toggleMapOptions();
-	    			});	
-	    		});
-	    	}else{
-	    		$('#analyticsDialog').hide();
-	    		$('#addMarkerDialog').show();
-	    		window.UI.toggleMapOptions();
-
-	        }
-	        this.MOUSEDOWN_TIME =0;
-	        this.MOUSEDOWN_TIME =0;
-	    }else{
-	        this.MOUSEDOWN_TIME =0;
-	        this.MOUSEDOWN_TIME =0;
-	    }
-	}
-
 	// track how long the user's finger was toucking to determine click while allowing map to be usable (touch-scroll)
 	UiHandle.prototype.mapTouchDown = function mapTouchDown(event){
 		// set the coords of the marker event
-		if(!window.UI.textInputIsVisible){
+	
 		    window.MAP.markerEvent = event;
 		    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
+	
+	}
+
+	// show the marker type select dialog
+	UiHandle.prototype.mapTouchUp = function mapTouchUp(){
+		// set the coords of the marker event
+	    MOUSEUP_TIME = (new Date().getTime());
+	    MOUSEUP_TIME = MOUSEUP_TIME / 1000;
+	    // if it was a short touch
+	    console.log((MOUSEUP_TIME - this.MOUSEDOWN_TIME));
+	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.5){
+	    	// check if the marker select menu is showing and toggle appropriately	
+	        this.MOUSEDOWN_TIME = 0;
+	        this.MOUSEDOWN_TIME = 0;
+	        window.UI.toggleAddMarkerOptions(window.MAP.markerEvent);
+	    }else{
+
+
+	        this.MOUSEDOWN_TIME = 0;
+	        this.MOUSEDOWN_TIME = 0;
+	    }
+	}
+
+	UiHandle.prototype.toggleAddMarkerOptions = function toggleAddMarkerOptions(point){
+		if(window.UI.isAddMarkerDialogVisible){
+			$('#addMarkerDashContainer').fadeOut(500);
+			window.UI.isAddMarkerDialogVisible = false;
+		}else{
+			console.log(point);
+			var lat = point.latLng.lat();
+			var lng = point.latLng.lng();
+
+			$('#markerLat').val(lat);
+			$('#markerLng').val(lng);
+
+			window.ApiConnector.getStreetFromLatLng(lat, lng)
+
+			$('#addMarkerDashContainer').fadeIn(500);
+			window.UI.isAddMarkerDialogVisible = true;	
 		}
 	}
+
+	
 
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
@@ -918,11 +962,36 @@ function UiHandle(){
 		window.MAP.applyHeatMap(data);
 	}
 
+	UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
+		console.log("raw heatmap data: ");
+		console.log(data);
+		var HELPER = new Helper();
+		var totalSecondsWorked = new BigNumber(0);
+		for(var ii=0; ii<data.grid.length; ii++){
+			totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
+			console.log(ii + "-" + totalSecondsWorked);
+		}
+
+		// alert(data.grid[0].secondsWorked + " - " + data.grid[(data.grid.length - 1)].secondsWorked);
+
+		var metersPerSecond = 0.25; // this is a guess
+		var sqMeters = (totalSecondsWorked * metersPerSecond);
+		var acresWorked = HELPER.metersToAcres(sqMeters);
+		// alert(acresWorked.toFixed(3));
+		var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
+		$('#acresWorked').html(acresWorked.toFixed(4));
+		$('#totalHoursWorked').html(timeWorked['hours']);
+		$('#totalMinutesWorked').html(timeWorked['minutes']);
+		$('#totalSecondsWorked').html(timeWorked['seconds']);
+		$('#totalDaysWorked').html(timeWorked['days']);
+	}
+
 	// markers coming from the apiconnector comes here to be added to the UI
 	UiHandle.prototype.updateMarker = function updateMarker(data){
 		console.log("marker response: ");
 		console.log(data);
 
+		window.PINS = [];
 		window.PINS = data.pins;
 		// var dataArr = JSON.parse(data);
 		var dataArr = data;
@@ -1063,14 +1132,19 @@ function UiHandle(){
 
 		$('.closeIconWrapper').click(function(){
 			var commentId = $(this).parent().parent().find(".commentIdHolder").val();
-			alert(commentId);
+			// alert(commentId);
 			$(this).parent().parent().fadeOut();
 		});
 
 		$('.addressIconWrapper').click(function(){
 			var commentId = $(this).parent().parent().find(".commentIdHolder").val();
-			alert(commentId);
+			// alert(commentId);
 		});
+	}
+
+	UiHandle.prototype.updateMarkerAddStreetAddr = function updateMarkerAddStreetAddr(data){
+		console.log("geocode data");
+		console.log(data);
 	}
 
 
@@ -1136,6 +1210,34 @@ function Helper(){
   					monthString + "-" + dayString;
 
   		return result;	
+	}
+
+	Helper.prototype.metersToAcres = function metersToAcres(sqMeters){
+		return (sqMeters * 0.000247105);
+	}
+
+	Helper.prototype.secondsToHoursMinutesSeconds = function secondsToHoursMinutesSeconds(seconds){
+
+		var remainderSeconds = (seconds % 60);
+		var minutes = ((seconds - remainderSeconds) / 60);
+		var remainderMinutes = (minutes % 60);
+		var hours = ((minutes - remainderMinutes) / 60);
+		var remainderHours = (hours % 24); 
+		var days = ((hours - remainderHours) / 24);
+
+		if(remainderHours < 10){
+			remainderHours = ("0"+remainderHours);
+		}
+		if(remainderMinutes < 10){
+			remainderMinutes = ("0"+remainderMinutes);
+		}
+		if(remainderSeconds < 10){
+			remainderSeconds = ("0"+remainderSeconds);
+		}
+
+		var results = {"days": days, "hours" : remainderHours, "minutes" : remainderMinutes, "seconds" : remainderSeconds};
+		console.log(results);
+		return results;
 	}	
 }
 
@@ -1275,8 +1377,10 @@ function handleProfiles(results) {
       var firstProfileId = results.items[0].id;
 
       var HELPER = new Helper();
-  	var endDate = HELPER.getGoogleFormattedDate(new Date());
-  var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 2, 2, 3, 4, 567));
+  	// var endDate = HELPER.getGoogleFormattedDate(new Date());
+  	var endDate = "2013-09-01";
+  // var startDate = HELPER.getGoogleFormattedDate(new Date(2013, 8, 3, 3, 3, 4, 567));
+  var startDate = "2013-05-01";
 
       // Step 3. Query the Core Reporting API
       queryCoreReportingApi(firstProfileId, startDate, endDate);
@@ -1386,12 +1490,16 @@ function mainLoad(){
 	window.UI = new UiHandle();
 	window.UI.init();
 	// build out the google map
+
 	window.MAP = new MapHandle();
-	window.MAP.initMap();
+	if(!window.DEBUG){
+		window.MAP.initMap();
+	}
 	// grab our comments, map markers, and heatmap data
 	window.ApiConnector.pullCommentData();
 	window.ApiConnector.pullMarkerData();
 	window.ApiConnector.pullHeatmapData();
+	window.ApiConnector.pullRawHeatmapData();
 
 }
 

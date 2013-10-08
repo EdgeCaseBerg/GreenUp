@@ -135,6 +135,7 @@ ul{
 
 
 #analyticsDialog{
+    border-bottom: solid 1px #444;
     min-height:220px;
     position:relative;
     z-index: 232;
@@ -146,6 +147,8 @@ ul{
 }
 
 #extendedAnalyticsDialog{
+    border-bottom: solid 1px #444;
+    text-align: left;
     min-height:220px;
     position: absolute;
     top: -250px;
@@ -161,6 +164,66 @@ ul{
     -ms-transition: all .5s ease;
     transition: all .5s ease;
 }
+
+.row2AnalyticsColumn{
+    /*border: solid 1px green;*/
+    margin: auto;
+}
+
+.row2AnalyticsColumn:last-child{
+    padding-left: 50px;
+}
+
+/*.row2AnalyticsColumn:first-child{
+    padding-right: 5%;
+}*/
+
+
+#acresWorked{
+    vertical-align: top;
+    padding: 5px 0px 5px 0px;
+    font-weight: bold;
+    font-size: 3.7em;
+    background: #333;
+    color: #eee;
+    /*border: solid 1px red;*/
+    /*background: url("images/radar_gray.jpg");*/
+    background-size: 200px 200px;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px; 
+}
+
+.timeComponentNest{
+    /*border:solid 1px red;*/
+    display:inline-block;
+    text-align: center;
+    padding: 0px;
+    margin:0px 3px 0px 0px;
+}
+
+.timeComponent{
+    -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+    background: #333;
+    color: #eee;
+    padding: 0px 5px 0px 5px;
+    font-size: 3.7em;
+    font-weight: bold;
+    text-align: center;
+    border:solid 2px black;
+}
+
+.timeComponentLabel{
+    /*border:solid 1px green;*/
+    font-size: 1.7em;
+    font-weight: bold;
+    text-align: center;
+}
+
 
 .datePicker{
     position: relative;
@@ -211,12 +274,12 @@ ul{
 }
 
 .nestedAnalyticsColumn:last-child{
-    border:0px;
+    border-right:0px;
 }
 
 
 
-.nestedAnalyticsColumn div{
+.row1AnalyticsColumn div{
     text-align: left;
     padding: 0px 0px 0px 5px;
 }
@@ -259,7 +322,7 @@ ul{
     width:100%;
     background: #eee;
     padding:30px 0px 10px 0px;
-    display:none;
+    /*display:none;*/
     font-size: 0.9em;
     text-align: center;
 }
@@ -325,21 +388,41 @@ ul{
     padding: 1px 5px 0px 5px;
 }
 
-.locationTypeMenuItem:hover{
-    color: blue;
-}
-
-.locationTypeMenuItem:first-child{
-    border-bottom: solid 1px #ddd; 
-}
 
 .locationTypeInputContainer{
     display:none;
 
 }
 
+#coordsInputContainer{
+    display: block;
+    width: 100%;
+}
+
 .markerInputNest{
-    float:right;
+    width: 100%;
+    max-width: 300px;
+}
+
+.markerInputNest .inputLabel{
+    width: 45%;
+    display: inline-block;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.inputLocationTypeLi{
+    font-size: 1.2em;
+    font-weight: bold;   
+}
+
+.markerInputNest .inputInput{
+    width: 45%;
+    display: inline-block;
+}
+
+.inputInput input{
+    width: 200px;
 }
 
 #markerIconNest{
@@ -378,9 +461,6 @@ ul{
   background: #c7c7c7;
 }
 
-#coordsInputNest li{
-	text-align:right;
-}
 
 #coordsInputNest input{
 	margin:0px 0px 0px 10px;
@@ -617,3 +697,60 @@ input[type=checkbox] {
 .slideToggle input[type=checkbox]:checked + label {
     left: 70px;
 }
+
+
+#addMarkerDashContainer{
+    display:none;
+    float:left;
+    position: absolute;
+    top: 70px;
+    height: 100%;
+    min-height: 620px;
+    width: 100%;
+    z-index: 700;
+    background: #111;
+    /*opacity: 0.7;*/
+}
+
+#addMarkerDashNest{
+    width: 40%;
+    min-width: 570px;
+    height: 30%;
+    min-height: 420px;
+    background: #eee;
+    margin: auto;
+    margin-top: 60px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+
+#addMarkerDashHeader{
+    vertical-align: middle;
+    font-size: 2.5em;
+    font-weight: bold;
+    text-align: center;
+
+}
+
+#addMarkerDashHeader img{
+    display:inline-block;
+    margin: 1% 2% 1% 1%;
+}
+
+#addMarkerDashContent{
+    text-align: left;
+    width: 50%;
+    margin: auto;
+    margin-top: 20px;
+    /*border:solid 1px red;*/
+}
+
+#addMarkerDashContent div{
+    /*width: 90%;*/
+    text-align: left;
+
+}
+
+
