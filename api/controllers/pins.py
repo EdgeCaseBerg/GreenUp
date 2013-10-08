@@ -24,21 +24,28 @@ class Pins(webapp2.RequestHandler):
 		pinId = self.request.get("id")
 
 		if pinId is not None and pinId is not "":
-			pinToReturn = AbstractionLayer().getSinglePin(pinId)
-			if pinToReturn is not None:
-				pin = {  'id' : pinToReturn.key().id(),
-							'latDegrees' : pinToReturn.lat,
-							'lonDegrees' : pinToReturn.lon,
-							'type'		 : pinToReturn.pinType,
-							'message'	 : pinToReturn.message,
-							'addressed'  : pinToReturn.addressed }
-				self.response.set_status(HTTP_OK)
-				self.response.write(json.dumps({'status_code' : HTTP_OK, 'pin' : pin}))
+			try:
+				int(pinId)
+			except ValueError, v:
+				self.response.set_status(HTTP_REQUEST_SYNTAX_PROBLEM)
+				self.response.write(ERROR_STR % (HTTP_REQUEST_SYNTAX_PROBLEM, "Pin Id must be an integral value"))
 				return
 			else:
-				self.response.set_status(HTTP_NOT_FOUND)
-				self.response.write(ERROR_STR % (HTTP_NOT_FOUND, "Could not find pin requested"))
-				return
+				pinToReturn = AbstractionLayer().getSinglePin(pinId)
+				if pinToReturn is not None:
+					pin = {  'id' : pinToReturn.key().id(),
+								'latDegrees' : pinToReturn.lat,
+								'lonDegrees' : pinToReturn.lon,
+								'type'		 : pinToReturn.pinType,
+								'message'	 : pinToReturn.message,
+								'addressed'  : pinToReturn.addressed }
+					self.response.set_status(HTTP_OK)
+					self.response.write(json.dumps({'status_code' : HTTP_OK, 'pin' : pin}))
+					return
+				else:
+					self.response.set_status(HTTP_NOT_FOUND)
+					self.response.write(ERROR_STR % (HTTP_NOT_FOUND, "Could not find pin requested"))
+					return
 		
 		if latDegrees == "":
 			latDegrees = None
