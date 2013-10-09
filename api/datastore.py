@@ -360,17 +360,24 @@ class AbstractionLayer():
 		return stat,msg
 
 	def checkNextPage(self, page):
-		# check for the presence of a next page in memecache
-		if memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(None,"comment",None, page+1) ):
-			return page+1
-		else:
-			# count comments using entity count.
-			ec = EntityCounter()
-			total = ec.count('Comments')
-			if (((page-1) * PAGE_SIZE) < total):
-				return page+1
-			else:
-				return None
+		ec = EntityCounter()
+		total = ec.count('Comments')
+		logging.info("Comments total = %s" %(total)) 
+
+		extra = False
+		if (total % PAGE_SIZE != 0):
+			extra = True
+		logging.info("Extra? : %s" %( str(extra) ))
+
+		totalPages = total / PAGE_SIZE
+		logging.info("Total number of pages: %s" %( str(totalPages)) )
+
+		if extra:
+			totalPages = totalPages + 1
+		logging.info("Final Number of Pages: %s" %(str(totalPages)))
+
+		if page < totalPages:
+			return page + 1
 
 		return None	
 
