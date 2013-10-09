@@ -10,255 +10,19 @@
 from google.appengine.ext import db
 from handlerBase import *
 from google.appengine.api import memcache
+from google.appengine.api import datastore_errors
 from google.appengine.datastore import entity_pb
 import logging
 import hashlib
 from datetime import date
 from constants import *
 
-# manage the EntityCounter class
-def increment(caller):
-	ec = EntityCounter()
-	ec.setType(caller)
-	keyName = "caller_%s" %(caller)
-	q = EntityCounter.get_or_insert(key_name=keyName, entityType=caller)
-	ec.increment(q.key())
-
-def decrement(caller):
-	ec = EntityCounter()
-	ec.setType(caller)
-	q = EntityCounter.all().filter('entityType =', caller).get()
-
-	if q is not None:
-		# an entityCounter object with this type does exist. all is well
-		ec.decrement(q.key())
-	else:
-		# and EntityCounter for this type doesn't exist in the datastore. How did this happen?
-		# it can happen because we can ask to delete something that doesn't exist. -E. --the spider does it
-		#raise Exception("Trying to decrement from a non-existant entityCounter type")	
-		pass #removed raise becuase it causes a problem with spider.
-
-
-class Campaign(db.Model):
-	# specify callbacks (and callforwards?) as well as override all of the put and delete methods provided by db.model so we can use them for counting
-	def before_put(self):
-		logging.info("before put")
-
-	def after_put(self):
-		logging.info("after put")
-		# this is where we do the counting
-		increment(self.__class__.__name__)
-		
-	def before_delete(self):
-		logging.info("before delete")
-
-	def after_delete(self):
-		logging.info("after delete")
-		# this is where we do the counting
-		decrement(self.__class__.__name__)
-
-	def put_async(self):
-		return db.put_async(self)
-
-	def delete_async(self):
-		return db.delete_async(self)
-
-	def put(self):
-		# call get_result() on the return value to block on the call (returns an object containing the response data)
-		return self.put_async().get_result()
-
-	def delete(self):
-		# call get_result() on the return value to block on the call (returns an object containing the response data)
-		return self.delete_async().get_result()
-
-def normalize_entities(entities):
-	# used to convert an entity_pb (protocol buffer, which is what entities is right now) into an actual entity (an instance of db.model)
-	if not isinstance(entities, (list, tuple)):
-		entities = (entities,)
-	return [e for e in entities if hasattr(e, 'before_put')]
-'''
-	monkeypatching thusly:
-	1) Rename the old version of the function we're replacing so we can still access it
-	2) define the replacement for the function
-	3) replace the original with our replacement  
-'''
-
-class Greenup(Campaign):	
-	@classmethod
-	def app_key(cls):
-		return db.Key.from_path('apps', 'greenup')
-
-class Pins(Greenup):
-	message = db.TextProperty()
-	pinType = db.StringProperty(choices=PIN_TYPES)
-	# these must be stored precisely
-	lat = db.FloatProperty()
-	lon = db.FloatProperty()
-
-	@classmethod
-	def by_id(cls, pinId):
-		return Pins.get_by_id(pinId, parent = app_key())
-
-	@classmethod
-	def by_message(cls, message):
-		bc = Pins.all().ancestor(Pins.app_key()).filter('message =', message).get()
-		return bc
-
-	@classmethod
-	def by_type(cls, pinType):
-		bt = Pins.all().ancestor(Pins.app_key()).filter('pinType =', pinType).get()
-		return bt
-
-	@classmethod
-	def by_lat(cls,lat, offset=None):
-		if not offset:
-			latitudes = Pins.all().ancestor(Pins.app_key()).filter('lat =', lat)
-			return latitudes
-		else:
-			latitudes = Pins.all().ancestor(Pins.app_key()).filter('lat >=', lat).filter('lat <=', lat + offset)
-		return latitudes
-
-	@classmethod
-	def by_lon(cls,lon, offset=None):
-		if not offset:
-			longitudes = Pins.all().ancestor(Pins.app_key()).filter('lon =', lon)
-		else:
-			longitudes = Pins.all().ancestor(Pins.app_key()).filter('lon >=', lon).filter('lon <=', lon + offset)
-		return longitudes
-
-	@classmethod
-	def get_all_pins(cls):
-		pins = Pins.all().ancestor(Pins.app_key())
-		return pins
-
-	@classmethod
-	def by_lat_and_lon(cls, lat, latOffset, lon, lonOffset):
-		if not latOffset:
-			both = Pins.all().ancestor(Pins.app_key()).filter('lon =', lon).filter('lat =', lat)
-			return both
-		else:
-			longitudes = Pins.all().ancestor(Pins.app_key()).filter('lon >=', lon).filter('lon <=', lon + offset)
-			latitudes = Pins.all().ancestor(Pins.app_key()).filter('lat >=', lat).filter('lat <=', lat + offset)
-		return longitudes, latitudes
-
-class Comments(Greenup):
-
-	commentType = db.StringProperty(choices=COMMENT_TYPES)
-	message = db.TextProperty()
-	timeSent = db.DateTimeProperty(auto_now_add = True)	
-	pin = db.ReferenceProperty(Pins, collection_name ='pins')
-
-	@classmethod
-	def by_id(cls, commentId):
-		return Comments.get_by_id(commentId, parent = app_key())
-	
-	@classmethod
-	def by_type(cls,cType):
-		ct = Comments.all().ancestor(Comments.app_key()).filter('commentType =', cType).get()	
-		return ct
-
-	@classmethod
-	def by_type_pagination(cls, cType):
-		ct = Comments.all().ancestor(Comments.app_key()).filter('commentType =', cType)
-		return ct
-
-class GridPoints(Greenup):
-	lat = db.FloatProperty()
-	lon = db.FloatProperty()
-	secondsWorked = db.IntegerProperty()
-
-	@classmethod
-	def by_id(cls, gridId):
-		return GridPoints.get_by_id(gridId, parent = app_key())
-
-	@classmethod
-	def by_lat(cls,lat):
-		latitudes = GridPoints.all().ancestor(GridPoints.app_key()).filter('lat =', lat).get()
-		return latitudes
-
-	@classmethod
-	def by_lon(cls,lon):
-		longitudes = GridPoints.all().ancestor(GridPoints.app_key()).filter('lon =', lon).get()
-		return longitudes
-
-	@classmethod
-	def by_latOffset(cls, latDegrees, offset):
-		# query all points with a latitude between latDegrees and offset
-		# this defines a chunk of the map containing the desired points
-		q = GridPoints().all().ancestor(GridPoints.app_key()).filter('lat >=', latDegrees).filter('lat <=', latDegrees + offset).get()
-		return q
-
-	@classmethod
-	def by_lonOffset(cls, lonDegrees, offset):
-		# query all points with a latitude between lonDegrees and offset
-		q = GridPoints().all().ancestor(GridPoints.app_key()).filter('lon >=', lonDegrees).filter('lon <=', lonDegrees + offset).get()
-		return q
-
-	@classmethod
-	def get_all_delayed(cls):
-		return GridPoints.all().ancestor(GridPoints.app_key())
-
-class DebugReports(Greenup):
-
-	errorMessage = db.StringProperty()
-	debugInfo = db.StringProperty()
-	timeSent = db.DateTimeProperty(auto_now_add = True)
-	origin = db.StringProperty(required = True)
-	authhash = db.StringProperty(required = True)
-
-	@classmethod 
-	def by_id(cls, debugId):
-		return DebugReports.get_by_id(debugId, parent=app_key())
-
-	@classmethod
-	def by_origin(cls, origin):
-		errors = DebugReports.all().ancestor(DebugReports.app_key()).filter('origin =', origin).get()	
-		return ct 
-
-	@classmethod
-	def since(cls,timeSent):
-		#gets delayed. call get on it
-		return DebugReports.all().ancestor(DebugReports.app_key()).filter('timeSent >',timeSent)
-
-	@classmethod
-	def by_hash(cls,theHash):
-		return DebugReports.all().ancestor(DebugReports.app_key()).filter('authhash =',theHash).get()		
-
-	@classmethod
-	def get_all(cls):
-		return DebugReports.all().ancestor(DebugReports.app_key()).get()
-
-	@classmethod
-	def get_all_delayed(cls):
-		return DebugReports.all().ancestor(DebugReports.app_key())
-
-class EntityCounter(db.Model):
-	# inherits from db.model to avoid running the counting callbacks on itself
-	entityType = db.StringProperty()
-	entityCount = db.IntegerProperty(default=0)
-
-	def setType(self, callerType):
-		self.entityType = callerType
-
-	@db.transactional
-	def increment(self, key, amount=1):
-		# Doing the read, calculation, and write in a single transaction ensures that no other process can interfere with the increment
-		obj = db.get(key)
-		obj.entityCount += amount
-		obj.put()
-
-	@db.transactional
-	def decrement(self, key, amount=1):
-		obj = db.get(key)
-		obj.entityCount -= amount
-		obj.put()
-
-	@classmethod
-	def count(cls, eType):
-		ec = EntityCounter.all().filter('entityType =', eType).get()	
-		if ec:
-			return ec.entityCount
-		return 1
+from db_models.campaign import Campaign
+from db_models.greenup import Greenup
+from db_models.grid import GridPoints
+from db_models.pins import Pins
+from db_models.reports import  DebugReports
+from db_models.comment import  Comments
 
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
@@ -276,7 +40,25 @@ class AbstractionLayer():
 		#Convert comments to simple dictionaries for the comments endpoint to use
 		dictComments = []
 		for comment in comments:
-			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "0" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
+			try:
+				pinId = comment.pin.key().id() if comment.pin is not None else "0"
+				addressed = False
+				if pinId != "0":
+					addressed = comment.pin.addressed
+				dictComments.append({
+					'type' : comment.commentType, 
+					'message' : comment.message, 
+					'pin' : pinId , 
+					'addressed' : addressed,
+					'timestamp' : comment.timeSent.ctime(), 
+					'id' : comment.key().id()})
+			except datastore_errors.Error, e:
+				#Give 0 shits about reference properties being broken becuase the pin deletion wont work right
+				if e.args[0][0:40] == "ReferenceProperty failed to be resolved:":
+					comment.delete()
+				else: 
+					raise
+				
 		return sorted(dictComments, key=lambda k: k['timestamp'], reverse=True) 
 		
 
@@ -291,6 +73,17 @@ class AbstractionLayer():
 		#Clear the memcache then recreate the initial page.
 		memcache.flush_all()
 		initialPage(None,"comment")
+
+	def deleteComment(self,commentId):
+		c = Comments.by_id(commentId)
+		if c is None:
+			return False
+		else:
+			#Delete any pins associated
+			if c.pin is not None:
+				c.pin.delete()
+			c.delete()
+		return True
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None,raw=False):
 		return heatmapFiltering(latDegrees,lonDegrees,latOffset,lonOffset,precision,raw)
@@ -307,8 +100,12 @@ class AbstractionLayer():
 		# datastore read
 		return pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset)
 
-	def submitPin(self, latDegrees, lonDegrees, pinType, message):
+	def getSinglePin(self, pinId):
+		return Pins.by_id(int(pinId))
+
+	def submitPin(self, latDegrees, lonDegrees, pinType, message,addressed=False):
 		# datastore write
+<<<<<<< HEAD
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message)
 		increment(p.__class__.__name__)
 		p = p.put()
@@ -316,9 +113,39 @@ class AbstractionLayer():
 		c.put()
 		increment(c.__class__.__name__)
 		
+=======
+		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message,addressed=addressed).put()
+		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
+>>>>>>> 52989bb34d4b564effc29a51f4b9b065d3544738
 		memcache.flush_all()
 		initialPage(None,"comment")
 		return p.id()
+
+	def addressPin(self, pinId, addressed):
+		p = Pins.by_id(pinId)
+		if p is not None:
+			p.addressed = addressed
+			p.put()
+			memcache.flush_all()
+			initialPage(None,"comment")
+			return True
+		else:
+			return False
+
+	def deletePin(self,pinId):
+		pin = Pins.by_id(int(pinId))
+		if pin is None:
+			return False
+		else:
+			#Remove any comments attached:
+			cs = Comments.all().filter('Pins=', pin.key().id())
+			for c in cs:
+				logging.info("deleting c")
+				c.delete()
+			pin.delete()
+			memcache.flush_all()
+			initialPage(None,"comment")
+			return True
 
 
 	def submitDebug(self, errorMessage, debugInfo,origin):
@@ -334,14 +161,11 @@ class AbstractionLayer():
 		# retrieve information about a bug by id, hash, or get them all with optional since time
 		# add JSON Formatting to the returns such that {  "errror_message" : "Stack trace or debugging information here", "id":id, "time":timestamp } 
 		if debugId is not None:
-			logging.info("by id")
 			bugs = DebugReports.by_id(debugId) 
 		elif theHash is not None:
-			logging.info("by hash")
 			bugs = DebugReports.by_hash(theHash)
 		else:
 			bugs = paging(page,None,"debug",since)
-		logging.info(bugs)
 		return debugFormatter(bugs)	
 
 	def deleteDebug(self,origin,theHash):
@@ -628,12 +452,13 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 							'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
-							'message'	 : pin.message }
+							'message'	 : pin.message,
+							'addressed'  : pin.addressed }
 						)
 		return pins
 
 	else:
-		return "Something bad happened"
+		return "[]"
 
 def pinFormatter(dbPins):
 	# properly format pins in json and return
@@ -643,7 +468,8 @@ def pinFormatter(dbPins):
 						'latDegrees' : pin.lat,
 						'lonDegrees' : pin.lon,
 						'type'		 : pin.pinType,
-						'message'	 : pin.message }
+						'message'	 : pin.message,
+						'addressed'  : pin.addressed }
 					)
 	return pins
 def debugFormatter(dbBugs):

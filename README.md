@@ -50,22 +50,40 @@ If you are going to contribute to the project (please do!) there is a general fl
 - If you have trouble with the public API or see an issue report the issue and let us know. 
 
 
-Developers:
+Developers (Current):
 ------------------
 - [Ethan Eldridge]
 - [Joshua Dickerson]
 - [Scott MacEwan]
 - [Anders Melen]
-- [Justin Adams]
-- [Danielle Steimke]
-- [Paul Kiripolsky]
 - [Evan Yandell]
 - [Phelan Vendeville]
-
 
 Designers:
 ------------------
 - [Doug Blackmore]
+
+
+Contributors (git log --format='%aN' | sort -u)
+--------------------
+- Anders Melen
+- Collin
+- Collin DeWitt
+- Danielle Steimke
+- EC2
+- EJEHardenberg
+- Ethan Joachim Eldridge
+- JoshuaDickerson
+- Joshua.Dickerson
+- justcadams
+- Phelan Vendeville
+- popwarfour
+- primehunter326
+- root
+- Scott MacEwan
+- the-hobbes
+- Ubuntu
+
 
 License:
 ----------
