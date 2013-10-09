@@ -23,6 +23,7 @@ from db_models.grid import GridPoints
 from db_models.pins import Pins
 from db_models.reports import  DebugReports
 from db_models.comment import  Comments
+from db_models.entityCounter import *
 
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
@@ -69,6 +70,7 @@ class AbstractionLayer():
 
 		# write to entitycounter of comments type
 		increment(cmt.__class__.__name__)
+		logging.info("Comment Written: %s" %str(cmt.__class__.__name__))
 
 		#Clear the memcache then recreate the initial page.
 		memcache.flush_all()
@@ -83,6 +85,7 @@ class AbstractionLayer():
 			if c.pin is not None:
 				c.pin.delete()
 			c.delete()
+			decrement("Comments")
 		return True
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None,raw=False):
@@ -105,18 +108,10 @@ class AbstractionLayer():
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message,addressed=False):
 		# datastore write
-<<<<<<< HEAD
-		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message)
-		increment(p.__class__.__name__)
-		p = p.put()
-		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p)
-		c.put()
-		increment(c.__class__.__name__)
-		
-=======
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message,addressed=addressed).put()
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
->>>>>>> 52989bb34d4b564effc29a51f4b9b065d3544738
+		increment("Comments")
+		logging.info("Comment Written.")
 		memcache.flush_all()
 		initialPage(None,"comment")
 		return p.id()
@@ -145,6 +140,7 @@ class AbstractionLayer():
 			pin.delete()
 			memcache.flush_all()
 			initialPage(None,"comment")
+			decrement("Comments")
 			return True
 
 
