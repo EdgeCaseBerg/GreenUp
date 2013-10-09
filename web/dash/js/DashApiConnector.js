@@ -120,6 +120,8 @@ function ApiConnector(){
 
 	}
 
+	
+
 
 	// ********** specific data pullers *************
 	ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
@@ -248,6 +250,16 @@ function ApiConnector(){
 		this.pullMarkerData();
 	}
 
+	ApiConnector.prototype.getStreetFromLatLng = function getStreetFromLatLng(lat, lng, callback){
+		var baseGeocodeUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=";
+		baseGeocodeUrl += lat + ",";
+		baseGeocodeUrl += lng;
+		baseGeocodeUrl += "&sensor=false";
+		// URL, DATATYPE, QUERYTYPE, CALLBACK
+		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.UI.updateMarkerAddStreetAddr);
+
+	}
+
 	//Uploads all local database entries to the Server
 	//Clears the local storage after upload
 	ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(){
@@ -334,8 +346,8 @@ function MapHandle(){
 		window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 		// get our bounds and set our map as loaded
 		google.maps.event.addListener(window.MAP.map, 'idle', function(ev){
-		  	window.UI.setMapLoaded
-		  	window.MAP.updateBounds();
+		window.UI.setMapLoaded
+		window.MAP.updateBounds();
 
 		  	// google.load("visualization", "1", {packages:["corechart"]});
       		// google.setOnLoadCallback(function(){
@@ -647,6 +659,8 @@ function UiHandle(){
 	this.isMarkerVisible = true;
 	this.isMapLoaded = false;
 
+	this.isAddMarkerDialogVisible = false
+
 	this.scrollPosition = 0;
 
 	this.isNavbarUp = true;
@@ -672,6 +686,10 @@ function UiHandle(){
 	this.commentsPrevPageUrl = "";
 
     UiHandle.prototype.init = function init(){
+
+    	$('#addMarkerCaneclButton').click(function(){
+    		window.UI.toggleAddMarkerOptions();
+    	});
 
     	$(".navLink").click(function(){
     		$('.navLi').removeClass("active");
@@ -888,42 +906,55 @@ function UiHandle(){
 		// (bug) here we need to prevent more map touches
 	}
 
-	// show the marker type select dialog
-	UiHandle.prototype.mapTouchUp = function mapTouchUp(){
-		// set the coords of the marker event
-	    MOUSEUP_TIME = new Date().getTime() / 1000;
-	    // if it was a short touch
-	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.3){
-	    	// check if the marker select menu is showing and toggle appropriately
-	    	if(window.UI.isOptionsVisible){
-	    		window.UI.toggleMapOptions(function(){
-	    			$('#analyticsDialog').hide();
-	    			$('#addMarkerDialog').show(function(){
-	    				window.UI.toggleMapOptions();
-	    			});	
-	    		});
-	    	}else{
-	    		$('#analyticsDialog').hide();
-	    		$('#addMarkerDialog').show();
-	    		window.UI.toggleMapOptions();
-
-	        }
-	        this.MOUSEDOWN_TIME =0;
-	        this.MOUSEDOWN_TIME =0;
-	    }else{
-	        this.MOUSEDOWN_TIME =0;
-	        this.MOUSEDOWN_TIME =0;
-	    }
-	}
-
 	// track how long the user's finger was toucking to determine click while allowing map to be usable (touch-scroll)
 	UiHandle.prototype.mapTouchDown = function mapTouchDown(event){
 		// set the coords of the marker event
-		if(!window.UI.textInputIsVisible){
+	
 		    window.MAP.markerEvent = event;
 		    this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
+	
+	}
+
+	// show the marker type select dialog
+	UiHandle.prototype.mapTouchUp = function mapTouchUp(){
+		// set the coords of the marker event
+	    MOUSEUP_TIME = (new Date().getTime());
+	    MOUSEUP_TIME = MOUSEUP_TIME / 1000;
+	    // if it was a short touch
+	    console.log((MOUSEUP_TIME - this.MOUSEDOWN_TIME));
+	    if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.5){
+	    	// check if the marker select menu is showing and toggle appropriately	
+	        this.MOUSEDOWN_TIME = 0;
+	        this.MOUSEDOWN_TIME = 0;
+	        window.UI.toggleAddMarkerOptions(window.MAP.markerEvent);
+	    }else{
+
+
+	        this.MOUSEDOWN_TIME = 0;
+	        this.MOUSEDOWN_TIME = 0;
+	    }
+	}
+
+	UiHandle.prototype.toggleAddMarkerOptions = function toggleAddMarkerOptions(point){
+		if(window.UI.isAddMarkerDialogVisible){
+			$('#addMarkerDashContainer').fadeOut(500);
+			window.UI.isAddMarkerDialogVisible = false;
+		}else{
+			console.log(point);
+			var lat = point.latLng.lat();
+			var lng = point.latLng.lng();
+
+			$('#markerLat').val(lat);
+			$('#markerLng').val(lng);
+
+			window.ApiConnector.getStreetFromLatLng(lat, lng)
+
+			$('#addMarkerDashContainer').fadeIn(500);
+			window.UI.isAddMarkerDialogVisible = true;	
 		}
 	}
+
+	
 
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
@@ -1109,6 +1140,11 @@ function UiHandle(){
 			var commentId = $(this).parent().parent().find(".commentIdHolder").val();
 			// alert(commentId);
 		});
+	}
+
+	UiHandle.prototype.updateMarkerAddStreetAddr = function updateMarkerAddStreetAddr(data){
+		console.log("geocode data");
+		console.log(data);
 	}
 
 
@@ -1454,8 +1490,11 @@ function mainLoad(){
 	window.UI = new UiHandle();
 	window.UI.init();
 	// build out the google map
+
 	window.MAP = new MapHandle();
-	window.MAP.initMap();
+	if(!window.DEBUG){
+		window.MAP.initMap();
+	}
 	// grab our comments, map markers, and heatmap data
 	window.ApiConnector.pullCommentData();
 	window.ApiConnector.pullMarkerData();
