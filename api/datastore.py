@@ -86,6 +86,7 @@ class AbstractionLayer():
 				c.pin.delete()
 			c.delete()
 			decrement("Comments")
+			logging.info("Comment Deleted.")
 		return True
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None,raw=False):
@@ -141,6 +142,7 @@ class AbstractionLayer():
 			memcache.flush_all()
 			initialPage(None,"comment")
 			decrement("Comments")
+			logging.info("Comment Deleted.")
 			return True
 
 
