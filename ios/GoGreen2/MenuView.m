@@ -125,18 +125,18 @@
     //Update Previous Time Intervals
     self.previousTimeIntervals = [[[ContainerViewController sharedContainer] theHomeViewController] previousLoggingTimes];
     
-    UIView *scrollViewContainerView = [[UIView alloc] initWithFrame:CGRectMake(5, 30, self.frame.size.width - 10, 100)];
+    UIView *scrollViewContainerView = [[UIView alloc] initWithFrame:CGRectMake(5, 5, self.frame.size.width - 10, 130)];
     [scrollViewContainerView setBackgroundColor:[UIColor greenUpGreenColor]];
     [scrollViewContainerView.layer setCornerRadius:5];
     
     UILabel *keyLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, scrollViewContainerView.frame.size.width - 10, 20)];
-    [keyLabel setText:@"Session \t - \t Time Spent Cleaning"];
+    [keyLabel setText:@"Session \t \t \t Time Spent Cleaning"];
     [keyLabel setBackgroundColor:[UIColor clearColor]];
-    [keyLabel setTextColor:[UIColor blackColor]];
+    [keyLabel setTextColor:[UIColor whiteColor]];
     [keyLabel setTextAlignment:NSTextAlignmentCenter];
     [scrollViewContainerView addSubview:keyLabel];
     
-    UIScrollView *previousTimesScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 30, scrollViewContainerView.frame.size.width - 20, 60)];
+    UIScrollView *previousTimesScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 30, scrollViewContainerView.frame.size.width - 20, 90)];
     int height = 0;
     [previousTimesScrollView setBackgroundColor:[UIColor clearColor]];
     
@@ -152,14 +152,14 @@
         if(i % 2 == 0)
         {
             UIView *highLightedBackground = [[UIView alloc] initWithFrame:CGRectMake(5, height, previousTimesScrollView.frame.size.width - 10, 35)];
-            [highLightedBackground setBackgroundColor:[UIColor whiteColor]];
+            [highLightedBackground setBackgroundColor:[UIColor greenUpLightGreenColor]];
             [previousTimesScrollView addSubview:highLightedBackground];
             
-            fontColor = [UIColor blackColor];
+            fontColor = [UIColor whiteColor];
         }
         else
         {
-            fontColor = [UIColor blackColor];
+            fontColor = [UIColor whiteColor];
         }
         UILabel *sessionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, height, 70, 30)];
         [sessionLabel setText:[NSString stringWithFormat:@"%d", i + 1]];
@@ -173,7 +173,7 @@
         [dividerLabel setBackgroundColor:[UIColor clearColor]];
         [dividerLabel setTextColor:fontColor];
         [dividerLabel setTextAlignment:NSTextAlignmentCenter];
-        [previousTimesScrollView addSubview:dividerLabel];
+        //[previousTimesScrollView addSubview:dividerLabel];
         
         NSString *time = [NSString stringWithFormat:@"%02d:%02d:%02d", (int)hours, (int)min, (int)sec];
         UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, height, previousTimesScrollView.frame.size.width - 115, 30)];
@@ -189,12 +189,6 @@
     
     [previousTimesScrollView setContentSize:CGSizeMake(previousTimesScrollView.frame.size.width, height)];
     [scrollViewContainerView addSubview:previousTimesScrollView];
-    
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, self.frame.size.width - 10, 20)];
-    [titleLabel setText:@"My Clean Up Times"];
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setBackgroundColor:[UIColor clearColor]];
-    [self.contentView addSubview:titleLabel];
     
     [self.contentView addSubview:scrollViewContainerView];
     

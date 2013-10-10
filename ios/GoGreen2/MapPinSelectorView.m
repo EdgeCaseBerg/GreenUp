@@ -49,12 +49,12 @@
         VoidBlock animationBlock =
         ^{
             [self.pinWheelBlue setAlpha:1];
-            [self.pinWheelRed setAlpha:1];
             [self.pinWheelGreen setAlpha:1];
             [self.pinWheelOrange setAlpha:1];
+            [self.pinWheelRed setAlpha:1];
         };
         
-        [UIView animateWithDuration:spinDuration / 10 animations: animationBlock];
+        //[UIView animateWithDuration:spinDuration / 10 animations: animationBlock];
         [self performSelector:@selector(setFinalPositionWithAllViews) withObject:nil afterDelay:spinDuration];
     }
     return self;
