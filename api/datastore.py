@@ -23,6 +23,7 @@ from db_models.grid import GridPoints
 from db_models.pins import Pins
 from db_models.reports import  DebugReports
 from db_models.comment import  Comments
+from db_models.entityCounter import *
 
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
@@ -64,7 +65,13 @@ class AbstractionLayer():
 
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
-		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
+		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin)
+		cmt.put()
+
+		# write to entitycounter of comments type
+		increment(cmt.__class__.__name__)
+		logging.info("Comment Written: %s" %str(cmt.__class__.__name__))
+
 		#Clear the memcache then recreate the initial page.
 		memcache.flush_all()
 		initialPage(None,"comment")
@@ -78,6 +85,8 @@ class AbstractionLayer():
 			if c.pin is not None:
 				c.pin.delete()
 			c.delete()
+			decrement("Comments")
+			logging.info("Comment Deleted.")
 		return True
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None,raw=False):
@@ -87,7 +96,9 @@ class AbstractionLayer():
 		# datastore write
 		for point in heatmapList:
 			#We may want to consider some error checking here.
-			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
+			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked'])
+			gp.put()
+			increment(gp.__class__.__name__)
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None):
 		# datastore read
@@ -99,7 +110,11 @@ class AbstractionLayer():
 	def submitPin(self, latDegrees, lonDegrees, pinType, message,addressed=False):
 		# datastore write
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message,addressed=addressed).put()
+		increment("Pins")
+		logging.info("Pins Written.")
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
+		increment("Comments")
+		logging.info("Comment Written.")
 		memcache.flush_all()
 		initialPage(None,"comment")
 		return p.id()
@@ -126,16 +141,22 @@ class AbstractionLayer():
 				logging.info("deleting c")
 				c.delete()
 			pin.delete()
+			decrement("Pins")
+			logging.info("Pins Written.")
 			memcache.flush_all()
 			initialPage(None,"comment")
+			decrement("Comments")
+			logging.info("Comment Deleted.")
 			return True
 
 
 	def submitDebug(self, errorMessage, debugInfo,origin):
 		# submit information about a bug
 		authhash = hashlib.sha256(errorMessage + debugInfo).hexdigest()
-		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin).put()
+		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin)
+		debug.put()
 		memcache.flush_all()
+		increment(debug.__class__.__name__)
 		initialPage(None,"comment")
 
 	def getDebug(self, debugId=None, theHash=None,since=None,page=1):
@@ -152,6 +173,7 @@ class AbstractionLayer():
 	def deleteDebug(self,origin,theHash):
 		# remove a bug from the datastore (if only we could remove all the bugs from the datastore! )
 		debugReport = DebugReports.by_hash(theHash)
+		decrement(debugReport.__class__.__name__)
 		msg = "Succesful Deletion"
 		if debugReport is None:
 			stat = HTTP_NOT_FOUND
@@ -164,16 +186,24 @@ class AbstractionLayer():
 		return stat,msg
 
 	def checkNextPage(self, page):
-		# check for the presence of a next page in memecache
-		if memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(None,"comment",None, page+1) ):
-			return page+1
-		else:
-			q = Comments.all()
-			total = q.count()
-			if (((page-1) * PAGE_SIZE) < total):
-				return page+1
-			else:
-				return None
+		ec = EntityCounter()
+		total = ec.count('Comments')
+		logging.info("Comments total = %s" %(total)) 
+
+		extra = False
+		if (total % PAGE_SIZE != 0):
+			extra = True
+		logging.info("Extra? : %s" %( str(extra) ))
+
+		totalPages = total / PAGE_SIZE
+		logging.info("Total number of pages: %s" %( str(totalPages)) )
+
+		if extra:
+			totalPages = totalPages + 1
+		logging.info("Final Number of Pages: %s" %(str(totalPages)))
+
+		if page < totalPages:
+			return page + 1
 
 		return None	
 
@@ -369,7 +399,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  point.lon and point.lon < (lonDegrees + lonOffset)):
 				continue
-		key = "%.*f_%.*f" % (int(latOffset),point.lat,int(lonOffset),point.lon)
+		key = "%.*f_%.*f" % (int(precision),point.lat,int(precision),point.lon)
 		if key in buckets:
 			buckets[key]['secondsWorked'] += point.secondsWorked
 			if buckets[key]['secondsWorked'] > highestVal:
@@ -420,7 +450,7 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  pin.lon and pin.lon < (lonDegrees + lonOffset)):
 				continue
-			pins.append( {  'id' : pin.id,
+			pins.append( {  'id' : pin.key().id(),
 							'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,

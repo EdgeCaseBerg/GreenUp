@@ -1,163 +1,275 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>GreenUp-VT Admin</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html style="height: 100%; background: #eee">
+<head>
+  <title>GreenUp-VT Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
-    <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="styles.css" rel="stylesheet" media="screen">
+  <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="styles.css" rel="stylesheet" media="screen">
+  <link href="js/lib/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" media="screen">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="//code.jquery.com/jquery.js"></script>
+    <!-- <script src="//code.jquery.com/jquery.js"></script> -->
+  <!--<script src="js/analytics_auth.js"></script> -->
+  <script src="js/lib/jquery/jquery.js"></script>
+  <script src="js/lib/BigNumber.js"></script>
 
-    <script type="text/javascript"
+
+ <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
+  <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
+  <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.datepicker.js"> </script>
+  <script src="js/lib/zepto.js"></script>
+  
+  <script src="js/apiConnector.js"></script>
+  <script src="js/greenUpMap.js"></script>
+  <script src="js/greenUpComments.js"></script>
+  <script src="js/greenUpHelper.js"></script>
+  <script src="js/greenUpUi.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- <script src="js/DashApiConnector.js"></script> -->
+  
+    
+
+  <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
-    <script src="DashApiConnector.js"></script>
 
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    
+    <!-- Include all compiled plugins (below), or include individual files as needed
+  <script src="bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
+     <script type="text/javascript" 
+src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'ru'}]}"></script>
+
+ <script src="https://apis.google.com/js/client.js?onload=loadAnalytics"></script>
+ 
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --> 
     <!--[if lt IE 9]>
       <script src="../../assets/js/html5shiv.js"></script>
       <script src="../../assets/js/respond.min.js"></script>
     <![endif]-->
-  </head>
-  <body>
+</head>
 
-<nav class="navbar navbar-default" role="navigation">
-  <!-- Brand and toggle get grouped for better mobile display -->
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="#"><img src="images/greenup_logo.png" height="50" id="navLogo" /></a>
+<body>
+  <nav class="navbar navbar-default" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"><img src="images/greenup-logo-redux.png" height="50" id="navLogo" /></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav">
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li id="pageLabel">Administrative Dashboard</li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </nav>
+
+
+  <div class="row mapAdminContainer">
+    <div id="iconContainer">
+      <img id="infoIcon" src="images/info-icon-dark.png" height="40" width="40"/>
+
+      <img id="commentsIcon" src="images/comment-icon.png" height="40" width="40"/>
+    </div>
+    <div id="map-canvas">
+    </div>
+    <div id="markerTypeDialog" class="markerTypeSelectDialog">
+
+      <div id="extendedAnalyticsDialog">
+        <div class="analyticsColumnContainer">
+          
+          <div class="nestedAnalyticsColumn row2AnalyticsColumn">
+            <div class="analyticsHeader extendedAnalyticsHeader">
+              Total Time Worked
+            </div>
+            <div class="analyticsData">
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalDaysWorked"></div>
+                <!-- <div class="timeComponent">100</div> -->
+                <div class="timeComponentLabel">DAYS</div>
+              </div>
+
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalHoursWorked">00</div>
+                <div class="timeComponentLabel">
+                  HRS
+                </div>
+              </div>
+
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalMinutesWorked">00</div>
+                <div class="timeComponentLabel">
+                  MINS
+                </div>
+              </div>
+
+              <div class="timeComponentNest">
+                <div class="timeComponent" id="totalSecondsWorked">00</div>
+                <div class="timeComponentLabel">
+                  SECS
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          
+          <div class="nestedAnalyticsColumn row2AnalyticsColumn">
+            <div class="analyticsHeader extendedAnalyticsHeader">
+              Total Acres Cleaned
+            </div>
+            <div class="analyticsData">
+     
+                    <div id="acresWorked"></div>
+   
+            </div>
+          </div>
+        </div>
+
+      </div> <!-- end extendedAnalyticsDialog -->
+
+      <div id="analyticsDialog">
+        <div class="analyticsColumnContainer">
+          
+          <div class="nestedAnalyticsColumn row1AnalyticsColumn">
+            <div class="analyticsHeader">
+              Analytics Sample Period
+            </div>
+            <div class="analyticsData">
+              <ul>
+                <li>Start Date:&nbsp;<input type="text" class="datePicker" id="startDateInput"/></li>
+                <li> End Date: &nbsp;&nbsp;<input type="text" class="datePicker" id="endDateInput"/></li>
+                <li><input type="button" value="update" id="updateAnalyticsButton" /></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="nestedAnalyticsColumn row1AnalyticsColumn">
+            <div class="analyticsHeader">
+              User Device Breakdown
+            </div>
+            <div class="analyticsData">
+              <div class="analyticsDataNestColumn usageDataNestColumn">
+                <ul>
+                  <li>iPhone  <span class="analyticsDataPoint" id="pctIphone"></span></li>
+                  <li>Android <span class="analyticsDataPoint" id="pctAndroid"></span></li>
+                  <li>Web <span class="analyticsDataPoint" id="pctOther"></span></li>
+                </ul>
+              </div>
+              <div class="analyticsDataNestColumn usageDataNestColumn usageDataChart" id="usageDataPieChart"></div>
+            </div>
+          </div>
+          
+          <div class="nestedAnalyticsColumn row1AnalyticsColumn">
+            <div class="analyticsHeader">
+              Users Per Day
+            </div>
+            <div class="analyticsData">
+              <div class="usageDataChart" id="usageDataLineChart"></div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- end analyticsDialog -->
+
+
+
+    </div>
   </div>
 
-  <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse navbar-ex1-collapse">
-    <ul class="nav navbar-nav">
-      <li class="navLi active"><a href="#" class="navLink" id="navMapLink">Maps</a></li>
-      <li class="navLi"><a href="#" id="navCommentsLink" class="navLink">Comments</a></li>
-      <li class="navLi"><a href="#" id="navAnalyticsLink" class="navLink">Analytics</a></li>
-    </ul>
-    <form class="navbar-form navbar-left" role="search">
-      <div class="form-group">
-        <input type="text" class="form-control" placeholder="Search">
+  <div id="commentsDialog">
+    <div id="bubbleContainer">
+    </div>
+  </div>
+
+  <div id="addMarkerDashContainer">
+      <div id="addMarkerDashNest">
+        <div id="addMarkerDashHeader">
+          <img src="images/icons/new_trash1.png" />
+          Add a marker to the map
+        </div>
+        <div id="addMarkerDashContent">
+          <ul>
+            <li class="inputLocationTypeLi">
+              <input type="radio" name="group" class="locationTypeMenuItem" id="latLonSelect" checked>&nbsp;&nbsp;&nbsp;Latitude / Longitude
+            </li>
+            <li class="inputLocationTypeLi">
+              <input type="radio" name="group" class="locationTypeMenuItem" id="streetSelect">&nbsp;&nbsp;&nbsp;Street Address
+            </li>
+          </ul>
+            
+          <div id="coordsInputContainer" class="locationTypeInputContainer">
+            <ul id="coordsInputNest" class="markerInputNest">
+              <li>
+                <div class="inputLabel">Latitude</div>
+                <div class="inputInput">
+                  <input type="text" name="coords" id="markerLat" />
+                </div>
+              <li>
+                <div class="inputLabel">Longitude</div>
+                <div class="inputInput">
+                  <input type="text" name="coords" id="markerLng" />
+              </div>
+            </ul>
+          </div>
+
+          <div id="streetInputContainer" class="locationTypeInputContainer">
+            <form id="streetInputForm">
+            <ul id="streetInputNest" class="markerInputNest">
+              <li>
+                <div class="inputLabel">Address 1</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddress1" />
+                </div>
+              </li>
+              <li>
+                <div class="inputLabel">Address 2</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddress2" />
+                </div>
+              <li>
+                <div class="inputLabel">City</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddressCity" />
+                </div>
+              <li>
+                <div class="inputLabel">State</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddressState" />
+                </div>
+              <li>
+                <div class="inputLabel">Zip</div>
+                <div class="inputInput">
+                  <input type="text" name="streetAddressZip" />
+              </div>
+            </ul>
+          </div>
+          <ul>
+            <li>Comment</li>
+            <li><textarea id="markerTextarea"></textarea></li>
+            <li><input type="button" value="Add Marker" id="addMarkerGoButton"/><input type="button" id="addMarkerCaneclButton" value="Cancel" /></li>
+          </ul>
+        </form>
+        </div>
       </div>
-      <button type="submit" class="btn btn-default">Submit</button>
-    </form>
-    <ul class="nav navbar-nav navbar-right">
-      <li><a href="#">Log Out</a></li>
-    </ul>
-  </div><!-- /.navbar-collapse -->
-</nav>
+  </div>
 
-    <div class="row mapAdminContainer">
-    	<div class="col-xs-6 col-sm-6 col-md-4">
-    		<ul>
-    			<li>Tap Map to Add Marker</li>
-    		</ul>
-    	</div>
-	  	<div class="col-xs-12 col-sm-6 col-md-8">
-	  		<div id="map-canvas">
-	  		</div>
-	  		<div id="mapCover">
-		  		<div id="markerTypeDialog" class="markerTypeSelectDialog">
-		  			<div class="nestLabel">
-		  				Add a marker
-		  			</div>
-
-		  			<div class="markerTextareaNest markerTypeNestColumn">
-		  				<div class="markerTypeInputLabel">
-		  					Comment
-		  				</div>
-		  				<textarea id="markerTextarea">
-		  				</textarea>
-		  			</div>
-
-		  			<div class="markerTypeNestColumn">
-		  				<div class="markerTypeInputLabel">
-		  					Icon
-		  				</div>
-		  				<div id="markerIconNest">
-		  					<ul>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/alien.png" /></li>
-		  						<li><img src="images/icons/Calender.png" /></li>
-		  						<li><img src="images/icons/Heart.png" /></li>
-		  						<li><img src="images/icons/Link.png" /></li>
-		  						<li><img src="images/icons/Image.png" /></li>
-		  						<li><img src="images/icons/IPhone 2.png" /></li>
-		  						<li><img src="images/icons/Mail 2.png" /></li>
-		  						<li><img src="images/icons/monitor.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  						<li><img src="images/icons/add.png" /></li>
-		  					</ul>
-		  				</div>
-		  				
-		  			</div>
-
-		  			<div class="markerTypeNestColumn">
-		  				<div class="markerTypeInputLabel">
-		  					Coords
-		  				</div>
-		  				<ul id="coordsInputNest">
-		  					<li>Lat<input type="text" name="coords" id="markerLat" /></li>
-		  					<li>Lon<input type="text" name="coords" id="markerLon" /></li>
-		  				</ul>
-		  			</div>
+  <div id="loginContainer">
+  </div>
 
 
-		  			<div id="selectPickup"></div>
-		  			<div id="selectComment"></div>	
-		  			<div id="selectTrash"></div>
-		  			<div id="cancel"></div>	
-		  		</div>
-		  	</div>
-	  	</div>
-	</div>
-	<div class="row commentsAdminContainer">
-    	<div class="col-xs-6 col-sm-6 col-md-4">
-    		<div class="col-xs-7 col-sm-4 col-md-4">
-    			<h4>Banned Words</h4>
-    		</div>
+</body>
 
-    		<div class="col-xs-6 col-sm-3 col-md-8 bannedWordsListNest">
-    			<div class="bannedWordsList" id="bannedWordsList">
-    				<div class="bannedWord">
-    					<div class="slideToggle">    
-                            <input type="checkbox" value="None" id="toggleMessages" name="check" onchange="window.Comments.toggleComments('message')" checked/>
-                            <label for="toggleMessages"></label>
-                        </div> 
-                            <span class="slideToggleLabel">shit</span>
-    				</div>
-    			</div>
-    			<script>
-    				for(var ii=0; ii<30; ii++){
-    					var banned = document.createElement("div");
-    					banned.className = "bannedWord";
-    					banned.innerHTML = "X"; 
-    					$('#bannedWordsList').append(banned);
-    				}
-    			</script>
-    		</div>
-    	</div>
-	  	<div class="col-xs-12 col-sm-6 col-md-8">
-	  		<div id="bubbleContainer">
-	  		</div>
-	  	</div>
-	</div>
-  </body>
+
 </html>
