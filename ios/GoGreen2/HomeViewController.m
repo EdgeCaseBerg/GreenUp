@@ -67,17 +67,27 @@
 
 -(IBAction)toggleCleanUp:(id)sender
 {
-    [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
-    if([[[ContainerViewController sharedContainer] theMapViewController] logging])
+    if(![[[ContainerViewController sharedContainer] theMapViewController] logging])
     {
-        self.startDate = [NSDate date];
-        
-        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(cleanUpCounter:) userInfo:nil repeats:YES];
-
-        [[ContainerViewController sharedContainer] switchMapView];
+        if([[ContainerViewController sharedContainer] networkingReachability])
+        {
+            [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
+            self.startDate = [NSDate date];
+            
+            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(cleanUpCounter:) userInfo:nil repeats:YES];
+            
+            [[ContainerViewController sharedContainer] switchMapViewAndDownloadData:TRUE];
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Start Cleaning" message:@"You dont appear to have a network connection, please connect and try and start cleaning" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+            [alert show];
+        }
     }
     else
     {
+        [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
+        
         [self.previousLoggingTimes addObject:[NSNumber numberWithDouble:(-1 * [self.startDate timeIntervalSinceNow])]];
         if([[[[ContainerViewController sharedContainer] theHomeViewController] view] frame].origin.x == 0 && [[[[ContainerViewController sharedContainer] theHomeViewController] view] frame].size.width != 0)
         {

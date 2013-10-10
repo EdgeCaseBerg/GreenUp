@@ -55,9 +55,17 @@
     //Marker Submitted
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postMarker:) name:@"postMarker" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewWillAppear:) name:@"switchedToMap" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(prepareMapToAppear:) name:@"switchedToMap" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(goToMapPin:) name:@"showMapPin" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMapPinForPinShow) name:@"goToMapPin" object:nil];
+    
+    //Networking Callbacks
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatesFromNetwork:) name:@"finishedDownloadingHeatMap" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatesFromNetwork:) name:@"finishedDownloadingMapPins" object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedPushingHeatMap:) name:@"finishedPushingHeatMap" object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedPushingMapPins:) name:@"finishedPushingMapPins" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingPinsForShowPin:) name:@"finishedGettingPinsForShowPin" object:nil];
     
     return self;
 }
@@ -120,10 +128,23 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self prepareMapToAppear:nil];
+}
+
+-(IBAction)prepareMapToAppear:(NSNotification *)sender
+{
+    //Get Updates From Server
     [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
     [self getMapPins];
-    [self updateHeatMapOverlay];
-    [self updateHeatMapWithNewPins];
+}
+
+-(void)updatesFromNetwork:(NSNotification *)sender
+{
+    if(self.finishedDownloadingHeatMap && self.finishedDownloadingMapPins)
+    {
+        [self updateHeatMapOverlay];
+        [self updateHeatMapWithNewPins];
+    }
 }
 
 
@@ -201,9 +222,17 @@
 -(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
     HeatMapPin *selectedMapPin = view.annotation;
-    [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:selectedMapPin.pinID];
-    [[ContainerViewController sharedContainer] switchMessageView];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"showSeletedMessage" object:nil];
+    id pinID = selectedMapPin.pinID;
+    if(![selectedMapPin.pinID isEqualToNumber:@420])
+    {
+        [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:pinID];
+        [[ContainerViewController sharedContainer] switchMessageView];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"getMessagesForShowingSelectedMessage" object:nil];
+    }
+    {
+        NSLog(@"jhk jhg hjgk hjg kjh jh hjk khkggjhgjkgj gjhkg jhjkg kjh gj  jhg kj hg jhg jh");
+    }
+    
 }
 
 #pragma mark - GPS Location Methods
@@ -317,6 +346,8 @@
         else if(self.loggingForMarker && self.logging)
         {
             //-------------- We Are Logging AND ALSO Want To Drop A Marker --------------
+            self.loggingForMarker = FALSE;
+            
             [self.gatheredMapPoints addObject:mapPoint];
             [self.gatheredMapPointsQueue addObject:mapPoint];
             
@@ -374,9 +405,6 @@
             [self.mapView regionThatFits:region];
              */
         }
-        
-        //Turn Off Pin Flag
-        self.loggingForMarker = FALSE;
     }
 }
 
@@ -411,45 +439,57 @@
     //self.tempPinRef = nil;
 }
 
--(void)goToMapPin:(NSNotification *)sender
+-(IBAction)finishedGettingPinsForShowPin:(NSNotification *)sender
 {
-    NSLog(@"INTEGER OF ID: %llu", self.pinIDToShow.longLongValue);
-    HeatMapPin *pinToShow = nil;
-    for(HeatMapPin *pin in self.downloadedMapPins)
+    //Hide the loading overlay
+    [[ContainerViewController sharedContainer] hideLoadingViewAbrupt:TRUE];
+    
+    NSNumber *statusCode = sender.object;
+    if([statusCode integerValue] == 200)
     {
-        if([pin.pinID isEqualToNumber:self.pinIDToShow])
+        HeatMapPin *pinToShow = nil;
+        for(HeatMapPin *pin in self.downloadedMapPins)
         {
-            pinToShow = pin;
+            if([pin.pinID isEqualToNumber:self.pinIDToShow])
+            {
+                pinToShow = pin;
+            }
         }
-    }
-    for(HeatMapPin *pin in self.gatheredMapPins)
-    {
-        if([pin.pinID isEqualToNumber:self.pinIDToShow])
+        for(HeatMapPin *pin in self.gatheredMapPins)
         {
-            pinToShow = pin;
+            if([pin.pinID isEqualToNumber:self.pinIDToShow])
+            {
+                pinToShow = pin;
+            }
         }
-    }
-    
-    //Center The Map
-    [self.mapView setRegion:MKCoordinateRegionMake(pinToShow.coordinate, MKCoordinateSpanMake(.015, .15)) animated:FALSE];
-    
-    //Add Fade View
-    self.fadeView = [[UIView alloc] initWithFrame:self.mapView.frame];
-    [self.fadeView setBackgroundColor:[UIColor blackColor]];
-    [self.fadeView setAlpha:.8];
-    [self.view addSubview:self.fadeView];
-    
-    //Add Fake Pin Overlay
-    CGPoint pinPointInSuperView = [self.mapView convertCoordinate:pinToShow.coordinate toPointToView:self.view];
-    UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashMarker.png"]];
-    [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 15, pinPointInSuperView.y - 34, 30, 34)];
+        
+        //Center The Map
+        if(self.mapView.region.span.latitudeDelta > 0.025 || self.mapView.region.span.longitudeDelta > 0.025)
+        {
+            [self.mapView setRegion:MKCoordinateRegionMake(pinToShow.coordinate, MKCoordinateSpanMake(0.015, 0.025)) animated:FALSE];
+        }
+        else
+        {
+            [self.mapView setRegion:MKCoordinateRegionMake(pinToShow.coordinate, MKCoordinateSpanMake(self.mapView.region.span.latitudeDelta, self.mapView.region.span.longitudeDelta)) animated:FALSE];
+        }
 
-    [self.fadeView addSubview:fakePin];
-    
-    //Remove View
-    [self performSelector:@selector(fadeOutFadeView:) withObject:nil afterDelay:1];
+        //Add Fade View
+        self.fadeView = [[UIView alloc] initWithFrame:self.mapView.frame];
+        [self.fadeView setBackgroundColor:[UIColor blackColor]];
+        [self.fadeView setAlpha:.8];
+        [self.view addSubview:self.fadeView];
+        
+        //Add Fake Pin Overlay
+        CGPoint pinPointInSuperView = [self.mapView convertCoordinate:pinToShow.coordinate toPointToView:self.view];
+        UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashMarker.png"]];
+        [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 16, pinPointInSuperView.y - 34, 30, 34)];
+        
+        [self.fadeView addSubview:fakePin];
+        
+        //Remove View
+        [self performSelector:@selector(fadeOutFadeView:) withObject:nil afterDelay:1];
+    }
 }
-
 
 -(IBAction)fadeOutFadeView:(id)sender
 {
@@ -569,29 +609,90 @@
 
 -(void)getMapPins
 {
-    NSMutableArray *newDownloadedPins = [[NSMutableArray alloc] init];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-        //Background Process Block
-        
-        NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
-        
-        NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:self.mapView.region.center.latitude], [NSNumber numberWithFloat:self.mapView.region.center.longitude], [NSNumber numberWithFloat:self.mapView.region.span.latitudeDelta], [NSNumber numberWithFloat:self.mapView.region.span.longitudeDelta], nil];
-        
-         
-        NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
-
-        NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
-        
-        dispatch_async(dispatch_get_main_queue(),^{
-            //Completion Block
+    self.finishedDownloadingMapPins = FALSE;
+    
+    if([[ContainerViewController sharedContainer] networkingReachability])
+    {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+            //Background Process Block
             
-            NSString *statusCode = [response objectForKey:@"status_code"];
+            NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
             
-            if([statusCode integerValue] == 200)
-            {
-                [self.downloadedMapPins removeAllObjects];
-                for(NSDictionary *networkPin in [response objectForKey:@"pins"])
+            NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:self.mapView.region.center.latitude], [NSNumber numberWithFloat:self.mapView.region.center.longitude], [NSNumber numberWithFloat:self.mapView.region.span.latitudeDelta], [NSNumber numberWithFloat:self.mapView.region.span.longitudeDelta], nil];
+            
+            
+            NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+            
+            NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                //Completion Block
+                
+                NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                if([statusCode integerValue] == 200)
                 {
+                    [self.downloadedMapPins removeAllObjects];
+                    
+                    for(NSDictionary *networkPin in [response objectForKey:@"pins"])
+                    {
+                        //Add New Pins
+                        HeatMapPin *newPin = [[HeatMapPin alloc] init];
+                        NSString *stringPinID = [[networkPin objectForKey:@"id"] stringValue];
+                        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                        [f setNumberStyle:NSNumberFormatterDecimalStyle];
+                        newPin.pinID = [f numberFromString:stringPinID];
+                        newPin.message = [networkPin objectForKey:@"message"];
+                        newPin.coordinate = CLLocationCoordinate2DMake([[networkPin objectForKey:@"latDegrees"] doubleValue], [[networkPin objectForKey:@"lonDegrees"] doubleValue]);
+                        newPin.type = [networkPin objectForKey:@"type"];
+                        newPin.message = [networkPin objectForKey:@"message"];
+                        newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
+                        
+                        [self.downloadedMapPins addObject:newPin];
+                    }
+                    
+                    self.finishedDownloadingMapPins = TRUE;
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:statusCode];
+                }
+                else
+                {
+                    self.finishedDownloadingMapPins = TRUE;
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:statusCode];
+                }
+            });
+        });
+    }
+    else
+    {
+        self.finishedDownloadingMapPins = TRUE;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:@"-1"];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    
+}
+
+-(void)getMapPinForPinShow
+{
+    if([[ContainerViewController sharedContainer] networkingReachability])
+    {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+            //Background Process Block
+            
+            NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:[NSString stringWithFormat:@"%@?id=%@",PINS_RELATIVE_URL, self.pinIDToShow.stringValue] withPort:API_PORT withProperties:nil];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                //Completion Block
+                
+                NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                if([statusCode integerValue] == 200)
+                {
+                    [self.downloadedMapPins removeAllObjects];
+      
+                    NSDictionary *networkPin = [response objectForKey:@"pin"];
+                    
                     //Add New Pins
                     HeatMapPin *newPin = [[HeatMapPin alloc] init];
                     NSString *stringPinID = [[networkPin objectForKey:@"id"] stringValue];
@@ -603,73 +704,99 @@
                     newPin.type = [networkPin objectForKey:@"type"];
                     newPin.message = [networkPin objectForKey:@"message"];
                     newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
-                
+                    
                     [self.downloadedMapPins addObject:newPin];
+                
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingPinsForShowPin" object:[NSNumber numberWithInt:statusCode.integerValue]];
                 }
-            }
+                else
+                {
+                    self.finishedDownloadingMapPins = TRUE;
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingPinsForShowPin" object:[NSNumber numberWithInt:statusCode.integerValue]];
+                }
+            });
         });
-    });
+    }
+    else
+    {
+        self.finishedDownloadingMapPins = TRUE;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:[NSNumber numberWithInt:-1]];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    
 }
 
 -(IBAction)postMarker:(NSNotification *)sender
 {
-    NSString *message = sender.object;
-    self.tempPinRef.message = message;
-    
-    //Perform Post Code To Update With Server
-    NSMutableArray *objects = [[NSMutableArray alloc] init];
-    [objects addFloat:self.tempPinRef.coordinate.latitude];
-    [objects addFloat:self.tempPinRef.coordinate.longitude];
-    [objects addObject:Message_Type_MARKER];
-    [objects addObject:message];
-    [objects addBool:FALSE];
-    
-    NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", @"addressed", nil]];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-        //Background Process Block
-        NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+    if([[ContainerViewController sharedContainer] networkingReachability])
+    {
+        NSString *message = sender.object;
+        self.tempPinRef.message = message;
         
+        //Perform Post Code To Update With Server
+        NSMutableArray *objects = [[NSMutableArray alloc] init];
+        [objects addFloat:self.tempPinRef.coordinate.latitude];
+        [objects addFloat:self.tempPinRef.coordinate.longitude];
+        [objects addObject:Message_Type_MARKER];
+        [objects addObject:message];
+        [objects addBool:FALSE];
         
-        dispatch_async(dispatch_get_main_queue(),^{
-            //Completion Block
-            NSString *statusCode = [response objectForKey:@"status_code"];
-            if([statusCode integerValue] != 200)
-            {
-                //Request Failed Remove Pin From Map
-                [self.mapView removeAnnotation:self.tempPinRef];
-                
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-                [alert show];
-            }
-            else
-            {
-                NSString *pinID = [response objectForKey:@"pin_id"];
-                if(pinID == nil)
+        NSArray *pinOnMap = self.mapView.annotations;
+        
+        NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", @"addressed", nil]];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+            //Background Process Block
+            NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                //Completion Block
+                NSString *statusCode = [response objectForKey:@"status_code"];
+                if([statusCode integerValue] != 200)
                 {
                     //Request Failed Remove Pin From Map
                     [self.mapView removeAnnotation:self.tempPinRef];
+                    
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
                     [alert show];
                 }
                 else
                 {
-                    //Worked
+                    NSString *pinID = [response objectForKey:@"pin_id"];
+                    if(pinID == nil)
+                    {
+                        //Request Failed Remove Pin From Map
+                        [self.mapView removeAnnotation:self.tempPinRef];
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+                        [alert show];
+                    }
+                    else
+                    {
+                        //Worked
+                        self.tempPinRef.pinID = [NSNumber numberWithLongLong:pinID.longLongValue];
+                    }
                 }
-            }
-            
-            //self.tempPinRef = nil;
+                
+                //self.tempPinRef = nil;
+            });
         });
-    });
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Pin" message:@"You dont appear to have a network connection, please connect and retry posting the pin." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
+    }
 }
 
 -(void)pushHeatMapDataToServer
 {
     //If the number of gathered points in the queue array is equal to our define or we have the overdue flag set. Update our gathered points with the server!
-    NSLog(@"COUNTER: %d - TOTAL: %d", self.gatheredMapPointsQueue.count, self.gatheredMapPoints.count);
     if(self.gatheredMapPointsQueue.count >= UPLOAD_QUEUE_LENGTH || self.pushOverdue)
     {
-        if(![self networkingReachability])
+        if(![[ContainerViewController sharedContainer] networkingReachability])
         {
             //If We Dont Have Service, Mark As Overdue
             self.pushOverdue = TRUE;
@@ -730,19 +857,14 @@
 }
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
 {
+    self.finishedDownloadingHeatMap = FALSE;
+    
     //Generation Properties
     NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
     NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:location.center.latitude], [NSNumber numberWithFloat:location.center.longitude], [NSNumber numberWithFloat:span.latitudeDelta], [NSNumber numberWithFloat:span.longitudeDelta], nil];
     
     NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
-    
-    /*
-    NSLog(@"Lon: %f", location.center.longitude);
-    NSLog(@"Lat: %f", location.center.latitude);
-    NSLog(@"Span-Lon: %f", span.longitudeDelta);
-    NSLog(@"Span-Lat: %f", span.latitudeDelta);
-    */
-    
+ 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
         //Background Process Block
         NSDictionary *results = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:parameters];
@@ -767,10 +889,14 @@
                     
                     [self.downloadedMapPoints addObject:newPoint];
                 }
+                
+                self.finishedDownloadingHeatMap = TRUE;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingHeatMap" object:statusCode];
             }
             else
             {
-                NSLog(@"*************GET ERROR OCCURED: %@", [results objectForKey:@"Error_Message"]);
+                self.finishedDownloadingHeatMap = TRUE;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingHeatMap" object:statusCode];
             }
         });
     });
@@ -786,20 +912,6 @@
     [self updateHeatMapOverlay];
 }
 
-#pragma mark - Network Reachability
--(BOOL)networkingReachability
-{
-    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
-    if (networkStatus == NotReachable)
-    {
-        return FALSE;
-    }
-    else
-    {
-        return TRUE;
-    }        
-}
 
 #pragma mark - Other Methods
 - (void)didReceiveMemoryWarning

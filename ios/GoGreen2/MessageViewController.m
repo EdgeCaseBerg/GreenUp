@@ -109,11 +109,17 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMessageAddressed:) name:@"toggleMessageAddressed" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSelectedMessage:) name:@"showSeletedMessage" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMessageForFirstPageOfShowMessage) name:@"getMessagesForShowingSelectedMessage" object:nil];
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingNewPageForScrolling:) name:@"finishedGettingNewPageForScrolling" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingNewPageForShowingNewMessage:) name:@"finishedGettingNewPageForShowingNewMessage" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingMessageForFirstPageOfShowMessage:) name:@"finishedGettingMessageForFirstPageOfShowMessage" object:nil];
+
     return self;
 }
-
 
 - (void)viewDidLoad
 {
@@ -138,9 +144,9 @@
 }
 
 #pragma mark - Networking Delegates
--(void)getMessages
+-(void)getMessageForFirstPageOfShowMessage
 {
-    if([self networkingReachability])
+    if([[ContainerViewController sharedContainer] networkingReachability])
     {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             //Background Process Block
@@ -182,32 +188,81 @@
                         [self.messages addObject:newMessage];
                         //[newDownloadedMessages addObject:newMessage];
                     }
-                    /*
-                    NSMutableArray *messagesToRemove = [[NSMutableArray alloc] init];
-                    for(NetworkMessage *messages in self.messages)
-                    {
-                        BOOL foundInDownloads = FALSE;
-                        for(NetworkMessage *newMessage in newDownloadedMessages)
-                        {
-                            if([newMessage.messageID isEqualToNumber:messages.messageID])
-                            {
-                                foundInDownloads = TRUE;
-                            }
-                        }
-                        if(!foundInDownloads)
-                        {
-                            [messagesToRemove addObject:messages];
-                        }
-                    }
-                    for(NetworkMessage *messageToDelete in messagesToRemove)
-                    {
-                        [self.messages removeObject:messageToDelete];
-                    }
-                    */
                     
-                    NSDictionary *pages = [response objectForKey:@"nextPage"];
-                    if(![[pages objectForKey:@"next"] isEqualToString:@"<null>"])
-                        self.nextPageURL = [pages objectForKey:@"next"];
+                    NSDictionary *pages = [response objectForKey:@"page"];
+                    if(![[pages objectForKey:@"next"] isEqual:[NSNull null]])
+                    {
+                        NSString *fullURL = [pages objectForKey:@"next"];
+                        NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
+                        self.nextPageURL = [NSString stringWithFormat:@"/api/%@", [components objectAtIndex:1]];
+                    }
+                    
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingMessageForFirstPageOfShowMessage" object:[NSNumber numberWithInt:statusCode.integerValue]];
+                }
+                
+            });
+        });
+    }
+    else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingMessageForFirstPageOfShowMessage" object:[NSNumber numberWithInt:-1]];
+    }
+}
+
+-(void)getMessages
+{
+    if([[ContainerViewController sharedContainer] networkingReachability])
+    {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+            //Background Process Block
+            //Get New Message List
+            NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:nil];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                //Completion Block
+                NSString *statusCode = [response objectForKey:@"status_code"];
+                if([statusCode integerValue] == 200)
+                {
+                    //Remove Old Messages Incase Removed
+                    [self.messages removeAllObjects];
+                    
+                    NSArray *comments = [response objectForKey:@"comments"];
+                    //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
+                    for(NSDictionary *comment in comments)
+                    {
+                        NetworkMessage *newMessage = [[NetworkMessage alloc] init];
+                        newMessage.messageContent = [comment objectForKey:@"message"];
+                        newMessage.messageID = [comment objectForKey:@"id"];
+                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                        [dateFormatter setDateFormat:@"E M d H:m:s y"];
+                        newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
+                        
+                        newMessage.messageType = [comment objectForKey:@"type"];
+                        id pinID = [comment objectForKey:@"pin"];
+                        if([pinID isKindOfClass:[NSNumber class]])
+                        {
+                            newMessage.pinID = [comment objectForKey:@"pin"];
+                        }
+                        else
+                        {
+                            newMessage.pinID = nil;
+                        }
+                        
+                        newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
+                        
+                        [self.messages addObject:newMessage];
+                        //[newDownloadedMessages addObject:newMessage];
+                    }
+                    
+                    NSDictionary *pages = [response objectForKey:@"page"];
+                    if(![[pages objectForKey:@"next"] isEqual:[NSNull null]])
+                    {
+                        NSString *fullURL = [pages objectForKey:@"next"];
+                        NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
+                        self.nextPageURL = [NSString stringWithFormat:@"/api/%@", [components objectAtIndex:1]];
+                    }
+                        
                     
                     [self.theTableView reloadData];
                 }
@@ -215,11 +270,143 @@
             });
         });
     }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+}
+
+-(void)getMessageByAppendingPageForScrolling
+{
+    if([[ContainerViewController sharedContainer] networkingReachability])
+    {
+        NSMutableArray *newMessages = [[NSMutableArray alloc] init];;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+            //Background Process Block
+            //Get New Message List
+            
+            NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:self.nextPageURL withPort:API_PORT withProperties:nil];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                //Completion Block
+                NSString *statusCode = [response objectForKey:@"status_code"];
+                if([statusCode integerValue] == 200)
+                {
+                    NSArray *comments = [response objectForKey:@"comments"];
+                    //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
+                    for(NSDictionary *comment in comments)
+                    {
+                        NetworkMessage *newMessage = [[NetworkMessage alloc] init];
+                        newMessage.messageContent = [comment objectForKey:@"message"];
+                        newMessage.messageID = [comment objectForKey:@"id"];
+                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                        [dateFormatter setDateFormat:@"E M d H:m:s y"];
+                        newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
+                        
+                        newMessage.messageType = [comment objectForKey:@"type"];
+                        id pinID = [comment objectForKey:@"pin"];
+                        if([pinID isKindOfClass:[NSNumber class]])
+                        {
+                            newMessage.pinID = [comment objectForKey:@"pin"];
+                        }
+                        else
+                        {
+                            newMessage.pinID = nil;
+                        }
+                        
+                        newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
+                        
+                        [newMessages addObject:newMessage];
+                    }
+                    
+                    NSDictionary *pages = [response objectForKey:@"page"];
+                    if(![[pages objectForKey:@"next"] isEqualToString:@"<null>"])
+                    {
+                        NSString *fullURL = [pages objectForKey:@"next"];
+                        NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
+                        self.nextPageURL = [NSString stringWithFormat:@"/api/%@", [components objectAtIndex:1]];
+                    }
+
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingNewPageForScrolling" object:newMessages];
+                }
+            });
+        });
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+}
+
+-(void)getMessageByAppendingPageForShowMessage
+{
+    if([[ContainerViewController sharedContainer] networkingReachability])
+    {
+        NSMutableArray *newMessages = [[NSMutableArray alloc] init];;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+            //Background Process Block
+            //Get New Message List
+            
+            NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:self.nextPageURL withPort:API_PORT withProperties:nil];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                //Completion Block
+                NSString *statusCode = [response objectForKey:@"status_code"];
+                if([statusCode integerValue] == 200)
+                {
+                    NSArray *comments = [response objectForKey:@"comments"];
+                    //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
+                    for(NSDictionary *comment in comments)
+                    {
+                        NetworkMessage *newMessage = [[NetworkMessage alloc] init];
+                        newMessage.messageContent = [comment objectForKey:@"message"];
+                        newMessage.messageID = [comment objectForKey:@"id"];
+                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                        [dateFormatter setDateFormat:@"E M d H:m:s y"];
+                        newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
+                        
+                        newMessage.messageType = [comment objectForKey:@"type"];
+                        id pinID = [comment objectForKey:@"pin"];
+                        if([pinID isKindOfClass:[NSNumber class]])
+                        {
+                            newMessage.pinID = [comment objectForKey:@"pin"];
+                        }
+                        else
+                        {
+                            newMessage.pinID = nil;
+                        }
+                        
+                        newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
+                        
+                        [newMessages addObject:newMessage];
+                    }
+                    
+                    NSDictionary *pages = [response objectForKey:@"page"];
+                    if(![[pages objectForKey:@"next"] isEqual:[NSNull null]])
+                    {
+                        NSString *fullURL = [pages objectForKey:@"next"];
+                        NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
+                        self.nextPageURL = [NSString stringWithFormat:@"/api/%@", [components objectAtIndex:1]];
+                    }
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingNewPageForShowingNewMessage" object:newMessages];
+                }
+            });
+        });
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
+    }
 }
 
 -(IBAction)postMessage:(id)sender
 {
-    if([self networkingReachability])
+    if([[ContainerViewController sharedContainer] networkingReachability])
     {
         if([self.messageTextView.text isEqualToString:@""])
         {
@@ -260,11 +447,84 @@
     }
     else
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Message" message:@"You dont appear to have a network connect, please connect and retry posting your message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Message" message:@"You dont appear to have a network connection, please connect and retry posting your message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
 }
 
+
+#pragma mark Get Call Backs
+
+-(IBAction)finishedGettingMessageForFirstPageOfShowMessage:(NSNotification *)sender
+{
+    NSNumber *statusCode = sender.object;
+    if([statusCode integerValue] == 200)
+    {
+        [self showSelectedMessage];
+    }
+}
+
+-(IBAction)finishedGettingNewPageForScrolling:(NSNotification *)sender
+{
+    NSArray *newMessages = sender.object;
+    
+    [self.messages addObjectsFromArray:newMessages];
+    
+    NSMutableArray *newIndexes = [[NSMutableArray alloc] init];
+    for(NetworkMessage *msg in newMessages)
+    {
+        [newIndexes addObject:[NSIndexPath indexPathForRow:[self.messages indexOfObject:msg] inSection:0]];
+    }
+    [self.theTableView insertRowsAtIndexPaths:newIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+-(IBAction)finishedGettingNewPageForShowingNewMessage:(NSNotification *)sender
+{
+    NSArray *newMessages = sender.object;
+    
+    NSIndexPath *indexPathOfFoundMessage = nil;
+    NetworkMessage *selectedMessage = nil;
+    for(NetworkMessage *msg in newMessages)
+    {
+        if([msg.pinID isEqualToNumber:self.pinIDToShow])
+        {
+            selectedMessage = msg;
+        }
+    }
+    
+    //Insert New Messages Into Table
+    NSMutableArray *newIndexes = [[NSMutableArray alloc] init];
+    [self.messages addObjectsFromArray:newMessages];
+    
+    for(NetworkMessage *msg in newMessages)
+    {
+        [newIndexes addObject:[NSIndexPath indexPathForRow:[self.messages indexOfObject:msg] inSection:0]];
+    }
+    [self.theTableView insertRowsAtIndexPaths:newIndexes withRowAnimation:UITableViewRowAnimationNone];
+    
+    if(selectedMessage == nil)
+    {
+        //recurrently get new messages
+        [self getMessageByAppendingPageForShowMessage];
+    }
+    else
+    {
+        //Scroll to new position
+        NSIndexPath *indexOfSelectedMessage = [NSIndexPath indexPathForRow:[self.messages indexOfObject:selectedMessage] inSection:0];
+        
+        [self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:FALSE];
+        
+        for(int i = 0; i < self.messages.count; i++)
+        {
+            if(i != indexOfSelectedMessage.row)
+            {
+                MessageCell *cell = (MessageCell *)[self.theTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                [cell.contentView setAlpha:0];
+            }
+        }
+        
+        [self performSelector:@selector(removeMessageFadeOverlay:) withObject:indexOfSelectedMessage afterDelay:1];
+    }
+}
 
 #pragma mark - TABLE VIEW DATA SOURCE
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -346,7 +606,7 @@
     CGSize size;
     if([msg.messageType isEqualToString:Message_Type_ADMIN] || [msg.messageType isEqualToString:Message_Type_MARKER])
     {
-        size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(230, CGFLOAT_MAX)];
+        size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
         size.height += + 20 + 6;
         NSLog(@"SIZE HEIGHT: %f - WIDTH: %f", size.height, size.width);
         //return size;
@@ -459,7 +719,7 @@
     self.currentMessageType = notificationRecieved.object;
 }
 
--(IBAction)showSelectedMessage:(id)sender
+-(void)showSelectedMessage
 {
     NetworkMessage *selectedMessage = nil;
     NSIndexPath *indexOfSelectedMessage = nil;
@@ -478,17 +738,31 @@
         count++;
     }
     
-    [self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:FALSE];
-    
-    for(int i = 0; i < self.messages.count; i++)
+    //Check we might not have the pin look through more pages until we find it!
+    if(indexOfSelectedMessage == nil)
     {
-        if(i != indexOfSelectedMessage.row)
-        {
-            MessageCell *cell = (MessageCell *)[self.theTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            [cell.contentView setAlpha:0];
-        }
+        [self getMessageForFirstPageOfShowMessage];
     }
-    
+    else
+    {
+        [self.theTableView reloadData];
+        [self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:FALSE];
+        
+        for(int i = 0; i < self.messages.count; i++)
+        {
+            if(i != indexOfSelectedMessage.row)
+            {
+                MessageCell *cell = (MessageCell *)[self.theTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                [cell.contentView setAlpha:0];
+            }
+        }
+        
+        [self performSelector:@selector(removeMessageFadeOverlay:) withObject:indexOfSelectedMessage afterDelay:1];
+    }
+}
+
+-(IBAction)removeMessageFadeOverlay:(NSIndexPath *)indexOfSelectedMessage
+{
     VoidBlock animate = ^
     {
         for(int i = 0; i < self.messages.count; i++)
@@ -500,8 +774,10 @@
             }
         }
     };
+    
+    self.pinIDToShow = nil;
     //Perform Animations
-    [UIView animateWithDuration:3 animations:animate];
+    [UIView animateWithDuration:.25 animations:animate];
 }
 
 #pragma mark - KEYBOARD CALL BACKS
@@ -545,6 +821,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    /*
     BOOL foundEndOfList = FALSE;
     for(NSIndexPath *path in [self.theTableView indexPathsForVisibleRows])
     {
@@ -555,37 +832,15 @@
         }
     }
     
-    if(foundEndOfList)
+    if(foundEndOfList && self.nextPageURL != nil)
     {
-#warning MAKE GET REQUEST FOR self.NEXTPAGEURL
-        
-        self.nextPageURL = nil;
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"END OF LIST" message:@"" delegate:nil cancelButtonTitle:@"close" otherButtonTitles:nil, nil];
-        //[alert show];
-    }
-
-    /*
-    if(self.keyboardIsOut)
-        [self hideKeyboard];
-    
-    [self.messageTextView resignFirstResponder];
-     */
-}
-
-#pragma mark - Network Reachability
--(BOOL)networkingReachability
-{
-    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
-    if (networkStatus == NotReachable)
-    {
-        return FALSE;
+        [self getMessageByAppendingPageForScrolling];
     }
     else
     {
-        return TRUE;
+        NSLog(@"NON");
     }
+     */
 }
 
 #pragma mark - Toggle Message Validity

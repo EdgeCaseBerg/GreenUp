@@ -10,4 +10,9 @@
 
 @implementation UIColor (methods)
 
++(UIColor *)greenUpGreenColor
+{
+    return [UIColor colorWithRed:56 green:155 blue:66 alpha:1];
+}
+
 @end

@@ -9,6 +9,7 @@
 #import "MenuView.h"
 #import "ContainerViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "UIColor+methods.h"
 
 @implementation MenuView
 
@@ -125,7 +126,7 @@
     self.previousTimeIntervals = [[[ContainerViewController sharedContainer] theHomeViewController] previousLoggingTimes];
     
     UIView *scrollViewContainerView = [[UIView alloc] initWithFrame:CGRectMake(5, 30, self.frame.size.width - 10, 100)];
-    [scrollViewContainerView setBackgroundColor:[UIColor greenColor]];
+    [scrollViewContainerView setBackgroundColor:[UIColor greenUpGreenColor]];
     [scrollViewContainerView.layer setCornerRadius:5];
     
     UILabel *keyLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, scrollViewContainerView.frame.size.width - 10, 20)];

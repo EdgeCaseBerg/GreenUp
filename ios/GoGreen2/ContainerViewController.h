@@ -34,6 +34,7 @@ typedef void (^VoidBlock)(void);
 @property (strong, nonatomic) MapViewController *theMapViewController;
 @property (strong, nonatomic) MessageViewController *theMessageViewController;
 @property (strong, nonatomic) MenuView *theMenuView;
+@property (strong, nonatomic) UIView *loadingView;
 
 +(ContainerViewController *)sharedContainer;
 
@@ -42,7 +43,7 @@ typedef void (^VoidBlock)(void);
 
 //Changing Views
 -(void)switchHomeView;
--(void)switchMapView;
+-(void)switchMapViewAndDownloadData:(BOOL)downloadData;
 -(void)switchMessageView;
 -(IBAction)shiftRight:(id)sender;
 -(IBAction)shiftLeft:(id)sender;
@@ -50,5 +51,11 @@ typedef void (^VoidBlock)(void);
 -(void)hideAllButtMapView;
 -(void)hideAllButtMessageView;
 -(char *)getIPFromHost:(NSString *)host;
+
+-(BOOL)networkingReachability;
+
+-(void)showLoadingView;
+-(void)hideLoadingViewAbrupt:(BOOL)abrupt;
+-(void)removeLoadingViewFromView;
 
 @end

@@ -75,6 +75,10 @@ static ContainerViewController* theContainerView = nil;
         [self.view addSubview:vc.view];
     }
     
+    self.loadingView = [[UIView alloc] initWithFrame:self.theHomeViewController.view.frame];
+    [self.loadingView setBackgroundColor:[UIColor blackColor]];
+    [self.loadingView setAlpha:0];
+    
     //TabBar
     if([UIScreen mainScreen].bounds.size.height == 568)
     {
@@ -130,7 +134,7 @@ static ContainerViewController* theContainerView = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMenu:) name:@"toggleMenu" object:nil];
 }
 
-#pragma - Tab Bar Delegate
+#pragma mark - Tab Bar Delegate
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
 {
@@ -142,7 +146,7 @@ static ContainerViewController* theContainerView = nil;
     }
     else if(item.tag == Map_VIEW)
     {
-        [self switchMapView];
+        [self switchMapViewAndDownloadData:TRUE];
     }
     else if(item.tag == MESSAGE_VIEW)
     {
@@ -173,10 +177,10 @@ static ContainerViewController* theContainerView = nil;
     
     [self performSelector:@selector(hideAllButtHomeView:) withObject:nil afterDelay:.3];
 }
--(void)switchMapView
+-(void)switchMapViewAndDownloadData:(BOOL)downloadData
 {
     //Update HeatMap
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMap" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMap" object:[NSNumber numberWithBool:downloadData]];
     
     [self.item1 setImage:[UIImage imageNamed:@"home.png"]];
     [self.item2 setImage:[UIImage imageNamed:@"map_active.png"]];
@@ -246,7 +250,7 @@ static ContainerViewController* theContainerView = nil;
     // Dispose of any resources that can be recreated.
 }
 
-#pragma - Menu
+#pragma mark - Menu
 
 -(IBAction)toggleMenu:(id)sender
 {
@@ -273,7 +277,7 @@ static ContainerViewController* theContainerView = nil;
     [UIView animateWithDuration:.2 animations:animate2];
 }
 
-#pragma - Shifting Views
+#pragma mark - Shifting Views
 
 -(IBAction)shiftRight:(id)sender
 {
@@ -283,7 +287,7 @@ static ContainerViewController* theContainerView = nil;
         {
             if([vc isKindOfClass:[HomeViewController class]])
             {
-                [self switchMapView];
+                [self switchMapViewAndDownloadData:TRUE];
                 break;
             }
             else if([vc isKindOfClass:[MapViewController class]])
@@ -318,10 +322,66 @@ static ContainerViewController* theContainerView = nil;
             }
             else if([vc isKindOfClass:[MessageViewController class]])
             {
-                [self switchMapView];
+                [self switchMapViewAndDownloadData:TRUE];
                 break;
             }
         }
+    }
+}
+
+#pragma mark - Loading View
+-(void)showLoadingView
+{
+    [self.loadingView setAlpha:0];
+    [self.theMapViewController.view addSubview:self.loadingView];
+    VoidBlock animate = ^
+    {
+        [self.loadingView setAlpha:0.8];
+    };
+    //Perform Animations
+    [UIView animateWithDuration:.3 animations:animate];
+}
+
+-(void)hideLoadingViewAbrupt:(BOOL)abrupt
+{
+    [self.view addSubview:self.loadingView];
+    VoidBlock animate = ^
+    {
+        [self.loadingView setAlpha:0];
+    };
+    //Perform Animations
+    if(abrupt)
+    {
+        [UIView animateWithDuration:0 animations:animate];
+        [self performSelector:@selector(removeLoadingViewFromView) withObject:nil afterDelay:0];
+    }
+    else
+    {
+        [UIView animateWithDuration:.3 animations:animate];
+        [self performSelector:@selector(removeLoadingViewFromView) withObject:nil afterDelay:.3];
+    }
+    
+}
+
+-(void)removeLoadingViewFromView
+{
+    [self.loadingView removeFromSuperview];
+}
+
+#pragma mark - Network Reachability
+-(BOOL)networkingReachability
+{
+    return TRUE;
+    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable)
+    {
+        return FALSE;
+    }
+    else
+    {
+        return TRUE;
     }
 }
 

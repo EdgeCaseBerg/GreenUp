@@ -46,6 +46,13 @@
 @property (strong, nonatomic) HeatMapPin *tempPinRef;
 @property (strong, nonatomic) NSNumber *pinIDToShow;
 @property (strong, nonatomic) UIView *fadeView;
+
+@property BOOL updatingView;
+@property BOOL finishedDownloadingHeatMap;
+@property BOOL finishedDownloadingMapPins;
+@property BOOL pushedHeatMap;
+@property BOOL pusheMapPins;
+
 @property BOOL pushOverdue;
 
 

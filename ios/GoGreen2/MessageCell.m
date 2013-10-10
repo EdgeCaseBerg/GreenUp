@@ -73,9 +73,9 @@
             
             int height = self.textContentLabel.frame.size.height + self.timeStampLabel.frame.size.height;
             int origin = self.textContentLabel.frame.origin.y;
-            origin += (height / 2) - 15;
+            origin += (height / 2) - 17;
             
-            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(15, origin, 24, 30)];
+            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(15, origin, 34, 30)];
             [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"trasbag.png"] forState:UIControlStateNormal];
             
             //Add Subviews to ContentView
@@ -139,9 +139,9 @@
             
             int height = self.textContentLabel.frame.size.height + self.timeStampLabel.frame.size.height;
             int origin = self.textContentLabel.frame.origin.y;
-            origin += (height / 2) - 15;
+            origin += (height / 2) - 17;
             
-            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(15, origin, 24, 30)];
+            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(12, origin, 30, 34)];
             [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"trashMarker.png"] forState:UIControlStateNormal];
             [self.showPinOnMap addTarget:self action:@selector(bringMeToMapPin:) forControlEvents:UIControlEventTouchUpInside];
             
@@ -213,9 +213,10 @@
 
 -(IBAction)bringMeToMapPin:(UIButton *)sender
 {
+    [[ContainerViewController sharedContainer] showLoadingView];
     [[[ContainerViewController sharedContainer] theMapViewController] setPinIDToShow:self.messageObject.pinID];
-    [[ContainerViewController sharedContainer] switchMapView];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"showMapPin" object:nil];
+    [[ContainerViewController sharedContainer] switchMapViewAndDownloadData:FALSE];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"goToMapPin" object:nil];
 }
 
 

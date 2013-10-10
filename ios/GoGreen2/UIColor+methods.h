@@ -10,4 +10,6 @@
 
 @interface UIColor (methods)
 
++(UIColor *)greenUpGreenColor;
+
 @end

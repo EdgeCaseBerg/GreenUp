@@ -13,7 +13,11 @@ typedef void (^VoidBlock)(void);
 @interface MapPinSelectorView : UIView
 
 @property int rotationCount;
-@property (nonatomic, strong) UIImageView *pinWheelImage;
+@property (nonatomic, strong) UIImageView *pinWheelRed;
+@property (nonatomic, strong) UIImageView *pinWheelBlue;
+@property (nonatomic, strong) UIImageView *pinWheelGreen;
+@property (nonatomic, strong) UIImageView *pinWheelOrange;
+
 
 - (id)initWithMapPoint:(CGPoint)sentPoint andDuration:(float)spinDuration;
 
