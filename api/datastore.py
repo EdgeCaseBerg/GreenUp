@@ -110,6 +110,8 @@ class AbstractionLayer():
 	def submitPin(self, latDegrees, lonDegrees, pinType, message,addressed=False):
 		# datastore write
 		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message,addressed=addressed).put()
+		increment("Pins")
+		logging.info("Pins Written.")
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
 		increment("Comments")
 		logging.info("Comment Written.")
@@ -139,6 +141,8 @@ class AbstractionLayer():
 				logging.info("deleting c")
 				c.delete()
 			pin.delete()
+			decrement("Pins")
+			logging.info("Pins Written.")
 			memcache.flush_all()
 			initialPage(None,"comment")
 			decrement("Comments")
