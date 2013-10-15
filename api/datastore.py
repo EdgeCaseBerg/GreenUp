@@ -10,165 +10,20 @@
 from google.appengine.ext import db
 from handlerBase import *
 from google.appengine.api import memcache
+from google.appengine.api import datastore_errors
 from google.appengine.datastore import entity_pb
 import logging
 import hashlib
 from datetime import date
 from constants import *
 
-class Campaign(db.Model):
-	pass
-
-class Greenup(Campaign):	
-	@classmethod
-	def app_key(cls):
-	    return db.Key.from_path('apps', 'greenup')
-
-class Pins(Greenup):
-	message = db.TextProperty()
-	pinType = db.StringProperty(choices=PIN_TYPES)
-	# these must be stored precisely
-	lat = db.FloatProperty()
-	lon = db.FloatProperty()
-
-	@classmethod
-	def by_id(cls, pinId):
-		return Pins.get_by_id(pinId, parent = app_key())
-
-	@classmethod
-	def by_message(cls, message):
-		bc = Pins.all().ancestor(Pins.app_key()).filter('message =', message).get()
-		return bc
-
-	@classmethod
-	def by_type(cls, pinType):
-		bt = Pins.all().ancestor(Pins.app_key()).filter('pinType =', pinType).get()
-		return bt
-
-	@classmethod
-	def by_lat(cls,lat, offset=None):
-		if not offset:
-			latitudes = Pins.all().ancestor(Pins.app_key()).filter('lat =', lat)
-			return latitudes
-		else:
-			latitudes = Pins.all().ancestor(Pins.app_key()).filter('lat >=', lat).filter('lat <=', lat + offset)
-		return latitudes
-
-	@classmethod
-	def by_lon(cls,lon, offset=None):
-		if not offset:
-			longitudes = Pins.all().ancestor(Pins.app_key()).filter('lon =', lon)
-		else:
-			longitudes = Pins.all().ancestor(Pins.app_key()).filter('lon >=', lon).filter('lon <=', lon + offset)
-		return longitudes
-
-	@classmethod
-	def get_all_pins(cls):
-		pins = Pins.all().ancestor(Pins.app_key())
-		return pins
-
-	@classmethod
-	def by_lat_and_lon(cls, lat, latOffset, lon, lonOffset):
-		if not latOffset:
-			both = Pins.all().ancestor(Pins.app_key()).filter('lon =', lon).filter('lat =', lat)
-			return both
-		else:
-			longitudes = Pins.all().ancestor(Pins.app_key()).filter('lon >=', lon).filter('lon <=', lon + offset)
-			latitudes = Pins.all().ancestor(Pins.app_key()).filter('lat >=', lat).filter('lat <=', lat + offset)
-		return longitudes, latitudes
-
-class Comments(Greenup):
-
-	commentType = db.StringProperty(choices=COMMENT_TYPES)
-	message = db.TextProperty()
-	timeSent = db.DateTimeProperty(auto_now_add = True)	
-	pin = db.ReferenceProperty(Pins, collection_name ='pins')
-
-	@classmethod
-	def by_id(cls, commentId):
-		return Comments.get_by_id(commentId, parent = app_key())
-	
-	@classmethod
-	def by_type(cls,cType):
-		ct = Comments.all().ancestor(Comments.app_key()).filter('commentType =', cType).get()	
-		return ct
-
-	@classmethod
-	def by_type_pagination(cls, cType):
-		ct = Comments.all().ancestor(Comments.app_key()).filter('commentType =', cType)
-		return ct
-
-class GridPoints(Greenup):
-	lat = db.FloatProperty()
-	lon = db.FloatProperty()
-	secondsWorked = db.IntegerProperty()
-
-	@classmethod
-	def by_id(cls, gridId):
-		return GridPoints.get_by_id(gridId, parent = app_key())
-
-	@classmethod
-	def by_lat(cls,lat):
-		latitudes = GridPoints.all().ancestor(GridPoints.app_key()).filter('lat =', lat).get()
-		return latitudes
-
-	@classmethod
-	def by_lon(cls,lon):
-		longitudes = GridPoints.all().ancestor(GridPoints.app_key()).filter('lon =', lon).get()
-		return longitudes
-
-	@classmethod
-	def by_latOffset(cls, latDegrees, offset):
-		# query all points with a latitude between latDegrees and offset
-		# this defines a chunk of the map containing the desired points
-		q = GridPoints().all().ancestor(GridPoints.app_key()).filter('lat >=', latDegrees).filter('lat <=', latDegrees + offset).get()
-		return q
-
-	@classmethod
-	def by_lonOffset(cls, lonDegrees, offset):
-		# query all points with a latitude between lonDegrees and offset
-		q = GridPoints().all().ancestor(GridPoints.app_key()).filter('lon >=', lonDegrees).filter('lon <=', lonDegrees + offset).get()
-		return q
-
-	@classmethod
-	def get_all_delayed(cls):
-		return GridPoints.all().ancestor(GridPoints.app_key())
-
-class DebugReports(Greenup):
-
-	errorMessage = db.StringProperty()
-	debugInfo = db.StringProperty()
-	timeSent = db.DateTimeProperty(auto_now_add = True)
-	origin = db.StringProperty(required = True)
-	authhash = db.StringProperty(required = True)
-
-	@classmethod 
-	def by_id(cls, debugId):
-		return DebugReports.get_by_id(debugId, parent=app_key())
-
-	@classmethod
-	def by_origin(cls, origin):
-		errors = DebugReports.all().ancestor(DebugReports.app_key()).filter('origin =', origin).get()	
-		return ct 
-
-	@classmethod
-	def since(cls,timeSent):
-		#gets delayed. call get on it
-		return DebugReports.all().ancestor(DebugReports.app_key()).filter('timeSent >',timeSent)
-
-	@classmethod
-	def by_hash(cls,theHash):
-		return DebugReports.all().ancestor(DebugReports.app_key()).filter('authhash =',theHash).get()		
-
-	@classmethod
-	def get_all(cls):
-		return DebugReports.all().ancestor(DebugReports.app_key()).get()
-
-	@classmethod
-	def get_all_delayed(cls):
-		return DebugReports.all().ancestor(DebugReports.app_key())
-
-
+from db_models.campaign import Campaign
+from db_models.greenup import Greenup
+from db_models.grid import GridPoints
+from db_models.pins import Pins
+from db_models.reports import  DebugReports
+from db_models.comment import  Comments
+from db_models.entityCounter import *
 
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
@@ -186,15 +41,53 @@ class AbstractionLayer():
 		#Convert comments to simple dictionaries for the comments endpoint to use
 		dictComments = []
 		for comment in comments:
-			dictComments.append({'type' : comment.commentType, 'message' : comment.message, 'pin' : comment.pin.key().id() if comment.pin is not None else "0" , 'timestamp' : comment.timeSent.ctime(), 'id' : comment.key().id()})
-		return dictComments
+			try:
+				pinId = comment.pin.key().id() if comment.pin is not None else "0"
+				addressed = False
+				if pinId != "0":
+					addressed = comment.pin.addressed
+				dictComments.append({
+					'type' : comment.commentType, 
+					'message' : comment.message, 
+					'pin' : pinId , 
+					'addressed' : addressed,
+					'timestamp' : comment.timeSent.ctime(), 
+					'id' : comment.key().id()})
+			except datastore_errors.Error, e:
+				#Give 0 shits about reference properties being broken becuase the pin deletion wont work right
+				if e.args[0][0:40] == "ReferenceProperty failed to be resolved:":
+					comment.delete()
+				else: 
+					raise
+				
+		return sorted(dictComments, key=lambda k: k['timestamp'], reverse=True) 
+		
 
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
-		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
+		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin)
+		cmt.put()
+
+		# write to entitycounter of comments type
+		increment(cmt.__class__.__name__)
+		logging.info("Comment Written: %s" %str(cmt.__class__.__name__))
+
 		#Clear the memcache then recreate the initial page.
 		memcache.flush_all()
 		initialPage(None,"comment")
+
+	def deleteComment(self,commentId):
+		c = Comments.by_id(commentId)
+		if c is None:
+			return False
+		else:
+			#Delete any pins associated
+			if c.pin is not None:
+				c.pin.delete()
+			c.delete()
+			decrement("Comments")
+			logging.info("Comment Deleted.")
+		return True
 
 	def getHeatmap(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None, precision=None,raw=False):
 		return heatmapFiltering(latDegrees,lonDegrees,latOffset,lonOffset,precision,raw)
@@ -203,38 +96,84 @@ class AbstractionLayer():
 		# datastore write
 		for point in heatmapList:
 			#We may want to consider some error checking here.
-			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
+			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked'])
+			gp.put()
+			increment(gp.__class__.__name__)
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None):
 		# datastore read
 		return pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset)
 
-	def submitPin(self, latDegrees, lonDegrees, pinType, message):
+	def getSinglePin(self, pinId):
+		return Pins.by_id(int(pinId))
+
+	def submitPin(self, latDegrees, lonDegrees, pinType, message,addressed=False):
 		# datastore write
-		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
+		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message,addressed=addressed).put()
+		increment("Pins")
+		logging.info("Pins Written.")
 		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
+		increment("Comments")
+		logging.info("Comment Written.")
+		memcache.flush_all()
+		initialPage(None,"comment")
+		return p.id()
+
+	def addressPin(self, pinId, addressed):
+		p = Pins.by_id(pinId)
+		if p is not None:
+			p.addressed = addressed
+			p.put()
+			memcache.flush_all()
+			initialPage(None,"comment")
+			return True
+		else:
+			return False
+
+	def deletePin(self,pinId):
+		pin = Pins.by_id(int(pinId))
+		if pin is None:
+			return False
+		else:
+			#Remove any comments attached:
+			cs = Comments.all().filter('Pins=', pin.key().id())
+			for c in cs:
+				logging.info("deleting c")
+				c.delete()
+			pin.delete()
+			decrement("Pins")
+			logging.info("Pins Written.")
+			memcache.flush_all()
+			initialPage(None,"comment")
+			decrement("Comments")
+			logging.info("Comment Deleted.")
+			return True
+
 
 	def submitDebug(self, errorMessage, debugInfo,origin):
 		# submit information about a bug
 		authhash = hashlib.sha256(errorMessage + debugInfo).hexdigest()
-		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin).put()
+		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin)
+		debug.put()
 		memcache.flush_all()
+		increment(debug.__class__.__name__)
+		initialPage(None,"comment")
 
 	def getDebug(self, debugId=None, theHash=None,since=None,page=1):
 		# retrieve information about a bug by id, hash, or get them all with optional since time
 		# add JSON Formatting to the returns such that {  "errror_message" : "Stack trace or debugging information here", "id":id, "time":timestamp } 
-		if debugId:
+		if debugId is not None:
 			bugs = DebugReports.by_id(debugId) 
-		elif theHash:
+		elif theHash is not None:
 			bugs = DebugReports.by_hash(theHash)
 		else:
 			bugs = paging(page,None,"debug",since)
-		logging.info(bugs)
 		return debugFormatter(bugs)	
 
 	def deleteDebug(self,origin,theHash):
 		# remove a bug from the datastore (if only we could remove all the bugs from the datastore! )
 		debugReport = DebugReports.by_hash(theHash)
+		decrement(debugReport.__class__.__name__)
 		msg = "Succesful Deletion"
 		if debugReport is None:
 			stat = HTTP_NOT_FOUND
@@ -245,6 +184,28 @@ class AbstractionLayer():
 			else:
 				stat = HTTP_NOT_FOUND
 		return stat,msg
+
+	def checkNextPage(self, page):
+		ec = EntityCounter()
+		total = ec.count('Comments')
+		logging.info("Comments total = %s" %(total)) 
+
+		extra = False
+		if (total % PAGE_SIZE != 0):
+			extra = True
+		logging.info("Extra? : %s" %( str(extra) ))
+
+		totalPages = total / PAGE_SIZE
+		logging.info("Total number of pages: %s" %( str(totalPages)) )
+
+		if extra:
+			totalPages = totalPages + 1
+		logging.info("Final Number of Pages: %s" %(str(totalPages)))
+
+		if page < totalPages:
+			return page + 1
+
+		return None	
 
 '''
 	Memecache layer, used to perform necessary methods for interaction with cache. Note that the cache becomes stale after X 
@@ -298,7 +259,7 @@ def initialPage(typeFilter=None, endpoint="comment",sinceTime=None):
 	initialCursorKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter,1)
 	initialPageKey = 'greenup_%s_%ss_page_%s_%s' %(sinceTime,endpoint,typeFilter,1)
 
-	results = querySet[0:20]
+	results = querySet[0:PAGE_SIZE]
 	# sort, newest to oldest
 	results = sorted(results, key=lambda dataPoint: dataPoint.timeSent, reverse=True)
 	memcache.set(initialPageKey, serialize_entities(results))
@@ -314,7 +275,7 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 		When a hit occurs (and a hit must occur, as the first cursor and page is always read into memcache), build each page
 		and their cursors up until we reach the page requested. Then, return that page of results.
 	'''
-	resultsPerPage = 20
+	resultsPerPage = PAGE_SIZE
 	querySet = None
 	if typeFilter is not None and typeFilter is not "":
 		#typeFilter must always by null when coming from debug endpoint
@@ -338,6 +299,8 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 		initialPage(typeFilter,endpoint,sinceTime)
 
 	if not pageInCache:
+		if page is None:
+			page = 1
 		# if there is no such item in memecache. we must build up all pages up to 'page' in memecache
 		for x in range(page - 1,0, -1):
 			# check to see if the page key x is in cache
@@ -356,7 +319,7 @@ def paging(page=1,typeFilter=None,endpoint="comment",sinceTime=None):
 			oldKey = 'greenup_%s_%s_paging_cursor_%s_%s' %(sinceTime,endpoint,typeFilter, oldNum)
 			cursor = memcache.get(oldKey)
 
-			# get 20 results from where we left off
+			# get PAGE_SIZE results from where we left off
 			results = querySet.with_cursor(start_cursor=cursor)
 			results = results.run(limit=resultsPerPage)
 
@@ -436,7 +399,7 @@ def heatmapFiltering(latDegrees=None,lonDegrees=None,latOffset=1,lonOffset=1,pre
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  point.lon and point.lon < (lonDegrees + lonOffset)):
 				continue
-		key = "%.*f_%.*f" % (latOffset,point.lat,lonOffset,point.lon)
+		key = "%.*f_%.*f" % (int(precision),point.lat,int(precision),point.lon)
 		if key in buckets:
 			buckets[key]['secondsWorked'] += point.secondsWorked
 			if buckets[key]['secondsWorked'] > highestVal:
@@ -487,24 +450,28 @@ def pinsFiltering(latDegrees, latOffset, lonDegrees, lonOffset):
 			#filter on lon
 			if not ((lonDegrees - lonOffset) <  pin.lon and pin.lon < (lonDegrees + lonOffset)):
 				continue
-			pins.append( {  'latDegrees' : pin.lat,
+			pins.append( {  'id' : pin.key().id(),
+							'latDegrees' : pin.lat,
 							'lonDegrees' : pin.lon,
 							'type'		 : pin.pinType,
-							'message'	 : pin.message }
+							'message'	 : pin.message,
+							'addressed'  : pin.addressed }
 						)
 		return pins
 
 	else:
-		return "Something bad happened"
+		return "[]"
 
 def pinFormatter(dbPins):
 	# properly format pins in json and return
 	pins = []
 	for pin in dbPins:		
-		pins.append( {  'latDegrees' : pin.lat,
+		pins.append( {  'id' : pin.key().id(),
+						'latDegrees' : pin.lat,
 						'lonDegrees' : pin.lon,
 						'type'		 : pin.pinType,
-						'message'	 : pin.message }
+						'message'	 : pin.message,
+						'addressed'  : pin.addressed }
 					)
 	return pins
 def debugFormatter(dbBugs):

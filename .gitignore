@@ -3,3 +3,4 @@ error.log
 config.php
 html/
 *.pyc
+*.DS_Store

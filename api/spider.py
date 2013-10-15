@@ -10,6 +10,7 @@ import logging
 import types
 import numbers
 import datetime
+import argparse
 
 from constants import *
 
@@ -47,6 +48,7 @@ class Spider(object):
 
 
 		request.add_header('Content-Type', 'application/json')
+		request.add_header('User-Agent', 'api-spider-test')
 		request.get_method = lambda: httpMethod
 
 		self.spiderlink  = opener.open(request)
@@ -86,7 +88,7 @@ class Spider(object):
 def validateCommentsGETRequest(comments_response_to_get):
 	#define filters
 	comment_response_keys = ['comments','page','status_code']
-	comment_response_inner_keys = {'comments' : ['type','message','timestamp','pin','id'],
+	comment_response_inner_keys = {'comments' : ['addressed', 'type','message','timestamp','pin','id'],
 									'page' : ['next','previous']
 	}
 	
@@ -169,7 +171,7 @@ def validateHeatmapPUTRequest(heatmap_response_to_put):
 
 def validatePINSGetRequest(pins_response_to_get):
 	pins_response_keys = ['status_code', 'pins']
-	pins_response_inner_keys = ['latDegrees','lonDegrees','type','message']
+	pins_response_inner_keys = ['latDegrees','lonDegrees','type','message','id','addressed']
 	assert pins_response_to_get is not None
 	for out_key,out_val in pins_response_to_get.iteritems():
 		assert out_key in pins_response_keys
@@ -179,8 +181,10 @@ def validatePINSGetRequest(pins_response_to_get):
 			for pin in out_val:
 				for key,value in pin.iteritems():
 					assert key in pins_response_inner_keys
-					if key in ['latDegrees','lonDegrees']:
+					if key in ['latDegrees','lonDegrees','id']:
 						assert isinstance(value,numbers.Number)
+					elif key == "addressed":
+						pass
 					else:
 						assert isinstance(value,basestring)
 	return True
@@ -189,6 +193,7 @@ def validatePinsPOSTRequest(pins_response_to_post):
 	assert pins_response_to_post is not None
 	assert 'status_code' in pins_response_to_post
 	assert 'message' in pins_response_to_post
+	assert 'pin_id' in pins_response_to_post
 	assert pins_response_to_post['status_code'] == 200
 	assert pins_response_to_post['message'] == "Successful submit"
 	return True
@@ -250,11 +255,18 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 			assert val == HTTP_NOT_FOUND
 	return True
 
-
 if __name__ == "__main__":
-	baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
-	baseURL = 'http://greenupapp.appspot.com/api'
-	baseURL = 'http://localhost:30002/api'
+	parser = argparse.ArgumentParser(description='Test the API.')
+	parser.add_argument('-p', help='Specify local port to run the spider against. If blank, run against app url.')
+	args = parser.parse_args()
+	if args.p:
+		port = args.p
+		baseURL = 'http://localhost:%s/api' % port
+	else:
+		baseURL = 'http://greenupapp.appspot.com/api'
+	
+	# baseURL = 'http://greenup.xenonapps.com/api' #doesn't work because of 302 instead of 307 on forwarding domain
+	
 	#make things easier later on
 	endPoints = {'home' : baseURL,
 			'comments' : baseURL + '/comments',
@@ -278,10 +290,10 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_OK
 	comments_response_to_get = tester.getJSON()
 	newlist = sorted(comments_response_to_get['comments'], key=lambda k: k['timestamp'], reverse=True) 
-	assert comments_response_to_get['comments'] == newlist
+	#assert comments_response_to_get['comments'] == newlist
 
 	#Next attempt to submit responses and verify that they are what they should be
-	tester.followLink(endPoints['comments'],withData={'type' : 'forum', 'page' : 1})
+	tester.followLink(endPoints['comments'],withData={'type' : 'COMMENT', 'page' : 1})
 	assert tester.getCode() == HTTP_OK
 	comments_response_to_get = tester.getJSON()
 	assert validateCommentsGETRequest(comments_response_to_get) is True
@@ -292,12 +304,12 @@ if __name__ == "__main__":
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Give it another bad value that it will be ok with (it doesn't care about negatives)
-	tester.followLink(endPoints['comments'],withData={'type' : 'trash+pickup', 'page' : -2})
+	tester.followLink(endPoints['comments'],withData={'type' : 'ADMIN', 'page' : -2})
 	assert tester.getCode() == HTTP_OK
 	assert validateCommentsGETRequest(tester.getJSON()) is True
 
 	#Send a POST request to the endpoint with appropriate data
-	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : "This is a test message"},httpMethod="POST")
+	tester.followLink(endPoints['comments'],withData={"type" : "COMMENT", "message" : "This is a test message"},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
 	assert validateCommentsPOSTRequest(tester.getJSON()) is True
 
@@ -310,19 +322,28 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['comments'],withData={"type" : "meessage", "message" : "This is another test message", "pin" : "badpinval"},httpMethod="POST")
+	tester.followLink(endPoints['comments'],withData={"type" : "COMMENT", "message" : "This is another test message", "pin" : "badpinval"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Send a POST request to the endpoint with an empty message
-	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : " "},httpMethod="POST")
+	tester.followLink(endPoints['comments'],withData={"type" : "COMMENT", "message" : " "},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Send a POST request to the endpoint with more than 140 characters (145) in the message
-	tester.followLink(endPoints['comments'],withData={"type" : "forum", "message" : "sfsdfsdlfhdslfhlksdfhlsdkfdsklfjldskjfkldsjflksdjflksdhfjsdkbgdsibosdihgfiosdhglkdshslkdhgioerhgoirenglsdkhgsdhgoierhgoirehglkfsdhgiofhgioshglks"},httpMethod="POST")
+	tester.followLink(endPoints['comments'],withData={"type" : "COMMENT", "message" : "sfsdfsdlfhdslfhlksdfhlsdkfdsklfjldskjfkldsjflksdjflksdhfjsdkbgdsibosdihgfiosdhglkdshslkdhgioerhgoirenglsdkhgsdhgoierhgoirehglkfsdhgiofhgioshglks"},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#Test delete a comment
+	tester.followLink(endPoints['comments'])
+	response = tester.getJSON()
+	tester.followLink(endPoints['comments'],withData={"id" : response['comments'][0]['id']},httpMethod="DELETE")
+	assert tester.getCode() == HTTP_DELETED
+	tester.followLink(endPoints['comments'],withData={"id" : response['comments'][0]['id']},httpMethod="DELETE")
+	assert tester.getCode() == HTTP_NOT_FOUND
+
 
 	print "\tComments Endpoint Passed all asserted tests"
 
@@ -451,68 +472,78 @@ if __name__ == "__main__":
 
 
 	#Test the POST
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "ADMIN", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
 	assert validatePinsPOSTRequest(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 25, 'type' : "help needed", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 25, 'type' : "MARKER", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
 	assert validatePinsPOSTRequest(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "general message", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 50, 'type' : "COMMENT", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
 	assert validatePinsPOSTRequest(tester.getJSON()) is True
 
 	#Test the POSt with missing keys
-	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'type' : "ADMIN", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 50, 'type' : "ADMIN", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'latDegrees' : 2, 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'latDegrees' : 2, 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'type' : "trash pickup", 'latDegrees' : 2},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'lonDegrees' : 50, 'type' : "ADMIN", 'latDegrees' : 2,"addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Test the POST with keys but bad data
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : -240, 'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : -240, 'lonDegrees' : 50, 'type' : "ADMIN", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 190, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : 190, 'type' : "ADMIN", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 440, 'lonDegrees' : 50, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 440, 'lonDegrees' : 50, 'type' : "ADMIN", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "ADMIN", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
 	#Because of pythons dynamic typing this is ok
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : "40", 'lonDegrees' : "50", 'type' : "trash pickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : "40", 'lonDegrees' : "50", 'type' : "ADMIN", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_OK
 	assert validatePinsPOSTRequest(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trashickup", 'message' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trashickup", 'message' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "trash pickup", 'messsage' : "Test"},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : 40, 'lonDegrees' : -930, 'type' : "ADMIN", 'messsage' : "Test","addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 
-	tester.followLink(endPoints['pins'],withData={'latDegrees' : None, 'lonDegrees' : None, 'type' : None, 'message' : None},httpMethod="POST")
+	tester.followLink(endPoints['pins'],withData={'latDegrees' : None, 'lonDegrees' : None, 'type' : None, 'message' : None,"addressed" : False},httpMethod="POST")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
+
+	#Test deleting a pin:
+	tester.followLink(endPoints['pins'])
+	response = tester.getJSON()
+	tester.followLink(endPoints['pins'],withData={'id':response['pins'][0]['id'] }, httpMethod="DELETE")
+	assert tester.getCode() == HTTP_DELETED
+	tester.followLink(endPoints['pins'],withData={'id':response['pins'][0]['id'] }, httpMethod="DELETE")
+	assert tester.getCode() == HTTP_NOT_FOUND
+	
+
 
 	print "\tPins endpoint passed all assertion tests"
 
@@ -609,20 +640,7 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 	
-
-
-
-
-
-
-
-
-
-
 	print "\tDebug endpoint passed all assertion tests"
-
-
-
 	print "Spider API Test complete. All tests passed"
 
 	
