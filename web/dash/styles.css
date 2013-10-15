@@ -146,6 +146,10 @@ ul{
     box-shadow: 0px 5px 3px 0px rgba(3, 3, 3, 0.2);
 }
 
+.analyticsDateSelectNest{
+    padding-top: 5px;
+}
+
 #extendedAnalyticsDialog{
     border-bottom: solid 1px #444;
     text-align: left;

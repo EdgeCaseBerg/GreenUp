@@ -147,12 +147,12 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
             <div class="analyticsHeader">
               Analytics Sample Period
             </div>
-            <div class="analyticsData">
-              <ul>
-                <li>Start Date:&nbsp;<input type="text" class="datePicker" id="startDateInput"/></li>
-                <li> End Date: &nbsp;&nbsp;<input type="text" class="datePicker" id="endDateInput"/></li>
-                <li><input type="button" value="update" id="updateAnalyticsButton" /></li>
-              </ul>
+            <div class="analyticsData analyticsDateSelectNest">
+              <table>
+                <tr><td>Start Date:</td><td><input type="text" class="datePicker" id="startDateInput"/></td></tr>
+                <tr><td>End Date:</td><td><input type="text" class="datePicker" id="endDateInput"/></td></tr>
+                <tr><td></td><td><input type="button" value="update" id="updateAnalyticsButton" /></td></tr>
+              </table>
             </div>
           </div>
 
