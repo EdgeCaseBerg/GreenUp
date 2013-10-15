@@ -16,13 +16,77 @@ import hashlib
 from datetime import date
 from constants import *
 
+# manage the EntityCounter class
+def increment(caller):
+	ec = EntityCounter()
+	ec.setType(caller)
+	keyName = "caller_%s" %(caller)
+	q = EntityCounter.get_or_insert(key_name=keyName, entityType=caller)
+	ec.increment(q.key())
+
+def decrement(caller):
+	ec = EntityCounter()
+	ec.setType(caller)
+	q = EntityCounter.all().filter('entityType =', caller).get()
+
+	if q is not None:
+		# an entityCounter object with this type does exist. all is well
+		ec.decrement(q.key())
+	else:
+		# and EntityCounter for this type doesn't exist in the datastore. How did this happen?
+		# it can happen because we can ask to delete something that doesn't exist. -E. --the spider does it
+		#raise Exception("Trying to decrement from a non-existant entityCounter type")	
+		pass #removed raise becuase it causes a problem with spider.
+
+
 class Campaign(db.Model):
-	pass
+	# specify callbacks (and callforwards?) as well as override all of the put and delete methods provided by db.model so we can use them for counting
+	def before_put(self):
+		logging.info("before put")
+
+	def after_put(self):
+		logging.info("after put")
+		# this is where we do the counting
+		increment(self.__class__.__name__)
+		
+	def before_delete(self):
+		logging.info("before delete")
+
+	def after_delete(self):
+		logging.info("after delete")
+		# this is where we do the counting
+		decrement(self.__class__.__name__)
+
+	def put_async(self):
+		return db.put_async(self)
+
+	def delete_async(self):
+		return db.delete_async(self)
+
+	def put(self):
+		# call get_result() on the return value to block on the call (returns an object containing the response data)
+		return self.put_async().get_result()
+
+	def delete(self):
+		# call get_result() on the return value to block on the call (returns an object containing the response data)
+		return self.delete_async().get_result()
+
+def normalize_entities(entities):
+	# used to convert an entity_pb (protocol buffer, which is what entities is right now) into an actual entity (an instance of db.model)
+	if not isinstance(entities, (list, tuple)):
+		entities = (entities,)
+	return [e for e in entities if hasattr(e, 'before_put')]
+'''
+	monkeypatching thusly:
+	1) Rename the old version of the function we're replacing so we can still access it
+	2) define the replacement for the function
+	3) replace the original with our replacement  
+'''
 
 class Greenup(Campaign):	
 	@classmethod
 	def app_key(cls):
-	    return db.Key.from_path('apps', 'greenup')
+		return db.Key.from_path('apps', 'greenup')
 
 class Pins(Greenup):
 	message = db.TextProperty()
@@ -168,7 +232,33 @@ class DebugReports(Greenup):
 	def get_all_delayed(cls):
 		return DebugReports.all().ancestor(DebugReports.app_key())
 
+class EntityCounter(db.Model):
+	# inherits from db.model to avoid running the counting callbacks on itself
+	entityType = db.StringProperty()
+	entityCount = db.IntegerProperty(default=0)
 
+	def setType(self, callerType):
+		self.entityType = callerType
+
+	@db.transactional
+	def increment(self, key, amount=1):
+		# Doing the read, calculation, and write in a single transaction ensures that no other process can interfere with the increment
+		obj = db.get(key)
+		obj.entityCount += amount
+		obj.put()
+
+	@db.transactional
+	def decrement(self, key, amount=1):
+		obj = db.get(key)
+		obj.entityCount -= amount
+		obj.put()
+
+	@classmethod
+	def count(cls, eType):
+		ec = EntityCounter.all().filter('entityType =', eType).get()	
+		if ec:
+			return ec.entityCount
+		return 1
 
 '''
 	Abstraction Layer between the user and the datastore, containing methods to processes requests by the endpoints.
@@ -192,7 +282,12 @@ class AbstractionLayer():
 
 	def submitComments(self, commentType, message, pin=None):
 		# datastore write
-		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin).put()
+		cmt = Comments(parent=self.appKey, commentType=commentType, message=message, pin=pin)
+		cmt.put()
+
+		# write to entitycounter of comments type
+		increment(cmt.__class__.__name__)
+
 		#Clear the memcache then recreate the initial page.
 		memcache.flush_all()
 		initialPage(None,"comment")
@@ -204,7 +299,9 @@ class AbstractionLayer():
 		# datastore write
 		for point in heatmapList:
 			#We may want to consider some error checking here.
-			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked']).put()
+			gp = GridPoints(parent=self.appKey, lat=float(point['latDegrees']), lon=float(point['lonDegrees']), secondsWorked=point['secondsWorked'])
+			gp.put()
+			increment(gp.__class__.__name__)
 
 	def getPins(self, latDegrees=None, latOffset=None, lonDegrees=None, lonOffset=None):
 		# datastore read
@@ -212,8 +309,13 @@ class AbstractionLayer():
 
 	def submitPin(self, latDegrees, lonDegrees, pinType, message):
 		# datastore write
-		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message).put()
-		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p).put()
+		p = Pins(parent=self.appKey, lat=latDegrees, lon=lonDegrees, pinType=pinType, message=message)
+		increment(p.__class__.__name__)
+		p = p.put()
+		c = Comments(parent=self.appKey, commentType=pinType,message=message,pin=p)
+		c.put()
+		increment(c.__class__.__name__)
+		
 		memcache.flush_all()
 		initialPage(None,"comment")
 		return p.id()
@@ -222,8 +324,10 @@ class AbstractionLayer():
 	def submitDebug(self, errorMessage, debugInfo,origin):
 		# submit information about a bug
 		authhash = hashlib.sha256(errorMessage + debugInfo).hexdigest()
-		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin).put()
+		debug = DebugReports(parent=self.appKey, errorMessage=errorMessage, debugInfo=debugInfo, authhash=authhash, origin=origin)
+		debug.put()
 		memcache.flush_all()
+		increment(debug.__class__.__name__)
 		initialPage(None,"comment")
 
 	def getDebug(self, debugId=None, theHash=None,since=None,page=1):
@@ -243,6 +347,7 @@ class AbstractionLayer():
 	def deleteDebug(self,origin,theHash):
 		# remove a bug from the datastore (if only we could remove all the bugs from the datastore! )
 		debugReport = DebugReports.by_hash(theHash)
+		decrement(debugReport.__class__.__name__)
 		msg = "Succesful Deletion"
 		if debugReport is None:
 			stat = HTTP_NOT_FOUND
@@ -255,16 +360,24 @@ class AbstractionLayer():
 		return stat,msg
 
 	def checkNextPage(self, page):
-		# check for the presence of a next page in memecache
-		if memcache.get('greenup_%s_%s_paging_cursor_%s_%s' %(None,"comment",None, page+1) ):
-			return page+1
-		else:
-			q = Comments.all()
-			total = q.count()
-			if (((page-1) * PAGE_SIZE) < total):
-				return page+1
-			else:
-				return None
+		ec = EntityCounter()
+		total = ec.count('Comments')
+		logging.info("Comments total = %s" %(total)) 
+
+		extra = False
+		if (total % PAGE_SIZE != 0):
+			extra = True
+		logging.info("Extra? : %s" %( str(extra) ))
+
+		totalPages = total / PAGE_SIZE
+		logging.info("Total number of pages: %s" %( str(totalPages)) )
+
+		if extra:
+			totalPages = totalPages + 1
+		logging.info("Final Number of Pages: %s" %(str(totalPages)))
+
+		if page < totalPages:
+			return page + 1
 
 		return None	
 
