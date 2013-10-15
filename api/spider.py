@@ -255,7 +255,6 @@ def validateDebugDELETE404Response(debugs_response_to_delete):
 			assert val == HTTP_NOT_FOUND
 	return True
 
-
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='Test the API.')
 	parser.add_argument('-p', help='Specify local port to run the spider against. If blank, run against app url.')
@@ -641,20 +640,7 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SYNTAX_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON()) is True
 	
-
-
-
-
-
-
-
-
-
-
 	print "\tDebug endpoint passed all assertion tests"
-
-
-
 	print "Spider API Test complete. All tests passed"
 
 	
