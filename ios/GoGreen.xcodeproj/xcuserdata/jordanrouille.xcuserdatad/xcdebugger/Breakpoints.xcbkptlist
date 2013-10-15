@@ -86,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "402979746.200056"
+         timestampString = "403563110.664366"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "469"
-         endingLineNumber = "469"
+         startingLineNumber = "488"
+         endingLineNumber = "488"
          landmarkName = "-finishedGettingPinsForShowPin:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +99,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "402979746.200056"
+         timestampString = "403563110.664366"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "473"
-         endingLineNumber = "473"
+         startingLineNumber = "492"
+         endingLineNumber = "492"
          landmarkName = "-finishedGettingPinsForShowPin:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -125,12 +125,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "402979746.200056"
+         timestampString = "403563110.664366"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "231"
-         endingLineNumber = "231"
-         landmarkName = "-mapView:didSelectAnnotationView:"
+         startingLineNumber = "760"
+         endingLineNumber = "760"
+         landmarkName = "-postMarker:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "GoGreen2/MapViewController.m"
+         timestampString = "403562780.102859"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "225"
+         endingLineNumber = "225"
+         landmarkName = "-mapView:viewForAnnotation:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -138,12 +151,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "402979830.593457"
+         timestampString = "403562780.102859"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "734"
-         endingLineNumber = "734"
-         landmarkName = "-postMarker:"
+         startingLineNumber = "322"
+         endingLineNumber = "322"
+         landmarkName = "-locationManager:didUpdateLocations:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -151,12 +164,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "402980330.053566"
+         timestampString = "403562214.621783"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "779"
-         endingLineNumber = "779"
-         landmarkName = "-postMarker:"
+         startingLineNumber = "177"
+         endingLineNumber = "177"
+         landmarkName = "-mapView:viewForAnnotation:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -164,25 +177,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "GoGreen2/MapViewController.m"
-         timestampString = "403068022.132664"
+         timestampString = "403564762.057398"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "574"
-         endingLineNumber = "574"
-         landmarkName = "-dropCustomMapPin:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "GoGreen2/MapViewController.m"
-         timestampString = "403068024.903183"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "565"
-         endingLineNumber = "565"
-         landmarkName = "-dropCustomMapPin:"
+         startingLineNumber = "902"
+         endingLineNumber = "902"
+         landmarkName = "-getHeatDataFromServer:andLocation:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

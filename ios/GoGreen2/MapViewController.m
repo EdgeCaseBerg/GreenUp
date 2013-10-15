@@ -17,6 +17,8 @@
 #import <netdb.h>
 #include <arpa/inet.h>
 
+//#include "FTLocationSimulator.h"
+
 #define UPLOAD_QUEUE_LENGTH 5
 #define longPressDuration .5
 
@@ -67,6 +69,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingPinsForShowPin:) name:@"finishedGettingPinsForShowPin" object:nil];
     
+    [self.mapView setShowsUserLocation:TRUE];
+    
     return self;
 }
 
@@ -110,8 +114,8 @@
     MKCoordinateRegion region;
     MKCoordinateSpan span;
     CLLocationCoordinate2D location = CLLocationCoordinate2DMake(44.468581,-73.157959);
-    span.latitudeDelta=1000000000;
-    span.longitudeDelta=1000000000;
+    span.latitudeDelta=100000;
+    span.longitudeDelta=100000;
     region.span = span;
     region.center = location;
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(location, 5*METERS_PER_MILE, 5*METERS_PER_MILE);
@@ -165,9 +169,10 @@
     return [[HeatMapView alloc] initWithOverlay:overlay];
 }
 
+
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
-{    
-    if ([annotation isKindOfClass:[MKUserLocation class]])
+{
+    if([annotation isKindOfClass: [MKUserLocation class]])
     {
         return nil;
     }
@@ -216,23 +221,33 @@
             return nil;
     }
     else
-        return nil;
+    {
+        NSLog(@"ELSE: %@", [annotation class]);
+    }
 }
+
 
 -(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
-    HeatMapPin *selectedMapPin = view.annotation;
-    id pinID = selectedMapPin.pinID;
-    if(![selectedMapPin.pinID isEqualToNumber:@420])
+    if([view isKindOfClass: [MKUserLocation class]])
     {
-        [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:pinID];
-        [[ContainerViewController sharedContainer] switchMessageView];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"getMessagesForShowingSelectedMessage" object:nil];
+        nil;
     }
+    else
     {
-        NSLog(@"jhk jhg hjgk hjg kjh jh hjk khkggjhgjkgj gjhkg jhjkg kjh gj  jhg kj hg jhg jh");
+        HeatMapPin *selectedMapPin = view.annotation;
+        id pinID = selectedMapPin.pinID;
+        if(![selectedMapPin.pinID isEqualToNumber:@420])
+        {
+            [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:pinID];
+            [[ContainerViewController sharedContainer] switchMessageView];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"getMessagesForShowingSelectedMessage" object:nil];
+        }
+        else
+        {
+            NSLog(@"jhk jhg hjgk hjg kjh jh hjk khkggjhgjkgj gjhkg jhjkg kjh gj  jhg kj hg jhg jh");
+        }
     }
-    
 }
 
 #pragma mark - GPS Location Methods
@@ -270,14 +285,18 @@
     // Create the location manager if this object does not
     // already have one.
     if (nil == self.locationManager)
+    {
+        
         self.locationManager = [[CLLocationManager alloc] init];
-    
-    self.locationManager.delegate = self;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
-    
-    // Set a movement threshold for new events.
-    self.locationManager.distanceFilter = 500;
-    
+        self.locationManager.delegate = self;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+
+        // Set a movement threshold for new events.
+        self.locationManager.distanceFilter = 500;
+
+
+    }
+        
     [self.locationManager startUpdatingLocation];
 }
 
@@ -301,7 +320,7 @@
     CLLocation* location = [locations lastObject];
     NSDate* eventDate = location.timestamp;
     NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
-    if (abs(howRecent) < 1.0)
+    if(abs(howRecent) < 1.0)
     {
         //ADD POINTS
         HeatMapPoint *mapPoint = [[HeatMapPoint alloc] init];
@@ -541,7 +560,14 @@
 -(void)updateHeatMapWithNewPins
 {
     //Remove Old
-    [self.mapView removeAnnotations:self.mapView.annotations];
+    for(MKAnnotationView *annotation in self.mapView.annotations)
+    {
+        if([annotation isKindOfClass:[HeatMapPin class]])
+        {
+            [self.mapView removeAnnotation:annotation];
+        }
+    }
+    //[self.mapView removeAnnotations:self.mapView.annotations];
     
     //Add Downloaded Pins
     [self updateMapWithPins:self.downloadedMapPins];

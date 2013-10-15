@@ -149,6 +149,14 @@
 		DFD73A2D1800824800202D57 /* topBar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A211800824700202D57 /* topBar@2x.png */; };
 		DFD73A2E1800824800202D57 /* trashMarker.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A221800824800202D57 /* trashMarker.png */; };
 		DFD73A2F1800824800202D57 /* trashMarker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFD73A231800824800202D57 /* trashMarker@2x.png */; };
+		DFE59BDC180CB3BD00357899 /* sampleRoute1.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DFE59BDB180CB3BD00357899 /* sampleRoute1.gpx */; };
+		DFE59BDE180CB3C400357899 /* sampleRoute2.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DFE59BDD180CB3C400357899 /* sampleRoute2.gpx */; };
+		DFE59BE0180CB3CC00357899 /* sampleRoute3.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DFE59BDF180CB3CC00357899 /* sampleRoute3.gpx */; };
+		DFE59C0A180DB91000357899 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = DFE59BE2180DB91000357899 /* .gitignore */; };
+		DFE59C1D180DB91000357899 /* fakeLocations.kml in Resources */ = {isa = PBXBuildFile; fileRef = DFE59C03180DB91000357899 /* fakeLocations.kml */; };
+		DFE59C1E180DB91000357899 /* FTLocationSimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE59C05180DB91000357899 /* FTLocationSimulator.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		DFE59C1F180DB91000357899 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE59C08180DB91000357899 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		DFE59C20180DB91000357899 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DFE59C09180DB91000357899 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -330,6 +338,17 @@
 		DFD73A211800824700202D57 /* topBar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "topBar@2x.png"; path = "Images/topBar@2x.png"; sourceTree = SOURCE_ROOT; };
 		DFD73A221800824800202D57 /* trashMarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trashMarker.png; path = Images/trashMarker.png; sourceTree = SOURCE_ROOT; };
 		DFD73A231800824800202D57 /* trashMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trashMarker@2x.png"; path = "Images/trashMarker@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFE59BDB180CB3BD00357899 /* sampleRoute1.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sampleRoute1.gpx; sourceTree = "<group>"; };
+		DFE59BDD180CB3C400357899 /* sampleRoute2.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sampleRoute2.gpx; sourceTree = "<group>"; };
+		DFE59BDF180CB3CC00357899 /* sampleRoute3.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sampleRoute3.gpx; sourceTree = "<group>"; };
+		DFE59BE2180DB91000357899 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		DFE59C03180DB91000357899 /* fakeLocations.kml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = fakeLocations.kml; sourceTree = "<group>"; };
+		DFE59C04180DB91000357899 /* FTLocationSimulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTLocationSimulator.h; sourceTree = "<group>"; };
+		DFE59C05180DB91000357899 /* FTLocationSimulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTLocationSimulator.m; sourceTree = "<group>"; };
+		DFE59C06180DB91000357899 /* FTSynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTSynthesizeSingleton.h; sourceTree = "<group>"; };
+		DFE59C07180DB91000357899 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		DFE59C08180DB91000357899 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		DFE59C09180DB91000357899 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -550,6 +569,9 @@
 		39592519177518690035E351 = {
 			isa = PBXGroup;
 			children = (
+				DFE59BDF180CB3CC00357899 /* sampleRoute3.gpx */,
+				DFE59BDD180CB3C400357899 /* sampleRoute2.gpx */,
+				DFE59BDB180CB3BD00357899 /* sampleRoute1.gpx */,
 				DF62E07517C1996700B29D43 /* CFNetwork.framework */,
 				86B89EFE17C1544300FDF820 /* greenHttp */,
 				3959252B177518690035E351 /* GoGreen */,
@@ -571,6 +593,7 @@
 		39592524177518690035E351 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DFE59BE1180DB91000357899 /* FTLocationSimulator */,
 				DFA9AA7917D26654006F58A5 /* NSArray+Primitives */,
 				392B9D8D178F66F300C40B64 /* Heat Map Library */,
 				39D06AFC1783A6A300DD94B7 /* MapKit.framework */,
@@ -731,6 +754,29 @@
 				DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */,
 			);
 			name = "MKMapKit Subclass";
+			sourceTree = "<group>";
+		};
+		DFE59BE1180DB91000357899 /* FTLocationSimulator */ = {
+			isa = PBXGroup;
+			children = (
+				DFE59BE2180DB91000357899 /* .gitignore */,
+				DFE59C02180DB91000357899 /* FTLocationSimulator */,
+				DFE59C09180DB91000357899 /* README.md */,
+			);
+			path = FTLocationSimulator;
+			sourceTree = "<group>";
+		};
+		DFE59C02180DB91000357899 /* FTLocationSimulator */ = {
+			isa = PBXGroup;
+			children = (
+				DFE59C03180DB91000357899 /* fakeLocations.kml */,
+				DFE59C04180DB91000357899 /* FTLocationSimulator.h */,
+				DFE59C05180DB91000357899 /* FTLocationSimulator.m */,
+				DFE59C06180DB91000357899 /* FTSynthesizeSingleton.h */,
+				DFE59C07180DB91000357899 /* RegexKitLite.h */,
+				DFE59C08180DB91000357899 /* RegexKitLite.m */,
+			);
+			path = FTLocationSimulator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -896,6 +942,12 @@
 				DFD73A2D1800824800202D57 /* topBar@2x.png in Resources */,
 				DFD73A2E1800824800202D57 /* trashMarker.png in Resources */,
 				DFD73A2F1800824800202D57 /* trashMarker@2x.png in Resources */,
+				DFE59BDC180CB3BD00357899 /* sampleRoute1.gpx in Resources */,
+				DFE59BDE180CB3C400357899 /* sampleRoute2.gpx in Resources */,
+				DFE59BE0180CB3CC00357899 /* sampleRoute3.gpx in Resources */,
+				DFE59C0A180DB91000357899 /* .gitignore in Resources */,
+				DFE59C1D180DB91000357899 /* fakeLocations.kml in Resources */,
+				DFE59C20180DB91000357899 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -956,6 +1008,8 @@
 				DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */,
 				DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */,
 				DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */,
+				DFE59C1E180DB91000357899 /* FTLocationSimulator.m in Sources */,
+				DFE59C1F180DB91000357899 /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1025,7 +1079,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-licucore",
+				);
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1052,7 +1109,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-licucore",
+				);
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

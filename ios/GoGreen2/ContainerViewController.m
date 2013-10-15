@@ -199,7 +199,6 @@ static ContainerViewController* theContainerView = nil;
     [UIView animateWithDuration:.3 animations:animate];
     
     [self performSelector:@selector(hideAllButtMapView:) withObject:nil afterDelay:.3];
-    
 }
 -(void)switchMessageView
 {
