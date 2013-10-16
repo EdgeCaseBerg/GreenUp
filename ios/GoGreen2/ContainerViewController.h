@@ -16,12 +16,12 @@
 #define HOME_VIEW 0
 #define Map_VIEW 1
 #define MESSAGE_VIEW 2
-#define API_PORT 30002
-#define BASE_URL @"localhost"
-//#define BASE_URL @"greenupapp.appspot.com/"
 
-#define HEAT_MAP_URL @"http://localhost:30002/api/heatmap"
-#define COMMENTS_URL @"http://localhost:30002/api/comments"
+#define API_PORT 30002
+#define BASE_HOST @"localhost"
+#define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
+#define COMMENTS_RELATIVE_URL @"/api/comments"
+#define PINS_RELATIVE_URL @"/api/pins"
 
 typedef void (^VoidBlock)(void);
 
@@ -34,6 +34,7 @@ typedef void (^VoidBlock)(void);
 @property (strong, nonatomic) MapViewController *theMapViewController;
 @property (strong, nonatomic) MessageViewController *theMessageViewController;
 @property (strong, nonatomic) MenuView *theMenuView;
+@property (strong, nonatomic) UIView *loadingView;
 
 +(ContainerViewController *)sharedContainer;
 
@@ -42,7 +43,7 @@ typedef void (^VoidBlock)(void);
 
 //Changing Views
 -(void)switchHomeView;
--(void)switchMapView;
+-(void)switchMapViewAndDownloadData:(BOOL)downloadData;
 -(void)switchMessageView;
 -(IBAction)shiftRight:(id)sender;
 -(IBAction)shiftLeft:(id)sender;
@@ -50,5 +51,11 @@ typedef void (^VoidBlock)(void);
 -(void)hideAllButtMapView;
 -(void)hideAllButtMessageView;
 -(char *)getIPFromHost:(NSString *)host;
+
+-(BOOL)networkingReachability;
+
+-(void)showLoadingView;
+-(void)hideLoadingViewAbrupt:(BOOL)abrupt;
+-(void)removeLoadingViewFromView;
 
 @end

@@ -9,10 +9,14 @@
 #import "ContainerViewController.h"
 //#import "FSNConnection.h"
 #import "greenhttp.h"
-#import "Message.h"
+#import "NetworkMessage.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+#define Message_Type_ADMIN @"ADMIN"
+#define Message_Type_MARKER @"MARKER"
+#define Message_Type_COMMENT @"COMMENT"
 
 @interface ContainerViewController ()
 
@@ -46,7 +50,16 @@ static ContainerViewController* theContainerView = nil;
 -(void)viewDidLoad
 {
     //Initilize the view
-    self.theView = [[ContainerView alloc] initWithFrame:CGRectMake(20, 0, 320, 460)];
+    
+    if([UIScreen mainScreen].bounds.size.height == 568)
+    {
+        self.theView = [[ContainerView alloc] initWithFrame:CGRectMake(20, 0, 320, 548)];
+    }
+    else
+    {
+        self.theView = [[ContainerView alloc] initWithFrame:CGRectMake(20, 0, 320, 460)];
+    }
+    
     self.view = self.theView;
     
     //Views
@@ -62,20 +75,36 @@ static ContainerViewController* theContainerView = nil;
         [self.view addSubview:vc.view];
     }
     
-    //Menu
-    self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
-    [self.view addSubview:self.theMenuView];
+    self.loadingView = [[UIView alloc] initWithFrame:self.theHomeViewController.view.frame];
+    [self.loadingView setBackgroundColor:[UIColor blackColor]];
+    [self.loadingView setAlpha:0];
     
     //TabBar
-    self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 411, 320, 49)];
+    if([UIScreen mainScreen].bounds.size.height == 568)
+    {
+        self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 499, 320, 49)];
+    }
+    else
+    {
+        self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 411, 320, 49)];
+    }
+    [self.theTabBar setBackgroundImage:[UIImage imageNamed:@"bottom_menu.png"]];
+    
     self.theTabBar.delegate = self;
     
-    self.item1 = [[UITabBarItem alloc] initWithTitle:@"Home" image:[UIImage imageNamed:nil] tag:HOME_VIEW];
-    self.item2 = [[UITabBarItem alloc] initWithTitle:@"Map" image:[UIImage imageNamed:nil] tag:Map_VIEW];
-    self.item3 = [[UITabBarItem alloc] initWithTitle:@"Messages" image:[UIImage imageNamed:nil] tag:MESSAGE_VIEW];
+    self.item1 = [[UITabBarItem alloc] initWithTitle:@"Home" image:[UIImage imageNamed:@"home_active.png"] tag:HOME_VIEW];
+    [self.item1 setFinishedSelectedImage:[UIImage imageNamed:@"home_active.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"home.png"]];
+    self.item2 = [[UITabBarItem alloc] initWithTitle:@"Map" image:[UIImage imageNamed:@"map_active.png"] tag:Map_VIEW];
+    [self.item2 setFinishedSelectedImage:[UIImage imageNamed:@"map_active.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"map.png"]];
+    self.item3 = [[UITabBarItem alloc] initWithTitle:@"Messages" image:[UIImage imageNamed:@"comments_active.png"] tag:MESSAGE_VIEW];
+    [self.item3 setFinishedSelectedImage:[UIImage imageNamed:@"comments_active.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"comments.png"]];
     [self.theTabBar setItems:[NSArray arrayWithObjects:self.item1, self.item2, self.item3, nil] animated:YES];
     [self.theTabBar setSelectedItem:[self.theTabBar.items objectAtIndex:0]];
     [self.view addSubview:self.theTabBar];
+    
+    //Menu
+    self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
+    [self.view addSubview:self.theMenuView];
     
     //Up swipe to show settings
     UISwipeGestureRecognizer *upRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(hideMenu:)];
@@ -100,14 +129,15 @@ static ContainerViewController* theContainerView = nil;
     [rightRecognizer setNumberOfTouchesRequired:1];
     [rightRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     [self.view addGestureRecognizer:rightRecognizer];
+    
+    //Notification Center
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMenu:) name:@"toggleMenu" object:nil];
 }
 
-#pragma - Tab Bar Delegate
+#pragma mark - Tab Bar Delegate
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
 {
-    //NSLog(@"View: X: %f - Y: %f - Width: %f - Height: %f", self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
-    //NSLog(@"Home: X: %f - Y: %f - Width: %f - Height: %f", self.theHomeViewController.view.frame.origin.x, self.theHomeViewController.view.frame.origin.y, self.theHomeViewController.view.frame.size.width, self.theHomeViewController.view.frame.size.height);
     [self.theMenuView removeFromSuperview];
     
     if(item.tag == HOME_VIEW)
@@ -116,7 +146,7 @@ static ContainerViewController* theContainerView = nil;
     }
     else if(item.tag == Map_VIEW)
     {
-        [self switchMapView];
+        [self switchMapViewAndDownloadData:TRUE];
     }
     else if(item.tag == MESSAGE_VIEW)
     {
@@ -128,7 +158,10 @@ static ContainerViewController* theContainerView = nil;
 
 -(void)switchHomeView
 {
-    //[self.theMenuView buildViewForHome];
+    [self.item1 setImage:[UIImage imageNamed:@"home_active.png"]];
+    [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
+    [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
+    [self.theMenuView fadeViewToView:MENU_HOME_VIEW];
     [self.theHomeViewController.view setHidden:FALSE];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item1];
@@ -144,9 +177,15 @@ static ContainerViewController* theContainerView = nil;
     
     [self performSelector:@selector(hideAllButtHomeView:) withObject:nil afterDelay:.3];
 }
--(void)switchMapView
+-(void)switchMapViewAndDownloadData:(BOOL)downloadData
 {
-    //[self.theMenuView buildViewForMap];
+    //Update HeatMap
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMap" object:[NSNumber numberWithBool:downloadData]];
+    
+    [self.item1 setImage:[UIImage imageNamed:@"home.png"]];
+    [self.item2 setImage:[UIImage imageNamed:@"map_active.png"]];
+    [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
+    [self.theMenuView fadeViewToView:MENU_MAP_VIEW];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item2];
     //Animate Block
@@ -160,11 +199,16 @@ static ContainerViewController* theContainerView = nil;
     [UIView animateWithDuration:.3 animations:animate];
     
     [self performSelector:@selector(hideAllButtMapView:) withObject:nil afterDelay:.3];
-
 }
 -(void)switchMessageView
 {
-    //[self.theMenuView buildViewForMessages];
+    //Update Messages
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMessages" object:nil];
+    
+    [self.item1 setImage:[UIImage imageNamed:@"home.png"]];
+    [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
+    [self.item3 setImage:[UIImage imageNamed:@"comments_active.png"]];
+    [self.theMenuView fadeViewToView:MENU_MESSAGE_VIEW];
     [self.theMessageViewController.view setHidden:FALSE];
     [self.theMapViewController.view setHidden:FALSE];
     [self.theTabBar setSelectedItem:self.item3];
@@ -205,7 +249,20 @@ static ContainerViewController* theContainerView = nil;
     // Dispose of any resources that can be recreated.
 }
 
-#pragma - Menu
+#pragma mark - Menu
+
+-(IBAction)toggleMenu:(id)sender
+{
+    NSLog(@"y: %f", self.theMenuView.frame.origin.y);
+    if(self.theMenuView.frame.origin.y < 0)
+    {
+        [self showMenu:nil];
+    }
+    else
+    {
+        [self hideMenu:nil];
+    }
+}
 
 -(IBAction)hideMenu:(id)sender
 {
@@ -219,7 +276,7 @@ static ContainerViewController* theContainerView = nil;
     [UIView animateWithDuration:.2 animations:animate2];
 }
 
-#pragma - Shifting Views
+#pragma mark - Shifting Views
 
 -(IBAction)shiftRight:(id)sender
 {
@@ -229,7 +286,7 @@ static ContainerViewController* theContainerView = nil;
         {
             if([vc isKindOfClass:[HomeViewController class]])
             {
-                [self switchMapView];
+                [self switchMapViewAndDownloadData:TRUE];
                 break;
             }
             else if([vc isKindOfClass:[MapViewController class]])
@@ -264,10 +321,66 @@ static ContainerViewController* theContainerView = nil;
             }
             else if([vc isKindOfClass:[MessageViewController class]])
             {
-                [self switchMapView];
+                [self switchMapViewAndDownloadData:TRUE];
                 break;
             }
         }
+    }
+}
+
+#pragma mark - Loading View
+-(void)showLoadingView
+{
+    [self.loadingView setAlpha:0];
+    [self.theMapViewController.view addSubview:self.loadingView];
+    VoidBlock animate = ^
+    {
+        [self.loadingView setAlpha:0.8];
+    };
+    //Perform Animations
+    [UIView animateWithDuration:.3 animations:animate];
+}
+
+-(void)hideLoadingViewAbrupt:(BOOL)abrupt
+{
+    [self.view addSubview:self.loadingView];
+    VoidBlock animate = ^
+    {
+        [self.loadingView setAlpha:0];
+    };
+    //Perform Animations
+    if(abrupt)
+    {
+        [UIView animateWithDuration:0 animations:animate];
+        [self performSelector:@selector(removeLoadingViewFromView) withObject:nil afterDelay:0];
+    }
+    else
+    {
+        [UIView animateWithDuration:.3 animations:animate];
+        [self performSelector:@selector(removeLoadingViewFromView) withObject:nil afterDelay:.3];
+    }
+    
+}
+
+-(void)removeLoadingViewFromView
+{
+    [self.loadingView removeFromSuperview];
+}
+
+#pragma mark - Network Reachability
+-(BOOL)networkingReachability
+{
+    return TRUE;
+    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable)
+    {
+        return FALSE;
+    }
+    else
+    {
+        return TRUE;
     }
 }
 
