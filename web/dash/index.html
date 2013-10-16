@@ -189,11 +189,22 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
   </div>
 
   <div id="commentsDialog">
+    <div class="nav navbar commentsSearchNavbar">
+      <form class="navbar-search pull-left">
+        <table>
+          <tr>
+            <td><input type="text" id="commentsSearch" class="search-query" placeholder="Search"></td>
+            <td><input type="button" id="commentsSearchGo" value="Search" /></td>
+          </tr>
+        </table>
+      </form>
+    </div>
     <div id="bubbleContainer">
     </div>
   </div>
 
   <div id="addMarkerDashContainer">
+    <div id="addmarkerDashNestBackground">
       <div id="addMarkerDashNest">
         <div id="addMarkerDashHeader">
           <img src="images/icons/new_trash1.png" />
@@ -263,6 +274,7 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
         </form>
         </div>
       </div>
+    </div>
   </div>
 
   <div id="loginContainer">
