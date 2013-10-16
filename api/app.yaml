@@ -1,5 +1,5 @@
 application: greenupapi
-version: 2-5
+version: 3
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -10,22 +10,19 @@ handlers:
   upload: favicon.ico
 
 - url: /api/heatmap
-  script: heatmap.application
+  script: controllers.heatmap.application
 
 - url: /api/pins
-  script: pins.application
+  script: controllers.pins.application
 
 - url: /api/comments
-  script: comments.application
+  script: controllers.comments.application
 
 - url: /api/debug
-  script: debug.application
-
-- url: /api 
-  script: api.application
+  script: controllers.debug.application
 
 - url: /.*
-  script: api.application
+  script: controllers.api.application
 
 libraries:
 - name: webapp2

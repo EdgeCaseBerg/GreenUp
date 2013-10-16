@@ -4,9 +4,9 @@ import json
 import logging
 import datetime
 
-from constants import *
+from ..constants import *
 
-from datastore import AbstractionLayer
+from ..datastore import AbstractionLayer
 
 #For extensions add to this list, or abstract to some type of properties file
 
@@ -150,10 +150,17 @@ class Debug(webapp2.RequestHandler):
 			return
 
 		layer = AbstractionLayer()
-		status_code, response = layer.deleteDebug(origin,msgHash)
+		try:
+			status_code, response = layer.deleteDebug(origin,msgHash)
 
-		self.response.set_status(status_code)
-		self.response.write('{"status_code" : %i , "message" : "%s"}' % (status_code,response))
+			self.response.set_status(status_code)
+			self.response.write('{"status_code" : %i , "message" : "%s"}' % (status_code,response))	
+		except Exception, e:
+			self.response.set_status(HTTP_NOT_FOUND)
+			self.response.write(ERROR_STR % (HTTP_NOT_FOUND,'Could not find report to delete'))
+						
+		
+		
 
 		
 

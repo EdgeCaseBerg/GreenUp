@@ -34,19 +34,19 @@ handlers:
   upload: iphone_black.png
 
 - url: /api/heatmap
-  script: api.heatmap.application
+  script: api.controllers.heatmap.application
 
 - url: /api/pins
-  script: api.pins.application
+  script: api.controllers.pins.application
 
 - url: /api/comments
-  script: api.comments.application
+  script: api.controllers.comments.application
 
 - url: /api/debug
-  script: api.debug.application
+  script: api.controllers.debug.application
 
 - url: /api 
-  script: api.api.application
+  script: api.controllers.api.application
 
 - url: /(.+)
   static_files: web/client/\1
@@ -56,7 +56,7 @@ handlers:
   script: detector.application
 
 - url: /.*
-  script: api.api.application
+  script: api.controllers.api.application
 
 libraries:
 - name: webapp2
