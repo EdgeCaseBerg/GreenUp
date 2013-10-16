@@ -8,11 +8,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 public final class APIServerInterface {
-	
-	
+		
 	private static final String BASE_URL = "https://greenupapp.appspot.com/api";
 	
 	//Class to serve as the main interface to the API server
@@ -20,7 +18,7 @@ public final class APIServerInterface {
 	// the various requests
 	
 	//TODO: Make it display a toast notification when an exception is thrown
-	//TODO: Clean up logging output
+	//TODO: Refactor
 	
 	//this isn't strictly necessary, but it'll prevent the class from being instantiated
 	private APIServerInterface(){};
@@ -48,7 +46,7 @@ public final class APIServerInterface {
 		return new CommentPage(response);
 	}
 	
-	//Submits a comment (POST), the pin is optional.  Returns an integer status code (codes TBD)
+	//Submits a comment (POST), the pin is optional.
 	public static void submitComments(String type, String message, int pin) {
 		Comment newComment = new Comment(type, message, pin);
 		String data = newComment.toJSON().toString();
@@ -107,7 +105,7 @@ public final class APIServerInterface {
 	}
 	
 	private static void sendRequestWithData(String url, String method, String data) {
-		APIRequestTask request = new APIRequestTask(url,method,data);
+		SubmitTask request = new SubmitTask(url,method,data);
 		request.execute();
 		String response;
 		try {
@@ -117,73 +115,69 @@ public final class APIServerInterface {
 			e.printStackTrace();
 			response = "Error, see stack trace";
 		}
-		Log.i("response",response);
+		//Log.i("response",response);
 	}
 	
 	private static String sendRequest(String url) {
-		APIRequestTask request = new APIRequestTask(url);
-		request.execute();
 		String response;
 		try {
-			response = request.get();
+			response = HTTPTransaction(url,"GET",null);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 			response = "Error, see stack trace";
 		}
-		Log.i("response",response);
+		//Log.i("response",response);
 		return response;
 	}
-	
-	private static class APIRequestTask extends AsyncTask<Void,Void,String>{
+
+	private static class SubmitTask extends AsyncTask<Void,Void,String> {
 		
 		private String url;
 		private String data;
 		private String method;
 		
-		//Constructor for GET requests
-		public APIRequestTask(String url) {
+		public SubmitTask(String url,String method, String data) {
 			this.url = url;
-			this.method = "GET";
-		}
-		
-		//Constructor for POST and PUT requests
-		public APIRequestTask(String url,String method,String data) {
-			this.url = url;
-			this.data = data;
 			this.method = method;
+			this.data = data;
 		}
 		
-		//Where the magic happens...
 		@Override
 		protected String doInBackground(Void...voids) {
-			String response;
-			URL urlObject;
-			try {
-				urlObject = new URL(url);
-				HttpURLConnection connection = (HttpURLConnection)urlObject.openConnection();
-				connection.setRequestMethod(method);
-				if (data != null) {
-					connection.setDoOutput(true);
-					int length = data.length();
-					connection.setFixedLengthStreamingMode(length);
-					OutputStream out = connection.getOutputStream();
-					out.write(data.toString().getBytes());
-				}
-				InputStreamReader reader = new InputStreamReader(connection.getInputStream());
-				StringBuilder sb = new StringBuilder();
-				
-				int readByte;
-				while ((readByte = reader.read()) != -1) {
-					sb.append((char)readByte);
-				}
-				response = sb.toString();
-			}
-			catch(IOException e) {
-				e.printStackTrace();
-				response = "Error occurred, see stack trace";
-			}
-			return response;
+			return HTTPTransaction(url,method,data);
 		}
+	}
+	
+
+	
+	private static String HTTPTransaction(String url,String method, String data) {
+		String response;
+		URL urlObject;
+		try {
+			urlObject = new URL(url);
+			HttpURLConnection connection = (HttpURLConnection)urlObject.openConnection();
+			connection.setRequestMethod(method);
+			if (data != null) {
+				connection.setDoOutput(true);
+				int length = data.length();
+				connection.setFixedLengthStreamingMode(length);
+				OutputStream out = connection.getOutputStream();
+				out.write(data.toString().getBytes());
+			}
+			InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+			StringBuilder sb = new StringBuilder();
+			
+			int readByte;
+			while ((readByte = reader.read()) != -1) {
+				sb.append((char)readByte);
+			}
+			response = sb.toString();
+		}
+		catch(IOException e) {
+			//e.printStackTrace();
+			response = "Error, see stack trace";
+		}
+		return response;
 	}
 }
