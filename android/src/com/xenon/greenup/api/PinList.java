@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -17,9 +18,11 @@ public class PinList {
 	
 	public PinList(String jsonString) {
 		int i;
+		JSONObject object;
 		JSONArray pins;
 		try {
-			pins = new JSONArray(jsonString);
+			object = new JSONObject(jsonString);
+			pins = object.getJSONArray("pins");
 			this.pinList = new ArrayList<Pin>();
 			for (i = 0; i < pins.length(); i++){
 				this.pinList.add(new Pin(pins.getString(i)));
