@@ -172,6 +172,8 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 			lat = newMarker.getPosition().latitude;
 			lon = newMarker.getPosition().longitude;
 			String message = messageEntry.getText().toString();
+			newMarker.setSnippet(message);
+			newMarker.setTitle(this.currentType);
 			APIServerInterface.submitPin(lat,lon,this.currentType, message);
 			newMarker.setDraggable(false);
 		}
