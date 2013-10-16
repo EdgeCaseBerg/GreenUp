@@ -8,7 +8,7 @@ import android.util.Log;
 public class Comment {
 	
 	private int id;
-	private String type; //either "forum", "needs" or "message"
+	private String type; //either "forum", "general" or "trash"
 	private String message;
 	private String timestamp;
 	private int pin;
@@ -103,7 +103,7 @@ public class Comment {
 			json.put("message",this.message);
 			if (this.pin != 0)
 				json.put("pin",this.pin);
-			Log.i("newComment",json.toString());
+			//Log.i("newComment",json.toString());
 			return json;
 		}
 		catch (JSONException e) {

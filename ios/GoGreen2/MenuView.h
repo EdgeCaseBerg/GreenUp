@@ -17,9 +17,12 @@ typedef void (^VoidBlock)(void);
 @interface MenuView : UIView
 
 - (id)initWithFrame:(CGRect)frame andView:(NSString *)view;
--(void)buildViewForHome;
--(void)buildViewForMap;
--(void)buildViewForMessages;
 
+-(void)fadeViewToView:(NSString *)view;
+
+@property (nonatomic, strong) UIImageView *topBarImageView;
+@property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIButton *toggleButton;
+@property (nonatomic, strong) NSMutableArray *previousTimeIntervals;
 
 @end

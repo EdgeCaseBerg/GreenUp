@@ -8,6 +8,7 @@
 
 #import "HomeViewController.h"
 #import "ContainerViewController.h"
+#import "MenuView.h"
 
 @interface HomeViewController ()
 
@@ -17,10 +18,22 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:@"HomeView_IPhone" bundle:nil];
-    if (self)
+    if([UIScreen mainScreen].bounds.size.height == 568)
+    {
+        self = [super initWithNibName:@"HomeView_IPhone5" bundle:nil];
+    }
+    else
+    {
+        self = [super initWithNibName:@"HomeView_IPhone" bundle:nil];
+    }
+    
+    if(self)
     {
         // Custom initialization
+        UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo.png"]];
+        [logo setFrame:CGRectMake(0, 0, 320, 207)];
+        [self.view addSubview:logo];
+        
         UILabel *mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 180, 260, 70)];
         [mainLabel setNumberOfLines:4];
         [mainLabel setBackgroundColor:[UIColor clearColor]];
@@ -40,21 +53,64 @@
         
         self.cleanUpToggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.cleanUpToggleButton setFrame:CGRectMake(30, 320, 260, 45)];
-        [self.cleanUpToggleButton setBackgroundImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+        [self.cleanUpToggleButton setBackgroundImage:[UIImage imageNamed:@"Start.png"] forState:UIControlStateNormal];
         [self.cleanUpToggleButton setTitle:@"Start Cleaning" forState:UIControlStateNormal];
         [self.cleanUpToggleButton addTarget:self action:@selector(toggleCleanUp:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.cleanUpToggleButton];
+        
+        self.previousLoggingTimes = [[NSMutableArray alloc] init];
     }
 
     return self;
 }
 
+
 -(IBAction)toggleCleanUp:(id)sender
 {
-    [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
-    if([[[ContainerViewController sharedContainer] theMapViewController] logging])
+    if(![[[ContainerViewController sharedContainer] theMapViewController] logging])
     {
-        [[ContainerViewController sharedContainer] switchMapView];
+        if([[ContainerViewController sharedContainer] networkingReachability])
+        {
+            [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
+            self.startDate = [NSDate date];
+            
+            [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(cleanUpCounter:) userInfo:nil repeats:YES];
+            
+            [[ContainerViewController sharedContainer] switchMapViewAndDownloadData:TRUE];
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Start Cleaning" message:@"You dont appear to have a network connection, please connect and try and start cleaning" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+    }
+    else
+    {
+        [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
+        
+        [self.previousLoggingTimes addObject:[NSNumber numberWithDouble:(-1 * [self.startDate timeIntervalSinceNow])]];
+        if([[[[ContainerViewController sharedContainer] theHomeViewController] view] frame].origin.x == 0 && [[[[ContainerViewController sharedContainer] theHomeViewController] view] frame].size.width != 0)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateHomeMenuWithNewPreviousTimes" object:nil];
+        }
+    }
+}
+
+- (void)cleanUpCounter:(NSTimer*)theTimer
+{
+    // code is written so one can see everything that is happening
+    // I am sure, some people would combine a few of the lines together
+    NSDate *currentDate = [NSDate date];
+    NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:self.startDate];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:elaspedTime];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+    NSString *formattedDate = [dateFormatter stringFromDate:date];
+    
+    if(elaspedTime >= 1 && [[[ContainerViewController sharedContainer] theMapViewController] logging])
+    {
+        self.timeLabel.text = [NSString stringWithFormat:@"%@", formattedDate];
     }
 }
 

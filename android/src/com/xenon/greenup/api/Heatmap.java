@@ -18,15 +18,15 @@ public class Heatmap {
 		int i;
 		JSONObject object;
 		JSONArray points;
+		this.pointList = new ArrayList<HeatmapPoint>();
 		try {
 			object = new JSONObject(jsonString);
 			points = object.getJSONArray("grid");
-			this.pointList = new ArrayList<HeatmapPoint>();
 			for (i = 0; i < points.length(); i++){
 				this.pointList.add(new HeatmapPoint(points.getString(i)));
-				Log.i("lat",Double.toString(pointList.get(i).getLatDegree()));
-				Log.i("lon",Double.toString(pointList.get(i).getLonDegree()));
-				Log.i("time",Double.toString(pointList.get(i).getSecondsWorked()));
+				//Log.i("lat",Double.toString(pointList.get(i).getLatDegree()));
+				//Log.i("lon",Double.toString(pointList.get(i).getLonDegree()));
+				//Log.i("time",Double.toString(pointList.get(i).getSecondsWorked()));
 			}
 		}
 		catch (JSONException e){
