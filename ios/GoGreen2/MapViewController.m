@@ -159,7 +159,7 @@
     {
         //Get heatmap data and pins from server
         [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        [self updateHeatMapOverlay];
+        //[self updateHeatMapOverlay];
         [self getMapPins];
     }
 }
@@ -229,23 +229,15 @@
 
 -(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
-    if([view isKindOfClass: [MKUserLocation class]])
+    HeatMapPin *selectedMapPin = view.annotation;
+    if([selectedMapPin respondsToSelector:@selector(pinID)])
     {
-        nil;
-    }
-    else
-    {
-        HeatMapPin *selectedMapPin = view.annotation;
-        id pinID = selectedMapPin.pinID;
+        NSNumber *pinID = selectedMapPin.pinID;
         if(![selectedMapPin.pinID isEqualToNumber:@420])
         {
             [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:pinID];
             [[ContainerViewController sharedContainer] switchMessageView];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"getMessagesForShowingSelectedMessage" object:nil];
-        }
-        else
-        {
-            NSLog(@"jhk jhg hjgk hjg kjh jh hjk khkggjhgjkgj gjhkg jhjkg kjh gj  jhg kj hg jhg jh");
         }
     }
 }
@@ -886,8 +878,33 @@
     self.finishedDownloadingHeatMap = FALSE;
     
     //Generation Properties
-    NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
-    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:location.center.latitude], [NSNumber numberWithFloat:location.center.longitude], [NSNumber numberWithFloat:span.latitudeDelta], [NSNumber numberWithFloat:span.longitudeDelta], nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", @"precision", nil];
+    
+    NSNumber *precision = nil;
+    if(location.span.longitudeDelta > 2.0)
+    {
+        precision = @1;
+    }
+    else if(location.span.longitudeDelta > 0.5 && location.span.longitudeDelta < 2.0)
+    {
+        precision = @2;
+    }
+    else if(location.span.longitudeDelta > 0.2 && location.span.longitudeDelta < 0.5)
+    {
+        precision = @3;
+    }
+    else if(location.span.longitudeDelta > 0.05 && location.span.longitudeDelta < 0.2)
+    {
+        precision = @4;
+    }
+    else if(location.span.longitudeDelta < 0.05)
+    {
+        precision = @5;
+    }
+    
+    NSLog(@"LAT: %f -- LON %f", location.span.latitudeDelta, location.span.longitudeDelta);
+    
+    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:location.center.latitude], [NSNumber numberWithFloat:location.center.longitude], [NSNumber numberWithFloat:span.latitudeDelta], [NSNumber numberWithFloat:span.longitudeDelta], precision, nil];
     
     NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
  
@@ -902,6 +919,8 @@
             if([statusCode integerValue] == 200)
             {
                 [self.downloadedMapPoints removeAllObjects];
+                NSLog(@"***************************************** POINTS COUNT: %d", [[results objectForKey:@"grid"] count]);
+                
                 for(NSDictionary *pointDictionary in [results objectForKey:@"grid"])
                 {
                     HeatMapPoint *newPoint = [[HeatMapPoint alloc] init];
@@ -915,6 +934,7 @@
                     
                     [self.downloadedMapPoints addObject:newPoint];
                 }
+                
                 
                 self.finishedDownloadingHeatMap = TRUE;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingHeatMap" object:statusCode];
