@@ -113,7 +113,7 @@
     //Map
     MKCoordinateRegion region;
     MKCoordinateSpan span;
-    CLLocationCoordinate2D location = CLLocationCoordinate2DMake(44.468581,-73.157959);
+    CLLocationCoordinate2D location = CLLocationCoordinate2DMake(45.468581,-73.157959);
     span.latitudeDelta=100000;
     span.longitudeDelta=100000;
     region.span = span;
@@ -128,6 +128,12 @@
     
     //Networking
     self.pushOverdue = FALSE;
+    
+    
+    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithDouble:self.mapView.region.center.latitude], [NSNumber numberWithDouble:self.mapView.region.center.longitude], [NSNumber numberWithDouble:self.mapView.region.span.latitudeDelta], [NSNumber numberWithDouble:self.mapView.region.span.longitudeDelta], nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"lat", @"lon", @"deltaLat", @"deltaLon", nil];
+    
+    self.lastViewedLocation = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -157,15 +163,44 @@
 {
     if([[[ContainerViewController sharedContainer] theMapViewController] view].frame.origin.x == 0 && [[[ContainerViewController sharedContainer] theMapViewController] view].frame.size.width != 0)
     {
-        //Get heatmap data and pins from server
-        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        //[self updateHeatMapOverlay];
+        NSNumber *lat = [self.lastViewedLocation objectForKey:@"lat"];
+        NSNumber *lon = [self.lastViewedLocation objectForKey:@"lon"];
+        NSNumber *latDelta = [self.lastViewedLocation objectForKey:@"deltaLat"];
+        NSNumber *lonDelta = [self.lastViewedLocation objectForKey:@"deltaLon"];
+        
+        
+        double latChange = fabs(lat.doubleValue - mapView.region.center.latitude);
+        double lonChange = fabs(lon.doubleValue - mapView.region.center.longitude);
+        
+        NSLog(@"LAT: %f - LON: %f", latChange, lonChange);
+        NSLog(@"LATDELTA: %f - LONDELTA: %f", (latDelta.doubleValue / 2.0), (lonDelta.doubleValue / 2.0));
+        
+        if(latChange > (latDelta.doubleValue / 2) || lonChange > (lonDelta.doubleValue / 2))
+        {
+            NSLog(@"MOVING OUTSIDE VIEW REGION");
+            
+            NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithDouble:self.mapView.region.center.latitude], [NSNumber numberWithDouble:self.mapView.region.center.longitude], [NSNumber numberWithDouble:self.mapView.region.span.latitudeDelta], [NSNumber numberWithDouble:self.mapView.region.span.longitudeDelta], nil];
+            NSArray *keys = [NSArray arrayWithObjects:@"lat", @"lon", @"deltaLat", @"deltaLon", nil];
+            
+            self.lastViewedLocation = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+            
+            //Get heatmap data and pins from server
+            [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+        }
+        else
+        {
+            NSLog(@"NOT");
+        }
+        
+
         [self getMapPins];
     }
 }
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
 {
+    HeatMapView *test = [[HeatMapView alloc] initWithOverlay:overlay];
+
     return [[HeatMapView alloc] initWithOverlay:overlay];
 }
 
@@ -423,7 +458,7 @@
 -(void)updateHeatMapOverlay
 {
     //remove old overlay
-    [self.mapView removeOverlay:self.heatMap];
+    //[self.mapView removeOverlay:self.heatMap];
     
     //create array of all points gathered and downloaded!
     NSMutableArray *allPoints = [[NSMutableArray alloc] initWithArray:self.downloadedMapPoints];
@@ -433,7 +468,14 @@
     NSLog(@"GATHERED POINTS: %d", self.gatheredMapPoints.count);
     
     //create new heatmap overlay and display it
-    self.heatMap = [[HeatMap alloc] initWithData:[self convertPointsToHeatMapFormat:allPoints]];
+    if(self.heatMap == nil)
+    {
+        self.heatMap = [[HeatMap alloc] initWithData:[self convertPointsToHeatMapFormat:allPoints]];
+    }
+    else
+    {
+        [self.heatMap setData:[self convertPointsToHeatMapFormat:allPoints]];
+    }
     [self.mapView addOverlay:self.heatMap];
     //[self.mapView setVisibleMapRect:[self.heatMap boundingMapRect] animated:YES];
 }

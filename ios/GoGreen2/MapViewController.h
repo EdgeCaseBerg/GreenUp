@@ -55,7 +55,7 @@
 
 @property BOOL pushOverdue;
 
-
+@property (strong, nonatomic) NSDictionary *lastViewedLocation;
 
 
 -(MapViewController *)init;
