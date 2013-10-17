@@ -458,7 +458,7 @@ URL: **/api/pins?id=<ID of the pin>**
 ```
 
 
-###Delete Comment
+###Delete Pin
 
 Method: **DELETE**
 
