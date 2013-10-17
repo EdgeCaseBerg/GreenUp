@@ -255,6 +255,10 @@
                         //[newDownloadedMessages addObject:newMessage];
                     }
                     
+                    NSSortDescriptor* sortByDate = [NSSortDescriptor sortDescriptorWithKey:@"messageTimeStamp" ascending:FALSE];
+                    [self.messages sortUsingDescriptors:[NSArray arrayWithObject:sortByDate]];
+                    //[self.messages sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:TRUE]]];
+                    
                     NSDictionary *pages = [response objectForKey:@"page"];
                     if(![[pages objectForKey:@"next"] isEqual:[NSNull null]])
                     {
@@ -756,7 +760,8 @@
                 [cell.contentView setAlpha:0];
             }
         }
-        
+    
+    
         [self performSelector:@selector(removeMessageFadeOverlay:) withObject:indexOfSelectedMessage afterDelay:1];
     }
 }

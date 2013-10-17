@@ -113,7 +113,7 @@
     //Map
     MKCoordinateRegion region;
     MKCoordinateSpan span;
-    CLLocationCoordinate2D location = CLLocationCoordinate2DMake(45.468581,-73.157959);
+    CLLocationCoordinate2D location = CLLocationCoordinate2DMake(44.468581,-73.157959);
     span.latitudeDelta=100000;
     span.longitudeDelta=100000;
     region.span = span;
@@ -128,7 +128,6 @@
     
     //Networking
     self.pushOverdue = FALSE;
-    
     
     NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithDouble:self.mapView.region.center.latitude], [NSNumber numberWithDouble:self.mapView.region.center.longitude], [NSNumber numberWithDouble:self.mapView.region.span.latitudeDelta], [NSNumber numberWithDouble:self.mapView.region.span.longitudeDelta], nil];
     NSArray *keys = [NSArray arrayWithObjects:@"lat", @"lon", @"deltaLat", @"deltaLon", nil];
@@ -156,7 +155,6 @@
         [self updateHeatMapWithNewPins];
     }
 }
-
 
 #pragma mark - MKMapViewDelegate
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
@@ -224,7 +222,7 @@
                 annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
             }
             
-            annotationView.image = [UIImage imageNamed:@"trashbag.png"];
+            annotationView.image = [UIImage imageNamed:@"trashMarker.png"];
             CGRect test = annotationView.frame;
             NSLog(@"%f - %f - %f - %f", test.origin.x, test.origin.y, test.size.width, test.size.height);
             [annotationView setFrame:CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y - annotationView.frame.size.height, annotationView.frame.size.height, annotationView.frame.size.width)];
@@ -244,9 +242,9 @@
                 annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
             }
             
-            annotationView.image = [UIImage imageNamed:@"trashMarker.png"];
+            annotationView.image = [UIImage imageNamed:@"marker.png"];
             
-            annotationView.centerOffset = CGPointMake(0, -17);
+            annotationView.centerOffset = CGPointMake(0, -15);
             
             annotationView.annotation = annotation;
             
@@ -360,7 +358,7 @@
             //-------------- We Are Not Logging But Want To Drop Marker At Our Current Location ---------
             self.loggingForMarker = FALSE;
             
-            /*
+/*
             //Get Current Location
             MKCoordinateRegion region;
             MKCoordinateSpan span;
@@ -370,7 +368,7 @@
             region.center = location.coordinate;
             [self.mapView setRegion:region animated:TRUE];
             [self.mapView regionThatFits:region];
-            */
+  */  
             
             //Stop Getting Updates
             [self.locationManager stopUpdatingLocation];
@@ -449,7 +447,7 @@
             region.center = location.coordinate;
             [self.mapView setRegion:region animated:TRUE];
             [self.mapView regionThatFits:region];
-             */
+            */
         }
     }
 }
@@ -534,8 +532,8 @@
         
         //Add Fake Pin Overlay
         CGPoint pinPointInSuperView = [self.mapView convertCoordinate:pinToShow.coordinate toPointToView:self.view];
-        UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashMarker.png"]];
-        [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 16, pinPointInSuperView.y - 34, 30, 34)];
+        UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"marker.png"]];
+        [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 9.5, pinPointInSuperView.y - 29, 19, 29)];
         
         [self.fadeView addSubview:fakePin];
         

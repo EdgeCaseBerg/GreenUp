@@ -55,6 +55,8 @@
 		39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D06AFC1783A6A300DD94B7 /* MapKit.framework */; };
 		39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E46BE3179C7000008590A6 /* GoGreenTabBar.m */; };
 		DF2E5D03180F43A4000B9824 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF2E5CFF180F43A4000B9824 /* greenhttp.c */; };
+		DF2E5D08181079A5000B9824 /* marker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF2E5D06181079A5000B9824 /* marker.png */; };
+		DF2E5D09181079A5000B9824 /* marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF2E5D07181079A5000B9824 /* marker@2x.png */; };
 		DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3F00FD17E25CD000530A4D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DF3F010517E3E5E200530A4D /* trasbag.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010317E3E5E200530A4D /* trasbag.png */; };
 		DF3F010617E3E5E200530A4D /* trashbag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010417E3E5E200530A4D /* trashbag@2x.png */; };
@@ -227,6 +229,8 @@
 		39E46BE3179C7000008590A6 /* GoGreenTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoGreenTabBar.m; sourceTree = "<group>"; };
 		DF2E5CFF180F43A4000B9824 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = greenhttp.c; sourceTree = "<group>"; };
 		DF2E5D00180F43A4000B9824 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = greenhttp.h; sourceTree = "<group>"; };
+		DF2E5D06181079A5000B9824 /* marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker.png; sourceTree = "<group>"; };
+		DF2E5D07181079A5000B9824 /* marker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker@2x.png"; sourceTree = "<group>"; };
 		DF3F00FC17E25CD000530A4D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = SOURCE_ROOT; };
 		DF3F00FD17E25CD000530A4D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = SOURCE_ROOT; };
 		DF3F010317E3E5E200530A4D /* trasbag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trasbag.png; path = Images/trasbag.png; sourceTree = SOURCE_ROOT; };
@@ -390,6 +394,8 @@
 		390415AD1798DC50005EC308 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DF2E5D06181079A5000B9824 /* marker.png */,
+				DF2E5D07181079A5000B9824 /* marker@2x.png */,
 				DFD73A181800824700202D57 /* blueLeaf.png */,
 				DFD73A191800824700202D57 /* blueLeaf@2x.png */,
 				DFD73A1A1800824700202D57 /* greenLeaf.png */,
@@ -908,6 +914,8 @@
 				DFE59BDC180CB3BD00357899 /* sampleRoute1.gpx in Resources */,
 				DFE59BDE180CB3C400357899 /* sampleRoute2.gpx in Resources */,
 				DFE59BE0180CB3CC00357899 /* sampleRoute3.gpx in Resources */,
+				DF2E5D08181079A5000B9824 /* marker.png in Resources */,
+				DF2E5D09181079A5000B9824 /* marker@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
