@@ -400,11 +400,11 @@ if __name__ == "__main__":
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
-	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : -31, "lonDegrees" : -92, "secondsWorked" : 45}],httpMethod="PUT")
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : -91, "lonDegrees" : -92, "secondsWorked" : 45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
-	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 32, "secondsWorked" : -45}],httpMethod="PUT")
+	tester.followLink(endPoints['heatmap'],withData=[{"latDegrees" : 31, "lonDegrees" : 182, "secondsWorked" : -45}],httpMethod="PUT")
 	assert tester.getCode() == HTTP_REQUEST_SEMANTICS_PROBLEM
 	assert validateErrorMessageReturned(tester.getJSON())	 is True
 
