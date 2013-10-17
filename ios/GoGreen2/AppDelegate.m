@@ -24,7 +24,7 @@
     {
         self.customContainer = [ContainerViewController sharedContainer];
         
-        self.window.rootViewController = self.customContainer;    
+        self.window.rootViewController = self.customContainer;
     }
     [self.window makeKeyAndVisible];
     return YES;

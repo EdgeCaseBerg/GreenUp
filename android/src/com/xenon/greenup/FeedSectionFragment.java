@@ -2,44 +2,47 @@ package com.xenon.greenup;
 
 import java.util.ArrayList;
 
-import com.xenon.greenup.api.APIServerInterface;
-import com.xenon.greenup.api.Comment;
-import com.xenon.greenup.api.CommentPage;
-
-import android.support.v4.app.ListFragment;
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.ListFragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
-public class FeedSectionFragment extends ListFragment {
+import com.xenon.greenup.api.APIServerInterface;
+import com.xenon.greenup.api.Comment;
+import com.xenon.greenup.api.CommentPage;
+
+public class FeedSectionFragment extends ListFragment implements DrawerListener, OnCheckedChangeListener{
 	private int lastPageLoaded = 1;
-	private ArrayList<Comment> comments = new ArrayList<Comment>(60); // Default to having enough space for 3 spaces
+	private DrawerLayout drawer;
 	private EditText editText;
+	private Switch forumSwitch, generalSwitch, trashSwitch;
+	private boolean forumFilterToggle = true;
+	private boolean generalFilterToggle = true;
+	private boolean trashFilterToggle = true;
+	private CommentPage page;
 	
 	public FeedSectionFragment(){
 	}
 	
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-		CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded );
-		this.comments = cp.getCommentsList();
-		//Set the adapter
-		Activity currentActivity = getActivity();
-		//If we have no internet then we will get nothing back from the api
-		if(this.comments == null)
-			this.comments = new ArrayList<Comment>(60);
-		
-		//Do feed rendering async or else it will take orders of magnitude longer to render
-		new AsyncCommentLoadTask(this,currentActivity,this.comments).execute();
 	}
 	
     @Override
@@ -47,28 +50,61 @@ public class FeedSectionFragment extends ListFragment {
      * Called when the android needs to create the view, simply inflates the layout
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    		
     	View rootView = inflater.inflate(R.layout.feed, container, false);
+    	//initialize the drawer listener
+    	
+    	drawer = (DrawerLayout)rootView.findViewById(R.id.comment_feed);
+    	drawer.setDrawerListener(this);
+    	
     	editText =  (EditText)rootView.findViewById(R.id.text_entry_comments);
     	editText.setOnEditorActionListener(new OnEditorActionListener() {
     	    @Override
     	    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
     	        boolean handled = false;
     	        if (actionId == EditorInfo.IME_ACTION_SEND) {
-    	            Log.i("text","i send!");
+    	            //Log.i("text","i send!");
     	            APIServerInterface.submitComments("forum", editText.getText().toString(), 0);
     	            handled = true;
     	        }
     	        return handled;
     	    }
     	});
-       	return rootView;
+    	
+    	//initialize the toggle switches
+    	forumSwitch = (Switch)rootView.findViewById(R.id.forum_switch);
+    	generalSwitch = (Switch)rootView.findViewById(R.id.general_switch);
+    	trashSwitch = (Switch)rootView.findViewById(R.id.trash_switch);
+		forumSwitch.setChecked(forumFilterToggle);
+		generalSwitch.setChecked(generalFilterToggle);
+		trashSwitch.setChecked(trashFilterToggle);
+		forumSwitch.setOnCheckedChangeListener(this);
+		generalSwitch.setOnCheckedChangeListener(this);
+		trashSwitch.setOnCheckedChangeListener(this);
+       	
+    	return rootView;
+    }
+    
+    @Override
+    public void onResume(){
+    	super.onResume();
+    	//if we have a network connection, load the comments from the server
+    	if (isConnected()) {
+    		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    		AsyncCommentLoadTask task = new AsyncCommentLoadTask(this,getActivity());
+    		task.execute();
+    	}
+    	else {
+    		Toast.makeText(getActivity(), "No network connection :(", Toast.LENGTH_SHORT).show();
+    	}
     }
     
 	private class AsyncCommentLoadTask extends AsyncTask<Void,Void,Void>{
 		
 		private final Activity act;
-		private final ArrayList<Comment> cmts;
+		private ArrayList<Comment> cmts;
 		private final FeedSectionFragment fsf;
+		private CommentPage page;
 		
 		/**
 		 * AsyncCommentLoadTask is the default constructor to create an asynchronous task
@@ -77,10 +113,9 @@ public class FeedSectionFragment extends ListFragment {
 		 * @param a The activity which is running the FeedSectionFragment instance
 		 * @param c The list of comments which we will bind to an arrayadapter that will populate the feeds view
 		 */
-		public AsyncCommentLoadTask(FeedSectionFragment fsf, Activity a, ArrayList<Comment> c) {
+		public AsyncCommentLoadTask(FeedSectionFragment fsf, Activity a) {
 			//apparently I've jumped back to 1982 when variable length matters
 			this.act = a;
-			this.cmts = c;
 			this.fsf = fsf;
 		}
 		
@@ -92,14 +127,63 @@ public class FeedSectionFragment extends ListFragment {
 		 * passed at construction time.
 		 */
 		protected Void doInBackground(Void...voids) {
-			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
+	    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded);
+	    	this.page = cp;
+			this.cmts = this.page.getCommentsList(forumFilterToggle,generalFilterToggle,trashFilterToggle);
+			if(this.cmts == null)
+				this.cmts = new ArrayList<Comment>(60);
 			//Java makes no sense. It requires the capital version of Void because there simply
-			//must be something returned and you have to java's bastard children, the wrapper 
+			//must be something returned and you have to use java's bastard children, the wrapper 
 			//types instead of primitives because it's an async task. But yet, the primitive
 			//keyword null is apparent a Void type (although returning void is wrong). 
 			//sense, this makes none.
 			return null;
 		}
+		
+		@Override
+		protected void onPostExecute(Void v) {
+			this.fsf.setListAdapter(new CommentAdapter(this.act,this.cmts));
+			this.fsf.page = page;
+			drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+		}
 	}
 
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if (buttonView == forumSwitch)
+			forumFilterToggle = isChecked;
+		if (buttonView == generalSwitch)
+			generalFilterToggle = isChecked;
+		if (buttonView == trashSwitch)
+			trashFilterToggle = isChecked;
+	}
+
+	@Override
+	public void onDrawerClosed(View arg0) {
+		ArrayList<Comment> comments = this.page.getCommentsList(forumFilterToggle,generalFilterToggle,trashFilterToggle);
+		this.setListAdapter(new CommentAdapter(getActivity(),comments));
+	}
+
+	@Override
+	public void onDrawerOpened(View view) {
+	}
+
+	@Override
+	public void onDrawerSlide(View view, float offset) {
+	}
+
+	@Override
+	public void onDrawerStateChanged(int state) {
+	}
+	
+    //Possibly check more network types and/or connection states
+	private boolean isConnected() {
+		ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (cm.getNetworkInfo(0) != null && cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED)
+			return true;
+		else if (cm.getNetworkInfo(1) != null && cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED)
+			return true;
+		else
+			return false;
+	}
 }

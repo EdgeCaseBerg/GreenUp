@@ -19,6 +19,7 @@ public class CommentPage {
 		int i;
 		JSONObject object,pageInfo;
 		JSONArray comments;
+		this.commentsList = new ArrayList<Comment>();
 		try {
 			object = new JSONObject(jsonString);
 			pageInfo = object.getJSONObject("page");
@@ -27,9 +28,15 @@ public class CommentPage {
 			Log.i("prevPage",this.prevPage);
 			Log.i("nextPage",this.nextPage);
 			comments = object.getJSONArray("comments");
-			this.commentsList = new ArrayList<Comment>();
 			for (i = 0; i < comments.length(); i++){
 				this.commentsList.add(new Comment(comments.getString(i)));
+				/*
+				Log.i("id",Integer.toString(commentsList.get(i).getId()));
+				Log.i("type",commentsList.get(i).getType());
+				Log.i("message",commentsList.get(i).getMessage());
+				Log.i("timestamp",commentsList.get(i).getTimestamp());
+				Log.i("pin",Integer.toString(commentsList.get(i).getPin()));
+				*/
 			}
 		}
 		catch (JSONException e){
@@ -43,6 +50,21 @@ public class CommentPage {
 	 */
 	public ArrayList<Comment> getCommentsList() {
 		return commentsList;
+	}
+	
+	public ArrayList<Comment> getCommentsList(boolean includeForum, boolean includeGeneral, boolean includeTrash) {
+		String commentType;
+		ArrayList<Comment> filteredList = new ArrayList<Comment>();
+		for (int i = 0; i < commentsList.size(); i++) {
+			commentType = commentsList.get(i).getType();
+			if (commentType.equals("FORUM") && includeForum)
+				filteredList.add(commentsList.get(i));
+			if (commentType.equals("GENERAL MESSAGE") && includeGeneral)
+				filteredList.add(commentsList.get(i));
+			if (commentType.equals("TRASH PICKUP") && includeTrash)
+				filteredList.add(commentsList.get(i));
+		}
+		return filteredList;
 	}
 	/**
 	 * @param commentsList the commentsList to set

@@ -14,22 +14,47 @@
 #import "HeatMap.h"
 #import "HeatMapView.h"
 #import "BDHost.h"
+#import "GreenUpMapView.h"
+#import "Reachability.h"
 
-@interface MapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate>
+#define Message_Type_ADMIN @"ADMIN"
+#define Message_Type_MARKER @"MARKER"
+#define Message_Type_COMMENT @"COMMENT"
 
-@property (strong, nonatomic) IBOutlet MKMapView *mapView;
+@class MapPinSelectorView, HeatMapPin;
+
+@interface MapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>
+
+@property (strong, nonatomic) IBOutlet GreenUpMapView *mapView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 //@property (strong, nonatomic) UIButton *toggleGeoLogging;
 @property (strong, nonatomic) UIButton *clearPoints;
 @property BOOL logging;
+@property BOOL loggingForMarker;
 @property (strong, nonatomic) HeatMap *heatMap;
 @property (strong, nonatomic) NSDate *startedCleaning;
-
 
 @property (strong, nonatomic) NSMutableArray *downloadedMapPoints;
 @property (strong, nonatomic) NSMutableArray *gatheredMapPoints;
 @property (strong, nonatomic) NSMutableArray *gatheredMapPointsQueue;
+
+@property (strong, nonatomic) NSMutableArray *downloadedMapPins;
+@property (strong, nonatomic) NSMutableArray *gatheredMapPins;
+
+@property (strong, nonatomic) NSDate *longPressTimer;
+@property (strong, nonatomic) MapPinSelectorView *mapSpinner;
+@property (strong, nonatomic) HeatMapPin *tempPinRef;
+@property (strong, nonatomic) NSNumber *pinIDToShow;
+@property (strong, nonatomic) UIView *fadeView;
+
+@property BOOL updatingView;
+@property BOOL finishedDownloadingHeatMap;
+@property BOOL finishedDownloadingMapPins;
+@property BOOL pushedHeatMap;
+@property BOOL pusheMapPins;
+
 @property BOOL pushOverdue;
+
 
 
 

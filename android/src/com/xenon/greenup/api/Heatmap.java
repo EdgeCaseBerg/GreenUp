@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -15,15 +16,17 @@ public class Heatmap {
 	
 	public Heatmap(String jsonString) {
 		int i;
+		JSONObject object;
 		JSONArray points;
+		this.pointList = new ArrayList<HeatmapPoint>();
 		try {
-			points = new JSONArray(jsonString);
-			this.pointList = new ArrayList<HeatmapPoint>();
+			object = new JSONObject(jsonString);
+			points = object.getJSONArray("grid");
 			for (i = 0; i < points.length(); i++){
 				this.pointList.add(new HeatmapPoint(points.getString(i)));
-				Log.i("lat",Double.toString(pointList.get(i).getLatDegree()));
-				Log.i("lon",Double.toString(pointList.get(i).getLonDegree()));
-				Log.i("time",Double.toString(pointList.get(i).getSecondsWorked()));
+				//Log.i("lat",Double.toString(pointList.get(i).getLatDegree()));
+				//Log.i("lon",Double.toString(pointList.get(i).getLonDegree()));
+				//Log.i("time",Double.toString(pointList.get(i).getSecondsWorked()));
 			}
 		}
 		catch (JSONException e){

@@ -14,7 +14,7 @@ License:
 API Requests:
 -------------------
 
-`http://greenup.xenonapps.com/api/comments?type=forum`
+`http://greenup.xenonapps.com/api/comments?type=COMMENT`
 
 Request URLs are composed from the protocol, host, context path, a resource path, and optional query parameters.
 
@@ -23,7 +23,7 @@ In this example,
  - the host is `greenup.xenonapps.com` 
  - the context path is `/api` 
  - the resource path is `/comments` 
- - and optional query parameters of `type=forum`. 
+ - and optional query parameters of `type=COMMENT`. 
   
 All API parameters are returned in the JSON format, and all data sent to the API must be in JSON as well. Query parameters follow a single `?` after the resource path, and are seperated by `&`.
 
@@ -63,7 +63,7 @@ URL: **/api**
 ```no-highlight
 {
     "status_code" : 200,
-    "version" : 2.5,
+    "version" : 3,
     "Credit" : "Powered by Xenon Apps",
 }
 ```
@@ -83,7 +83,7 @@ URL: **/api/comments**
 <tr><th>name</th><th>type</th><th>description  </th></tr>
 </thead>
 <tbody>
-<tr><td>type</td><td>String </td><td> Can be either `forum`, `general message`, `trash pickup` or `help needed` </td></tr>
+<tr><td>type</td><td>String </td><td> Can be either `COMMENT`, `ADMIN` or `MARKER` </td></tr>
 <tr><td>page</td><td>unsigned Integer</td><td>Based on [RFC 5005], for use with pagination, a request for a page that does not exist will result in no comments being returned. A non-integer value for this parameter will result in a 422 HTTP status code. Paging begins at 1.</td></tr>
 </tbody>
 
@@ -100,14 +100,14 @@ No type specified will return all comments.
     "status_code" : 200,
     "comments" : [
         { 
-            "type" : "trash pickup", 
+            "type" : "ADMIN", 
             "message" : "I need help with the trash on Colchester ave",
             "timestamp" : "2013-05-07 17:12:01",
             "pin" : 3,
             "id" : 4156
         },
         {
-            "type" : "help needed",
+            "type" : "MARKER",
             "message" : "There's a lot of trash on Pearl St, I could use some help!"
             "timestamp" : "1970-01-01 00:00:01",
             "pin" : None,
@@ -115,8 +115,8 @@ No type specified will return all comments.
         }
     ],
     "page" : {
-        "next" : "http://greenup.xenonapps.com/api/comments?type=help+needed&amp;page=3",
-        "previous" : "http://greenup.xenonapps.com/api/comments?type=help+needed&amp;page=1"
+        "next" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=3",
+        "previous" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=1"
     }
 }
 ```
@@ -137,7 +137,7 @@ URL: **/api/comments**
     </thead>
     <tbody>
         <tr>
-            <td> type </td><td>String </td><td> Can be either `forum`, `help needed`, `trash pickup` or `general message` </td>
+            <td> type </td><td>String </td><td> Can be either `MARKER`, `ADMIN` or `COMMENT` </td>
         </tr>
         <tr>
             <td> message   </td><td> String </td><td> The message to associated with this comment. Message length must not exceed 140 characters, and must also be non-empty. </td>
@@ -165,7 +165,7 @@ If the post data is malformed, the server will return a `400 bad request` respon
 ####Example Request Body
 ```
 {
-    "type" : "forum",
+    "type" : "COMMENT",
     "message" : "Have you guys heard about the free cookies on Pearl St and South Winooski? Bring your green bags down there and get one!"
 }
 ```
@@ -175,6 +175,35 @@ If the post data is malformed, the server will return a `400 bad request` respon
 { 
  "status_code" : 200, 
  "message" : "Succesfully submited new comment",
+}
+```
+
+-------------------------------------------------
+
+###Delete Comment
+
+Method: **DELETE**
+
+URL: **/api/comments**
+
+####Required DELETE data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>id</td><td>Integer</td><td>The unique id identifying a comment. Can be found through GET requests on the comments</td></tr>
+    </tbody>
+</table>
+
+####Example Request
+`http://greenup.xenonapps.com/api/comments?id=4543252345345`
+
+####Example Response
+```
+{
+    "status_code" : 204,
+    "message" : "Successfuly deleted comment"
 }
 ```
 
@@ -312,16 +341,20 @@ If no latitude or longitude are specified then all pins will be returned.
     "status_code" : 200,
     "pins" : [
         {
+            "id" : 3324523452345,
             "latDegrees" : 24.53, 
             "lonDegrees" : 43.2, 
-            "type" : "general message", 
-            "message", "I need help with the trash on Colchester ave"
+            "type" : "COMMENT", 
+            "message", "I need help with the trash on Colchester ave",
+            "addressed"  : false
         },
         {
+            "id" : 5246234532534,
             "latDegrees" : 25.13, 
             "lonDegrees" : 41.2, 
-            "type" : "help needed", 
-            "message", "There's a lot of trash on Pearl St, I could use some help!"
+            "type" : "MARKER", 
+            "message", "There's a lot of trash on Pearl St, I could use some help!",
+            "addressed"  : true
         }
     ]
 }
@@ -344,8 +377,9 @@ URL: **/api/pins**
     <tbody>
         <tr><td>latDegrees</td><td>float</td><td>The latitude coordinate of the pin in Decimal Degrees, values must range between -90.0 and 90.0</td></tr>
         <tr><td>lonDegrees</td><td>float</td><td>The longitude coordinate of the pin in Decimal Degrees, values must range between -180.0 and 180.0</td></tr>
-        <tr><td> type </td><td>String </td><td> Can be either `general message`, `help needed`, or `trash pickup` </td></tr>
+        <tr><td> type </td><td>String </td><td> Can be either `COMMENT`, `MARKER`, or `ADMIN` </td></tr>
         <tr><td>message</td><td>String</td><td>The message associated with this pin. May not be empty or a semantic error will occur</td></tr>
+        <tr><td>addressed</td><td>Boolean</td><td>Whether or not a marker has been addressed or not by the community</td></tr>
     </tbody>
 </table>
 
@@ -357,8 +391,9 @@ URL: **/api/pins**
 {
     "latDegrees" : 24.53, 
     "lonDegrees" : 43.2, 
-    "type" : "trash pickup", 
-    "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?"
+    "type" : "ADMIN", 
+    "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?",
+    "addressed" : true
 }
 ```
 
@@ -371,6 +406,84 @@ URL: **/api/pins**
 ```
 
 If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
+
+
+--------------------------
+
+###Mark pin addressed
+
+Method: **PUT**
+
+URL: **/api/pins?id=<ID of the pin>**
+
+####Required URL parameter
+<table>
+    <thead>
+        <tr><th>Name</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>id</td>
+            <td>The id of the pin to be updated</td>
+        </tr>
+    </tbody>
+</table>
+
+####Required PUT data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>addressed</td><td>Boolean</td><td>Whether or not a marker has been addressed or not by the community</td></tr>
+    </tbody>
+</table>
+
+
+####Example Request
+`http://greenup.xenonapps.com/api/pins?id=32424j23k4j2kldsafasdf`  
+
+####Request Body
+```
+{
+    "addressed" : true
+}
+```
+
+####Example Response
+```
+{
+    "status_code" : 200
+}
+```
+
+
+###Delete Comment
+
+Method: **DELETE**
+
+URL: **/api/pins**
+
+####Required DELETE data
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>id</td><td>Integer</td><td>The unique id identifying a pin. Can be found through GET requests on the pins</td></tr>
+    </tbody>
+</table>
+
+####Example Request
+`http://greenup.xenonapps.com/api/comments?id=4543252345345`
+
+####Example Response
+```
+{
+    "status_code" : 204,
+    "message" : "Successful"
+}
+```
 
 ----------------------------
 
@@ -558,6 +671,26 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
             <td>The message submitted is longer that the maximum length of 140 characters</td>
         </tr>
     </tbody>
+    <tr>
+        <td colspan="3" style="text-align: center;">DELETE Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td>422</td>
+            <td>Required key id not present in request url</td>
+            <td>The id field was not passed in the url.</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>id must be a numeric identifier</td>
+            <td>The Id was present, but was not a valid numeric integer</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>Could not find comment matching id</td>
+            <td>The requested comment to delete was not found</td>
+        </tr>
+    </tbody>
 </table>
 
 #### Heatmap
@@ -740,6 +873,57 @@ The error codes returned by the API are either of HTTP Code 400 for a bad reques
             <td>422</td>
             <td>Pin message may not be empty.</td>
             <td>The message to be associated with the pin was empty or null</td>
+        </tr>
+    </tbody>
+     <tr>
+        <td colspan="3" style="text-align: center;">PUT Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td>400</td>
+            <td>Request body is malformed</td>
+            <td>The JSON array sent to the server was not valid</td>
+        </tr>
+        <tr>
+            <td>400</td>
+            <td>Required key 'addressed' not present in request body</td>
+            <td>The key-value pair for addressed is missing from the put body</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>Required key id not present in request url</td>
+            <td>The id of the pin to be updated was not passed in the url parameters</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>id must be a numeric identifier</td>
+            <td>The id passed through the url parameters was not a numeric value</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>Id not found and pin not updated</td>
+            <td>The pin identified by the id could not be found</td>
+        </tr>
+        <tr>
+    </tbody>
+    <tr>
+        <td colspan="3" style="text-align: center;">DELETE Requests</td>
+    </tr>
+    <tbody>
+        <tr>
+            <td>422</td>
+            <td>Required key id not present in request url</td>
+            <td>The id field was not passed in the url.</td>
+        </tr>
+        <tr>
+            <td>422</td>
+            <td>id must be a numeric identifier</td>
+            <td>The Id was present, but was not a valid numeric integer</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>Id not found and pin not updated</td>
+            <td>The requested pin to delete was not found</td>
         </tr>
     </tbody>
 </table>
