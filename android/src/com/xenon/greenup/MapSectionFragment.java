@@ -50,7 +50,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 	private ArrayList<Marker> markers; //references to the map markers representing pins
 	private Marker newMarker; //reference to the most recently added marker
 	private boolean submitPinMode; //controls whether the additional buttons and stuff are displayed
-	private String currentType = "General Message"; //the type that is currently selected in the spinner
+	private String currentType = "ADMIN"; //the type that is currently selected in the spinner
 	
 	//Have Montpelier be the default center point for the map
 	private final double DEFAULT_LAT = 44.260059;
@@ -220,7 +220,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 		else if(title.equalsIgnoreCase("MARKER"))
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-		else if(title.equalsIgnoreCase("MARKER"))
+		else if(title.equalsIgnoreCase("COMMENT"))
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
 		else
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));

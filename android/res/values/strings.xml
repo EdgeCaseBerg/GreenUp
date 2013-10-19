@@ -32,8 +32,8 @@
 	<string name="show">Show</string>
 	<string name="hide">Hide</string>
 	<string-array name="pin_types">
-        <item>General Message</item>
-        <item>Help Needed</item>
-        <item>Trash Pickup</item>
+        <item>ADMIN</item>
+        <item>MARKER</item>
+        <item>COMMENT</item>
     </string-array>
 </resources>
