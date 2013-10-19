@@ -35,40 +35,49 @@ public final class APIServerInterface {
 			e.printStackTrace();
 		}
 		StringBuilder sb = new StringBuilder(BASE_URL + "/comments?");
+		if(type != null) {sb.append("type=" + type);}
+		if((Integer)page != null) {sb.append("&page=" + page);}
 		sb.append("type=" + type + "&" + "page=" + page);
-		String response = sendRequest(sb.toString());
+		String response = sendRequest(sb.toString(),"GET");
 		return new CommentPage(response);
 	}
 	
 	//Retrieves a page of comments with no regard for the type
 	public static CommentPage getAllComments(int page){
 		StringBuilder sb = new StringBuilder(); sb.append(BASE_URL).append("/comments?").append("page=").append(page);
-		String response = sendRequest(sb.toString());
+		String response = sendRequest(sb.toString(),"GET");
 		return new CommentPage(response);
 	}
 	
 	//Submits a comment (POST), the pin is optional.
-	public static void submitComments(String type, String message, int pin) {
+	public static void submitComment(String type, String message, int pin) {
 		Comment newComment = new Comment(type, message, pin);
 		String data = newComment.toJSON().toString();
 		String url = new StringBuilder(BASE_URL + "/comments").toString();
 		sendRequestWithData(url,"POST",data);
 	}
 	
+	//Deletes the comment with the given ID
+	public static void deleteComment(int commentID) {
+		String url = BASE_URL + "/comments?id=" + commentID;
+		String response = sendRequest(url,"DELETE");
+	}
+	
 	//Get a list of heatmap points for the specified coordinates, all parameters are optional (??)
-	public static Heatmap getHeatmap(float latDegrees, float latOffset, float lonDegrees, float lonOffset, int precision){
+	public static Heatmap getHeatmap(float latDegrees, float latOffset, float lonDegrees, float lonOffset, int precision, boolean raw){
 		StringBuilder sb = new StringBuilder(BASE_URL + "/heatmap?");
 		
 		//Wrapper class casting is neccesary to compare to null (damn java)
-		if((Float)latDegrees != null) { sb.append(("latDegrees=")).append(latDegrees); }
-		if((Float)latOffset != null)  { sb.append("&latOffset=").append(latOffset); }
-		if((Float)lonDegrees != null) { sb.append("&lonDegrees=").append(lonDegrees); }
-		if((Float)lonOffset != null)  { sb.append("&lonOffset=").append(lonOffset); }
-		if((Integer)precision != null)  { sb.append("&precision=").append(precision); }
+		if((Float)latDegrees != null) { sb.append("latDegrees=" + latDegrees); }
+		if((Float)latOffset != null)  { sb.append("&latOffset=" + latOffset); }
+		if((Float)lonDegrees != null) { sb.append("&lonDegrees=" + lonDegrees); }
+		if((Float)lonOffset != null)  { sb.append("&lonOffset=" + lonOffset); }
+		if((Integer)precision != null)  { sb.append("&precision=" + precision); }
+		if((Boolean)raw != null) {sb.append("&raw="+ raw);}
 		//If my oneline if's offend you feel free to change them. If Java was a good language and supported
 		//free standing ternary statements I would have used those. But no, it demands an assignment.
 		
-		String response = sendRequest(sb.toString());
+		String response = sendRequest(sb.toString(),"GET");
 		return new Heatmap(response);
 	}
 	
@@ -88,20 +97,33 @@ public final class APIServerInterface {
 		if((Double)lonDegrees != null) { sb.append("&lonDegrees=").append(lonDegrees); }
 		if((Integer)lonOffset != null)  { sb.append("&lonOffset=").append(lonOffset); }
 
-		String response = sendRequest(sb.toString());
+		String response = sendRequest(sb.toString(),"GET");
 		return new PinList(response);
 	}
 	
 	//Submit a pin (POST)
-	public static void submitPin(double latDegrees, double lonDegrees, String type, String message){
-		Pin pin = new Pin(latDegrees,lonDegrees,type,message);
+	public static void submitPin(double latDegrees, double lonDegrees, String type, String message,boolean addressed){
+		Pin pin = new Pin(latDegrees,lonDegrees,type,message,addressed);
 		String data = pin.toJSON().toString();
 		String url = new StringBuilder(BASE_URL + "/pins").toString();
 		sendRequestWithData(url,"POST",data);		
 	}
 	
+	//Set the 'addressed' flag of a pin
+	public static void setAddressed(int pinID,boolean addressed) {
+		String url = BASE_URL + "/pins?id=" + pinID;
+		String data = "{\"adressed\" : " + addressed + "}";
+		sendRequestWithData(url,"PUT",data);
+	}
+	
+	//Deletes the pin with the given ID
+	public static void deletePin(int pinID) {
+		String url = BASE_URL + "/pins?id=" + pinID;
+		String response = sendRequest(url,"DELETE");;
+	}
+	
 	public static int testConnection(){
-		sendRequest(BASE_URL);
+		sendRequest(BASE_URL,"GET");
 		return 0;
 	}
 	
@@ -119,10 +141,10 @@ public final class APIServerInterface {
 		Log.i("response",response);
 	}
 	
-	private static String sendRequest(String url) {
+	private static String sendRequest(String url, String method) {
 		String response;
 		try {
-			response = HTTPTransaction(url,"GET",null);
+			response = HTTPTransaction(url,method,null);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -179,6 +201,7 @@ public final class APIServerInterface {
 			e.printStackTrace();
 			response = "Error, see stack trace";
 		}
+		Log.i("HTTP response",response);
 		return response;
 	}
 }

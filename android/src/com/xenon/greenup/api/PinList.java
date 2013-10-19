@@ -23,10 +23,11 @@ public class PinList {
 			pins = object.getJSONArray("pins");
 			for (i = 0; i < pins.length(); i++){
 				this.pinList.add(new Pin(pins.getString(i)));
-				Log.i("lat",Double.toString(pinList.get(i).getLatDegrees()));
-				Log.i("lon",Double.toString(pinList.get(i).getLonDegrees()));
-				Log.i("type",pinList.get(i).getType());
-				Log.i("message",pinList.get(i).getMessage());
+				//Log.i("lat",Double.toString(pinList.get(i).getLatDegrees()));
+				//Log.i("lon",Double.toString(pinList.get(i).getLonDegrees()));
+				//Log.i("type",pinList.get(i).getType());
+				//Log.i("message",pinList.get(i).getMessage());
+				//Log.i("addressed",pinList.get(i).isAddressed());
 			}
 		}
 		catch (JSONException e){

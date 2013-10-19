@@ -53,13 +53,13 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 	 */
 	private int[] getResourceByType(String typeOfComment){
 		//TODO Match types to colors for drawables
-		if("FORUM".equalsIgnoreCase(typeOfComment)){
+		if("COMMENT".equalsIgnoreCase(typeOfComment)){
 			return new int[]{R.drawable.bubble_blue_top, R.drawable.bubble_blue_center,R.drawable.bubble_blue_bottom};
 		}
-		if("GENERAL MESSAGE".equalsIgnoreCase(typeOfComment)){
+		if("ADMIN".equalsIgnoreCase(typeOfComment)){
 			return new int[]{R.drawable.bubble_green_top, R.drawable.bubble_green_center,R.drawable.bubble_green_bottom};
 		}
-		if("TRASH PICKUP".equalsIgnoreCase(typeOfComment)){
+		if("MARKER".equalsIgnoreCase(typeOfComment)){
 			return new int[]{R.drawable.bubble_yellow_top, R.drawable.bubble_yellow_center,R.drawable.bubble_yellow_bottom};
 		}
 		//Default/Help needed

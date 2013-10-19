@@ -174,7 +174,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 			String message = messageEntry.getText().toString();
 			newMarker.setSnippet(message);
 			newMarker.setTitle(this.currentType);
-			APIServerInterface.submitPin(lat,lon,this.currentType, message);
+			APIServerInterface.submitPin(lat,lon,this.currentType, message,false);
 			newMarker.setDraggable(false);
 		}
 		else { //reset everything
@@ -216,11 +216,11 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 		options.position(coords);
 		options.snippet(message);
 		options.title(title);
-		if(title.equalsIgnoreCase("GENERAL MESSAGE"))
+		if(title.equalsIgnoreCase("ADMIN"))
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-		else if(title.equalsIgnoreCase("HELP NEEDED"))
+		else if(title.equalsIgnoreCase("MARKER"))
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-		else if(title.equalsIgnoreCase("TRASH PICKUP"))
+		else if(title.equalsIgnoreCase("MARKER"))
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
 		else
 			options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
