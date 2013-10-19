@@ -57,11 +57,11 @@ public class CommentPage {
 		ArrayList<Comment> filteredList = new ArrayList<Comment>();
 		for (int i = 0; i < commentsList.size(); i++) {
 			commentType = commentsList.get(i).getType();
-			if (commentType.equals("FORUM") && includeForum)
+			if (commentType.equals("COMMENT") && includeForum)
 				filteredList.add(commentsList.get(i));
-			if (commentType.equals("GENERAL MESSAGE") && includeGeneral)
+			if (commentType.equals("ADMIN") && includeGeneral)
 				filteredList.add(commentsList.get(i));
-			if (commentType.equals("TRASH PICKUP") && includeTrash)
+			if (commentType.equals("MARKER") && includeTrash)
 				filteredList.add(commentsList.get(i));
 		}
 		return filteredList;

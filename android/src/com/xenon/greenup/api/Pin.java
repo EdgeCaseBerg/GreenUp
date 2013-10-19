@@ -11,6 +11,7 @@ public class Pin {
 	private double lonDegrees;
 	private String type;
 	private String message;
+	private boolean addressed;
 	
 	public Pin(String jsonString) {
 		JSONObject object;
@@ -20,13 +21,14 @@ public class Pin {
 			this.lonDegrees = object.getDouble("lonDegrees");
 			this.type = object.getString("type");
 			this.message = object.getString("message");
+			this.addressed = object.getBoolean("addressed");
 		}
 		catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public Pin(float latDegrees, float lonDegrees, String type, String message) {
+	public Pin(float latDegrees, float lonDegrees, String type, String message,boolean addressed) {
 		this.latDegrees = latDegrees;
 		this.lonDegrees = lonDegrees;
 		this.type = type;
@@ -89,6 +91,7 @@ public class Pin {
 			json.put("lonDegrees",this.lonDegrees);
 			json.put("type", this.type);
 			json.put("message",this.message);
+			json.put("addressed", this.addressed);
 			Log.i("newPin",json.toString());
 			return json;
 		}
