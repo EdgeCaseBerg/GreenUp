@@ -31,4 +31,9 @@
 	<string name="trash_switch_text">Trash Pickup</string>
 	<string name="show">Show</string>
 	<string name="hide">Hide</string>
+	<string-array name="pin_types">
+        <item>General Message</item>
+        <item>Help Needed</item>
+        <item>Trash Pickup</item>
+    </string-array>
 </resources>
