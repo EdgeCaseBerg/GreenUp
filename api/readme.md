@@ -360,6 +360,45 @@ If no latitude or longitude are specified then all pins will be returned.
 }
 ```
 
+-----------------------
+
+###Get Pin
+
+Method: **GET**
+
+URL: **/api/pins?id={pin id here}**
+
+####Required Parameters
+<table>
+    <thead>
+        <tr><th>name</th><th>type</th><th>description</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>id</td>
+            <td>integer</td>
+            <td>The integral id of the pin to retrieve information about</td>
+        </tr>
+    </tbody>
+</table>
+
+####Example Request
+`http://greenup.xenonapps.com/api/pins?id=3324523452345`
+
+####Response
+
+    {
+        "status_code" : 200,
+        "pin" : {
+            "id" : 3324523452345,
+            "latDegrees" : 24.53, 
+            "lonDegrees" : 43.2, 
+            "type" : "COMMENT", 
+            "message", "I need help with the trash on Colchester ave",
+            "addressed"  : false
+        }
+    }
+
 
 ---------------------
 
