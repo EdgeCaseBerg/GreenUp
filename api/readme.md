@@ -33,11 +33,11 @@ Error Messages:
 --------------------
 
 When the API has difficulty processing any request it will return an error message within the json string in the following format:
-```
-{
-    "Error_Message" : "There was a problem with your request"
-}
-```
+
+    {
+        "Error_Message" : "There was a problem with your request"
+    }
+
 The value of the `Error_Message` field will be an informative message that will help you troubleshoot your malformed request. 
 
 --------------------
@@ -60,13 +60,13 @@ URL: **/api**
 `http://greenup.xenonapps.com/api` 
 
 ####Response:
-```no-highlight
-{
-    "status_code" : 200,
-    "version" : 3,
-    "Credit" : "Powered by Xenon Apps",
-}
-```
+
+    {
+        "status_code" : 200,
+        "version" : 3,
+        "Credit" : "Powered by Xenon Apps",
+    }
+
 
 -----------------------------
 
@@ -95,31 +95,31 @@ No type specified will return all comments.
 `http://greenup.xenonapps.com/api/comments?type=needs`
 
 ####Response:
-```no-highlight
-{
-    "status_code" : 200,
-    "comments" : [
-        { 
-            "type" : "ADMIN", 
-            "message" : "I need help with the trash on Colchester ave",
-            "timestamp" : "2013-05-07 17:12:01",
-            "pin" : 3,
-            "id" : 4156
-        },
-        {
-            "type" : "MARKER",
-            "message" : "There's a lot of trash on Pearl St, I could use some help!"
-            "timestamp" : "1970-01-01 00:00:01",
-            "pin" : None,
-            "id" : 1134
+
+    {
+        "status_code" : 200,
+        "comments" : [
+            { 
+                "type" : "ADMIN", 
+                "message" : "I need help with the trash on Colchester ave",
+                "timestamp" : "2013-05-07 17:12:01",
+                "pin" : 3,
+                "id" : 4156
+            },
+            {
+                "type" : "MARKER",
+                "message" : "There's a lot of trash on Pearl St, I could use some help!"
+                "timestamp" : "1970-01-01 00:00:01",
+                "pin" : None,
+                "id" : 1134
+            }
+        ],
+        "page" : {
+            "next" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=3",
+            "previous" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=1"
         }
-    ],
-    "page" : {
-        "next" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=3",
-        "previous" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=1"
     }
-}
-```
+
 The pin field refers to a pin resource. Each pin is identified uniquely by an unsigned integer value assigned to it from the database. If a comment originated from a pin being created with a message, then this message will appear as a comment with a non None pin resource id.
 
 -------------------------------------------------
@@ -163,20 +163,20 @@ If the post data is malformed, the server will return a `400 bad request` respon
 `http://greenup.xenonapps.com/api/comments`
 
 ####Example Request Body
-```
-{
-    "type" : "COMMENT",
-    "message" : "Have you guys heard about the free cookies on Pearl St and South Winooski? Bring your green bags down there and get one!"
-}
-```
+
+    {
+        "type" : "COMMENT",
+        "message" : "Have you guys heard about the free cookies on Pearl St and South Winooski? Bring your green bags down there and get one!"
+    }
+
 
 ####Response:
-```
-{ 
- "status_code" : 200, 
- "message" : "Succesfully submited new comment",
-}
-```
+
+    { 
+        "status_code" : 200, 
+        "message" : "Succesfully submited new comment",
+    }
+
 
 -------------------------------------------------
 
@@ -200,12 +200,12 @@ URL: **/api/comments**
 `http://greenup.xenonapps.com/api/comments?id=4543252345345`
 
 ####Example Response
-```
-{
-    "status_code" : 204,
-    "message" : "Successfuly deleted comment"
-}
-```
+
+    {
+        "status_code" : 204,
+        "message" : "Successfuly deleted comment"
+    }
+
 
 ---------------------------------
 
@@ -239,23 +239,23 @@ If the request only specifies the offset then the API will return an error messa
 `http://greenup.xenonapps.com/api/heatmap?latDegrees=23.45&latOffset=2.0&lonDegrees=40.3&lonOffset=5.12`
 
 ####Response
-```
-{
-    "status_code" : 200,
-    "grid" : [
-        {
-            "latDegrees" : 24.53, 
-            "lonDegrees" : 43.2, 
-            "secondsWorked" : 120
-        },
-        {
-            "latDegrees" : 25.13, 
-            "lonDegrees" : 41.2, 
-            "secondsWorked" : 133
-        }
-    ]
-}
-```
+
+    {
+        "status_code" : 200,
+        "grid" : [
+            {
+                "latDegrees" : 24.53, 
+                "lonDegrees" : 43.2, 
+                "secondsWorked" : 120
+            },
+            {
+                "latDegrees" : 25.13, 
+                "lonDegrees" : 41.2, 
+                "secondsWorked" : 133
+            }
+        ]
+    }
+
 
 ---------------------------
 
@@ -288,23 +288,23 @@ If the request is malformed the server will return an error code of `400 bad req
 ####Example Request
 `http://greenup.xenonapps.com/api/heatmap`
 #####Message Body
-```
-[
-    {
-        "latDegrees" : 24.53, 
-        "lonDegrees" : 43.2, 
-        "secondsWorked" : 120
-    }
-]
-```
+
+    [
+        {
+            "latDegrees" : 24.53, 
+            "lonDegrees" : 43.2, 
+            "secondsWorked" : 120
+        }
+    ]   
+
 
 ####Response
-```
-{ 
- "status_code" : 200, 
- "message" : "Successful submit",
-}
-```
+
+    { 
+        "status_code" : 200, 
+        "message" : "Successful submit",
+    }
+
 
 It is important to note that the heatmap endpoint for **PUT** accepts only json arrays of headmap data objects, this enables batch updating of the heatmap resource.
 
@@ -336,29 +336,29 @@ If no latitude or longitude are specified then all pins will be returned.
 `http://greenup.xenonapps.com/api/pins`
 
 ####Response
-```
-{
-    "status_code" : 200,
-    "pins" : [
-        {
-            "id" : 3324523452345,
-            "latDegrees" : 24.53, 
-            "lonDegrees" : 43.2, 
-            "type" : "COMMENT", 
-            "message", "I need help with the trash on Colchester ave",
-            "addressed"  : false
-        },
-        {
-            "id" : 5246234532534,
-            "latDegrees" : 25.13, 
-            "lonDegrees" : 41.2, 
-            "type" : "MARKER", 
-            "message", "There's a lot of trash on Pearl St, I could use some help!",
-            "addressed"  : true
-        }
-    ]
-}
-```
+
+    {
+        "status_code" : 200,
+        "pins" : [
+            {
+                "id" : 3324523452345,
+                "latDegrees" : 24.53, 
+                "lonDegrees" : 43.2, 
+                "type" : "COMMENT", 
+                "message", "I need help with the trash on Colchester ave",
+                "addressed"  : false
+            },
+            {
+                "id" : 5246234532534,
+                "latDegrees" : 25.13, 
+                "lonDegrees" : 41.2, 
+                "type" : "MARKER", 
+                "message", "There's a lot of trash on Pearl St, I could use some help!",
+                "addressed"  : true
+            }
+        ]
+    }
+
 
 -----------------------
 
@@ -426,23 +426,23 @@ URL: **/api/pins**
 ####Example Request
 `http://greenup.xenonapps.com/api/pins`
 #####Message Body
-```
-{
-    "latDegrees" : 24.53, 
-    "lonDegrees" : 43.2, 
-    "type" : "ADMIN", 
-    "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?",
-    "addressed" : true
-}
-```
+
+    {
+        "latDegrees" : 24.53, 
+        "lonDegrees" : 43.2, 
+        "type" : "ADMIN", 
+        "message" : "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?",
+        "addressed" : true
+    }
+
 
 ####Response
-```
-{ 
- "status_code" : 200, 
- "message" : "Successful submit",
-}
-```
+
+    { 
+        "status_code" : 200, 
+        "message" : "Successful submit",
+    }
+
 
 If the Post body is malformed, then the server will emit a `400 Bad Request` response, and if possible state the reason for why the pin was rejected. For example, a post body with a type of `pickup` will be rejected because it is not a valid type of pin.
 
@@ -483,18 +483,18 @@ URL: **/api/pins?id=<ID of the pin>**
 `http://greenup.xenonapps.com/api/pins?id=32424j23k4j2kldsafasdf`  
 
 ####Request Body
-```
-{
-    "addressed" : true
-}
-```
+
+    {
+        "addressed" : true
+    }
+    
 
 ####Example Response
-```
-{
-    "status_code" : 200
-}
-```
+
+    {
+        "status_code" : 200
+    }
+
 
 
 ###Delete Pin
@@ -517,12 +517,12 @@ URL: **/api/pins**
 `http://greenup.xenonapps.com/api/comments?id=4543252345345`
 
 ####Example Response
-```
-{
-    "status_code" : 204,
-    "message" : "Successful"
-}
-```
+
+    {
+        "status_code" : 204,
+        "message" : "Successful"
+    }
+
 
 ----------------------------
 
@@ -548,25 +548,25 @@ URL: **/api/debug**
 `http://greenup.xenonapps.com/api/debug`
 
 ####Response
-```
-{
-    "status" : 200,
-    "messages" : [
-        {
-            "message" : "Null pointer exception on line 42 in badcontroller.java",
-            "stackTrace" : " stack trace: ..."
-            "timestamp" : "2013-05-08-00:00",
-            "hash" : "aed60d05a1bd3f7633a6464a7a9b4eab5a9c13a185f47cb651e6b4130ce09dfa"
-        },
-        {
-            "message" : "Problem resolving up address of server. stack trace: ...",
-            "stackTrace" : " stack trace: ..."
-            "timestamp" : "2014-03-11-15:11",
-            "hash" : "6f3d78c8ca1d63645015d6fa2ld975902348d585f954efd0e8ecca4f362c697d9"  
-        }
-    ]
-}
-```
+
+    {
+        "status" : 200,
+        "messages" : [
+            {
+                "message" : "Null pointer exception on line 42 in badcontroller.java",
+                "stackTrace" : " stack trace: ..."
+                "timestamp" : "2013-05-08-00:00",
+                "hash" : "aed60d05a1bd3f7633a6464a7a9b4eab5a9c13a185f47cb651e6b4130ce09dfa"
+            },
+            {
+                "message" : "Problem resolving up address of server. stack trace: ...",
+                "stackTrace" : " stack trace: ..."
+                "timestamp" : "2014-03-11-15:11",
+                "hash" : "6f3d78c8ca1d63645015d6fa2ld975902348d585f954efd0e8ecca4f362c697d9"  
+            }
+        ]
+    }
+
 
 ###Post log message
 
@@ -590,21 +590,21 @@ URL: **/api/debug**
 `http://greenup.xenonapps.com/api/debug`
 
 ####Message Body
-```
-{
-    "message" : "There was a problem in the main controller",
-    "stackTrace" : "line 52... etc etc" ,
-    "origin" : "6f3d78c8ca1d63645015d6fa2d975902348d585f954efd0e8ecca4f362c697d9"
-}
-```
+
+    {
+        "message" : "There was a problem in the main controller",
+        "stackTrace" : "line 52... etc etc" ,
+        "origin" : "6f3d78c8ca1d63645015d6fa2d975902348d585f954efd0e8ecca4f362c697d9"
+    }
+    
 
 ####Response
-```
-{ 
- "status" : 200, 
- "message" : "Successful submit"
-}
-```
+
+    { 
+        "status" : 200, 
+        "message" : "Successful submit"
+    }
+
 
 ###Delete log message
 
@@ -637,9 +637,9 @@ Note that by design response code 204 returns no content. So this is the only en
 
 If the resource to be deleted is not found during a request, then a 404 is returned along with the following response:
 ####Response
-```
-{'status_code' : 404 ,'message' : 'Successful Deletion'}
-```
+
+    {'status_code' : 404 ,'message' : 'Successful Deletion'}
+
 
 -------------------------------
 
