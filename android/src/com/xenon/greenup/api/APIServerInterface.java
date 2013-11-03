@@ -138,7 +138,7 @@ public final class APIServerInterface {
 			e.printStackTrace();
 			response = "Error, see stack trace";
 		}
-		Log.i("response",response);
+		//Log.i("response",response);
 	}
 	
 	private static String sendRequest(String url, String method) {

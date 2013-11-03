@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +24,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -34,14 +36,15 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Heatmap;
+import com.xenon.greenup.api.HeatmapPoint;
 import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
 import com.xenon.greenup.heatmap.HeatmapOverlayProvider;
 
-public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener,OnItemSelectedListener {
+public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener,OnItemSelectedListener, OnMapClickListener {
 	
 	private MapView mMapView;
-	private Button submitButton,clearButton;
+	private Button submitButton,clearButton,testButton;
 	private EditText messageEntry;
 	private RelativeLayout pinLayout;
 	private Spinner typeSelect;
@@ -49,7 +52,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 	private TileOverlay heatmapOverlay;
 	private Bundle bundle;
 	private LocationManager mLocationManager;
-	private Heatmap heatmap;
+	private Heatmap serverData,testData;
 	private PinList pins; //list of pins from the server, pins only added once they're submitted
 	private ArrayList<Marker> markers; //references to the map markers representing pins
 	private Marker newMarker; //reference to the most recently added marker
@@ -75,11 +78,13 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         pinLayout = (RelativeLayout)inflatedView.findViewById(R.id.add_pins_layout);
         submitButton = (Button)inflatedView.findViewById(R.id.pin_submit_button);
         clearButton = (Button)inflatedView.findViewById(R.id.pin_clear_button);
+        testButton = (Button)inflatedView.findViewById(R.id.push_points);
         typeSelect = (Spinner)inflatedView.findViewById(R.id.pin_type_selection);
         messageEntry = (EditText)inflatedView.findViewById(R.id.edit_message_text);
         pinLayout.setVisibility(View.INVISIBLE);
         submitButton.setOnClickListener(this);
         clearButton.setOnClickListener(this);
+        testButton.setOnClickListener(this);
         typeSelect.setOnItemSelectedListener(this);
         
         //Populate the spinner with choices
@@ -94,6 +99,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         mMapView.onCreate(bundle);
         map = mMapView.getMap();
         map.setOnMapLongClickListener(this);
+        map.setOnMapClickListener(this); //for the heatmap testing
         mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         
         //center the camera, use the default coordinates and zoom for now
@@ -105,6 +111,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         //add the heatmap overlay
         HeatmapOverlayProvider provider = new HeatmapOverlayProvider(mMapView,map);
         heatmapOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+        testData = new Heatmap();
         
         markers = new ArrayList<Marker>();
         
@@ -185,6 +192,10 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 			APIServerInterface.submitPin(lat,lon,this.currentType, message,false);
 			newMarker.setDraggable(false);
 		}
+		else if(view == testButton){
+			APIServerInterface.updateHeatmap(testData);
+			testData.clear();
+		}
 		else { //reset everything
 			messageEntry.setText("");
 			this.currentType = "General Message";
@@ -243,4 +254,11 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
     	this.markers.remove(i);
     	this.newMarker = null;
     }
+
+    //Add a heatmap point to the testData list when the map area is clicked, for testing only
+	@Override
+	public void onMapClick(LatLng pos) {
+		testData.add(new HeatmapPoint(pos.latitude,pos.longitude,60));
+		Log.i("testPoint","Added new test point"+pos.toString());
+	}
 }

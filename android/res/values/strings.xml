@@ -36,4 +36,5 @@
         <item>MARKER</item>
         <item>COMMENT</item>
     </string-array>
+        <string name="push_points">Push Points</string>
 </resources>
