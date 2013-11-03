@@ -30,10 +30,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Heatmap;
 import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
+import com.xenon.greenup.heatmap.HeatmapOverlayProvider;
 
 public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener,OnItemSelectedListener {
 	
@@ -43,6 +46,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 	private RelativeLayout pinLayout;
 	private Spinner typeSelect;
 	private GoogleMap map;
+	private TileOverlay heatmapOverlay;
 	private Bundle bundle;
 	private LocationManager mLocationManager;
 	private Heatmap heatmap;
@@ -97,6 +101,10 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(DEFAULT_ZOOM);
         map.moveCamera(center);
         map.moveCamera(zoom);
+        
+        //add the heatmap overlay
+        HeatmapOverlayProvider provider = new HeatmapOverlayProvider(mMapView,map);
+        heatmapOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
         
         markers = new ArrayList<Marker>();
         
