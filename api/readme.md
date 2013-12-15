@@ -115,8 +115,8 @@ No type specified will return all comments.
         }
     ],
     "page" : {
-        "next" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=3",
-        "previous" : "http://greenup.xenonapps.com/api/comments?type=MARKER&amp;page=1"
+        "next" : "http://greenup.xenonapps.com/api/comments?type=MARKER&page=3",
+        "previous" : "http://greenup.xenonapps.com/api/comments?type=MARKER&page=1"
     }
 }
 ```
@@ -475,7 +475,7 @@ URL: **/api/pins**
 </table>
 
 ####Example Request
-`http://greenup.xenonapps.com/api/comments?id=4543252345345`
+`http://greenup.xenonapps.com/api/pins?id=4543252345345`
 
 ####Example Response
 ```
