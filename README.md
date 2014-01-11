@@ -2,6 +2,8 @@ GreenUp WebClient  - v0.01
 =========
 Powered by <a href="http://xenonapps.com">XenonApps</a>
 
+GreenUp Repository for Client and Administration
+------------------------------------------------------------------------
 
 A mobile-web client for GreenUp-VT 
 
