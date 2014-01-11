@@ -628,6 +628,7 @@
 		3959252C177518690035E351 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DF4F48DD1881E59B00C4A9AC /* NetworkingController */,
 				DF3F00FB17E25CBC00530A4D /* Reachability Library */,
 				DFA9ABFC17D664E9006F58A5 /* Categories */,
 				DFA9AA7517D25ABF006F58A5 /* CSocketController / C Socket Library */,
@@ -686,6 +687,13 @@
 				DF3F00FD17E25CD000530A4D /* Reachability.m */,
 			);
 			name = "Reachability Library";
+			sourceTree = "<group>";
+		};
+		DF4F48DD1881E59B00C4A9AC /* NetworkingController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = NetworkingController;
 			sourceTree = "<group>";
 		};
 		DFA9AA7517D25ABF006F58A5 /* CSocketController / C Socket Library */ = {
@@ -793,7 +801,7 @@
 		3959251A177518690035E351 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Aidan Melen";
 			};
 			buildConfigurationList = 3959251D177518690035E351 /* Build configuration list for PBXProject "GoGreen" */;
@@ -1021,7 +1029,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1058,7 +1065,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;

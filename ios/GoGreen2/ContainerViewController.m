@@ -13,6 +13,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#import "UIColor+methods.h"
 
 #define Message_Type_ADMIN @"ADMIN"
 #define Message_Type_MARKER @"MARKER"
@@ -40,10 +41,13 @@ static ContainerViewController* theContainerView = nil;
         {
             theContainerView = [[self alloc] init];
         }
-        
         return theContainerView;
     }
     return nil;
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
 }
 
 
@@ -92,6 +96,8 @@ static ContainerViewController* theContainerView = nil;
     
     self.theTabBar.delegate = self;
     
+    [self.theTabBar setTintColor:[UIColor whiteColor]];
+    
     self.item1 = [[UITabBarItem alloc] initWithTitle:@"Home" image:[UIImage imageNamed:@"home_active.png"] tag:HOME_VIEW];
     [self.item1 setFinishedSelectedImage:[UIImage imageNamed:@"home_active.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"home.png"]];
     self.item2 = [[UITabBarItem alloc] initWithTitle:@"Map" image:[UIImage imageNamed:@"map_active.png"] tag:Map_VIEW];
@@ -103,7 +109,15 @@ static ContainerViewController* theContainerView = nil;
     [self.view addSubview:self.theTabBar];
     
     //Menu
-    self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
+    if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
+    {
+        self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -120, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
+    }
+    else
+    {
+        self.theMenuView = [[MenuView alloc] initWithFrame:CGRectMake(0, -140, self.view.frame.size.width, 171) andView:MENU_HOME_VIEW];
+    }
+    
     [self.view addSubview:self.theMenuView];
     
     //Up swipe to show settings
@@ -132,6 +146,13 @@ static ContainerViewController* theContainerView = nil;
     
     //Notification Center
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMenu:) name:@"toggleMenu" object:nil];
+    
+    if([UIScreen mainScreen].bounds.size.height == 568)
+    {
+        self.statusBarFix = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+        [self.statusBarFix setBackgroundColor:[UIColor greenUpGreenColor]];
+        [self.view addSubview:self.statusBarFix];
+    }
 }
 
 #pragma mark - Tab Bar Delegate
@@ -154,6 +175,7 @@ static ContainerViewController* theContainerView = nil;
     }
     
     [self.view addSubview:self.theMenuView];
+    [self.view bringSubviewToFront:self.statusBarFix];
 }
 
 -(void)switchHomeView
@@ -172,6 +194,7 @@ static ContainerViewController* theContainerView = nil;
         [self.theMapViewController.view setFrame:CGRectMake(320, 0, 320, self.theMapViewController.view.frame.size.height)];
         [self.theMessageViewController.view setFrame:CGRectMake(640, 0, 320, self.theMessageViewController.view.frame.size.height)];
     };
+
     //Perform Animations
     [UIView animateWithDuration:.3 animations:animate];
     
@@ -266,13 +289,30 @@ static ContainerViewController* theContainerView = nil;
 
 -(IBAction)hideMenu:(id)sender
 {
-    VoidBlock animate2 = ^{[self.theMenuView setFrame:CGRectMake(0, -140, self.theMenuView.frame.size.width, self.theMenuView.frame.size.height)];};
+    
+    VoidBlock animate2 = ^{
+        if([UIScreen mainScreen].bounds.size.height == 568)
+        {
+            [self.theMenuView setFrame:CGRectMake(0, -120, self.theMenuView.frame.size.width, self.theMenuView.frame.size.height)];
+        }
+        else
+        {
+           [self.theMenuView setFrame:CGRectMake(0, -140, self.theMenuView.frame.size.width, self.theMenuView.frame.size.height)];
+        }};
     [UIView animateWithDuration:.2 animations:animate2];
 }
 
 -(IBAction)showMenu:(id)sender
 {
-    VoidBlock animate2 = ^{[self.theMenuView setFrame:CGRectMake(0, 0, self.theMenuView.frame.size.width, self.theMenuView.frame.size.height)];};
+    VoidBlock animate2 = ^{
+        if([UIScreen mainScreen].bounds.size.height == 568)
+        {
+            [self.theMenuView setFrame:CGRectMake(0, 20, self.theMenuView.frame.size.width, self.theMenuView.frame.size.height)];
+        }
+        else
+        {
+            [self.theMenuView setFrame:CGRectMake(0, 0, self.theMenuView.frame.size.width, self.theMenuView.frame.size.height)];
+        }};
     [UIView animateWithDuration:.2 animations:animate2];
 }
 

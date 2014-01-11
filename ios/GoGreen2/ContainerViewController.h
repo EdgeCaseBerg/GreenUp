@@ -17,8 +17,9 @@
 #define Map_VIEW 1
 #define MESSAGE_VIEW 2
 
-#define API_PORT 30002
-#define BASE_HOST @"localhost"
+#define API_PORT 31337
+
+#define BASE_HOST @"199.195.248.180"
 #define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
 #define COMMENTS_RELATIVE_URL @"/api/comments"
 #define PINS_RELATIVE_URL @"/api/pins"
@@ -35,6 +36,7 @@ typedef void (^VoidBlock)(void);
 @property (strong, nonatomic) MessageViewController *theMessageViewController;
 @property (strong, nonatomic) MenuView *theMenuView;
 @property (strong, nonatomic) UIView *loadingView;
+@property (nonatomic, strong) UIView *statusBarFix;
 
 +(ContainerViewController *)sharedContainer;
 

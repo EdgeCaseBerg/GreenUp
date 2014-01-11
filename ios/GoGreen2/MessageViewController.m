@@ -18,6 +18,7 @@
 #import "Reachability.h"
 #import "HeatMapPin.h"
 #import "ContainerViewController.h"
+//#import "NetworkingController.h"
 
 #define ALERT_VIEW_TOGGLE_ON 0
 #define ALERT_VIEW_TOGGLE_OFF 1
@@ -82,7 +83,6 @@
     [self.messageSendButton setFrame:CGRectMake(265, 10, 50, 35)];
     [self.messageViewContainer addSubview:self.messageSendButton];
     
-    
     //Keyboard CallBacks
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyboardWillShow:)
@@ -110,7 +110,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMessageAddressed:) name:@"toggleMessageAddressed" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMessageForFirstPageOfShowMessage) name:@"getMessagesForShowingSelectedMessage" object:nil];
-    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingNewPageForScrolling:) name:@"finishedGettingNewPageForScrolling" object:nil];
     
@@ -190,7 +189,7 @@
                     }
                     
                     NSDictionary *pages = [response objectForKey:@"page"];
-                    if(![[pages objectForKey:@"next"] isEqual:[NSNull null]])
+                    if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
                     {
                         NSString *fullURL = [pages objectForKey:@"next"];
                         NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
@@ -260,7 +259,9 @@
                     //[self.messages sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:TRUE]]];
                     
                     NSDictionary *pages = [response objectForKey:@"page"];
-                    if(![[pages objectForKey:@"next"] isEqual:[NSNull null]])
+                    NSLog(@"Class: %@", [[pages objectForKey:@"next"] class]);
+                    
+                    if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
                     {
                         NSString *fullURL = [pages objectForKey:@"next"];
                         NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
@@ -325,7 +326,7 @@
                     }
                     
                     NSDictionary *pages = [response objectForKey:@"page"];
-                    if(![[pages objectForKey:@"next"] isEqualToString:@"<null>"])
+                    if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
                     {
                         NSString *fullURL = [pages objectForKey:@"next"];
                         NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
@@ -389,7 +390,7 @@
                     }
                     
                     NSDictionary *pages = [response objectForKey:@"page"];
-                    if(![[pages objectForKey:@"next"] isEqual:[NSNull null]])
+                    if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
                     {
                         NSString *fullURL = [pages objectForKey:@"next"];
                         NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
