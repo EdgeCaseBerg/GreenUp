@@ -183,19 +183,20 @@ function ApiConnector(){
 			window.MAP.pickupMarkers[i].setMap(null);
 		}
 		window.MAP.pickupMarkers = [];
-		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker);
+        var customUrl = null;
+		this.pullApiData(URL, "JSON", "GET", window.UI.updateMarker, customUrl);
 	}
 
 	// by passing the url as an argument, we can use this method to get next pages
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
 		var urlStr = "";
 		if(url == null || url == "null"){
-			urlStr += "/api/comments";
+			urlStr += "/comments";
 		}else{
 			urlStr += url;
 		}
-
-		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
+        var customUrl = null;
+		this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum, customUrl);
 	} // end pullCommentData()
 
 	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
@@ -264,9 +265,9 @@ function ApiConnector(){
 		baseGeocodeUrl += lng;
 		baseGeocodeUrl += "&sensor=false";
 
-        var useUrl = 1;
+        var customUrl = 1;
 		// URL, DATATYPE, QUERYTYPE, CALLBACK
-		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.UI.updateMarkerAddStreetAddr, useUrl, 1);
+		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.UI.updateMarkerAddStreetAddr, customUrl);
 
 	}
 
@@ -279,8 +280,9 @@ function ApiConnector(){
 
 		baseGeocodeUrl = baseGeocodeUrl.substring(0, baseGeocodeUrl.length - 2);
 		baseGeocodeUrl += "&sensor=false";
+        var customUrl = 1;
 		// URL, DATATYPE, QUERYTYPE, CALLBACK
-		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.ApiConnector.buildNewPin, 1);
+		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.ApiConnector.buildNewPin, customUrl);
 
 	}
 
