@@ -370,6 +370,9 @@ function UiHandle(){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
                 console.log(ii + "-" + totalSecondsWorked);
             }
+        }else{
+            console.log("Data grid not found --> ");
+            console.log(data);
         }
 
 		// alert(data.grid[0].secondsWorked + " - " + data.grid[(data.grid.length - 1)].secondsWorked);

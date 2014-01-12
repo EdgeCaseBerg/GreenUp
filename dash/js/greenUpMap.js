@@ -121,15 +121,18 @@ function MapHandle(){
 		console.log(heatmapData);
 
   		if(heatmapData.length > 0){
-	        var pointArray = new google.maps.MVCArray(heatmapData);
 
-			window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
-			    data: pointArray,
-			    dissipating: true, 
-			    radius: 5
-			});
+                var pointArray = new google.maps.MVCArray(heatmapData);
 
-	  		window.MAP.heatmap.setMap(window.MAP.map);
+                window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: pointArray,
+                    dissipating: true,
+                    radius: 5
+                });
+
+                window.MAP.heatmap.setMap(window.MAP.map);
+                console.log("map:");
+                console.log(window.MAP.map);
 	  	}
 	}
 

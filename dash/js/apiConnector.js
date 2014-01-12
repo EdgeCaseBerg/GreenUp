@@ -171,7 +171,7 @@ function ApiConnector(){
 		var params = "?raw=true";
 		console.log("Preparing to pull RAW heatmap data");
 		var URL = heatmapURI+params;
-		this.pullApiData(URL, "JSON", "GET", window.UI.updateRawHeatmapData);
+		this.pullApiData(URL, "JSON", "GET", window.UI.updateRawHeatmapData, null);
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
