@@ -36,11 +36,13 @@ function loadAnalytics(){
 	// alert("analytics");
 	if(window.DEBUG == false){
 		var clientId = '603345821345.apps.googleusercontent.com';
-		var apiKey = 'Qvz6i1KzafNG8oxcH6_w1sGC';
+		var apiKey = 'AIzaSyBYp3Dhzy4PR0TPmtw7y2cnMz7nQrPJ9yQ';
 		var scopes = 'https://www.googleapis.com/auth/analytics.readonly';
 
 		gapi.client.setApiKey(apiKey);
+
 		gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+
 	}else{
 		alert("DEBUG");
 		$('#loginContainer').fadeOut(1000);

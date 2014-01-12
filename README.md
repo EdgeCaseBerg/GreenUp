@@ -32,9 +32,9 @@ the proxied response looks like: <br />
 
  Problems with SSL and Google OAuth:<br />
  The Admin dashboard uses Google Analytics data to feed some of the usage graphs and to log in to the dashboard in general.
- To access the dash the user must log in using OAuth and the Google account, all of which occurs over HTTPS. Unless you have a Cert and want
- to futz with that, you'll need to use an ssl tunnel to access the http content over https. I'm using Stunnel which, on a Mac, is avaiable
- as a tar archive or through MacPorts.
+ To access the dash the user must log in using OAuth and the Google account, all of which occurs over HTTPS.<br />
+ To run provide HTTPS locally, you'll need to configure your Apache, and generate a cert.<br />
+ <A href="http://webdevstudios.com/2013/05/24/how-to-set-up-ssl-with-osx-mountain-lions-built-in-apache/">Mac users, see this tutorial</a><br /><br />
 
 
 
