@@ -14,10 +14,14 @@ function ApiConnector(){
 	// api URLs have been moved into each of the functions using them as per issue 46
 
 	// performs the ajax call to get our data
-	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
+	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK, USE_URL){
 		console.log("url requested");
 		console.log(URL);
-        URL = this.LOCALHOST+this.PROXYBASE+this.HOST+this.PORT+this.BASE+URL;
+        if(!window.HELPER.isNull(USE_URL) && USE_URL == 1){
+            // leave the URL alone
+        }else{
+            URL = this.LOCALHOST+this.PROXYBASE+this.HOST+this.PORT+this.BASE+URL;
+        }
         console.log(URL);
 		$.ajax({
 			type: QUERYTYPE,
@@ -255,17 +259,19 @@ function ApiConnector(){
 	}
 
 	ApiConnector.prototype.getStreetFromLatLng = function getStreetFromLatLng(lat, lng, callback){
-		var baseGeocodeUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=";
+		var baseGeocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
 		baseGeocodeUrl += lat + ",";
 		baseGeocodeUrl += lng;
 		baseGeocodeUrl += "&sensor=false";
+
+        var useUrl = 1;
 		// URL, DATATYPE, QUERYTYPE, CALLBACK
-		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.UI.updateMarkerAddStreetAddr);
+		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.UI.updateMarkerAddStreetAddr, useUrl, 1);
 
 	}
 
 	ApiConnector.prototype.getLatLngFromStreet = function getStreetFromLatLng(streetAddr, pin, callback){
-		var baseGeocodeUrl = "http://maps.googleapis.com/maps/api/geocode/json?address=";
+		var baseGeocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 		for(prop in streetAddr){
 			prop = prop.replace(" ", "+");
 			baseGeocodeUrl += prop + ",+"
@@ -274,7 +280,7 @@ function ApiConnector(){
 		baseGeocodeUrl = baseGeocodeUrl.substring(0, baseGeocodeUrl.length - 2);
 		baseGeocodeUrl += "&sensor=false";
 		// URL, DATATYPE, QUERYTYPE, CALLBACK
-		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.ApiConnector.buildNewPin);
+		this.pullApiData(baseGeocodeUrl, "JSON", "GET", window.ApiConnector.buildNewPin, 1);
 
 	}
 
