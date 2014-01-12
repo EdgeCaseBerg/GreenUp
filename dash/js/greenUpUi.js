@@ -412,13 +412,13 @@ function UiHandle(){
 		var comments = dataObj.comments;
 		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
 		// window.UI.commentsNextPageUrl = dataObj.page.next;
-		if(dataObj.page.next != null){
+		if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.next)){
 			var nextArr = dataObj.page.next.split("greenupapp.appspot.com/api");
 			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
 		}else{
 			window.UI.commentsNextPageUrl = null;
 		}
-		if(dataObj.page.previous != null){
+		if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.previous)){
 			var prevArr = dataObj.page.previous.split("greenupapp.appspot.com/api");
 			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
 		}else{
