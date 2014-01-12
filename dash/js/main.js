@@ -1,4 +1,4 @@
-window.DEBUG = false;
+window.DEBUG =true;
 
 // prototype objects for posting to API
 function Pin(){
