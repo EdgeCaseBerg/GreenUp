@@ -147,12 +147,12 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
             <div class="analyticsHeader">
               Analytics Sample Period
             </div>
-            <div class="analyticsData">
-              <ul>
-                <li>Start Date:&nbsp;<input type="text" class="datePicker" id="startDateInput"/></li>
-                <li> End Date: &nbsp;&nbsp;<input type="text" class="datePicker" id="endDateInput"/></li>
-                <li><input type="button" value="update" id="updateAnalyticsButton" /></li>
-              </ul>
+            <div class="analyticsData analyticsDateSelectNest">
+              <table>
+                <tr><td>Start Date:</td><td><input type="text" class="datePicker" id="startDateInput"/></td></tr>
+                <tr><td>End Date:</td><td><input type="text" class="datePicker" id="endDateInput"/></td></tr>
+                <tr><td></td><td><input type="button" value="update" id="updateAnalyticsButton" /></td></tr>
+              </table>
             </div>
           </div>
 
@@ -189,11 +189,22 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
   </div>
 
   <div id="commentsDialog">
+    <div class="nav navbar commentsSearchNavbar">
+      <form class="navbar-search pull-left">
+        <table>
+          <tr>
+            <td><input type="text" id="commentsSearch" class="search-query" placeholder="Search"></td>
+            <td><input type="button" id="commentsSearchGo" value="Search" /></td>
+          </tr>
+        </table>
+      </form>
+    </div>
     <div id="bubbleContainer">
     </div>
   </div>
 
   <div id="addMarkerDashContainer">
+    <div id="addmarkerDashNestBackground">
       <div id="addMarkerDashNest">
         <div id="addMarkerDashHeader">
           <img src="images/icons/new_trash1.png" />
@@ -263,6 +274,7 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
         </form>
         </div>
       </div>
+    </div>
   </div>
 
   <div id="loginContainer">

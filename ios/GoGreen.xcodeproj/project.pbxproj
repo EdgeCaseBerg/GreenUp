@@ -54,6 +54,9 @@
 		39592580177519730035E351 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3959257F177519730035E351 /* SystemConfiguration.framework */; };
 		39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D06AFC1783A6A300DD94B7 /* MapKit.framework */; };
 		39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E46BE3179C7000008590A6 /* GoGreenTabBar.m */; };
+		DF2E5D03180F43A4000B9824 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF2E5CFF180F43A4000B9824 /* greenhttp.c */; };
+		DF2E5D08181079A5000B9824 /* marker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF2E5D06181079A5000B9824 /* marker.png */; };
+		DF2E5D09181079A5000B9824 /* marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF2E5D07181079A5000B9824 /* marker@2x.png */; };
 		DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3F00FD17E25CD000530A4D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DF3F010517E3E5E200530A4D /* trasbag.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010317E3E5E200530A4D /* trasbag.png */; };
 		DF3F010617E3E5E200530A4D /* trashbag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010417E3E5E200530A4D /* trashbag@2x.png */; };
@@ -65,7 +68,6 @@
 		DF60D5F417F4FD3200105121 /* currentLocation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5F017F4FD3200105121 /* currentLocation@2x.png */; };
 		DF60D5F517F4FD3200105121 /* currentLocationButtonBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5F117F4FD3200105121 /* currentLocationButtonBackground.png */; };
 		DF60D5F617F4FD3200105121 /* currentLocationButtonBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5F217F4FD3200105121 /* currentLocationButtonBackground@2x.png */; };
-		DF62E07117C18E1B00B29D43 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF62E06F17C18E1A00B29D43 /* greenhttp.c */; };
 		DF62E07417C1992700B29D43 /* BDHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DF62E07317C1992700B29D43 /* BDHost.m */; };
 		DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF62E07517C1996700B29D43 /* CFNetwork.framework */; };
 		DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */; };
@@ -152,11 +154,6 @@
 		DFE59BDC180CB3BD00357899 /* sampleRoute1.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DFE59BDB180CB3BD00357899 /* sampleRoute1.gpx */; };
 		DFE59BDE180CB3C400357899 /* sampleRoute2.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DFE59BDD180CB3C400357899 /* sampleRoute2.gpx */; };
 		DFE59BE0180CB3CC00357899 /* sampleRoute3.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DFE59BDF180CB3CC00357899 /* sampleRoute3.gpx */; };
-		DFE59C0A180DB91000357899 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = DFE59BE2180DB91000357899 /* .gitignore */; };
-		DFE59C1D180DB91000357899 /* fakeLocations.kml in Resources */ = {isa = PBXBuildFile; fileRef = DFE59C03180DB91000357899 /* fakeLocations.kml */; };
-		DFE59C1E180DB91000357899 /* FTLocationSimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE59C05180DB91000357899 /* FTLocationSimulator.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		DFE59C1F180DB91000357899 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = DFE59C08180DB91000357899 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		DFE59C20180DB91000357899 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DFE59C09180DB91000357899 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -230,6 +227,10 @@
 		39D06AFC1783A6A300DD94B7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39E46BE2179C7000008590A6 /* GoGreenTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoGreenTabBar.h; sourceTree = "<group>"; };
 		39E46BE3179C7000008590A6 /* GoGreenTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoGreenTabBar.m; sourceTree = "<group>"; };
+		DF2E5CFF180F43A4000B9824 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = greenhttp.c; sourceTree = "<group>"; };
+		DF2E5D00180F43A4000B9824 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = greenhttp.h; sourceTree = "<group>"; };
+		DF2E5D06181079A5000B9824 /* marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker.png; sourceTree = "<group>"; };
+		DF2E5D07181079A5000B9824 /* marker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker@2x.png"; sourceTree = "<group>"; };
 		DF3F00FC17E25CD000530A4D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = SOURCE_ROOT; };
 		DF3F00FD17E25CD000530A4D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = SOURCE_ROOT; };
 		DF3F010317E3E5E200530A4D /* trasbag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trasbag.png; path = Images/trasbag.png; sourceTree = SOURCE_ROOT; };
@@ -242,8 +243,6 @@
 		DF60D5F017F4FD3200105121 /* currentLocation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "currentLocation@2x.png"; path = "Images/currentLocation@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF60D5F117F4FD3200105121 /* currentLocationButtonBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = currentLocationButtonBackground.png; path = Images/currentLocationButtonBackground.png; sourceTree = SOURCE_ROOT; };
 		DF60D5F217F4FD3200105121 /* currentLocationButtonBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "currentLocationButtonBackground@2x.png"; path = "Images/currentLocationButtonBackground@2x.png"; sourceTree = SOURCE_ROOT; };
-		DF62E06F17C18E1A00B29D43 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = greenhttp.c; path = "green-http/greenhttp.c"; sourceTree = "<group>"; };
-		DF62E07017C18E1B00B29D43 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = greenhttp.h; path = "green-http/greenhttp.h"; sourceTree = "<group>"; };
 		DF62E07217C1992700B29D43 /* BDHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDHost.h; sourceTree = "<group>"; };
 		DF62E07317C1992700B29D43 /* BDHost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDHost.m; sourceTree = "<group>"; };
 		DF62E07517C1996700B29D43 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -341,14 +340,6 @@
 		DFE59BDB180CB3BD00357899 /* sampleRoute1.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sampleRoute1.gpx; sourceTree = "<group>"; };
 		DFE59BDD180CB3C400357899 /* sampleRoute2.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sampleRoute2.gpx; sourceTree = "<group>"; };
 		DFE59BDF180CB3CC00357899 /* sampleRoute3.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sampleRoute3.gpx; sourceTree = "<group>"; };
-		DFE59BE2180DB91000357899 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		DFE59C03180DB91000357899 /* fakeLocations.kml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = fakeLocations.kml; sourceTree = "<group>"; };
-		DFE59C04180DB91000357899 /* FTLocationSimulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTLocationSimulator.h; sourceTree = "<group>"; };
-		DFE59C05180DB91000357899 /* FTLocationSimulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTLocationSimulator.m; sourceTree = "<group>"; };
-		DFE59C06180DB91000357899 /* FTSynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTSynthesizeSingleton.h; sourceTree = "<group>"; };
-		DFE59C07180DB91000357899 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
-		DFE59C08180DB91000357899 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
-		DFE59C09180DB91000357899 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -403,6 +394,8 @@
 		390415AD1798DC50005EC308 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DF2E5D06181079A5000B9824 /* marker.png */,
+				DF2E5D07181079A5000B9824 /* marker@2x.png */,
 				DFD73A181800824700202D57 /* blueLeaf.png */,
 				DFD73A191800824700202D57 /* blueLeaf@2x.png */,
 				DFD73A1A1800824700202D57 /* greenLeaf.png */,
@@ -593,7 +586,6 @@
 		39592524177518690035E351 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DFE59BE1180DB91000357899 /* FTLocationSimulator */,
 				DFA9AA7917D26654006F58A5 /* NSArray+Primitives */,
 				392B9D8D178F66F300C40B64 /* Heat Map Library */,
 				39D06AFC1783A6A300DD94B7 /* MapKit.framework */,
@@ -636,6 +628,7 @@
 		3959252C177518690035E351 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DF4F48DD1881E59B00C4A9AC /* NetworkingController */,
 				DF3F00FB17E25CBC00530A4D /* Reachability Library */,
 				DFA9ABFC17D664E9006F58A5 /* Categories */,
 				DFA9AA7517D25ABF006F58A5 /* CSocketController / C Socket Library */,
@@ -696,11 +689,18 @@
 			name = "Reachability Library";
 			sourceTree = "<group>";
 		};
+		DF4F48DD1881E59B00C4A9AC /* NetworkingController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = NetworkingController;
+			sourceTree = "<group>";
+		};
 		DFA9AA7517D25ABF006F58A5 /* CSocketController / C Socket Library */ = {
 			isa = PBXGroup;
 			children = (
-				DF62E06F17C18E1A00B29D43 /* greenhttp.c */,
-				DF62E07017C18E1B00B29D43 /* greenhttp.h */,
+				DF2E5CFF180F43A4000B9824 /* greenhttp.c */,
+				DF2E5D00180F43A4000B9824 /* greenhttp.h */,
 				DFA9AA7617D25AE9006F58A5 /* CSocketController.h */,
 				DFA9AA7717D25AEA006F58A5 /* CSocketController.m */,
 			);
@@ -756,29 +756,6 @@
 			name = "MKMapKit Subclass";
 			sourceTree = "<group>";
 		};
-		DFE59BE1180DB91000357899 /* FTLocationSimulator */ = {
-			isa = PBXGroup;
-			children = (
-				DFE59BE2180DB91000357899 /* .gitignore */,
-				DFE59C02180DB91000357899 /* FTLocationSimulator */,
-				DFE59C09180DB91000357899 /* README.md */,
-			);
-			path = FTLocationSimulator;
-			sourceTree = "<group>";
-		};
-		DFE59C02180DB91000357899 /* FTLocationSimulator */ = {
-			isa = PBXGroup;
-			children = (
-				DFE59C03180DB91000357899 /* fakeLocations.kml */,
-				DFE59C04180DB91000357899 /* FTLocationSimulator.h */,
-				DFE59C05180DB91000357899 /* FTLocationSimulator.m */,
-				DFE59C06180DB91000357899 /* FTSynthesizeSingleton.h */,
-				DFE59C07180DB91000357899 /* RegexKitLite.h */,
-				DFE59C08180DB91000357899 /* RegexKitLite.m */,
-			);
-			path = FTLocationSimulator;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -824,7 +801,7 @@
 		3959251A177518690035E351 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Aidan Melen";
 			};
 			buildConfigurationList = 3959251D177518690035E351 /* Build configuration list for PBXProject "GoGreen" */;
@@ -945,9 +922,8 @@
 				DFE59BDC180CB3BD00357899 /* sampleRoute1.gpx in Resources */,
 				DFE59BDE180CB3C400357899 /* sampleRoute2.gpx in Resources */,
 				DFE59BE0180CB3CC00357899 /* sampleRoute3.gpx in Resources */,
-				DFE59C0A180DB91000357899 /* .gitignore in Resources */,
-				DFE59C1D180DB91000357899 /* fakeLocations.kml in Resources */,
-				DFE59C20180DB91000357899 /* README.md in Resources */,
+				DF2E5D08181079A5000B9824 /* marker.png in Resources */,
+				DF2E5D09181079A5000B9824 /* marker@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -996,7 +972,6 @@
 				39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */,
 				3915605F179E086100D6E35D /* NetworkMessage.m in Sources */,
 				DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */,
-				DF62E07117C18E1B00B29D43 /* greenhttp.c in Sources */,
 				DF62E07417C1992700B29D43 /* BDHost.m in Sources */,
 				DFA9AA7817D25AEA006F58A5 /* CSocketController.m in Sources */,
 				DFA9AA7C17D2666B006F58A5 /* NSArray+Primitive.m in Sources */,
@@ -1008,8 +983,7 @@
 				DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */,
 				DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */,
 				DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */,
-				DFE59C1E180DB91000357899 /* FTLocationSimulator.m in Sources */,
-				DFE59C1F180DB91000357899 /* RegexKitLite.m in Sources */,
+				DF2E5D03180F43A4000B9824 /* greenhttp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1055,7 +1029,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1092,7 +1065,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;

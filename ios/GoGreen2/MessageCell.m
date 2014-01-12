@@ -76,7 +76,7 @@
             origin += (height / 2) - 17;
             
             self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(15, origin, 34, 30)];
-            [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"trasbag.png"] forState:UIControlStateNormal];
+            [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"trashMarker.png"] forState:UIControlStateNormal];
             
             //Add Subviews to ContentView
             [self.contentView addSubview:self.topBackgroundImage];
@@ -141,8 +141,8 @@
             int origin = self.textContentLabel.frame.origin.y;
             origin += (height / 2) - 17;
             
-            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(12, origin, 30, 34)];
-            [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"trashMarker.png"] forState:UIControlStateNormal];
+            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(18, origin, 19, 29)];
+            [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"marker.png"] forState:UIControlStateNormal];
             [self.showPinOnMap addTarget:self action:@selector(bringMeToMapPin:) forControlEvents:UIControlEventTouchUpInside];
             
             //Add Subviews to ContentView

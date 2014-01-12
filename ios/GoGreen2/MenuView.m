@@ -202,32 +202,33 @@
     [self setBackgroundColor:[UIColor clearColor]];
     
     //Init the Pin Icons
-    UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"currentLocation.png"]];
-    UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"currentLocation@2x.png"]];
+    UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"marker.png"]];
+    UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashMarker.png"]];
+    
     UIImageView *currentLocationImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"currentLocation.png"]];
     UIButton *dropPinButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     //[dropPinButton setBackgroundImage:[UIImage imageNamed:@"currentLocationButtonBackground.png"] forState:UIControlStateNormal];
     [dropPinButton setFrame:CGRectMake(60, 100, self.frame.size.width - 80, 30)];
-    [dropPinButton setTitle:@"Drop Pickup Marker" forState:UIControlStateNormal];
+    [dropPinButton setTitle:@"Drop Marker At My Location" forState:UIControlStateNormal];
     [dropPinButton addTarget:self action:@selector(dropMarker:) forControlEvents:UIControlEventTouchUpInside];
     
     //Set Pin Image Frames
-    [pin1Image setFrame:CGRectMake(10, 5, 80, 40)];
-    [pin2Image setFrame:CGRectMake(10, 50, 80, 40)];
+    [pin1Image setFrame:CGRectMake(15, 5, 30, 40)];
+    [pin2Image setFrame:CGRectMake(10, 50, 40, 40)];
     [currentLocationImage setFrame:CGRectMake(10, 95, 40, 40)];
     
     //Add pin images to view
-    //[self addSubview:pin1Image];
-    //[self addSubview:pin2Image];
+    [self.contentView addSubview:pin1Image];
+    [self.contentView addSubview:pin2Image];
     [self.contentView addSubview:currentLocationImage];
     
     //Init Pin Labels
-    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 40)];
-    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(90, 50, 220, 40)];
+    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 260, 40)];
+    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(50, 50, 260, 40)];
     
     //Set Pins Text
-    [pin1 setText:@"Pickup Point"];
-    [pin2 setText:@"Comment Point"];
+    [pin1 setText:@"User Markers"];
+    [pin2 setText:@"Admin Markers"];
     
     //Set Text Color
     [pin1 setTextColor:[UIColor blackColor]];
@@ -251,53 +252,79 @@
 {
      //Set Background Color
      [self setBackgroundColor:[UIColor clearColor]];
-     
-     //Init the Pin Icons
-     UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-     UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-     UIImageView *pin3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-     
-     //Set Pin Image Frames
-     [pin1Image setFrame:CGRectMake(10, 5, 80, 40)];
-     [pin2Image setFrame:CGRectMake(10, 50, 80, 40)];
-     [pin3Image setFrame:CGRectMake(10, 95, 80, 40)];
-     
-     //Add pin images to view
-     //[self addSubview:pin1Image];
-     //[self addSubview:pin2Image];
-     //[self addSubview:pin3Image];
-     
-     
-     //Init Pin Labels
-     UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 40)];
-     UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(90, 50, 220, 40)];
-     UILabel *pin3 = [[UILabel alloc] initWithFrame:CGRectMake(90, 95, 220, 40)];
-     
-     //Set Pins Text
-     [pin1 setText:@"Comment Type A"];
-     [pin2 setText:@"Comment Type B"];
-     [pin3 setText:@"Comment Type C"];
-     
-     //Set Text Color
-     [pin1 setTextColor:[UIColor blackColor]];
-     [pin2 setTextColor:[UIColor blackColor]];
-     [pin3 setTextColor:[UIColor blackColor]];
-     
-     //Set Text Alignment
-     [pin1 setTextAlignment:NSTextAlignmentCenter];
-     [pin2 setTextAlignment:NSTextAlignmentCenter];
-     [pin3 setTextAlignment:NSTextAlignmentCenter];
-     
-     
-     //Set Background Color
-     [pin1 setBackgroundColor:[UIColor clearColor]];
-     [pin2 setBackgroundColor:[UIColor clearColor]];
-     [pin3 setBackgroundColor:[UIColor clearColor]];
-     
-     //Add the pins to the view
-     [self.contentView addSubview:pin1];
-     [self.contentView addSubview:pin2];
-     [self.contentView addSubview:pin3];
+    
+    int extraTop = 5;
+    
+    //------ USER COMMENT SAMPLE ----------
+    //Top Slice
+    UIImageView *top = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_orange_top.png"]];
+    [top setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 6)];
+    extraTop += 6;
+    //Variable Middle Slice
+    UIView *middle = [[UIView alloc] initWithFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 16)];
+    [middle setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_orange_center.png"]]];
+    UILabel *commentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -6, middle.frame.size.width - 20, 28)];
+    [commentLabel setText:@"User Comments"];
+    [commentLabel setTextAlignment:NSTextAlignmentCenter];
+    [commentLabel setBackgroundColor:[UIColor clearColor]];
+    [middle addSubview:commentLabel];
+    extraTop += middle.frame.size.height;
+    //Bottom Clise
+    UIImageView *bottom = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_orange_bottom_reverse.png"]];
+    [bottom setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 20)];
+    
+    extraTop += 22;
+    
+    //------ USER MARKER SAMPLE ----------
+    //Top Slice
+    UIImageView *top2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_top.png"]];
+    [top2 setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 6)];
+    extraTop += 6;
+    //Variable Middle Slice
+    UIView *middle2 = [[UIView alloc] initWithFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 16)];
+    [middle2 setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_green_center.png"]]];
+    UILabel *commentLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(10, -6, middle2.frame.size.width - 20, 28)];
+    [commentLabel2 setText:@"User Markers"];
+    [commentLabel2 setTextAlignment:NSTextAlignmentCenter];
+    [commentLabel2 setBackgroundColor:[UIColor clearColor]];
+    [middle2 addSubview:commentLabel2];
+    extraTop += middle2.frame.size.height;
+    //Bottom Clise
+    UIImageView *bottom2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom.png"]];
+    [bottom2 setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 20)];
+    
+    extraTop += 22;
+    
+    //------ ADMIN MARKER SAMPLE ----------
+    //Top Slice
+    UIImageView *top3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_top.png"]];
+    [top3 setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 6)];
+    extraTop += 6;
+    //Variable Middle Slice
+    UIView *middle3 = [[UIView alloc] initWithFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 16)];
+    [middle3 setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_red_center.png"]]];
+    UILabel *commentLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(10, -6, middle3.frame.size.width - 20, 28)];
+    [commentLabel3 setText:@"Admin Markers"];
+    [commentLabel3 setTextAlignment:NSTextAlignmentCenter];
+    [commentLabel3 setBackgroundColor:[UIColor clearColor]];
+    [middle3 addSubview:commentLabel3];
+    extraTop += middle3.frame.size.height;
+    //Bottom Clise
+    UIImageView *bottom3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_bottom_reverse.png"]];
+    [bottom3 setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 20)];
+    
+    [self.contentView addSubview:top];
+    [self.contentView addSubview:middle];
+    [self.contentView addSubview:bottom];
+    
+    [self.contentView addSubview:top2];
+    [self.contentView addSubview:middle2];
+    [self.contentView addSubview:bottom2];
+    
+    [self.contentView addSubview:top3];
+    [self.contentView addSubview:middle3];
+    [self.contentView addSubview:bottom3];
+    
 }
 
 -(IBAction)dropMarker:(id)sender

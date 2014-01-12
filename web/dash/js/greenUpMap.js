@@ -93,7 +93,7 @@ function MapHandle(){
     	});
 
     	google.maps.event.addListener(marker, 'click', function() {
-    		window.MAP.map.setZoom(20);
+    		window.MAP.map.setZoom(15);
     		window.MAP.map.setCenter(marker.getPosition());
   		});
 
@@ -172,7 +172,7 @@ function MapHandle(){
     	});
 
 		google.maps.event.addListener(marker, 'click', function() {
-    		window.MAP.map.setZoom(20);
+    		window.MAP.map.setZoom(18);
     		window.MAP.map.setCenter(marker.getPosition());
   		});
 

@@ -32,10 +32,12 @@ static CSocketController* theCSocketController = nil;
 #pragma mark - GET REQUESTS
 -(id)performGETRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSDictionary *)properties
 {
+    NSLog(@"RELATIVE: %@", relativeURL);
     //GET IP FROM HOST
-    struct hostent *host_entry = gethostbyname([host UTF8String]);
-    char *ip;
-    ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
+    //struct hostent *host_entry = gethostbyname([host UTF8String]);
+    const char *ip;
+    //ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
+    ip = [host UTF8String];
     
     //CREATE URL STRING PROPERTIES
     NSMutableString *urlParameters = [[NSMutableString alloc] init];
@@ -68,7 +70,9 @@ static CSocketController* theCSocketController = nil;
         id finalResponse = [NSJSONSerialization JSONObjectWithData:data options:nil error:nil];
         
         //always call free
-        free(charPointer);
+        
+        if(charPointer != [@"PROBLEM" UTF8String])
+            free(charPointer);
         
         return finalResponse;
     }
@@ -84,9 +88,10 @@ static CSocketController* theCSocketController = nil;
     BOOL parseFailed = FALSE;
     
     //GET IP FROM HOST
-    struct hostent *host_entry = gethostbyname([host UTF8String]);
-    char *ip;
-    ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
+    //struct hostent *host_entry = gethostbyname([host UTF8String]);
+    const char *ip;
+    //ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
+    ip = [host UTF8String];
     
     //CREATE RAW JSON OF PROPERTIES
     NSError *error;
@@ -115,7 +120,8 @@ static CSocketController* theCSocketController = nil;
             id finalResponse = [NSJSONSerialization JSONObjectWithData:data options:nil error:nil];
             
             //always call free
-            free(charPointer);
+            if(charPointer != [@"PROBLEM" UTF8String])
+                free(charPointer);
             
             return finalResponse;
         }
@@ -137,10 +143,10 @@ static CSocketController* theCSocketController = nil;
     BOOL parseFailed = FALSE;
     
     //GET IP FROM HOST
-    struct hostent *host_entry = gethostbyname([host UTF8String]);
-    char *ip;
-    ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
-    
+    //struct hostent *host_entry = gethostbyname([host UTF8String]);
+    const char *ip;
+    //ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
+    ip = [host UTF8String];
     //CREATE RAW JSON OF PROPERTIES
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:properties options:0 error:&error];
@@ -168,7 +174,8 @@ static CSocketController* theCSocketController = nil;
             id finalResponse = [NSJSONSerialization JSONObjectWithData:data options:nil error:nil];
             
             //always call free
-            free(charPointer);
+            if(charPointer != [@"PROBLEM" UTF8String])
+                free(charPointer);
             
             return finalResponse;
         }

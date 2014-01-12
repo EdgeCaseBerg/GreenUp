@@ -39,6 +39,10 @@ function UiHandle(){
     		window.UI.toggleAddMarkerOptions();
     	});
 
+ 	   	$(".addressIconWrapper").click(function(){
+ 	   		$(this).parent().parent().addClass("addressedComment");
+    	});
+
     	$(".navLink").click(function(){
     		$('.navLi').removeClass("active");
     		$(this).parent().addClass("active");
