@@ -8,17 +8,15 @@ function ApiConnector(){
 	var markerData = []; 
 	var commentData = [];
 
-
-	// var BASE = "http://greenupapp.appspot.com/api";
-	var BASE = "http://localhost:30002/api";
-	this.BASE = BASE;
-
-
-	// api URLs have been moved into each of the functions using them as per issue 46
+    this.LOCALHOST = "http://localhost/green-web"
+    this.PROXYBASE = "/proxy.php?url=";
+    this.HOST = "http://199.195.248.180";
+    this.PORT = "31337"
+    this.BASE = "/api";
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
-		// zepto
+		console.log("pull api data URL:")
 		console.log(URL);
 		$.ajax({
 			type: QUERYTYPE,
@@ -149,7 +147,7 @@ function ApiConnector(){
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
 		var pinsURI = "/pins";
-		var URL = BASE+pinsURI;
+		var URL = pinsURI;
 		//Clear the markers
 		for( var i =0 ; i < window.MAP.pickupMarkers.length; i++){
 			window.MAP.pickupMarkers[i].setMap(null);
@@ -162,7 +160,7 @@ function ApiConnector(){
 	ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
 		var urlStr = "";
 		if(url == null || url == "null"){
-			urlStr += "/api/comments";
+			urlStr += "/comments";
 		}else{
 			urlStr += url;
 		}
@@ -173,10 +171,10 @@ function ApiConnector(){
 	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
 		var commentsURI = "/comments";
 		console.log("json to push: "+jsonObj);
-		console.log("Push comment data to: "+BASE+commentsURI);
+		console.log("Push comment data to: "+commentsURI);
 		$.ajax({
 			type: "POST",
-			url: BASE+commentsURI,
+			url: commentsURI,
 			data: jsonObj,
     		cache: false,
 			// processData: false,
@@ -248,7 +246,7 @@ function ApiConnector(){
 		// zepto code
 		$.ajax({
 	    	type:'PUT',
-	    	url: BASE + heatmapURI,
+	    	url: heatmapURI,
 	    	dataType:"json",
 	    	data:  JSON.stringify(jsonArray),
 	    	failure: function(errMsg){

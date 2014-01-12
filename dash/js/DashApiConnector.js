@@ -12,17 +12,18 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	// var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
-	var BASE = "https://localhost:30001/api";
-	this.BASE = BASE;
+    this.LOCALHOST = "https://localhost/green-web"
+    this.PROXYBASE = "/proxy.php?url=";
+    this.HOST = "http://199.195.248.180";
+    this.PORT = "31337"
+    this.BASE = "/api";
 
 
 	// api URLs have been moved into each of the functions using them as per issue 46
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
-		// zepto
+        console.log("url requested:");
 		console.log(URL);
 		$.ajax({
 			type: QUERYTYPE,

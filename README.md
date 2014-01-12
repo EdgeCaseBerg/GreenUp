@@ -28,7 +28,13 @@ the proxied response looks like: <br />
          "heartbeat": 1389547522
      }
  }`<br />
- So there will be a line in the ApiConnectors that identifies the origin and switches the proxy script in and out accordingly.
+ So there will be a line in the ApiConnectors that identifies the origin and switches the proxy script in and out accordingly.<br /><br />
+
+ Problems with SSL and Google OAuth:<br />
+ The Admin dashboard uses Google Analytics data to feed some of the usage graphs and to log in to the dashboard in general.
+ To access the dash the user must log in using OAuth and the Google account, all of which occurs over HTTPS. Unless you have a Cert and want
+ to futz with that, you'll need to use an ssl tunnel to access the http content over https. I'm using Stunnel which, on a Mac, is avaiable
+ as a tar archive or through MacPorts.
 
 
 

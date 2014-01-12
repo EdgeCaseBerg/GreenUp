@@ -4,26 +4,34 @@ function ApiConnector(){
 	var commentData = [];
 
 
-	// var BASE = "http://greenupapp.appspot.com/api";
-	// var BASE = "http://localhost:30002/api";
-	var BASE = "https://localhost:30001/api";
-	this.BASE = BASE;
+    this.LOCALHOST = "https://127.0.0.1/green-web"
+    this.PROXYBASE = "/proxy.php?url=";
+    this.HOST = "http://199.195.248.180";
+    this.PORT = ":31337"
+    this.BASE = "/api";
 
 
 	// api URLs have been moved into each of the functions using them as per issue 46
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
-		// zepto
+		console.log("url requested");
 		console.log(URL);
+        URL = this.LOCALHOST+this.PROXYBASE+this.HOST+this.PORT+this.BASE+URL;
+        console.log(URL);
 		$.ajax({
 			type: QUERYTYPE,
 			url: URL,
 			dataType: DATATYPE,
 			success: function(data){
+                if(window.HELPER.isNull(data.contents)){
+                    CALLBACK(data);
+                }else{
+                    CALLBACK(data.contents);
+                }
 				console.log("Pull API Data: SUCCESS");
 				// console.log(data);
-				CALLBACK(data);
+
 			},
 			error: function(xhr, errorType, error){
 				// alert("error: "+xhr.status);
@@ -63,7 +71,7 @@ function ApiConnector(){
 		var pinsURI = "/pins";
 		$.ajax({
 			type: "POST",
-			url: BASE+pinsURI,
+			url: pinsURI,
 			data: jsonObj,
     		cache: false,
 			// processData: false,
@@ -144,7 +152,7 @@ function ApiConnector(){
 			params += "lonOffset" + lonOffset + "&";
 		}
 		console.log("Preparing to pull heatmap data");
-		var URL = BASE+heatmapURI+params;
+		var URL = heatmapURI+params;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
 
 	}
@@ -158,14 +166,14 @@ function ApiConnector(){
 		var heatmapURI = "/heatmap";
 		var params = "?raw=true";
 		console.log("Preparing to pull RAW heatmap data");
-		var URL = BASE+heatmapURI+params;
+		var URL = heatmapURI+params;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateRawHeatmapData);
 	}
 
 	ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
 		console.log("pullMarkerData");
 		var pinsURI = "/pins";
-		var URL = BASE+pinsURI;
+		var URL = pinsURI;
 		//Clear the markers
 		for( var i =0 ; i < window.MAP.pickupMarkers.length; i++){
 			window.MAP.pickupMarkers[i].setMap(null);
@@ -189,10 +197,10 @@ function ApiConnector(){
 	ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
 		var commentsURI = "/comments";
 		console.log("json to push: "+jsonObj);
-		console.log("Push comment data to: "+BASE+commentsURI);
+		console.log("Push comment data to: "+commentsURI);
 		$.ajax({
 			type: "POST",
-			url: BASE+commentsURI,
+			url: commentsURI,
 			data: jsonObj,
     		cache: false,
 			// processData: false,
@@ -295,7 +303,7 @@ function ApiConnector(){
 		// zepto code
 		$.ajax({
 	    	type:'PUT',
-	    	url: BASE + heatmapURI,
+	    	url: heatmapURI,
 	    	dataType:"json",
 	    	data:  JSON.stringify(jsonArray),
 	    	failure: function(errMsg){

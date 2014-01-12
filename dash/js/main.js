@@ -1,4 +1,4 @@
-window.DEBUG =true;
+window.DEBUG = false;
 
 // prototype objects for posting to API
 function Pin(){
@@ -35,8 +35,8 @@ function ClientLogger(){
 function loadAnalytics(){
 	// alert("analytics");
 	if(window.DEBUG == false){
-		var clientId = '326012990067.apps.googleusercontent.com';
-		var apiKey = 'AIzaSyACnq-9GkT--OraydO2wWiN10qK3Oh24-k';
+		var clientId = '603345821345.apps.googleusercontent.com';
+		var apiKey = 'Qvz6i1KzafNG8oxcH6_w1sGC';
 		var scopes = 'https://www.googleapis.com/auth/analytics.readonly';
 
 		gapi.client.setApiKey(apiKey);
@@ -236,6 +236,7 @@ function handleCoreReportingResults(results) {
 
 function mainLoad(){
 	window.HELPER = new Helper();
+    console.log("window helper");
 	window.LOGGER = new ClientLogger();
 	window.INPUT_TYPE = new INPUT_TYPE();
 	
