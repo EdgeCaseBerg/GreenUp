@@ -247,7 +247,7 @@ function ApiConnector(){
 	}
 
 	ApiConnector.prototype.getStreetFromLatLng = function getStreetFromLatLng(lat, lng, callback){
-		var baseGeocodeUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=";
+		var baseGeocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
 		baseGeocodeUrl += lat + ",";
 		baseGeocodeUrl += lng;
 		baseGeocodeUrl += "&sensor=false";

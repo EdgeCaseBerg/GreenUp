@@ -42,21 +42,29 @@
         [self.labelField setText:@"Message Cannot Be Blank \nMessage Must Be Less Than 140 Characters \nMessage Cannot Be Deleted \nMessage Will Be Publicly Viewable"];
         [self.containerView addSubview:self.labelField];
         
-        self.messageField = [[UITextView alloc] initWithFrame:CGRectMake(10 + 320, 150, 255, 100)];
+        if([UIScreen mainScreen].bounds.size.height == 568.0)
+        {
+            self.messageField = [[UITextView alloc] initWithFrame:CGRectMake(10 + 320, 150, 255, 188)];
+            
+        }
+        else
+        {
+            self.messageField = [[UITextView alloc] initWithFrame:CGRectMake(10 + 320, 150, 255, 100)];
+        }
         [self.messageField.layer setCornerRadius:5];
         [self.messageField setBackgroundColor:[UIColor whiteColor]];
         [self.messageField setFont:[UIFont messageFont]];
         [self.containerView addSubview:self.messageField];
         
-        self.doneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.doneButton setImage:[UIImage imageNamed:@"check.png"] forState:UIControlStateNormal];
         [self.doneButton setFrame:CGRectMake(270 + 320, 150, 40, 48)];
-        [self.doneButton setTitle:@"Done" forState:UIControlStateNormal];
         [self.doneButton addTarget:self action:@selector(doneButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.containerView addSubview:self.doneButton];
         
-        self.cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.cancelButton setImage:[UIImage imageNamed:@"notCheck.png"] forState:UIControlStateNormal];
         [self.cancelButton setFrame:CGRectMake(270 + 320, 202, 40, 48)];
-        [self.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
         [self.cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.containerView addSubview:self.cancelButton];
         
@@ -68,7 +76,14 @@
         ^{
             [self setAlpha:1];
             [self.labelBackgroundView setFrame:CGRectMake(10, 50, 300, 90)];
-            [self.messageField setFrame:CGRectMake(10, 150, 255, 100)];
+            if([UIScreen mainScreen].bounds.size.height == 568.0)
+            {
+                [self.messageField setFrame:CGRectMake(10, 150, 255, 188)];
+            }
+            else
+            {
+                [self.messageField setFrame:CGRectMake(10, 150, 255, 100)];
+            }
             [self.doneButton setFrame:CGRectMake(270, 150, 40, 48)];
             [self.cancelButton setFrame:CGRectMake(270, 202, 40, 48)];
         };
@@ -111,7 +126,14 @@
     ^{
         [self setAlpha:0];
         [self.labelBackgroundView setFrame:CGRectMake(10 - 320, 50, 300, 90)];
-        [self.messageField setFrame:CGRectMake(10 + 320, 150, 255, 100)];
+        if([UIScreen mainScreen].bounds.size.height == 568.0)
+        {
+            [self.messageField setFrame:CGRectMake(10 + 320, 150, 255, 188)];
+        }
+        else
+        {
+            [self.messageField setFrame:CGRectMake(10 + 320, 150, 255, 100)];
+        }
         [self.doneButton setFrame:CGRectMake(270 + 320, 150, 40, 48)];
         [self.cancelButton setFrame:CGRectMake(270 + 320, 202, 40, 48)];
     };

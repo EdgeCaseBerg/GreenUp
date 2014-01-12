@@ -146,6 +146,10 @@ ul{
     box-shadow: 0px 5px 3px 0px rgba(3, 3, 3, 0.2);
 }
 
+.analyticsDateSelectNest{
+    padding-top: 5px;
+}
+
 #extendedAnalyticsDialog{
     border-bottom: solid 1px #444;
     text-align: left;
@@ -490,6 +494,35 @@ ul{
 }
 
 
+.commentsSearchNavbar{
+    /*background: red;*/
+    /*padding: 0px 0px 0px 0px; */
+    margin: 0px; 
+    min-height: 0px;
+    /*border: solid 1px red;*/
+    background: #fff;
+    padding: 5px;
+
+}
+
+.commentsSearchNavbar table{
+    width: 320px;
+    /*border:solid 1px blue;*/
+}
+
+
+.commentsSearchNavbar input{
+    margin-bottom: 0px;
+    display: inline;
+    /*float: left;*/
+    
+}
+
+#commentsSearch{
+    width: 100%;    
+}
+
+
 
 .bubble{
     position: relative;
@@ -709,6 +742,7 @@ input[type=checkbox] {
     width: 100%;
     z-index: 700;
     background: #111;
+
     /*opacity: 0.7;*/
 }
 
@@ -723,7 +757,12 @@ input[type=checkbox] {
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
+    /*background: url('images/new_trash1_big.png');*/
 }
+
+/*#addMarkerDashNestBackground{
+    background: #eee;
+}*/
 
 
 #addMarkerDashHeader{
