@@ -365,10 +365,12 @@ function UiHandle(){
 		console.log(data);
 		var HELPER = new Helper();
 		var totalSecondsWorked = new BigNumber(0);
-		for(var ii=0; ii<data.grid.length; ii++){
-			totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
-			console.log(ii + "-" + totalSecondsWorked);
-		}
+        if(!window.HELPER.isNull(data.grid)){
+            for(var ii=0; ii<data.grid.length; ii++){
+                totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
+                console.log(ii + "-" + totalSecondsWorked);
+            }
+        }
 
 		// alert(data.grid[0].secondsWorked + " - " + data.grid[(data.grid.length - 1)].secondsWorked);
 
