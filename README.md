@@ -26,9 +26,11 @@ Note:  There will be a line in the ApiConnectors that identifies the origin and 
  
 ####Problems with SSL and Google OAuth:
 
- The Admin dashboard uses Google Analytics data to feed some of the usage graphs and to log in to the dashboard in general.
- To access the dash the user must log in using OAuth and the Google account, all of which occurs over HTTPS.<br /><br />
- To run provide HTTPS locally, you'll need to configure your Apache, and generate a cert.<br />
+ The Admin dashboard uses Google Analytics data to feed some of the usage graphs, so when a user enters the admin dash he is prompted to login
+ with google credentials. The dash uses these credentials to authenticate into google analytics, all over HTTPS. If you log in as you... you won't see analytics data,
+ as the site will be looking for an anlytics profile for <b>YOUR</b> account.
+ I am working on fixing this, but until I do, you have to log in as <b>xenonapplab@gmai.com</b><br /><br />
+ Furthermore, you have to connect to your localhost using https://127.0.0.1 meaning you'll have to configure Apache to listen for ssl traffic. <br />To run provide HTTPS locally, you'll need to configure your Apache, and generate a cert.<br />
  <A href="http://webdevstudios.com/2013/05/24/how-to-set-up-ssl-with-osx-mountain-lions-built-in-apache/">Mac users, see this tutorial</a><br /><br />
 
 
