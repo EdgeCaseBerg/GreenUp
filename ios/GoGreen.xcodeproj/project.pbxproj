@@ -203,7 +203,7 @@
 		3959252D177518690035E351 /* GoogleGreenMapTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleGreenMapTest-Info.plist"; sourceTree = "<group>"; };
 		3959252F177518690035E351 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		39592531177518690035E351 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		39592533177518690035E351 /* GoogleGreenMapTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GoogleGreenMapTest-Prefix.pch"; sourceTree = "<group>"; };
+		39592533177518690035E351 /* GoGreen-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GoGreen-Prefix.pch"; sourceTree = "<group>"; };
 		39592537177518690035E351 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		39592539177518690035E351 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		3959253B177518690035E351 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -647,7 +647,7 @@
 				3959252D177518690035E351 /* GoogleGreenMapTest-Info.plist */,
 				3959252E177518690035E351 /* InfoPlist.strings */,
 				39592531177518690035E351 /* main.m */,
-				39592533177518690035E351 /* GoogleGreenMapTest-Prefix.pch */,
+				39592533177518690035E351 /* GoGreen-Prefix.pch */,
 				39592537177518690035E351 /* Default.png */,
 				39592539177518690035E351 /* Default@2x.png */,
 				3959253B177518690035E351 /* Default-568h@2x.png */,
@@ -826,7 +826,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0500;
-				ORGANIZATIONNAME = "Aidan Melen";
+				ORGANIZATIONNAME = "Xenon Apps";
 			};
 			buildConfigurationList = 3959251D177518690035E351 /* Build configuration list for PBXProject "GoGreen" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1127,7 +1127,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GoGreen2/GoogleGreenMapTest-Prefix.pch";
+				GCC_PREFIX_HEADER = "GoGreen2/GoGreen-Prefix.pch";
 				INFOPLIST_FILE = "GoGreen2/GoogleGreenMapTest-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
@@ -1147,7 +1147,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GoGreen2/GoogleGreenMapTest-Prefix.pch";
+				GCC_PREFIX_HEADER = "GoGreen2/GoGreen-Prefix.pch";
 				INFOPLIST_FILE = "GoGreen2/GoogleGreenMapTest-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (

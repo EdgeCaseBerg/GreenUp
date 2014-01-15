@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'GoGreen' target in the 'GoGreen' project
+// Prefix header for all source files of the 'GoGreen2' target in the 'GoGreen2' project
 //
 
 #import <Availability.h>
@@ -11,4 +11,9 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+
+    #import "TestFlight.h"
+    #define NSLog TFLog
+
 #endif
+
