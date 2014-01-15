@@ -547,6 +547,8 @@
             if([pin.pinID isEqualToNumber:self.pinIDToShow])
             {
                 pinToShow = pin;
+                
+                NSLog(@"Message - Map: Found Pin To Show In Downloaded Pins");
             }
         }
         for(HeatMapPin *pin in self.gatheredMapPins)
@@ -554,6 +556,8 @@
             if([pin.pinID isEqualToNumber:self.pinIDToShow])
             {
                 pinToShow = pin;
+                
+                NSLog(@"Message - Map: Found Pin To Show In Gathered Pins");
             }
         }
         
@@ -580,6 +584,8 @@
         
         [self.fadeView addSubview:fakePin];
         
+        NSLog(@"Message - Map: Showing Fade View");
+        
         //Remove View
         [self performSelector:@selector(fadeOutFadeView:) withObject:nil afterDelay:1];
     }
@@ -598,11 +604,14 @@
 -(IBAction)removeFadeView:(id)sender
 {
     [self.fadeView removeFromSuperview];
+    
+    NSLog(@"Message - Map: Removing Fade View");
 }
 
 
 -(void)addNewDownloadedPins:(NSArray *)pins
 {
+#warning METHOD NOT USED ANYWHERE
     for(HeatMapPin *currentPin in pins)
     {
         BOOL found = FALSE;
@@ -622,6 +631,8 @@
 
 -(void)updateMapWithPins:(NSMutableArray *)pins
 {
+    NSLog(@"Message - Map: Adding Unaddressed Pins To Map");
+    
     //Add New
     for(HeatMapPin *pin in pins)
     {
@@ -634,6 +645,7 @@
 
 -(void)updateHeatMapWithNewPins
 {
+    NSLog(@"Message - Map: Removing Old Pins From Map");
     //Remove Old
     for(MKAnnotationView *annotation in self.mapView.annotations)
     {
@@ -649,6 +661,7 @@
 }
 -(IBAction)dropMarkerAtCurrentLocation:(id)sender
 {
+    NSLog(@"Action - Map: Dropping Pin At Current Location");
     //Set Logging For Marker Flag
     self.loggingForMarker = TRUE;
     
@@ -663,6 +676,7 @@
 {
     if(sender.state == UIGestureRecognizerStateBegan)
     {
+        NSLog(@"Action - Map: Dropping Custom Pin (Long Press Started)");
         //Start Timer
         self.longPressTimer = [NSDate date];
         
@@ -672,6 +686,7 @@
     }
     else if(sender.state == UIGestureRecognizerStateEnded)
     {
+        NSLog(@"Action - Map: Dropping Custom Pin (Long Press Ended)");
         NSTimeInterval elapsedTime = -[self.longPressTimer timeIntervalSinceNow];
         if(elapsedTime >= longPressDuration)
         {
@@ -808,8 +823,10 @@
                     NSLog(@"Network - Map: ***************************************");
                     NSLog(@"Network - Map: *************** WANRING ***************");
                     NSLog(@"Network - Map: ****** Received Bad Status Code *******");
+                    NSLog(@"Network - Map: %@", response);
                     NSLog(@"Network - Map: ***************************************");
                     NSLog(@"Network - Map: ***************************************");
+                    
                     self.finishedDownloadingMapPins = TRUE;
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:statusCode];
                 }
@@ -829,11 +846,13 @@
 
 -(void)getMapPinForPinShow
 {
+    NSLog(@"Network - Map: Getting Map Pin for Pin Show");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             //Background Process Block
             
+            NSLog(@"--- Data - Map: Pin Id: %@", self.pinIDToShow.stringValue);
             NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:[NSString stringWithFormat:@"%@?id=%@",PINS_RELATIVE_URL, self.pinIDToShow.stringValue] withPort:API_PORT withProperties:nil];
             
             dispatch_async(dispatch_get_main_queue(),^{
@@ -841,11 +860,17 @@
                 
                 NSString *statusCode = [response objectForKey:@"status_code"];
                 
+                NSLog(@"Network - Map: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] == 200)
                 {
                     [self.downloadedMapPins removeAllObjects];
         
                     NSDictionary *networkPin = [response objectForKey:@"pin"];
+                    
+                    NSLog(@"Network - Map: Recieved New Map Pin");
+                    NSLog(@"--- Data - Map: %@", [response objectForKey:@"pin"]);
+                    
         
                     //Add New Pins
                     HeatMapPin *newPin = [[HeatMapPin alloc] init];
@@ -885,6 +910,7 @@
 
 -(IBAction)postMarker:(NSNotification *)sender
 {
+    NSLog(@"Network - Map: Pushing New Marker With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         NSString *message = sender.object;
@@ -900,15 +926,33 @@
         
         NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", @"addressed", nil]];
         
+        NSLog(@"--- Data - Map: Lat = %f", self.tempPinRef.coordinate.latitude);
+        NSLog(@"--- Data - Map: Lon = %f", self.tempPinRef.coordinate.longitude);
+        NSLog(@"--- Data - Map: Type = %@", Message_Type_MARKER);
+        NSLog(@"--- Data - Map: Message = %@", message);
+        
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             //Background Process Block
             NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:PINS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
             
             dispatch_async(dispatch_get_main_queue(),^{
                 //Completion Block
+                
                 NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                NSLog(@"Network - Map: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] != 200)
                 {
+                    NSLog(@"Network - Map: ***************************************");
+                    NSLog(@"Network - Map: ***************************************");
+                    NSLog(@"Network - Map: *************** WANRING ***************");
+                    NSLog(@"Network - Map: ****** Received Bad Status Code *******");
+                    NSLog(@"Network - Map: %@", response);
+                    NSLog(@"Network - Map: ***************************************");
+                    NSLog(@"Network - Map: ***************************************");
+                    
                     //Request Failed Remove Pin From Map
                     [self.mapView removeAnnotation:self.tempPinRef];
                     
@@ -920,6 +964,7 @@
                     NSString *pinID = [response objectForKey:@"pin_id"];
                     if(pinID == nil)
                     {
+                        NSLog(@"WARNING - Map: Server Did Not Return Pin ID!");
                         //Request Failed Remove Pin From Map
                         [self.mapView removeAnnotation:self.tempPinRef];
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
@@ -945,6 +990,12 @@
 
 -(void)pushHeatMapDataToServer
 {
+    NSLog(@"Message - Map: Pushing Heatmap Data To Server");
+    NSLog(@"--- Data - Map: QUEUE LIMIT = %d", UPLOAD_QUEUE_LENGTH);
+    NSLog(@"--- Data - Map: Gathered Queue = %d", self.gatheredMapPoints.count);
+    NSLog(@"--- Data - Map: Push Overdue = %d", self.pushOverdue);
+    
+    
     //If the number of gathered points in the queue array is equal to our define or we have the overdue flag set. Update our gathered points with the server!
     if(self.gatheredMapPointsQueue.count >= UPLOAD_QUEUE_LENGTH || self.pushOverdue)
     {
@@ -956,7 +1007,7 @@
         else
         {
             //If We Do Have Service Push That Bitch
-            NSLog(@"********************* PUSHING QUEUE LIMIT REACHED");
+            NSLog(@"Message - Map: Push Queue Limit Reached, Push Data,");
             int sentCount = 0;
             NSMutableArray *dataArray = [[NSMutableArray alloc] init];
             
@@ -972,18 +1023,13 @@
                 [objects addFloat:point.lon];
                 [objects addFloat:point.secWorked];
                 
-                NSLog(@"PUSHING - Lat: %f", point.lat);
-                NSLog(@"PUSHING - Lon: %f", point.lon);
-                NSLog(@"PUSHING - sec: %d", point.secWorked);
-                
-                
                 //Create Dictionary Of Parameters
                 NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
                 [dataArray addObject:parameters];
             }
-        
-            NSLog(@"SEND POINTS: %d", sentCount);
             
+            NSLog(@"--- Data - Map: %@", dataArray);
+        
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
                 //Background Process Block
                 NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
@@ -992,9 +1038,18 @@
                     //Completion Block
                     NSString *statusCode = [response objectForKey:@"status_code"];
                     
+                    NSLog(@"Network - Map: Recieved Status Code: %@", statusCode);
+                    
                     if([statusCode integerValue] != 200)
                     {
-                        NSLog(@"*************PUSH ERROR OCCURED: %@", [response objectForKey:@"Error_Message"]);
+                        NSLog(@"Network - Map: ***************************************");
+                        NSLog(@"Network - Map: ***************************************");
+                        NSLog(@"Network - Map: *************** WANRING ***************");
+                        NSLog(@"Network - Map: ****** Received Bad Status Code *******");
+                        NSLog(@"Network - Map: %@", response);
+                        NSLog(@"Network - Map: ***************************************");
+                        NSLog(@"Network - Map: ***************************************");
+                        
                         self.pushOverdue = TRUE;
                     }
                     else
@@ -1087,8 +1142,10 @@
                 NSLog(@"Network - Map: ***************************************");
                 NSLog(@"Network - Map: *************** WANRING ***************");
                 NSLog(@"Network - Map: ****** Received Bad Status Code *******");
+                NSLog(@"Network - Map: %@", results);
                 NSLog(@"Network - Map: ***************************************");
                 NSLog(@"Network - Map: ***************************************");
+                
                 self.finishedDownloadingHeatMap = TRUE;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingHeatMap" object:statusCode];
             }
@@ -1099,9 +1156,11 @@
 #pragma mark - Utility Methods
 -(IBAction)clearAllPoints:(id)sender
 {
+    NSLog(@"Action - Map: Clearing All Gathered and Downloaded Heatmap Points and Pins");
     [self.gatheredMapPoints removeAllObjects];
     [self.gatheredMapPointsQueue removeAllObjects];
     [self.downloadedMapPoints removeAllObjects];
+    [self.downloadedMapPins removeAllObjects];
     
     [self updateHeatMapOverlay];
 }

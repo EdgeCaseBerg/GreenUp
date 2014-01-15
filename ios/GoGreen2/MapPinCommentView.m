@@ -17,6 +17,8 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
+    NSLog(@"Message - MapCommentView: Showing Pin Comment View");
+    
     self = [super initWithFrame:frame];
     if (self)
     {
@@ -94,19 +96,23 @@
 
 -(IBAction)doneButtonPressed:(id)sender
 {
+    NSLog(@"Action - MapCommentView: Done Button Pressed");
     //Check if Message Meets Criteria
     if(self.messageField.text == nil || [self.messageField.text isEqualToString:@""])
     {
+        NSLog(@"Message - MapCommentView: Blank Message");
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Blank Message" message:@"You cannot post a blank message" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
     else if(self.messageField.text.length > 140)
     {
+        NSLog(@"Message - MapCommentView: Message > 140 Chars (%d chars)", self.messageField.text.length);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message To Large" message:@"You cannot post a message over 140 charecters" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
     else
     {
+        NSLog(@"Message - MapCommentView: Removing Show Pin Comment View");
         //Fade OUT
         VoidBlock animationBlock =
         ^{
@@ -121,6 +127,8 @@
 
 -(IBAction)cancelButtonPressed:(id)sender
 {
+    NSLog(@"Action - MapCommentView: Cancle Button Pressed");
+    NSLog(@"Message - MapCommentView: Removing Show Pin Comment View");
     //Fade OUT
     VoidBlock animationBlock =
     ^{

@@ -15,6 +15,8 @@
 
 - (id)initWithMapPoint:(CGPoint)sentPoint andDuration:(float)spinDuration
 {
+    NSLog(@"Message - LeafSpinner: Showing Pin Leaf Spinner");
+    
     CGRect frameFromPoint = CGRectMake(sentPoint.x - 50, sentPoint.y - 50, 100, 100);
     self = [super initWithFrame:frameFromPoint];
     if (self)

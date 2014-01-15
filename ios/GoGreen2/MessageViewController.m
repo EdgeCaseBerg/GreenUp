@@ -145,6 +145,7 @@
 #pragma mark - Networking Delegates
 -(void)getMessageForFirstPageOfShowMessage
 {
+    NSLog(@"Network - Message: Getting First Page Of Show Message");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
@@ -155,10 +156,17 @@
             dispatch_async(dispatch_get_main_queue(),^{
                 //Completion Block
                 NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                NSLog(@"Network - Message: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] == 200)
                 {
                     //Remove Old Messages Incase Removed
                     [self.messages removeAllObjects];
+                    
+                    NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
+                    NSLog(@"--- Data - Message: Messages,");
+                    NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
                     
                     NSArray *comments = [response objectForKey:@"comments"];
                     //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
@@ -188,6 +196,9 @@
                         //[newDownloadedMessages addObject:newMessage];
                     }
                     
+                    NSLog(@"--- Data - Message: Pages,");
+                    NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
+                    
                     NSDictionary *pages = [response objectForKey:@"page"];
                     if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
                     {
@@ -198,6 +209,16 @@
                     
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingMessageForFirstPageOfShowMessage" object:[NSNumber numberWithInt:statusCode.integerValue]];
+                }
+                else
+                {
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: *************** WANRING ***************");
+                    NSLog(@"Network - Message: ****** Received Bad Status Code *******");
+                    NSLog(@"Network - Message: %@", response);
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
                 }
                 
             });
@@ -211,6 +232,7 @@
 
 -(void)getMessages
 {
+    NSLog(@"Network - Message: Getting Messages");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
@@ -221,10 +243,17 @@
             dispatch_async(dispatch_get_main_queue(),^{
                 //Completion Block
                 NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                NSLog(@"Network - Message: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] == 200)
                 {
                     //Remove Old Messages Incase Removed
                     [self.messages removeAllObjects];
+                    
+                    NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
+                    NSLog(@"--- Data - Message: Messages,");
+                    NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
                     
                     NSArray *comments = [response objectForKey:@"comments"];
                     //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
@@ -258,9 +287,11 @@
                     [self.messages sortUsingDescriptors:[NSArray arrayWithObject:sortByDate]];
                     //[self.messages sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:TRUE]]];
                     
-                    NSDictionary *pages = [response objectForKey:@"page"];
-                    NSLog(@"Class: %@", [[pages objectForKey:@"next"] class]);
+                    NSLog(@"--- Data - Message: Pages,");
+                    NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
+
                     
+                    NSDictionary *pages = [response objectForKey:@"page"];
                     if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
                     {
                         NSString *fullURL = [pages objectForKey:@"next"];
@@ -270,6 +301,16 @@
                         
                     
                     [self.theTableView reloadData];
+                }
+                else
+                {
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: *************** WANRING ***************");
+                    NSLog(@"Network - Message: ****** Received Bad Status Code *******");
+                    NSLog(@"Network - Message: %@", response);
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
                 }
                 
             });
@@ -284,6 +325,7 @@
 
 -(void)getMessageByAppendingPageForScrolling
 {
+    NSLog(@"Network - Message: Getting Next Page Of Messages For Scrolling With URL %@", self.nextPageURL);
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         NSMutableArray *newMessages = [[NSMutableArray alloc] init];;
@@ -296,8 +338,15 @@
             dispatch_async(dispatch_get_main_queue(),^{
                 //Completion Block
                 NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                NSLog(@"Network - Message: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] == 200)
                 {
+                    NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
+                    NSLog(@"--- Data - Message: Messages,");
+                    NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
+                    
                     NSArray *comments = [response objectForKey:@"comments"];
                     //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
                     for(NSDictionary *comment in comments)
@@ -325,6 +374,9 @@
                         [newMessages addObject:newMessage];
                     }
                     
+                    NSLog(@"--- Data - Message: Pages,");
+                    NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
+                    
                     NSDictionary *pages = [response objectForKey:@"page"];
                     if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
                     {
@@ -335,6 +387,16 @@
 
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingNewPageForScrolling" object:newMessages];
+                }
+                else
+                {
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: *************** WANRING ***************");
+                    NSLog(@"Network - Message: ****** Received Bad Status Code *******");
+                    NSLog(@"Network - Message: %@", response);
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
                 }
             });
         });
@@ -348,6 +410,7 @@
 
 -(void)getMessageByAppendingPageForShowMessage
 {
+    NSLog(@"Network - Message: Getting Next Page Of Messages For Show Message With URL %@", self.nextPageURL);
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         NSMutableArray *newMessages = [[NSMutableArray alloc] init];;
@@ -360,8 +423,16 @@
             dispatch_async(dispatch_get_main_queue(),^{
                 //Completion Block
                 NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                NSLog(@"Network - Message: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] == 200)
                 {
+                    
+                    NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
+                    NSLog(@"--- Data - Message: Messages,");
+                    NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
+                    
                     NSArray *comments = [response objectForKey:@"comments"];
                     //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
                     for(NSDictionary *comment in comments)
@@ -389,6 +460,9 @@
                         [newMessages addObject:newMessage];
                     }
                     
+                    NSLog(@"--- Data - Message: Pages,");
+                    NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
+                    
                     NSDictionary *pages = [response objectForKey:@"page"];
                     if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
                     {
@@ -398,6 +472,16 @@
                     }
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingNewPageForShowingNewMessage" object:newMessages];
+                }
+                else
+                {
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: *************** WANRING ***************");
+                    NSLog(@"Network - Message: ****** Received Bad Status Code *******");
+                    NSLog(@"Network - Message: %@", response);
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
                 }
             });
         });
@@ -411,10 +495,12 @@
 
 -(IBAction)postMessage:(id)sender
 {
+    NSLog(@"Network - Message: Post New Message");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         if([self.messageTextView.text isEqualToString:@""])
         {
+            NSLog(@"Message - Message: Message is Blank!");
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Blank Message" message:@"Cannot post blank message" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
             [alert show];
         }
@@ -425,13 +511,28 @@
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
                 //Background Process Block
                 NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:self.currentMessageType, self.messageTextView.text, nil] forKeys:[NSArray arrayWithObjects:@"type", @"message", nil]];
+                
+                NSLog(@"Message - Message: Push New Message, Push Data,");
+                NSLog(@"--- Data - Message: %@", parameters);
+                
                 NSDictionary *response = [[CSocketController sharedCSocketController] performPOSTRequestToHost:BASE_HOST withRelativeURL:COMMENTS_RELATIVE_URL withPort:API_PORT withProperties:parameters];
                 
                 dispatch_async(dispatch_get_main_queue(),^{
                     //Completion Block
                     NSString *statusCode = [response objectForKey:@"status_code"];
+                    
+                    NSLog(@"Network - Message: Recieved Status Code: %@", statusCode);
+                    
                     if([statusCode integerValue] != 200)
                     {
+                        NSLog(@"Network - Message: ***************************************");
+                        NSLog(@"Network - Message: ***************************************");
+                        NSLog(@"Network - Message: *************** WANRING ***************");
+                        NSLog(@"Network - Message: ****** Received Bad Status Code *******");
+                        NSLog(@"Network - Message: %@", response);
+                        NSLog(@"Network - Message: ***************************************");
+                        NSLog(@"Network - Message: ***************************************");
+                        
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post Failed" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
                         [alert show];
                     }
@@ -462,6 +563,7 @@
 
 -(IBAction)finishedGettingMessageForFirstPageOfShowMessage:(NSNotification *)sender
 {
+    NSLog(@"Message - Message: Finished Getting Message For First Page Of Show Message");
     NSNumber *statusCode = sender.object;
     if([statusCode integerValue] == 200)
     {
@@ -471,6 +573,7 @@
 
 -(IBAction)finishedGettingNewPageForScrolling:(NSNotification *)sender
 {
+    NSLog(@"Message - Message: Finished Getting New Page For Scrolling");
     NSArray *newMessages = sender.object;
     
     [self.messages addObjectsFromArray:newMessages];
@@ -484,6 +587,7 @@
 }
 -(IBAction)finishedGettingNewPageForShowingNewMessage:(NSNotification *)sender
 {
+    NSLog(@"Message - Message: Finished Getting New Page For Showing New Message");
     NSArray *newMessages = sender.object;
     
     NSIndexPath *indexPathOfFoundMessage = nil;
@@ -721,11 +825,13 @@
 
 -(IBAction)setMessageType:(NSNotification *)notificationRecieved
 {
+    NSLog(@"Messag - Message: Setting Message Type = %@", notificationRecieved.object);
     self.currentMessageType = notificationRecieved.object;
 }
 
 -(void)showSelectedMessage
 {
+    NSLog(@"Message - Message: Showing selected message");
     NetworkMessage *selectedMessage = nil;
     NSIndexPath *indexOfSelectedMessage = nil;
     int count = 0;
@@ -746,10 +852,12 @@
     //Check we might not have the pin look through more pages until we find it!
     if(indexOfSelectedMessage == nil)
     {
-        [self getMessageForFirstPageOfShowMessage];
+        NSLog(@"Message - Message: Could Not Find Selected Message On Current Page");
+        [self getMessageByAppendingPageForShowMessage];
     }
     else
     {
+        NSLog(@"Message - Message: Found Selected Message On Current Page");
         [self.theTableView reloadData];
         [self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:FALSE];
         
@@ -769,6 +877,7 @@
 
 -(IBAction)removeMessageFadeOverlay:(NSIndexPath *)indexOfSelectedMessage
 {
+    NSLog(@"Message - Message: Removing Message Fade Overlay");
     VoidBlock animate = ^
     {
         for(int i = 0; i < self.messages.count; i++)
@@ -789,6 +898,8 @@
 #pragma mark - KEYBOARD CALL BACKS
 -(IBAction)keyboardWillShow:(id)sender
 {
+    NSLog(@"Action - Message: Keyboard Will Show");
+    
     self.keyboardIsOut = TRUE;
     
     //Shift Subviews For Keyboard
@@ -804,14 +915,13 @@
  
 -(IBAction)keyboardWillHide:(id)sender
 {
+    NSLog(@"Action - Message: Keyboard Will Hide");
     [self hideKeyboard];
 }
 
 -(void)hideKeyboard
 {
     self.keyboardIsOut = FALSE;
-    
-    NSLog(@"HIDE KEYBORAD: %f", self.messageTextView.frame.size.height);
     
     //Shift Subviews For Keyboard
     CGRect currentTableFrame = self.theTableView.frame;
@@ -827,6 +937,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+#warning METHOD NOT USED
     /*
     BOOL foundEndOfList = FALSE;
     for(NSIndexPath *path in [self.theTableView indexPathsForVisibleRows])
@@ -852,8 +963,11 @@
 #pragma mark - Toggle Message Validity
 -(void)toggleMessageAddressed:(NSNotification *)notification
 {
+    NSLog(@"Action - Message: Toggling Message Addressed. Message,");
     NetworkMessage *msg = notification.object;
     self.toggledMessageRef = msg;
+    
+    NSLog(@"--- Data - Message: %@", self.toggledMessageRef);
     if(msg.addressed)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Are you sure this location has not been cleaned up?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes I'm Sure", nil];
@@ -876,19 +990,30 @@
     {
         if(buttonIndex == 1)
         {
+            NSLog(@"Action - Message: Toggled Message To Be NOT ADDRESSED!");
             parameters = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:TRUE], nil] forKeys:[NSArray arrayWithObjects:@"addressed", nil]];
+        }
+        else
+        {
+            NSLog(@"Action - Message: Cancled Message Addressed Toggle");
         }
     }
     else if(alertView.tag == ALERT_VIEW_TOGGLE_OFF)
     {
         if(buttonIndex == 1)
         {
+            NSLog(@"Action - Message: Toggled Message To Be ADDRESSED!");
             parameters = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:FALSE], nil] forKeys:[NSArray arrayWithObjects:@"addressed", nil]];
+        }
+        else
+        {
+            NSLog(@"Action - Message: Cancled Message Addressed Toggle");
         }
     }
     
     if(parameters != nil)
     {
+        NSLog(@"Network - Message: Updaing Toggled Message with Message ID: %@", self.toggledMessageRef.pinID.stringValue);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             //Background Process Block
             
@@ -897,6 +1022,9 @@
             dispatch_async(dispatch_get_main_queue(),^{
                 //Completion Block
                 NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                NSLog(@"Network - Message: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] == 200)
                 {
                     //COMPLETED!
@@ -951,6 +1079,13 @@
                 }
                 else
                 {
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: *************** WANRING ***************");
+                    NSLog(@"Network - Message: ****** Received Bad Status Code *******");
+                    NSLog(@"Network - Message: %@", response);
+                    NSLog(@"Network - Message: ***************************************");
+                    NSLog(@"Network - Message: ***************************************");
                     //FAILED!
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Request Failed" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
                     [alert show];
