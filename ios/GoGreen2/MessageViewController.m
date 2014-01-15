@@ -34,13 +34,13 @@
     if([UIScreen mainScreen].bounds.size.height == 568)
     {
         self = [super initWithNibName:@"MessageView_IPhone5" bundle:nil];
-        self.messageViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, 320, 50)];
     }
     else
     {
         self = [super initWithNibName:@"MessageView_IPhone" bundle:nil];
-        self.messageViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, 320, 50)];
     }
+    self.messageViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 49 - 11, 320, 49)];
+
     self.title = @"About";
 
     self.messages = [[NSMutableArray alloc] init];

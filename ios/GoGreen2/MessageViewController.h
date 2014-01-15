@@ -27,6 +27,5 @@
 
 //NETWORKING
 -(void)getMessages;
--(void)post;
 
 @end

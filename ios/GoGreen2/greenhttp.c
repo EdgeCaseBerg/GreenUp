@@ -60,6 +60,9 @@ char * gh_make_request(char * request, char * host, char * str_ip, int port) {
     sent = 0;
   	while(sent < strlen(request)) {
     	tmpres = send(sock, request+sent, strlen(request)-sent, 0);
+        
+        //fprintf(stderr, "%s\n", request+sent);
+        
     	if(tmpres == -1){
     	  	perror("Can't send query");
 	      	return "PROBLEM";

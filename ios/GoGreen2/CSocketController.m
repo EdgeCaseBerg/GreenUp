@@ -32,7 +32,6 @@ static CSocketController* theCSocketController = nil;
 #pragma mark - GET REQUESTS
 -(id)performGETRequestToHost:(NSString *)host withRelativeURL:(NSString *)relativeURL withPort:(int)port withProperties:(NSDictionary *)properties
 {
-    NSLog(@"RELATIVE: %@", relativeURL);
     //GET IP FROM HOST
     //struct hostent *host_entry = gethostbyname([host UTF8String]);
     const char *ip;
@@ -60,7 +59,6 @@ static CSocketController* theCSocketController = nil;
     
     if(ip)
     {
-        NSLog(@"URL PARAMS: %@", urlParameters);
         NSString *finalRelativeURL = [NSString stringWithFormat:@"%@%@", relativeURL, urlParameters];
         const char *relativeURLCString = [finalRelativeURL cStringUsingEncoding:NSUTF8StringEncoding];
         char * request = gh_build_get_query((char *)[host UTF8String], (char *)relativeURLCString);
@@ -113,7 +111,9 @@ static CSocketController* theCSocketController = nil;
         {
             const char *payload = [jsonString cStringUsingEncoding:NSUTF8StringEncoding];
 
+            
             char *request = gh_build_put_query((char *)[host UTF8String], (char *)[relativeURL UTF8String], payload);
+
             char *charPointer = gh_make_request(request, (char *)[host UTF8String], ip, port);
             NSString *response = [NSString stringWithFormat:@"%s", charPointer];
             NSData *data = [response dataUsingEncoding:NSUTF8StringEncoding];

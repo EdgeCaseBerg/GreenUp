@@ -12,19 +12,24 @@
 #import "MessageViewController.h"
 #import "HeatMapView.h"
 
+#import "TestFlight.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    //[GMSServices provideAPIKey:@"AIzaSyA5OrkUZ2YC72dAe9Rtv_xtc03A_eMzSXE"];
+    NSLog(@"************* Application Starting ************* ");
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
     {
         self.customContainer = [ContainerViewController sharedContainer];
         
         self.window.rootViewController = self.customContainer;
+        
+        [TestFlight takeOff:@"df231bba-62f1-4ff9-a59f-63120e1bc3db"];
     }
     [self.window makeKeyAndVisible];
     return YES;

@@ -1,0 +1,3 @@
+pod 'GMSWNetworking', '1.0'
+pod 'GMSWCoreDataController', '1.0'
+pod 'MBProgressHUD', '~> 0.8'

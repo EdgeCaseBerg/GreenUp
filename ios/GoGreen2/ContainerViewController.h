@@ -38,6 +38,8 @@ typedef void (^VoidBlock)(void);
 @property (strong, nonatomic) UIView *loadingView;
 @property (nonatomic, strong) UIView *statusBarFix;
 
+@property int heightFix;
+
 +(ContainerViewController *)sharedContainer;
 
 -(IBAction)hideMenu:(id)sender;
