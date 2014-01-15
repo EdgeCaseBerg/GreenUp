@@ -36,10 +36,6 @@
 		3959254F177518690035E351 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39592527177518690035E351 /* Foundation.framework */; };
 		39592557177518690035E351 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39592555177518690035E351 /* InfoPlist.strings */; };
 		3959255A177518690035E351 /* GoGreen2Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 39592559177518690035E351 /* GoGreen2Tests.m */; };
-		39592564177518BD0035E351 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39592563177518BD0035E351 /* GoogleMaps.framework */; };
-		39592565177518BD0035E351 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39592563177518BD0035E351 /* GoogleMaps.framework */; };
-		39592567177518DD0035E351 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 39592566177518DD0035E351 /* GoogleMaps.bundle */; };
-		39592568177518DD0035E351 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 39592566177518DD0035E351 /* GoogleMaps.bundle */; };
 		3959256A177519010035E351 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39592569177519010035E351 /* AVFoundation.framework */; };
 		3959256C177519090035E351 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3959256B177519090035E351 /* CoreData.framework */; };
 		3959256E177519120035E351 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3959256D177519120035E351 /* CoreLocation.framework */; };
@@ -213,8 +209,6 @@
 		39592556177518690035E351 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		39592558177518690035E351 /* GoGreen2Tests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GoGreen2Tests.h; sourceTree = "<group>"; };
 		39592559177518690035E351 /* GoGreen2Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GoGreen2Tests.m; sourceTree = "<group>"; };
-		39592563177518BD0035E351 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
-		39592566177518DD0035E351 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
 		39592569177519010035E351 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3959256B177519090035E351 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3959256D177519120035E351 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -374,7 +368,6 @@
 				39592526177518690035E351 /* UIKit.framework in Frameworks */,
 				39592528177518690035E351 /* Foundation.framework in Frameworks */,
 				3959252A177518690035E351 /* CoreGraphics.framework in Frameworks */,
-				39592564177518BD0035E351 /* GoogleMaps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,7 +378,6 @@
 				3959254D177518690035E351 /* SenTestingKit.framework in Frameworks */,
 				3959254E177518690035E351 /* UIKit.framework in Frameworks */,
 				3959254F177518690035E351 /* Foundation.framework in Frameworks */,
-				39592565177518BD0035E351 /* GoogleMaps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -611,8 +603,6 @@
 				3959256D177519120035E351 /* CoreLocation.framework */,
 				3959256B177519090035E351 /* CoreData.framework */,
 				39592569177519010035E351 /* AVFoundation.framework */,
-				39592566177518DD0035E351 /* GoogleMaps.bundle */,
-				39592563177518BD0035E351 /* GoogleMaps.framework */,
 				39592525177518690035E351 /* UIKit.framework */,
 				39592527177518690035E351 /* Foundation.framework */,
 				39592529177518690035E351 /* CoreGraphics.framework */,
@@ -855,7 +845,6 @@
 				39592538177518690035E351 /* Default.png in Resources */,
 				3959253A177518690035E351 /* Default@2x.png in Resources */,
 				3959253C177518690035E351 /* Default-568h@2x.png in Resources */,
-				39592567177518DD0035E351 /* GoogleMaps.bundle in Resources */,
 				392E74811798B83300C71680 /* HomeView_IPhone.xib in Resources */,
 				392E74821798B83300C71680 /* HomeView_IPhone5.xib in Resources */,
 				392E74871798B83E00C71680 /* MapView_IPhone.xib in Resources */,
@@ -958,7 +947,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				39592557177518690035E351 /* InfoPlist.strings in Resources */,
-				39592568177518DD0035E351 /* GoogleMaps.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1135,6 +1123,7 @@
 					"/Users/jordanrouille/Desktop/OLD\\ DESKTOP/GreenUp/ios/TestFlightSDK2.1.3",
 				);
 				PRODUCT_NAME = GoGreen;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1155,6 +1144,7 @@
 					"/Users/jordanrouille/Desktop/OLD\\ DESKTOP/GreenUp/ios/TestFlightSDK2.1.3",
 				);
 				PRODUCT_NAME = GoGreen;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
