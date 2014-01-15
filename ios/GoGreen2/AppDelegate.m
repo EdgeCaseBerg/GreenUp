@@ -23,14 +23,14 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-    {
+    //if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+    //{
         self.customContainer = [ContainerViewController sharedContainer];
         
         self.window.rootViewController = self.customContainer;
         
         [TestFlight takeOff:@"df231bba-62f1-4ff9-a59f-63120e1bc3db"];
-    }
+    //}
     [self.window makeKeyAndVisible];
     return YES;
 }
