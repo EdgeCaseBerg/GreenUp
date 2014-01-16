@@ -441,6 +441,7 @@ static ContainerViewController* theContainerView = nil;
 #pragma mark - Network Reachability
 -(BOOL)networkingReachability
 {
+    return TRUE;
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     if (networkStatus == NotReachable)

@@ -29,7 +29,7 @@
         
         self.window.rootViewController = self.customContainer;
         
-        [TestFlight takeOff:@"df231bba-62f1-4ff9-a59f-63120e1bc3db"];
+        [TestFlight takeOff:@"60fa253d-8284-496a-97c3-34b3f1cb179c"];
     //}
     [self.window makeKeyAndVisible];
     return YES;

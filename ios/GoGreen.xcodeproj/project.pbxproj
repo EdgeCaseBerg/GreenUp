@@ -63,6 +63,7 @@
 		DF3F010B17E3FEED00530A4D /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010817E3FEED00530A4D /* check@2x.png */; };
 		DF3F010C17E3FEED00530A4D /* notCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010917E3FEED00530A4D /* notCheck.png */; };
 		DF3F010E17E3FF2A00530A4D /* notCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010D17E3FF2A00530A4D /* notCheck@2x.png */; };
+		DF5AC59518874D2F0010B346 /* sampleRoute4.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DF5AC59418874D2F0010B346 /* sampleRoute4.gpx */; };
 		DF60D5F317F4FD3200105121 /* currentLocation.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5EF17F4FD3200105121 /* currentLocation.png */; };
 		DF60D5F417F4FD3200105121 /* currentLocation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5F017F4FD3200105121 /* currentLocation@2x.png */; };
 		DF60D5F517F4FD3200105121 /* currentLocationButtonBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5F117F4FD3200105121 /* currentLocationButtonBackground.png */; };
@@ -242,6 +243,7 @@
 		DF3F010817E3FEED00530A4D /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "check@2x.png"; path = "Images/check@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF3F010917E3FEED00530A4D /* notCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notCheck.png; path = Images/notCheck.png; sourceTree = SOURCE_ROOT; };
 		DF3F010D17E3FF2A00530A4D /* notCheck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "notCheck@2x.png"; path = "Images/notCheck@2x.png"; sourceTree = SOURCE_ROOT; };
+		DF5AC59418874D2F0010B346 /* sampleRoute4.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sampleRoute4.gpx; sourceTree = "<group>"; };
 		DF60D5EF17F4FD3200105121 /* currentLocation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = currentLocation.png; path = Images/currentLocation.png; sourceTree = SOURCE_ROOT; };
 		DF60D5F017F4FD3200105121 /* currentLocation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "currentLocation@2x.png"; path = "Images/currentLocation@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF60D5F117F4FD3200105121 /* currentLocationButtonBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = currentLocationButtonBackground.png; path = Images/currentLocationButtonBackground.png; sourceTree = SOURCE_ROOT; };
@@ -564,6 +566,7 @@
 		39592519177518690035E351 = {
 			isa = PBXGroup;
 			children = (
+				DF5AC59418874D2F0010B346 /* sampleRoute4.gpx */,
 				DFE59BDF180CB3CC00357899 /* sampleRoute3.gpx */,
 				DFE59BDD180CB3C400357899 /* sampleRoute2.gpx */,
 				DFE59BDB180CB3BD00357899 /* sampleRoute1.gpx */,
@@ -866,6 +869,7 @@
 				DFA9ABCA17D63C5B006F58A5 /* bubble_orange_bottom.png in Resources */,
 				DFA9ABCB17D63C5B006F58A5 /* bubble_orange_bottom@2x.png in Resources */,
 				DFA9ABCC17D63C5B006F58A5 /* bubble_orange_center.png in Resources */,
+				DF5AC59518874D2F0010B346 /* sampleRoute4.gpx in Resources */,
 				DFA9ABCD17D63C5B006F58A5 /* bubble_orange_center@2x.png in Resources */,
 				DFA9ABCE17D63C5B006F58A5 /* bubble_orange_top.png in Resources */,
 				DFA9ABCF17D63C5B006F58A5 /* bubble_orange_top@2x.png in Resources */,
@@ -1071,6 +1075,7 @@
 					"-ObjC",
 					"-licucore",
 				);
+				PROVISIONING_PROFILE = "3ABDDFC9-831D-40FD-AC65-F1EC8BE4FDBC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1101,6 +1106,7 @@
 					"-ObjC",
 					"-licucore",
 				);
+				PROVISIONING_PROFILE = "3ABDDFC9-831D-40FD-AC65-F1EC8BE4FDBC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

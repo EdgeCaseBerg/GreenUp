@@ -23,6 +23,7 @@
 #define UPLOAD_QUEUE_LENGTH 5
 #define longPressDuration .5
 #define BUFFER_SCALER 2
+#define MIN_DISTANCE_FOR_UPDATES 10
 
 @interface MapViewController ()
 
@@ -356,9 +357,7 @@
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 
         // Set a movement threshold for new events.
-        self.locationManager.distanceFilter = 500;
-
-
+        self.locationManager.distanceFilter = MIN_DISTANCE_FOR_UPDATES;
     }
         
     [self.locationManager startUpdatingLocation];
@@ -397,18 +396,6 @@
             //-------------- We Are Not Logging But Want To Drop Marker At Our Current Location ---------
             self.loggingForMarker = FALSE;
             
-/*
-            //Get Current Location
-            MKCoordinateRegion region;
-            MKCoordinateSpan span;
-            span.latitudeDelta=0.1;
-            span.longitudeDelta=0.1;
-            region.span = span;
-            region.center = location.coordinate;
-            [self.mapView setRegion:region animated:TRUE];
-            [self.mapView regionThatFits:region];
-  */  
-            
             //Stop Getting Updates
             [self.locationManager stopUpdatingLocation];
             
@@ -439,17 +426,12 @@
             [self pushHeatMapDataToServer];
             [self updateHeatMapOverlay];
             
-            /*
             //Update Map Location
             MKCoordinateRegion region;
-            MKCoordinateSpan span;
-            span.latitudeDelta=0.1;
-            span.longitudeDelta=0.1;
-            region.span = span;
+            region.span = self.mapView.region.span;
             region.center = location.coordinate;
             [self.mapView setRegion:region animated:TRUE];
             [self.mapView regionThatFits:region];
-            */
             
             //Create Pin For Current Location
             HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:Message_Type_MARKER];
@@ -476,17 +458,13 @@
             [self pushHeatMapDataToServer];
             [self updateHeatMapOverlay];
             
-            /*
-            //Update Map Location
+            
             MKCoordinateRegion region;
-            MKCoordinateSpan span;
-            span.latitudeDelta=0.1;
-            span.longitudeDelta=0.1;
-            region.span = span;
+            region.span = self.mapView.region.span;
             region.center = location.coordinate;
             [self.mapView setRegion:region animated:TRUE];
             [self.mapView regionThatFits:region];
-            */
+            
         }
     }
 }
