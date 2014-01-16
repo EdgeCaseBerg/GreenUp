@@ -175,6 +175,8 @@ static ContainerViewController* theContainerView = nil;
         [self.statusBarFix setBackgroundColor:[UIColor greenUpGreenColor]];
         [self.view addSubview:self.statusBarFix];
     }
+    
+    [self hideAllButtHomeView:nil];
 }
 
 #pragma mark - Tab Bar Delegate
@@ -276,19 +278,19 @@ static ContainerViewController* theContainerView = nil;
     [self performSelector:@selector(hideAllButtMessageView:) withObject:nil afterDelay:.3];
 }
 
--(IBAction)hideAllButtHomeView:(id)sender;
+-(IBAction)hideAllButtHomeView:(id)sender
 {
     [self.theMapViewController.view setHidden:TRUE];
     [self.theMessageViewController.view setHidden:TRUE];
 }
 
--(IBAction)hideAllButtMapView:(id)sender;
+-(IBAction)hideAllButtMapView:(id)sender
 {
     [self.theHomeViewController.view setHidden:TRUE];
     [self.theMessageViewController.view setHidden:TRUE];
 }
 
--(IBAction)hideAllButtMessageView:(id)sender;
+-(IBAction)hideAllButtMessageView:(id)sender
 {
     [self.theHomeViewController.view setHidden:TRUE];
     [self.theMapViewController.view setHidden:TRUE];

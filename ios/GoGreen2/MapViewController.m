@@ -35,11 +35,11 @@
 {
     if([UIScreen mainScreen].bounds.size.height == 568)
     {
-        self.mapView = [[GreenUpMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 499)];
+        self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 499)];
     }
     else
     {
-       self.mapView = [[GreenUpMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 411)]; 
+       self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 411)];
     }
     
     [self.view addSubview:self.mapView];
@@ -295,7 +295,7 @@
     }
     else
     {
-        NSLog(@"ELSE: %@", [annotation class]);
+        return nil;
     }
 }
 
@@ -586,27 +586,6 @@
     NSLog(@"Message - Map: Removing Fade View");
 }
 
-
--(void)addNewDownloadedPins:(NSArray *)pins
-{
-#warning METHOD NOT USED ANYWHERE
-    for(HeatMapPin *currentPin in pins)
-    {
-        BOOL found = FALSE;
-        for(HeatMapPin *downloadedPin in self.downloadedMapPins)
-        {
-            if(downloadedPin.pinID == currentPin.pinID)
-            {
-                found = TRUE;
-                break;
-            }
-        }
-        
-        if(!found)
-            [self.downloadedMapPins addObject:currentPin];
-    }
-}
-
 -(void)updateMapWithPins:(NSMutableArray *)pins
 {
     NSLog(@"Message - Map: Adding Unaddressed Pins To Map");
@@ -629,7 +608,7 @@
     {
         if([annotation isKindOfClass:[HeatMapPin class]])
         {
-            [self.mapView removeAnnotation:annotation];
+            [self.mapView removeAnnotation:(id)annotation];
         }
     }
     //[self.mapView removeAnnotations:self.mapView.annotations];
@@ -700,45 +679,6 @@
 }
 
 #pragma mark - Networking Methods
-
--(void)finishedGettingMapPins:(NSNotification *)notification
-{
-#warning METHOD NEVER USED!
-    NSDictionary *response = notification.object;
-    
-    NSString *statusCode = [response objectForKey:@"status_code"];
-    
-    if([statusCode integerValue] == 200)
-    {
-        [self.downloadedMapPins removeAllObjects];
-        
-        for(NSDictionary *networkPin in [response objectForKey:@"pins"])
-        {
-            //Add New Pins
-            HeatMapPin *newPin = [[HeatMapPin alloc] init];
-            NSString *stringPinID = [[networkPin objectForKey:@"id"] stringValue];
-            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-            [f setNumberStyle:NSNumberFormatterDecimalStyle];
-            newPin.pinID = [f numberFromString:stringPinID];
-            newPin.message = [networkPin objectForKey:@"message"];
-            newPin.coordinate = CLLocationCoordinate2DMake([[networkPin objectForKey:@"latDegrees"] doubleValue], [[networkPin objectForKey:@"lonDegrees"] doubleValue]);
-            newPin.type = [networkPin objectForKey:@"type"];
-            newPin.message = [networkPin objectForKey:@"message"];
-            newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
-            
-            [self.downloadedMapPins addObject:newPin];
-        }
-        
-        self.finishedDownloadingMapPins = TRUE;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:statusCode];
-    }
-    else
-    {
-        self.finishedDownloadingMapPins = TRUE;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:statusCode];
-    }
-}
-
 -(void)getMapPins
 {
     NSLog(@"Network - Map: Getting Pins With Data,");
@@ -1102,7 +1042,7 @@
                     double lat = [[pointDictionary objectForKey:@"latDegrees"] doubleValue];
                     double lon = [[pointDictionary objectForKey:@"lonDegrees"] doubleValue];
                     double secWorked = [[pointDictionary objectForKey:@"secondsWorked"] doubleValue];
-                    
+
                     newPoint.lat = lat;
                     newPoint.lon = lon;
                     newPoint.secWorked = secWorked;

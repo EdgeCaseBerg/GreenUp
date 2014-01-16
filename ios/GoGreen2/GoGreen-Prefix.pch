@@ -17,3 +17,6 @@
 
 #endif
 
+typedef void (^VoidBlock)(void);
+
+

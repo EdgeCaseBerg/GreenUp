@@ -590,7 +590,6 @@
     NSLog(@"Message - Message: Finished Getting New Page For Showing New Message");
     NSArray *newMessages = sender.object;
     
-    NSIndexPath *indexPathOfFoundMessage = nil;
     NetworkMessage *selectedMessage = nil;
     for(NetworkMessage *msg in newMessages)
     {
@@ -638,8 +637,6 @@
 #pragma mark - TABLE VIEW DATA SOURCE
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"Count: %d", self.messages.count);
-    
     return self.messages.count;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -717,14 +714,12 @@
     {
         size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
         size.height += + 20 + 6;
-        NSLog(@"SIZE HEIGHT: %f - WIDTH: %f", size.height, size.width);
         //return size;
     }
     else
     {
         size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(290, CGFLOAT_MAX)];
         size.height += + 20 + 6;
-        NSLog(@"SIZE HEIGHT: %f - WIDTH: %f", size.height, size.width);
         //return size;
     }
     
@@ -757,9 +752,6 @@
     {
         CGSize oldContentSize = [[change objectForKey: NSKeyValueChangeOldKey] CGSizeValue];
         float heightDiff = self.messageTextView.contentSize.height - oldContentSize.height;
-
-        CGSize newContentSize = self.messageTextView.contentSize;
-        NSLog(@"OLD: %f - New: %f - DIFF: %f", oldContentSize.height, self.messageTextView.contentSize.height, heightDiff);
 
         if(heightDiff != 0)
         {
@@ -937,27 +929,22 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-#warning METHOD NOT USED
-    /*
     BOOL foundEndOfList = FALSE;
     for(NSIndexPath *path in [self.theTableView indexPathsForVisibleRows])
     {
         NSLog(@"CHECKING PATH: %d With Count: %d", path.row, self.messages.count);
         if(path.row == self.messages.count - 1)
         {
+            NSLog(@"Action - Message: Reached End Of Message List");
             foundEndOfList = TRUE;
         }
     }
     
     if(foundEndOfList && self.nextPageURL != nil)
     {
+        NSLog(@"Message - Message: End Of List Reached With Next Page URL: %@", self.nextPageURL);
         [self getMessageByAppendingPageForScrolling];
     }
-    else
-    {
-        NSLog(@"NON");
-    }
-     */
 }
 
 #pragma mark - Toggle Message Validity

@@ -135,7 +135,6 @@
 		DFA9C38517D94ABE00FBE61F /* pinwheel.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C38317D94ABE00FBE61F /* pinwheel.png */; };
 		DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C38417D94ABE00FBE61F /* pinwheel@2x.png */; };
 		DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */; };
-		DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */; };
 		DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */; };
 		DFA9C39317E22FA000FBE61F /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39117E22F9900FBE61F /* logo.png */; };
 		DFA9C39417E22FA000FBE61F /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39217E22F9D00FBE61F /* logo@2x.png */; };
@@ -324,8 +323,6 @@
 		DFA9C38417D94ABE00FBE61F /* pinwheel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pinwheel@2x.png"; path = "Images/pinwheel@2x.png"; sourceTree = SOURCE_ROOT; };
 		DFA9C38717D95E1D00FBE61F /* HeatMapPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeatMapPin.h; sourceTree = "<group>"; };
 		DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPin.m; sourceTree = "<group>"; };
-		DFA9C38B17DF916900FBE61F /* GreenUpMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GreenUpMapView.h; sourceTree = "<group>"; };
-		DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GreenUpMapView.m; sourceTree = "<group>"; };
 		DFA9C38E17DFB1F800FBE61F /* MapPinCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapPinCommentView.h; sourceTree = "<group>"; };
 		DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPinCommentView.m; sourceTree = "<group>"; };
 		DFA9C39117E22F9900FBE61F /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Images/logo.png; sourceTree = SOURCE_ROOT; };
@@ -511,7 +508,6 @@
 		392B9DE41790C9F500C40B64 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				DFA9C38A17DF914600FBE61F /* MKMapKit Subclass */,
 				DFA9ABFA17D653BF006F58A5 /* Data Model Objects */,
 				392E74851798B83E00C71680 /* MapViewController.h */,
 				392E74861798B83E00C71680 /* MapViewController.m */,
@@ -764,15 +760,6 @@
 			name = Categories;
 			sourceTree = "<group>";
 		};
-		DFA9C38A17DF914600FBE61F /* MKMapKit Subclass */ = {
-			isa = PBXGroup;
-			children = (
-				DFA9C38B17DF916900FBE61F /* GreenUpMapView.h */,
-				DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */,
-			);
-			name = "MKMapKit Subclass";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -998,7 +985,6 @@
 				DFA9AC0217D66543006F58A5 /* UIColor+methods.m in Sources */,
 				DFA9C38017D9419B00FBE61F /* MapPinSelectorView.m in Sources */,
 				DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */,
-				DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */,
 				DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */,
 				DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */,
 				DF2E5D03180F43A4000B9824 /* greenhttp.c in Sources */,
