@@ -17,7 +17,7 @@
 
 #define API_PORT 31337
 
-#define BASE_HOST @"199.195.248.180"
+#define BASE_HOST @"http://199.195.248.180"
 #define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
 #define COMMENTS_RELATIVE_URL @"/api/comments"
 #define PINS_RELATIVE_URL @"/api/pins"
@@ -71,7 +71,7 @@ static NetworkingController *sharedNetworkingController;
     // so that we can append data to it in the didReceiveData method
     // Furthermore, this method is called each time there is a redirect so reinitializing it
     // also serves to clear it
-    
+
     if([connection isEqual:getMapPinsConnection])
     {
         getMapPinsData = [[NSMutableData alloc] init];
@@ -381,21 +381,15 @@ static NetworkingController *sharedNetworkingController;
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    /*
-    NSLog(@"Network - Map: ***************************************");
-    NSLog(@"Network - Map: ***************************************");
-    NSLog(@"Network - Map: *************** WANRING ***************");
-    NSLog(@"Network - Map: *********** Request Failed ************");
-    NSLog(@"Network - Map: %@", response);
-    NSLog(@"Network - Map: ***************************************");
-    NSLog(@"Network - Map: ***************************************");
-    */
+    NSLog(@"FAILED....");
     
     if([connection isEqual:getMapPinsConnection])
     {
         NSDictionary *response = nil;
         if(getMapPinsData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMapPinsData options:0 error:nil];
+        
+        [self printResponseFromFailedRequest:response andStatusCode:getMapPinsStatusCode];
         
         [[ContainerViewController sharedContainer] theMapViewController].finishedDownloadingMapPins = TRUE;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:@"-1"];
@@ -409,6 +403,8 @@ static NetworkingController *sharedNetworkingController;
         if(getMapPinsForShowData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMapPinsForShowData options:0 error:nil];
         
+        [self printResponseFromFailedRequest:response andStatusCode:getMapPinsForShowStatusCode];
+        
         [[ContainerViewController sharedContainer] theMapViewController].finishedDownloadingMapPins = TRUE;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:[NSNumber numberWithInt:-1]];
         
@@ -421,6 +417,8 @@ static NetworkingController *sharedNetworkingController;
         if(postMarkerData != nil)
             response = [NSJSONSerialization JSONObjectWithData:postMarkerData options:0 error:nil];
         
+        [self printResponseFromFailedRequest:response andStatusCode:postMarkerStatusCode];
+        
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Pin" message:@"You dont appear to have a network connection, please connect and retry posting the pin." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
@@ -429,6 +427,8 @@ static NetworkingController *sharedNetworkingController;
         NSDictionary *response = nil;
         if(pushHeatMapData != nil)
             response = [NSJSONSerialization JSONObjectWithData:pushHeatMapData options:0 error:nil];
+        
+        [self printResponseFromFailedRequest:response andStatusCode:pushHeatMapStatusCode];
         
         //If We Dont Have Service, Mark As Overdue
         [[ContainerViewController sharedContainer] theMapViewController].pushOverdue = TRUE;
@@ -661,6 +661,7 @@ static NetworkingController *sharedNetworkingController;
     
     NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL];
     
+    urlString = @"http://199.195.248.180/hockeyapp/api/";
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                        timeoutInterval:10];
@@ -673,7 +674,7 @@ static NetworkingController *sharedNetworkingController;
     [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
     
     //Fire Off Request
-    getHeatMapConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+    getHeatMapConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
 
 #pragma mark - Message Request Methods
@@ -748,5 +749,20 @@ static NetworkingController *sharedNetworkingController;
     //Fire Off Request
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }*/
+
+#pragma mark - Utility Methods
+
+-(void)printResponseFromFailedRequest:(NSDictionary *)response andStatusCode:(int)statusCode
+{
+    NSLog(@"Network - Map: ***************************************");
+    NSLog(@"Network - Map: ***************************************");
+    NSLog(@"Network - Map: *************** WANRING ***************");
+    NSLog(@"Network - Map: *********** Request Failed ************");
+    NSLog(@"Network - Map: ****** Header Status Code: %d *********", statusCode);
+    NSLog(@"Network - Map: %@", response);
+    NSLog(@"Network - Map: ***************************************");
+    NSLog(@"Network - Map: ***************************************");
+    
+}
 
 @end

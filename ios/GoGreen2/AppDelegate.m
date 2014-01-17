@@ -11,6 +11,7 @@
 #import "MapViewController.h"
 #import "MessageViewController.h"
 #import "HeatMapView.h"
+#import "NetworkingController.h"
 
 #import "TestFlight.h"
 
@@ -22,7 +23,7 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    
+
     //if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
     //{
         self.customContainer = [ContainerViewController sharedContainer];

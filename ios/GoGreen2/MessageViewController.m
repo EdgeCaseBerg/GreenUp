@@ -981,10 +981,6 @@
         NSLog(@"Action - Message: Scrolled To End Of List, Loading Next Page Wit URL: %@", self.nextPageURL);
         [self getMessageByAppendingPageForScrolling];
     }
-    else
-    {
-        NSLog(@"$324");
-    }
 }
 
 #pragma mark - Alert View Delegate
