@@ -45,6 +45,7 @@
 
     self.messages = [[NSMutableArray alloc] init];
     self.keyboardIsOut = FALSE;
+    self.appendingMessages = FALSE;
     
     [self getMessages];
     
@@ -593,6 +594,8 @@
         [newIndexes addObject:[NSIndexPath indexPathForRow:[self.messages indexOfObject:msg] inSection:0]];
     }
     [self.theTableView insertRowsAtIndexPaths:newIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    self.appendingMessages = FALSE;
 }
 -(IBAction)finishedGettingNewPageForShowingNewMessage:(NSNotification *)sender
 {
@@ -972,10 +975,15 @@
     // NSLog(@"pos: %f of %f", y, h);
     
     float reload_distance = 10;
-    if(y > h + reload_distance && self.nextPageURL != nil)
+    if(y > h + reload_distance && self.nextPageURL != nil && self.appendingMessages == FALSE)
     {
+        self.appendingMessages = TRUE;
         NSLog(@"Action - Message: Scrolled To End Of List, Loading Next Page Wit URL: %@", self.nextPageURL);
         [self getMessageByAppendingPageForScrolling];
+    }
+    else
+    {
+        NSLog(@"$324");
     }
 }
 

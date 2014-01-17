@@ -21,6 +21,7 @@
 @property (strong, nonatomic) NetworkMessage *toggledMessageRef;
 @property (strong, nonatomic) NSNumber *pinIDToShow;
 
+@property BOOL appendingMessages;
 @property BOOL keyboardIsOut;
 
 -(MessageViewController *)init;
