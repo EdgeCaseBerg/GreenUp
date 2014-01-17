@@ -692,7 +692,7 @@
 #pragma mark - Networking Methods
 -(void)getMapPins
 {
-    //[[NetworkingController shared] getMapPinsWithMap:self.mapView];
+    [[NetworkingController shared] getMapPinsWithMap:self.mapView];
     /*
     NSLog(@"Network - Map: Getting Pins With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])
