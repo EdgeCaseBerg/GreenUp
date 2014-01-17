@@ -18,7 +18,7 @@
 #import "Reachability.h"
 #import "HeatMapPin.h"
 #import "ContainerViewController.h"
-//#import "NetworkingController.h"
+#import "NetworkingController.h"
 
 #define ALERT_VIEW_TOGGLE_ON 0
 #define ALERT_VIEW_TOGGLE_OFF 1
@@ -82,6 +82,11 @@
     [self.messageSendButton addTarget:self action:@selector(postMessage:) forControlEvents:UIControlEventTouchUpInside];
     [self.messageSendButton setFrame:CGRectMake(265, 10, 50, 35)];
     [self.messageViewContainer addSubview:self.messageSendButton];
+    
+    if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
+    {
+        [self.theTableView setFrame:CGRectMake(self.theTableView.frame.origin.x, self.theTableView.frame.origin.y, self.theTableView.frame.size.width, self.theTableView.frame.size.height - 10)];
+    }
     
     //Keyboard CallBacks
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -376,13 +381,17 @@
                     
                     NSLog(@"--- Data - Message: Pages,");
                     NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
-                    
+                
                     NSDictionary *pages = [response objectForKey:@"page"];
                     if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
                     {
                         NSString *fullURL = [pages objectForKey:@"next"];
                         NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
                         self.nextPageURL = [NSString stringWithFormat:@"/api/%@", [components objectAtIndex:1]];
+                    }
+                    else
+                    {
+                        self.nextPageURL = nil;
                     }
 
                     
@@ -925,28 +934,6 @@
     [self.messageViewContainer setFrame:currentMessageViewFrame];
 }
 
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    BOOL foundEndOfList = FALSE;
-    for(NSIndexPath *path in [self.theTableView indexPathsForVisibleRows])
-    {
-        NSLog(@"CHECKING PATH: %d With Count: %d", path.row, self.messages.count);
-        if(path.row == self.messages.count - 1)
-        {
-            NSLog(@"Action - Message: Reached End Of Message List");
-            foundEndOfList = TRUE;
-        }
-    }
-    
-    if(foundEndOfList && self.nextPageURL != nil)
-    {
-        NSLog(@"Message - Message: End Of List Reached With Next Page URL: %@", self.nextPageURL);
-        [self getMessageByAppendingPageForScrolling];
-    }
-}
-
 #pragma mark - Toggle Message Validity
 -(void)toggleMessageAddressed:(NSNotification *)notification
 {
@@ -966,6 +953,29 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Are you sure you have cleaned up this location?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes I'm Sure", nil];
         alert.tag = ALERT_VIEW_TOGGLE_ON;
         [alert show];
+    }
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)aScrollView {
+    CGPoint offset = aScrollView.contentOffset;
+    CGRect bounds = aScrollView.bounds;
+    CGSize size = aScrollView.contentSize;
+    UIEdgeInsets inset = aScrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    // NSLog(@"offset: %f", offset.y);
+    // NSLog(@"content.height: %f", size.height);
+    // NSLog(@"bounds.height: %f", bounds.size.height);
+    // NSLog(@"inset.top: %f", inset.top);
+    // NSLog(@"inset.bottom: %f", inset.bottom);
+    // NSLog(@"pos: %f of %f", y, h);
+    
+    float reload_distance = 10;
+    if(y > h + reload_distance && self.nextPageURL != nil)
+    {
+        NSLog(@"Action - Message: Scrolled To End Of List, Loading Next Page Wit URL: %@", self.nextPageURL);
+        [self getMessageByAppendingPageForScrolling];
     }
 }
 

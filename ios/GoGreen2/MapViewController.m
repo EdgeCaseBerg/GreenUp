@@ -16,7 +16,7 @@
 #import "MapPinCommentView.h"
 #import <netdb.h>
 #include <arpa/inet.h>
-//#import "NetworkingController.h"
+#import "NetworkingController.h"
 
 //#include "FTLocationSimulator.h"
 
@@ -186,6 +186,8 @@
     NSNumber *lon = [self.lastViewedLocation objectForKey:@"lon"];
     NSNumber *latDelta = [self.lastViewedLocation objectForKey:@"deltaLat"];
     NSNumber *lonDelta = [self.lastViewedLocation objectForKey:@"deltaLon"];
+    float latDeltaWithoutBuff = latDelta.floatValue;// / BUFFER_SCALER;
+    float lonDeltaWithoutBuff = lonDelta.floatValue;// / BUFFER_SCALER;
     
     float newLonUpper = mapView.region.center.longitude + mapView.region.span.longitudeDelta;
     float newLonLower = mapView.region.center.longitude - mapView.region.span.longitudeDelta;
@@ -197,6 +199,9 @@
     float oldLatUpper = lat.floatValue + latDelta.floatValue;
     float oldLatLower = lat.floatValue - latDelta.floatValue;
     
+    float newLonDelta = mapView.region.span.longitudeDelta;
+    float newLatDelta = mapView.region.span.latitudeDelta;
+    
     NSLog(@"--- Data - Map: New Upper Lon Limit = %f", newLonUpper);
     NSLog(@"--- Data - Map: New Lower Lon Limit = %f", newLonLower);
     NSLog(@"--- Data - Map: New Upper Lat Limit = %f", newLatUpper);
@@ -207,7 +212,12 @@
     NSLog(@"--- Data - Map: Old Upper Lat Limit = %f", oldLatUpper);
     NSLog(@"--- Data - Map: Old Lower Lat Limit = %f", oldLatLower);
     
-    if(newLatUpper >= oldLatUpper || newLatLower <= oldLatLower || newLonUpper >= oldLonUpper || newLonLower <= oldLonLower)
+    if(newLatUpper >= oldLatUpper ||
+       newLatLower <= oldLatLower ||
+       newLonUpper >= oldLonUpper ||
+       newLonLower <= oldLonLower ||
+       newLatDelta < latDeltaWithoutBuff ||
+       newLonDelta < lonDeltaWithoutBuff)
     {
         NSLog(@"Message - Map: Outside Buffer Zone");
         return TRUE;
@@ -678,9 +688,12 @@
     }
 }
 
+
 #pragma mark - Networking Methods
 -(void)getMapPins
 {
+    //[[NetworkingController shared] getMapPinsWithMap:self.mapView];
+    /*
     NSLog(@"Network - Map: Getting Pins With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
@@ -759,11 +772,13 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
-    
+    */
 }
 
 -(void)getMapPinForPinShow
 {
+    [[NetworkingController shared] getMapPinsWithMap:self.mapView];
+    /*
     NSLog(@"Network - Map: Getting Map Pin for Pin Show");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
@@ -823,11 +838,13 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
-    
+    */
 }
 
 -(IBAction)postMarker:(NSNotification *)sender
 {
+    [[NetworkingController shared] postMarkerWithPin:self.tempPinRef andMessage:sender.object];
+    /*
     NSLog(@"Network - Map: Pushing New Marker With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
@@ -903,11 +920,13 @@
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Pin" message:@"You dont appear to have a network connection, please connect and retry posting the pin." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
-    }
+    }*/
 }
 
 -(void)pushHeatMapDataToServer
 {
+    [[NetworkingController shared] pushHeatMapPoints];
+    /*
     NSLog(@"Message - Map: Pushing Heatmap Data To Server");
     NSLog(@"--- Data - Map: QUEUE LIMIT = %d", UPLOAD_QUEUE_LENGTH);
     NSLog(@"--- Data - Map: Gathered Queue = %d", self.gatheredMapPoints.count);
@@ -978,10 +997,12 @@
                 });
             });
         }
-    }
+    }*/
 }
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
 {
+    [[NetworkingController shared] getHeatDataPointsWithSpan:span andLocation:location];
+    /*
     self.finishedDownloadingHeatMap = FALSE;
     
     //Generation Properties
@@ -1068,7 +1089,7 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingHeatMap" object:statusCode];
             }
         });
-    });
+    });*/
 }
 
 #pragma mark - Utility Methods

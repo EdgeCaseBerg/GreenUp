@@ -91,7 +91,14 @@ char * gh_make_request(char * request, char * host, char * str_ip, int port) {
     	}
     	if(htmlstart){
             if( htmlBufsUsed < htmlBufsNeeded){
-                strcat(htmlBuf,htmlcontent);
+                /*fprintf(stderr, "-----");
+                printf("%s", htmlBuf);
+                fprintf(stderr, "\n");
+                fprintf(stderr, "\n");
+                fprintf(stderr, "\n");
+                printf("%s", htmlcontent);*/
+                strncat(htmlBuf, htmlcontent, BUFSIZ);
+                //strcat(htmlBuf,htmlcontent);
             }else{
                 /*Grow buffer first*/
                 indirectionBufferPointer = realloc(htmlBuf, strlen(htmlBuf) + strlen(buf) + sizeof(char));
