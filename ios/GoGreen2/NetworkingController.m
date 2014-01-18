@@ -661,7 +661,6 @@ static NetworkingController *sharedNetworkingController;
     
     NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL];
     
-    urlString = @"http://199.195.248.180/hockeyapp/api/";
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                        timeoutInterval:10];

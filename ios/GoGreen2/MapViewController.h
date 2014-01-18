@@ -53,6 +53,8 @@
 @property BOOL pusheMapPins;
 
 @property BOOL pushOverdue;
+@property BOOL centerOnCurrentLocation;
+@property BOOL drivingAlertShown;
 
 @property (strong, nonatomic) NSDictionary *lastViewedLocation;
 

@@ -24,6 +24,7 @@
 #define longPressDuration .5
 #define BUFFER_SCALER 2
 #define MIN_DISTANCE_FOR_UPDATES 10
+#define MAX_METERS_PER_SECOND 5 // ~12 mph
 
 @interface MapViewController ()
 
@@ -74,6 +75,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingPinsForShowPin:) name:@"finishedGettingPinsForShowPin" object:nil];
     
     [self.mapView setShowsUserLocation:TRUE];
+    
+    self.centerOnCurrentLocation = TRUE;
     
     return self;
 }
@@ -395,6 +398,7 @@
     NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
     if(abs(howRecent) < 1.0)
     {
+
         //ADD POINTS
         HeatMapPoint *mapPoint = [[HeatMapPoint alloc] init];
         mapPoint.lat = location.coordinate.latitude;
@@ -415,7 +419,7 @@
             
             //Save pin
             [self.gatheredMapPins addObject:currentLocationPin];
-
+            
             //Add Pin To Map
             [self.mapView addAnnotation:currentLocationPin];
             
@@ -426,22 +430,27 @@
         else if(self.loggingForMarker && self.logging)
         {
             //-------------- We Are Logging AND ALSO Want To Drop A Marker --------------
-            self.loggingForMarker = FALSE;
-            
-            [self.gatheredMapPoints addObject:mapPoint];
-            [self.gatheredMapPointsQueue addObject:mapPoint];
-            
-            //Update With Server
-            [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-            [self pushHeatMapDataToServer];
-            [self updateHeatMapOverlay];
-            
-            //Update Map Location
-            MKCoordinateRegion region;
-            region.span = self.mapView.region.span;
-            region.center = location.coordinate;
-            [self.mapView setRegion:region animated:TRUE];
-            [self.mapView regionThatFits:region];
+            if(location.speed < MAX_METERS_PER_SECOND)
+            {
+                self.drivingAlertShown = FALSE;
+                
+                self.loggingForMarker = FALSE;
+                
+                [self.gatheredMapPoints addObject:mapPoint];
+                [self.gatheredMapPointsQueue addObject:mapPoint];
+                
+                //Update With Server
+                [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+                [self pushHeatMapDataToServer];
+                [self updateHeatMapOverlay];
+            }
+            else
+            {
+                if(!self.drivingAlertShown)
+                {
+                    [self showDrivingAlert];
+                }
+            }
             
             //Create Pin For Current Location
             HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:Message_Type_MARKER];
@@ -456,27 +465,60 @@
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
             [self.view.window addSubview:commentView];
+            
+            [self centerMapWithCurrentLocation:location];
         }
         else
         {
             //-------------- We Are Logging AND Don't Want To Drop A Marker --------------
-            [self.gatheredMapPoints addObject:mapPoint];
-            [self.gatheredMapPointsQueue addObject:mapPoint];
             
-            //Update With Server
-            [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-            [self pushHeatMapDataToServer];
-            [self updateHeatMapOverlay];
-            
-            
-            MKCoordinateRegion region;
-            region.span = self.mapView.region.span;
-            region.center = location.coordinate;
-            [self.mapView setRegion:region animated:TRUE];
-            [self.mapView regionThatFits:region];
-            
+            if(location.speed < MAX_METERS_PER_SECOND)
+            {
+                self.drivingAlertShown = FALSE;
+                
+                [self.gatheredMapPoints addObject:mapPoint];
+                [self.gatheredMapPointsQueue addObject:mapPoint];
+                
+                //Update With Server
+                [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+                [self pushHeatMapDataToServer];
+                [self updateHeatMapOverlay];
+                
+                
+                [self centerMapWithCurrentLocation:location];
+            }
+            else
+            {
+                if(!self.drivingAlertShown)
+                {
+                    [self showDrivingAlert];
+                }
+            }
         }
     }
+}
+
+-(void)centerMapWithCurrentLocation:(CLLocation *)location
+{
+    if(self.centerOnCurrentLocation)
+    {
+        //Update Map Location
+        MKCoordinateRegion region;
+        MKCoordinateSpan span;
+        span.latitudeDelta = 0.005;
+        span.longitudeDelta = 0.005;
+        region.span = span;
+        region.center = location.coordinate;
+        [self.mapView setRegion:region animated:TRUE];
+        [self.mapView regionThatFits:region];
+    }
+}
+
+-(void)showDrivingAlert
+{
+    self.drivingAlertShown = TRUE;
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are you Driving?" message:@"Either you're the worlds fastest cleaner or you're driving around. We wan't accurate results so once you it slow down we'll automatically enable tracking for you." delegate:nil cancelButtonTitle:@"I'm Driving" otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 #pragma mark - Heat Map Point Methods

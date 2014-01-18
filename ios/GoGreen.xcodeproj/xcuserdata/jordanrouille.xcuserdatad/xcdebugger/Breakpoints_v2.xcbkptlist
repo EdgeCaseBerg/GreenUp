@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/MapViewController.m"
-            timestampString = "411621420.932676"
+            timestampString = "411758048.620387"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "393"
-            endingLineNumber = "393"
+            startingLineNumber = "396"
+            endingLineNumber = "396"
             landmarkName = "-locationManager:didUpdateLocations:"
             landmarkType = "5">
          </BreakpointContent>
@@ -36,28 +36,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/MapViewController.m"
-            timestampString = "411621420.932676"
+            timestampString = "411758048.620387"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "337"
-            endingLineNumber = "337"
+            startingLineNumber = "340"
+            endingLineNumber = "340"
             landmarkName = "-toggleLogging:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GoGreen2/MapViewController.m"
-            timestampString = "411621420.932676"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "410"
-            endingLineNumber = "410"
-            landmarkName = "-locationManager:didUpdateLocations:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -158,11 +142,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/MapViewController.m"
-            timestampString = "411621420.932676"
+            timestampString = "411758048.620387"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
+            startingLineNumber = "242"
+            endingLineNumber = "242"
             landmarkName = "-mapView:regionDidChangeAnimated:"
             landmarkType = "5">
          </BreakpointContent>
@@ -174,11 +158,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/MapViewController.m"
-            timestampString = "411621420.932676"
+            timestampString = "411758048.620387"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
             landmarkName = "-checkIfOutsideBufferZone:"
             landmarkType = "5">
          </BreakpointContent>
@@ -206,11 +190,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "568"
-            endingLineNumber = "568"
+            startingLineNumber = "561"
+            endingLineNumber = "561"
             landmarkName = "-pushHeatMapPoints"
             landmarkType = "5">
          </BreakpointContent>
@@ -222,11 +206,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "526"
-            endingLineNumber = "526"
+            startingLineNumber = "519"
+            endingLineNumber = "519"
             landmarkName = "-postMarkerWithPin:andMessage:"
             landmarkType = "5">
          </BreakpointContent>
@@ -238,11 +222,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411689187.323487"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "497"
-            endingLineNumber = "497"
+            startingLineNumber = "496"
+            endingLineNumber = "496"
             landmarkName = "-getMapPinsForPinShowWithMap:"
             landmarkType = "5">
          </BreakpointContent>
@@ -254,11 +238,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "486"
-            endingLineNumber = "486"
+            startingLineNumber = "479"
+            endingLineNumber = "479"
             landmarkName = "-getMapPinsWithMap:"
             landmarkType = "5">
          </BreakpointContent>
@@ -270,11 +254,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "407"
-            endingLineNumber = "407"
+            startingLineNumber = "394"
+            endingLineNumber = "394"
             landmarkName = "-connection:didFailWithError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -286,11 +270,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "419"
-            endingLineNumber = "419"
+            startingLineNumber = "408"
+            endingLineNumber = "408"
             landmarkName = "-connection:didFailWithError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -302,11 +286,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "431"
-            endingLineNumber = "431"
+            startingLineNumber = "422"
+            endingLineNumber = "422"
             landmarkName = "-connection:didFailWithError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -318,11 +302,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "440"
-            endingLineNumber = "440"
+            startingLineNumber = "433"
+            endingLineNumber = "433"
             landmarkName = "-connection:didFailWithError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -334,11 +318,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "445"
-            endingLineNumber = "445"
+            startingLineNumber = "438"
+            endingLineNumber = "438"
             landmarkName = "-connection:didFailWithError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -350,11 +334,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
             landmarkName = "-connectionDidFinishLoading:"
             landmarkType = "5">
          </BreakpointContent>
@@ -366,11 +350,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
             landmarkName = "-connectionDidFinishLoading:"
             landmarkType = "5">
          </BreakpointContent>
@@ -382,11 +366,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "249"
-            endingLineNumber = "249"
+            startingLineNumber = "243"
+            endingLineNumber = "243"
             landmarkName = "-connectionDidFinishLoading:"
             landmarkType = "5">
          </BreakpointContent>
@@ -398,11 +382,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "296"
-            endingLineNumber = "296"
+            startingLineNumber = "290"
+            endingLineNumber = "290"
             landmarkName = "-connectionDidFinishLoading:"
             landmarkType = "5">
          </BreakpointContent>
@@ -414,11 +398,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "325"
-            endingLineNumber = "325"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
             landmarkName = "-connectionDidFinishLoading:"
             landmarkType = "5">
          </BreakpointContent>
@@ -430,59 +414,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688854.397302"
+            timestampString = "411756523.555825"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "672"
-            endingLineNumber = "672"
-            landmarkName = "-getHeatDataPointsWithSpan:andLocation:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688649.187535"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "-connection:didReceiveData:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411689142.175799"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "-connection:didReceiveResponse:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688854.397302"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "686"
-            endingLineNumber = "686"
+            startingLineNumber = "678"
+            endingLineNumber = "678"
             landmarkName = "@implementation NetworkingController"
             landmarkType = "3">
          </BreakpointContent>
@@ -525,7 +461,7 @@
                   symbolName = "-[MessageViewController finishedGettingNewPageForScrolling:]"
                   moduleName = "GoGreen"
                   urlString = "file:///Users/jordanrouille/Desktop/OLD%20DESKTOP/GreenUp/ios/GoGreen2/MessageViewController.m"
-                  timestampString = "411689012.622468"
+                  timestampString = "411758048.931842"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "595"
@@ -539,7 +475,7 @@
                   symbolName = "-[MessageViewController finishedGettingNewPageForScrolling:]"
                   moduleName = "GoGreen"
                   urlString = "file:///Users/jordanrouille/Desktop/OLD%20DESKTOP/GreenUp/ios/GoGreen2/MessageViewController.m"
-                  timestampString = "411689012.622729"
+                  timestampString = "411758048.932106"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "595"
@@ -556,11 +492,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688594.585064"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "390"
-            endingLineNumber = "390"
+            startingLineNumber = "384"
+            endingLineNumber = "384"
             landmarkName = "-connection:didFailWithError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -572,11 +508,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411688780.39672"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "634"
-            endingLineNumber = "634"
+            startingLineNumber = "627"
+            endingLineNumber = "627"
             landmarkName = "-getHeatDataPointsWithSpan:andLocation:"
             landmarkType = "5">
          </BreakpointContent>
@@ -588,11 +524,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GoGreen2/NetworkingController.m"
-            timestampString = "411689189.740081"
+            timestampString = "411755668.889228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "470"
-            endingLineNumber = "470"
+            startingLineNumber = "469"
+            endingLineNumber = "469"
             landmarkName = "-getMapPinsWithMap:"
             landmarkType = "5">
          </BreakpointContent>
