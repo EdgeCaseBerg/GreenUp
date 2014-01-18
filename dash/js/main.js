@@ -236,34 +236,7 @@ function handleCoreReportingResults(results) {
 * @author Josh
 */
 
-function mainLoad(){
-	window.HELPER = new Helper();
-    console.log("window helper");
-	window.LOGGER = new ClientLogger();
-	window.INPUT_TYPE = new INPUT_TYPE();
-	
 
-
-	// instansiate the api
-	window.ApiConnector = new ApiConnector();
-	// instansiate the forum
-	window.Comments = new CommentsHandle();
-	// instansiate /initialize the UI controls
-	window.UI = new UiHandle();
-	window.UI.init();
-	// build out the google map
-
-	window.MAP = new MapHandle();
-	if(!window.DEBUG){
-		window.MAP.initMap();
-	}
-	// grab our comments, map markers, and heatmap data
-	window.ApiConnector.pullCommentData();
-	window.ApiConnector.pullMarkerData();
-	window.ApiConnector.pullHeatmapData();
-	window.ApiConnector.pullRawHeatmapData();
-
-}
 
 // document.addEventListener('DOMContentLoaded',function(){
 // 	window.LOGGER = new ClientLogger();

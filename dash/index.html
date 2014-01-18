@@ -38,14 +38,17 @@
 
     
     <!-- Include all compiled plugins (below), or include individual files as needed
-  <script src="bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
+  <script src="bootstrap-3.0.0/dist/js/bootstrap.min.js"></script> -->
 
-    <!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
-     <script type="text/javascript" 
+     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+     <script type="text/javascript"
 src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'ru'}]}"></script>
 
- <script src="https://apis.google.com/js/client.js?onload=loadAnalytics"></script>
- 
+ <!--<script src="https://apis.google.com/js/client.js?onload=loadAnalytics"></script>-->
+
+    <script src="js/lib/jquery.cookie.js"></script>
+
+
 
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --> 
@@ -53,6 +56,55 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
       <script src="../../assets/js/html5shiv.js"></script>
       <script src="../../assets/js/respond.min.js"></script>
     <![endif]-->
+
+    <script>
+
+        $(document).ready(function(){
+            window.TOKEN = getParameterByName("token");
+            window.userID = getParameterByName("user");
+            console.log(window.TOKEN);
+            console.log(window.userID);
+
+            window.HELPER = new Helper();
+            console.log("window helper");
+            window.LOGGER = new ClientLogger();
+            window.INPUT_TYPE = new INPUT_TYPE();
+
+
+
+            // instansiate the api
+            window.ApiConnector = new ApiConnector();
+//            if(window.ApiConnector.authenticateToken(window.userID, window.TOKEN)){
+                // instansiate the forum
+                window.Comments = new CommentsHandle();
+                // instansiate /initialize the UI controls
+                window.UI = new UiHandle();
+                window.UI.init();
+                // build out the google map
+
+                window.MAP = new MapHandle();
+                if(!window.DEBUG){
+                    window.MAP.initMap();
+                }
+                // grab our comments, map markers, and heatmap data
+                window.ApiConnector.pullCommentData();
+                window.ApiConnector.pullMarkerData();
+                window.ApiConnector.pullHeatmapData();
+                window.ApiConnector.pullRawHeatmapData();
+//            }else{
+////                open('html_snippet/login_widget.html','_self','resizable,location,menubar,toolbar,scrollbars,status');
+//            }
+
+        });
+
+        function getParameterByName(name) {
+            var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+            return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+        }
+
+
+
+    </script>
 </head>
 
 <body>
@@ -267,8 +319,6 @@ src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','
       </div>
   </div>
 
-  <div id="loginContainer">
-  </div>
 
 
 </body>

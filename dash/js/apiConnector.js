@@ -4,7 +4,7 @@ function ApiConnector(){
 	var commentData = [];
 
 
-    this.LOCALHOST = "https://127.0.0.1/green-web"
+    this.LOCALHOST = "http://localhost/green-web"
     this.PROXYBASE = "/proxy.php?url=";
     this.HOST = "http://199.195.248.180";
     this.PORT = ":31337"
@@ -12,6 +12,29 @@ function ApiConnector(){
 
 
 	// api URLs have been moved into each of the functions using them as per issue 46
+
+    ApiConnector.prototype.authenticateToken = function authenticateToken(user, token){
+        jsonObj = {
+            id : user,
+            us : token
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "../dash-auth/api/auth",
+            dataType: "JSON",
+            data: JSON.stringify(jsonObj),
+            cache: false,
+            success: function(data){
+                return true;
+            },
+            error: function(xhr, errorType, error){
+                console.log(xhr);
+                return false;
+            }
+        });
+
+    }
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK, USE_URL){

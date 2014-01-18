@@ -51,9 +51,10 @@ class Database extends Singleton{
 		if( is_null( self::$connection ) ){
 			/* Connect to database */
 			self::$connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-			if(self::$connection->connect_error)
+			if(self::$connection->connect_error || !isset(self::$connection)){
+			    error_log("Unable to connect to the db");
 				throw new DatabaseException("Error Connecting to Database", 503);
-				
+		    }
 		}
 		return True;
 	}
@@ -68,6 +69,10 @@ class Database extends Singleton{
 	/* Returns User Object if exists, throws UnknownUserException otherwise */
 	protected function __user_exist($ident){
 		$user_query = self::$connection->prepare("SELECT hash, nickname, realname, UNIX_TIMESTAMP(last_seen) FROM users WHERE ident = ?");
+		if($user_query == null){
+		    error_log("query is null");
+		    error_log(self::$connection->error);
+		}
 		$user_query->bind_param('s',$ident);
 		if( ! $user_query->execute() ){
 			error_log(self::$connection->error);
