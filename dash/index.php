@@ -1,12 +1,5 @@
 <?php
     $base = str_replace( basename($_SERVER['REQUEST_URI'], "") , "" , $_SERVER['REQUEST_URI']);
-    echo "<br />";
-    var_dump($_SERVER['REQUEST_URI']);
-    var_dump($_SERVER['HTTPS']);
-    var_dump($_SERVER['SERVER_NAME']);
-
-    echo $_SERVER['SERVER_NAME'] . $base;
-
     if(!isset($_SESSION["userid"]) || !isset($_SESSION["hashword"])){
         session_start();
     }
