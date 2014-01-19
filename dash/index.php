@@ -1,9 +1,11 @@
 <?php
     $base = str_replace( basename($_SERVER['REQUEST_URI'], "") , "" , $_SERVER['REQUEST_URI']);
+
     if(!isset($_SESSION["userid"]) || !isset($_SESSION["hashword"])){
         session_start();
     }
 
+    echo(file_get_contents("/etc/conf/local.conf"));
 ?>
 
 <html>
@@ -39,6 +41,27 @@
         #loginCancelButton{
             margin-top: 5px;
         }
+
+        #mainContainer{
+            position relative;
+            z-index: 1;
+            height: 100%;
+            width: 100%;
+            background: url('images/backgrounds/norwegian_rose/norwegian_rose.png');
+        }
+
+        #headerNav{
+            position: relative;
+            z-index: 1000;
+            margin-bottom: 0px;
+            -webkit-box-shadow: 2px 2px 7px 2px #3B3B3B;
+            box-shadow: 2px 2px 7px 2px #3B3B3B;
+
+        }
+
+        .col-md-4{
+            border:solid 2px #fff;
+          }
     </style>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -73,7 +96,7 @@
     </script>
 </head>
 <body>
-    <nav class="navbar navbar-default" role="navigation">
+    <nav class="navbar navbar-default" role="navigation" id="headerNav">
     <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -94,14 +117,37 @@
         </ul>
     </div><!-- /.navbar-collapse -->
   </nav>
-    <div id="loginContainer">
-        <div id="loginNest">
-            <form method="POST" name="login" id="loginForm" action="home.php">
-                email:<input type="email" name= "username" id="username"/><br />
-                password:<input type="password" name="password" id="password"/><br />
-                <input type="submit" value="submit" id="submitButton" class="btn btn-default btn-md"/>
-                <input type="button" value="cancel" id="loginCancelButton" class="btn btn-default btn-md"/>
-            </form>
+    <div id="mainContainer">
+    dsfsdfsdf
+        <div class="row">
+            <div class="col-md-4">
+            sdfsdf
+            </div>
+
+            <div class="col-md-4">
+            sdfsdf
+            </div>
+
+            <div class="col-md-4">
+            sdfsdfs
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- not shown  -->
+        <div id="loginContainer">
+            <div id="loginNest">
+                <form method="POST" name="login" id="loginForm" action="home.php">
+                    email:<input type="email" name= "username" id="username"/><br />
+                    password:<input type="password" name="password" id="password"/><br />
+                    <input type="submit" value="submit" id="submitButton" class="btn btn-default btn-md"/>
+                    <input type="button" value="cancel" id="loginCancelButton" class="btn btn-default btn-md"/>
+                </form>
+            </div>
         </div>
     </div>
 </body>
