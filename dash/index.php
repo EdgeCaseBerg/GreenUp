@@ -1,7 +1,16 @@
 <?php
+    $base = str_replace( basename($_SERVER['REQUEST_URI'], "") , "" , $_SERVER['REQUEST_URI']);
+    echo "<br />";
+    var_dump($_SERVER['REQUEST_URI']);
+    var_dump($_SERVER['HTTPS']);
+    var_dump($_SERVER['SERVER_NAME']);
+
+    echo $_SERVER['SERVER_NAME'] . $base;
+
     if(!isset($_SESSION["userid"]) || !isset($_SESSION["hashword"])){
         session_start();
     }
+
 ?>
 
 <html>
@@ -43,7 +52,20 @@
     <script src="js/lib/jquery.cookie.js"></script>
 
     <script>
+        <?
+        if($_SERVER['HTTPS'] != null){
+            echo("var base = 'https://" . $_SERVER['SERVER_NAME'] . $base . "';");
+        }else{
+            echo("var base = 'http://" . $_SERVER['SERVER_NAME'] . $base . "';");
+        }
+
+        echo "console.log(base);";
+
+        ?>
+
         $(document).ready(function(){
+            $('#loginForm').attr("action", base+"home.php");
+
             $('#loginButton').click(function(){
                 $('#loginContainer').show();
             });
@@ -81,7 +103,7 @@
   </nav>
     <div id="loginContainer">
         <div id="loginNest">
-            <form method="POST" name="login" action="home.php">
+            <form method="POST" name="login" id="loginForm" action="home.php">
                 email:<input type="email" name= "username" id="username"/><br />
                 password:<input type="password" name="password" id="password"/><br />
                 <input type="submit" value="submit" id="submitButton" class="btn btn-default btn-md"/>
