@@ -151,6 +151,8 @@
 #pragma mark - Networking Delegates
 -(void)getMessageForFirstPageOfShowMessage
 {
+    [[NetworkingController shared] getMessageForFirstPageOfShowMessage];
+    /*
     NSLog(@"Network - Message: Getting First Page Of Show Message");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
@@ -233,11 +235,13 @@
     else
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingMessageForFirstPageOfShowMessage" object:[NSNumber numberWithInt:-1]];
-    }
+    }*/
 }
 
 -(void)getMessages
 {
+    [[NetworkingController shared] getMessages];
+    /*
     NSLog(@"Network - Message: Getting Messages");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
@@ -326,11 +330,13 @@
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
-    }
+    }*/
 }
 
 -(void)getMessageByAppendingPageForScrolling
 {
+    [[NetworkingController shared] getMessageForAppendingPageForScrollingWithPageURL:self.nextPageURL];
+    /*
     NSLog(@"Network - Message: Getting Next Page Of Messages For Scrolling With URL %@", self.nextPageURL);
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
@@ -415,11 +421,13 @@
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
-    }
+    }*/
 }
 
 -(void)getMessageByAppendingPageForShowMessage
 {
+    [[NetworkingController shared] getMessageForFirstPageOfShowMessage];
+    /*
     NSLog(@"Network - Message: Getting Next Page Of Messages For Show Message With URL %@", self.nextPageURL);
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
@@ -500,11 +508,14 @@
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
-    }
+    }*/
 }
 
 -(IBAction)postMessage:(id)sender
 {
+    self.currentMessageType = Message_Type_COMMENT;
+    [[NetworkingController shared] postMessageWithMessageType:self.currentMessageType andMessage:self.messageTextView.text];
+    /*
     NSLog(@"Network - Message: Post New Message");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
@@ -566,6 +577,7 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Message" message:@"You dont appear to have a network connection, please connect and retry posting your message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
+    */
 }
 
 
@@ -596,6 +608,8 @@
     [self.theTableView insertRowsAtIndexPaths:newIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
     
     self.appendingMessages = FALSE;
+    
+    [self showMoreMessagesAlert];
 }
 -(IBAction)finishedGettingNewPageForShowingNewMessage:(NSNotification *)sender
 {
@@ -967,13 +981,7 @@
     UIEdgeInsets inset = aScrollView.contentInset;
     float y = offset.y + bounds.size.height - inset.bottom;
     float h = size.height;
-    // NSLog(@"offset: %f", offset.y);
-    // NSLog(@"content.height: %f", size.height);
-    // NSLog(@"bounds.height: %f", bounds.size.height);
-    // NSLog(@"inset.top: %f", inset.top);
-    // NSLog(@"inset.bottom: %f", inset.bottom);
-    // NSLog(@"pos: %f of %f", y, h);
-    
+
     float reload_distance = 10;
     if(y > h + reload_distance && self.nextPageURL != nil && self.appendingMessages == FALSE)
     {
@@ -983,6 +991,55 @@
     }
 }
 
+-(void)showMoreMessagesAlert
+{
+    if(self.moreMessagesAlertView == nil)
+    {
+        self.moreMessagesAlertView = [[UIView alloc] initWithFrame:CGRectMake(5, (self.view.frame.size.height / 2) - 15, 310, 30)];
+        [self.moreMessagesAlertView.layer setCornerRadius:5];
+        [self.moreMessagesAlertView.layer setBorderWidth:2];
+        [self.moreMessagesAlertView setBackgroundColor:[UIColor whiteColor]];
+        
+        UILabel *alertLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.moreMessagesAlertView.frame.size.width, self.moreMessagesAlertView.frame.size.height)];
+        [alertLabel setText:@"Scroll Down For More Messages"];
+        [alertLabel setBackgroundColor:[UIColor clearColor]];
+        [alertLabel setTextAlignment:NSTextAlignmentCenter];
+        [self.moreMessagesAlertView addSubview:alertLabel];
+    }
+    
+    [self.moreMessagesAlertView setAlpha:0];
+    [self.view addSubview:self.moreMessagesAlertView];
+    
+    //Animate Block
+    VoidBlock animate = ^
+    {
+        [self.moreMessagesAlertView setAlpha:1];
+    };
+    
+    //Perform Animations
+    [UIView animateWithDuration:.3 animations:animate];
+    
+    [self performSelector:@selector(hideMoreMessagesAlert) withObject:nil afterDelay:4];
+}
+
+-(void)hideMoreMessagesAlert
+{
+    //Animate Block
+    VoidBlock animate = ^
+    {
+        [self.moreMessagesAlertView setAlpha:0];
+    };
+    
+    //Perform Animations
+    [UIView animateWithDuration:.3 animations:animate];
+    
+    [self performSelector:@selector(removeMoreMessagesAlert) withObject:nil afterDelay:.3];
+}
+
+-(void)removeMoreMessagesAlert
+{
+    [self.moreMessagesAlertView removeFromSuperview];
+}
 #pragma mark - Alert View Delegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {

@@ -87,7 +87,8 @@ static ContainerViewController* theContainerView = nil;
         [self.view addSubview:vc.view];
     }
     
-    self.loadingView = [[UIView alloc] initWithFrame:self.theHomeViewController.view.frame];
+    self.loadingView = [[UIView alloc] initWithFrame:CGRectMake(self.theHomeViewController.view.frame.origin.x, 0, self.theHomeViewController.view.frame.size.width, self.theHomeViewController.view.frame.size.height + self.heightFix)];
+                        
     [self.loadingView setBackgroundColor:[UIColor blackColor]];
     [self.loadingView setAlpha:0];
     

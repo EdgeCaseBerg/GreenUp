@@ -137,10 +137,7 @@
     //Networking
     self.pushOverdue = FALSE;
     
-    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithDouble:self.mapView.region.center.latitude], [NSNumber numberWithDouble:self.mapView.region.center.longitude], [NSNumber numberWithDouble:self.mapView.region.span.latitudeDelta], [NSNumber numberWithDouble:self.mapView.region.span.longitudeDelta], nil];
-    NSArray *keys = [NSArray arrayWithObjects:@"lat", @"lon", @"deltaLat", @"deltaLon", nil];
-    
-    self.lastViewedLocation = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+    [self saveLastViewedLocation:self.mapView];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -189,8 +186,8 @@
     NSNumber *lon = [self.lastViewedLocation objectForKey:@"lon"];
     NSNumber *latDelta = [self.lastViewedLocation objectForKey:@"deltaLat"];
     NSNumber *lonDelta = [self.lastViewedLocation objectForKey:@"deltaLon"];
-    float latDeltaWithoutBuff = latDelta.floatValue;// / BUFFER_SCALER;
-    float lonDeltaWithoutBuff = lonDelta.floatValue;// / BUFFER_SCALER;
+    float latDeltaWithoutBuff = latDelta.floatValue / BUFFER_SCALER;
+    float lonDeltaWithoutBuff = lonDelta.floatValue / BUFFER_SCALER;
     
     float newLonUpper = mapView.region.center.longitude + mapView.region.span.longitudeDelta;
     float newLonLower = mapView.region.center.longitude - mapView.region.span.longitudeDelta;
@@ -219,8 +216,8 @@
        newLatLower <= oldLatLower ||
        newLonUpper >= oldLonUpper ||
        newLonLower <= oldLonLower ||
-       newLatDelta < latDeltaWithoutBuff ||
-       newLonDelta < lonDeltaWithoutBuff)
+       newLatDelta * 1.1 < latDeltaWithoutBuff ||
+       newLonDelta * 1.1 < lonDeltaWithoutBuff)
     {
         NSLog(@"Message - Map: Outside Buffer Zone");
         return TRUE;
@@ -484,7 +481,6 @@
                 [self pushHeatMapDataToServer];
                 [self updateHeatMapOverlay];
                 
-                
                 [self centerMapWithCurrentLocation:location];
             }
             else
@@ -602,7 +598,9 @@
         }
 
         //Add Fade View
-        self.fadeView = [[UIView alloc] initWithFrame:self.mapView.frame];
+        if(self.fadeView == nil)
+            self.fadeView = [[UIView alloc] initWithFrame:self.mapView.frame];
+        
         [self.fadeView setBackgroundColor:[UIColor blackColor]];
         [self.fadeView setAlpha:.8];
         [self.view addSubview:self.fadeView];
@@ -819,7 +817,7 @@
 
 -(void)getMapPinForPinShow
 {
-    [[NetworkingController shared] getMapPinsWithMap:self.mapView];
+    [[NetworkingController shared] getMapPinsForPinShowWithMap:self.mapView];
     /*
     NSLog(@"Network - Map: Getting Map Pin for Pin Show");
     if([[ContainerViewController sharedContainer] networkingReachability])

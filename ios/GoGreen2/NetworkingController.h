@@ -22,7 +22,11 @@
 -(void)getHeatDataPointsWithSpan:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location;
 
 //Messages
-
+-(void)getMessageForFirstPageOfShowMessage;
+-(void)getMessages;
+-(void)getMessageForAppendingPageForScrollingWithPageURL:(NSString *)pageURL;
+-(void)getMessageByAppendingPageForShowMessageWithPageURL:(NSString *)pageURL;
+-(void)postMessageWithMessageType:(NSString *)type andMessage:(NSString *)message;
 
 + (NetworkingController *)shared;
 
