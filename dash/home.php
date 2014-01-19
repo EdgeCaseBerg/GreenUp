@@ -1,18 +1,33 @@
 <?php
 
+    if(isset($_POST['username']) && isset($_POST['password'])){
+        $ch = curl_init();
+        $str = '{ "id" : "'.$_POST['username'].'", "us" : "'.$_POST['password'].'" }';
 
-     $ch = curl_init();
-     $str = '{ "id" : "abcdefghijklmnopqrstuvwxyz0123456789", "us" : "63124bc7aa9cdfbf2112b3b22130fbb7" }';
-     curl_setopt($ch, CURLOPT_URL,            "http://localhost/green-web/dash-auth/api/auth" );
-     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
-     curl_setopt($ch, CURLOPT_POST,           1 );
-     curl_setopt($ch, CURLOPT_POSTFIELDS,     $str );
-     curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/json'));
-     $result=json_decode(curl_exec ($ch));
-     if(!isset($result->token)){
-        echo("working");
-        die;
-     }
+        curl_setopt($ch, CURLOPT_URL,            "http://localhost/green-web/dash-auth/api/auth" );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
+        curl_setopt($ch, CURLOPT_POST,           1 );
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     $str );
+        curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/json'));
+        $result=json_decode(curl_exec ($ch));
+        if(!isset($result->token)){
+            header('Location: index.php');
+        }
+    }else{
+
+        header('Location: index.php');
+    }
+
+
+    if(!isset($_COOKIE[session_name()])){
+        session_start();
+    }
+
+
+
+
+
+
 ?>
 
 
@@ -27,8 +42,6 @@
   <link href="styles.css" rel="stylesheet" media="screen">
   <link href="js/lib/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" media="screen">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <!-- <script src="//code.jquery.com/jquery.js"></script> -->
-  <!--<script src="js/analytics_auth.js"></script> -->
   <script src="js/lib/jquery/jquery.js"></script>
   <script src="js/lib/BigNumber.js"></script>
 
@@ -36,7 +49,6 @@
 <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
   <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
   <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.datepicker.js"> </script>
-  <!--<script src="js/lib/zepto.js"></script>-->
 
   <script src="js/Helper.js"></script>
 
@@ -47,7 +59,6 @@
   <script src="js/greenUpUi.js"></script>
   <script src="js/main.js"></script>
 
-  <!-- <script src="js/DashApiConnector.js"></script> -->
 
 
 
