@@ -616,7 +616,7 @@ function CommentsHandle(){
 		// add the listener to our add comments button
 	} // end init()
 
-	// when the comments nest is scrolled to a position defined in index.html, more comments are added
+	// when the comments nest is scrolled to a position defined in home.php, more comments are added
 	CommentsHandle.prototype.updateScroll = function updateScroll(element){
 		// console.log("Scrolling");
 		// var offset = window.pageYOffset;
