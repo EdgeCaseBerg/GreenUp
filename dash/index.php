@@ -5,7 +5,7 @@
         session_start();
     }
 
-    echo(file_get_contents("/etc/conf/local.conf"));
+//    echo(file_get_contents("/etc/conf/local.conf"));
 ?>
 
 <html>
