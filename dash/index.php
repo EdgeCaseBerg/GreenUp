@@ -64,7 +64,7 @@
         ?>
 
         $(document).ready(function(){
-            $('#loginForm').attr("action", base+"home.php");
+//            $('#loginForm').attr("action", base+"home.php");
 
             $('#loginButton').click(function(){
                 $('#loginContainer').show();
