@@ -62,8 +62,8 @@
 		DF29ACF1188716D000574314 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DF29ACEB188716D000574314 /* README.md */; };
 		DF29ACF2188716D000574314 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = DF29ACEC188716D000574314 /* release_notes.md */; };
 		DF2E5D03180F43A4000B9824 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF2E5CFF180F43A4000B9824 /* greenhttp.c */; };
-		DF2E5D08181079A5000B9824 /* marker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF2E5D06181079A5000B9824 /* marker.png */; };
-		DF2E5D09181079A5000B9824 /* marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF2E5D07181079A5000B9824 /* marker@2x.png */; };
+		DF365D12188DBB710017301D /* marker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF365D10188DBB710017301D /* marker.png */; };
+		DF365D13188DBB710017301D /* marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF365D11188DBB710017301D /* marker@2x.png */; };
 		DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3F00FD17E25CD000530A4D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DF3F010517E3E5E200530A4D /* trasbag.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010317E3E5E200530A4D /* trasbag.png */; };
 		DF3F010617E3E5E200530A4D /* trashbag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010417E3E5E200530A4D /* trashbag@2x.png */; };
@@ -249,8 +249,8 @@
 		DF29ACEF188716D000574314 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		DF2E5CFF180F43A4000B9824 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = greenhttp.c; sourceTree = "<group>"; };
 		DF2E5D00180F43A4000B9824 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = greenhttp.h; sourceTree = "<group>"; };
-		DF2E5D06181079A5000B9824 /* marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker.png; sourceTree = "<group>"; };
-		DF2E5D07181079A5000B9824 /* marker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker@2x.png"; sourceTree = "<group>"; };
+		DF365D10188DBB710017301D /* marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = marker.png; path = Images/marker.png; sourceTree = SOURCE_ROOT; };
+		DF365D11188DBB710017301D /* marker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "marker@2x.png"; path = "Images/marker@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF3F00FC17E25CD000530A4D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = SOURCE_ROOT; };
 		DF3F00FD17E25CD000530A4D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = SOURCE_ROOT; };
 		DF3F010317E3E5E200530A4D /* trasbag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trasbag.png; path = Images/trasbag.png; sourceTree = SOURCE_ROOT; };
@@ -414,6 +414,8 @@
 		390415AD1798DC50005EC308 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DF365D10188DBB710017301D /* marker.png */,
+				DF365D11188DBB710017301D /* marker@2x.png */,
 				DF0A9495188DB1C2009B049E /* icon-57.png */,
 				DF0A9496188DB1C2009B049E /* icon-72.png */,
 				DF0A9497188DB1C2009B049E /* icon-76.png */,
@@ -422,8 +424,6 @@
 				DF0A949A188DB1C2009B049E /* icon-144.png */,
 				DF0A949B188DB1C2009B049E /* icon-152.png */,
 				DF0A949C188DB1C2009B049E /* icon-1024.png */,
-				DF2E5D06181079A5000B9824 /* marker.png */,
-				DF2E5D07181079A5000B9824 /* marker@2x.png */,
 				DFD73A181800824700202D57 /* blueLeaf.png */,
 				DFD73A191800824700202D57 /* blueLeaf@2x.png */,
 				DFD73A1A1800824700202D57 /* greenLeaf.png */,
@@ -884,6 +884,7 @@
 				DFA9ABC817D63C5B006F58A5 /* bubble_orange_bottom_reverse.png in Resources */,
 				DFA9ABC917D63C5B006F58A5 /* bubble_orange_bottom_reverse@2x.png in Resources */,
 				DFA9ABCA17D63C5B006F58A5 /* bubble_orange_bottom.png in Resources */,
+				DF365D13188DBB710017301D /* marker@2x.png in Resources */,
 				DF0A949E188DB1C2009B049E /* icon-72.png in Resources */,
 				DFA9ABCB17D63C5B006F58A5 /* bubble_orange_bottom@2x.png in Resources */,
 				DF0A949D188DB1C2009B049E /* icon-57.png in Resources */,
@@ -923,6 +924,7 @@
 				DFA9ABEA17D63C5B006F58A5 /* home_active@2x.png in Resources */,
 				DFA9ABEB17D63C5B006F58A5 /* home.png in Resources */,
 				DFA9ABEC17D63C5B006F58A5 /* home@2x.png in Resources */,
+				DF365D12188DBB710017301D /* marker.png in Resources */,
 				DFA9ABED17D63C5B006F58A5 /* map_active.png in Resources */,
 				DFA9ABEE17D63C5B006F58A5 /* map_active@2x.png in Resources */,
 				DFA9ABEF17D63C5B006F58A5 /* map.png in Resources */,
@@ -965,8 +967,6 @@
 				DFE59BDC180CB3BD00357899 /* sampleRoute1.gpx in Resources */,
 				DFE59BDE180CB3C400357899 /* sampleRoute2.gpx in Resources */,
 				DFE59BE0180CB3CC00357899 /* sampleRoute3.gpx in Resources */,
-				DF2E5D08181079A5000B9824 /* marker.png in Resources */,
-				DF2E5D09181079A5000B9824 /* marker@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1147,7 +1147,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GoGreen2/GoGreen-Prefix.pch";
 				INFOPLIST_FILE = "GoGreen2/GoGreen-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/jordanrouille/Desktop/OLD\\ DESKTOP/GreenUp/ios/TestFlightSDK2.1.3",
@@ -1168,7 +1168,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GoGreen2/GoGreen-Prefix.pch";
 				INFOPLIST_FILE = "GoGreen2/GoGreen-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/jordanrouille/Desktop/OLD\\ DESKTOP/GreenUp/ios/TestFlightSDK2.1.3",

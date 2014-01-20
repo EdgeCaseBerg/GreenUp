@@ -31,18 +31,18 @@
         [self setAlpha:0];
         
         self.labelBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(10 - 320, 50, 300, 90)];
-        [self.labelBackgroundView.layer setCornerRadius:5];
-        [self.labelBackgroundView setBackgroundColor:[UIColor darkGrayColor]];
-        [self.containerView addSubview:self.labelBackgroundView];
+        //[self.labelBackgroundView.layer setCornerRadius:5];
+        [self.labelBackgroundView setBackgroundColor:[UIColor clearColor]];
+        [self addSubview:self.labelBackgroundView];
         
-        self.labelField = [[UILabel alloc] initWithFrame:CGRectMake(15, 55, 290, 80)];
-        [self.labelField setTextColor:[UIColor redColor]];
+        self.labelField = [[UILabel alloc] initWithFrame:CGRectMake(15, 35, 290, 100)];
+        [self.labelField setTextColor:[UIColor whiteColor]];
         [self.labelField setNumberOfLines:0];
         [self.labelField setTextAlignment:NSTextAlignmentCenter];
         [self.labelField setFont:[UIFont messageFont]];
         [self.labelField setBackgroundColor:[UIColor clearColor]];
-        [self.labelField setText:@"Message Cannot Be Blank \nMessage Must Be Less Than 140 Characters \nMessage Cannot Be Deleted \nMessage Will Be Publicly Viewable"];
-        [self.containerView addSubview:self.labelField];
+        [self.labelField setText:@"Post a message to the community, such as asking for help with large items.\nMessage cannot be blank.\nMessage must be less than 140 characters.\nMessage cannot be deleted.\nMessage will be publicly viewable."];
+        [self addSubview:self.labelField];
         
         if([UIScreen mainScreen].bounds.size.height == 568.0)
         {
@@ -56,19 +56,19 @@
         [self.messageField.layer setCornerRadius:5];
         [self.messageField setBackgroundColor:[UIColor whiteColor]];
         [self.messageField setFont:[UIFont messageFont]];
-        [self.containerView addSubview:self.messageField];
+        [self addSubview:self.messageField];
         
         self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.doneButton setImage:[UIImage imageNamed:@"check.png"] forState:UIControlStateNormal];
         [self.doneButton setFrame:CGRectMake(270 + 320, 150, 40, 48)];
         [self.doneButton addTarget:self action:@selector(doneButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self.containerView addSubview:self.doneButton];
+        [self addSubview:self.doneButton];
         
         self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.cancelButton setImage:[UIImage imageNamed:@"notCheck.png"] forState:UIControlStateNormal];
         [self.cancelButton setFrame:CGRectMake(270 + 320, 202, 40, 48)];
         [self.cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self.containerView addSubview:self.cancelButton];
+        [self addSubview:self.cancelButton];
         
         //Set With Keyboard Out
         [self.messageField becomeFirstResponder];
