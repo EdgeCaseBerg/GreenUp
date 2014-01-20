@@ -14,6 +14,10 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
+				<string>icon-114</string>
+				<string>icon-120</string>
+				<string>icon-76</string>
+				<string>icon-57</string>
 				<string>icon-iPad</string>
 				<string>icon-iPhone</string>
 				<string>icon-iPad2</string>
@@ -26,6 +30,9 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
+				<string>icon-152</string>
+				<string>icon-76</string>
+				<string>icon-144</string>
 				<string>icon</string>
 				<string>icon-iPhone</string>
 				<string>icon-iPad2</string>
