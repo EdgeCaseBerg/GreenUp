@@ -12,11 +12,12 @@
         curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/json'));
         $result=json_decode(curl_exec ($ch));
         if(!isset($result->token)){
-            header('Location: index.php');
+            echo "no token";
+//            header('Location: index.php');
         }
     }else{
 
-        header('Location: index.php');
+//        header('Location: index.php');
     }
 
 
