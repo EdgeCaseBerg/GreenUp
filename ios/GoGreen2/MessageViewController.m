@@ -610,8 +610,6 @@
     [self.theTableView insertRowsAtIndexPaths:newIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
     
     self.appendingMessages = FALSE;
-    
-    [self showMoreMessagesAlert];
 }
 -(IBAction)finishedGettingNewPageForShowingNewMessage:(NSNotification *)sender
 {
@@ -881,6 +879,15 @@
         [self.theTableView reloadData];
         [self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:FALSE];
         
+        [self performSelector:@selector(showMessageFadeOverlay:) withObject:indexOfSelectedMessage afterDelay:.3];
+    }
+}
+
+-(IBAction)showMessageFadeOverlay:(NSIndexPath *)indexOfSelectedMessage
+{
+    NSLog(@"Message - Message: Removing Message Fade Overlay");
+    VoidBlock animate = ^
+    {
         for(int i = 0; i < self.messages.count; i++)
         {
             if(i != indexOfSelectedMessage.row)
@@ -889,10 +896,13 @@
                 [cell.contentView setAlpha:0];
             }
         }
+    };
     
+    self.pinIDToShow = nil;
+    //Perform Animations
+    [UIView animateWithDuration:.25 animations:animate];
     
-        [self performSelector:@selector(removeMessageFadeOverlay:) withObject:indexOfSelectedMessage afterDelay:1];
-    }
+    [self performSelector:@selector(removeMessageFadeOverlay:) withObject:indexOfSelectedMessage afterDelay:1.25];
 }
 
 -(IBAction)removeMessageFadeOverlay:(NSIndexPath *)indexOfSelectedMessage
@@ -988,6 +998,8 @@
     if(y > h + reload_distance && self.nextPageURL != nil && self.appendingMessages == FALSE)
     {
         self.appendingMessages = TRUE;
+        
+        [self showMoreMessagesAlert];
         NSLog(@"Action - Message: Scrolled To End Of List, Loading Next Page Wit URL: %@", self.nextPageURL);
         [self getMessageByAppendingPageForScrolling];
     }
@@ -1021,7 +1033,7 @@
     //Perform Animations
     [UIView animateWithDuration:.3 animations:animate];
     
-    [self performSelector:@selector(hideMoreMessagesAlert) withObject:nil afterDelay:4];
+    [self performSelector:@selector(hideMoreMessagesAlert) withObject:nil afterDelay:2];
 }
 
 -(void)hideMoreMessagesAlert

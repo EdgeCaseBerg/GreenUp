@@ -40,21 +40,21 @@
             [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 260, contentSize.height)];
             
             //Top Slice
-            self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_top.png"]];
+            self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_top.png"]];
             [self.topBackgroundImage setFrame:CGRectMake(10, extraTop, 300, 6)];
             
             //Variable Middle Slice
             self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height + 20)];
-            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_red_center.png"]]];
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_green_center.png"]]];
         
             //Buttom Slice
             if(backwards)
             {
-                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_bottom_reverse.png"]];
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom_reverse.png"]];
             }
             else
             {
-                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_bottom.png"]];
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom.png"]];
             }
             [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
             
@@ -75,7 +75,7 @@
             int origin = self.textContentLabel.frame.origin.y;
             origin += (height / 2) - 17;
             
-            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(15, origin, 34, 30)];
+            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(13, origin, 30, 34)];
             [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"trashMarker.png"] forState:UIControlStateNormal];
             
             //Add Subviews to ContentView
@@ -107,21 +107,21 @@
             [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 260, contentSize.height)];
             
             //Top Slice
-            self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_top.png"]];
+            self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_top.png"]];
             [self.topBackgroundImage setFrame:CGRectMake(10, extraTop, 300, 6)];
             
             //Variable Middle Slice
             self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height + 20)];
-            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_green_center.png"]]];
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_red_center.png"]]];
             
             //Buttom Slice
             if(backwards)
             {
-                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom_reverse.png"]];
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_bottom_reverse.png"]];
             }
             else
             {
-                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom.png"]];
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_bottom.png"]];
             }
             [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
             
@@ -143,7 +143,7 @@
             origin += (height / 2) - 17;
             
             self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(18, origin, 19, 29)];
-            [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"marker.png"] forState:UIControlStateNormal];
+            [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"hazardMarker.png"] forState:UIControlStateNormal];
             [self.showPinOnMap addTarget:self action:@selector(bringMeToMapPin:) forControlEvents:UIControlEventTouchUpInside];
             
             //Add Subviews to ContentView
@@ -174,21 +174,21 @@
             [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 260, contentSize.height)];
             
             //Top Slice
-            self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_top.png"]];
+            self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_blue_top.png"]];
             [self.topBackgroundImage setFrame:CGRectMake(10, extraTop, 300, 6)];
             
             //Variable Middle Slice
             self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height + 20)];
-            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_green_center.png"]]];
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_blue_center.png"]]];
             
             //Buttom Slice
             if(backwards)
             {
-                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom_reverse.png"]];
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_blue_bottom_reverse.png"]];
             }
             else
             {
-                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom.png"]];
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_blue_bottom.png"]];
             }
             [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
             
