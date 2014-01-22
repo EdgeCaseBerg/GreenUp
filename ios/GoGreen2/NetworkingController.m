@@ -17,7 +17,8 @@
 
 #define API_PORT 31337
 
-#define BASE_HOST @"http://199.195.248.180"
+//#define BASE_HOST @"http://199.195.248.180"
+#define BASE_HOST @"http://dev.xenonapps.com"
 #define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
 #define COMMENTS_RELATIVE_URL @"/api/comments"
 #define PINS_RELATIVE_URL @"/api/pins"
@@ -747,7 +748,7 @@ static NetworkingController *sharedNetworkingController;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:@"-1"];
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
+        //[alert show];
     }
     else if([connection isEqual:getMapPinsForShowConnection])
     {
@@ -761,7 +762,7 @@ static NetworkingController *sharedNetworkingController;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:[NSNumber numberWithInt:-1]];
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
+        //[alert show];
     }
     else if([connection isEqual:postMarkerConnection])
     {
@@ -806,7 +807,7 @@ static NetworkingController *sharedNetworkingController;
             response = [NSJSONSerialization JSONObjectWithData:getMessagesData options:0 error:nil];
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
+        //[alert show];
         
         [self printResponseFromFailedRequest:response andStatusCode:getMessagesStatusCode];
     }

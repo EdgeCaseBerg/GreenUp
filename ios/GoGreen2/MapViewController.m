@@ -182,13 +182,9 @@
     {
         [self.mapView setMapType:MKMapTypeStandard];
     }
-    else if(value.integerValue == 1)
-    {
-        [self.mapView setMapType:MKMapTypeHybrid];
-    }
     else
     {
-        [self.mapView setMapType:MKMapTypeSatellite];
+        [self.mapView setMapType:MKMapTypeHybrid];
     }
 }
 
@@ -424,7 +420,8 @@
     NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
     if(abs(howRecent) < 1.0)
     {
-
+        [self centerMapWithCurrentLocation:location];
+        
         //ADD POINTS
         HeatMapPoint *mapPoint = [[HeatMapPoint alloc] init];
         mapPoint.lat = location.coordinate.latitude;
@@ -491,8 +488,6 @@
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
             [self.view.window addSubview:commentView];
-            
-            [self centerMapWithCurrentLocation:location];
         }
         else
         {
@@ -509,8 +504,6 @@
                 [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
                 [self pushHeatMapDataToServer];
                 [self updateHeatMapOverlay];
-                
-                [self centerMapWithCurrentLocation:location];
             }
             else
             {

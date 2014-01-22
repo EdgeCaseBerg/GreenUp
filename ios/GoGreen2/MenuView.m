@@ -208,28 +208,27 @@
     
     UIButton *dropPinButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [dropPinButton setBackgroundImage:[UIImage imageNamed:@"currentLocationButtonBackground.png"] forState:UIControlStateNormal];
-    [dropPinButton setFrame:CGRectMake(40, 75, self.frame.size.width - 80, 30)];
+    [dropPinButton setFrame:CGRectMake(40, 72, self.frame.size.width - 80, 30)];
     [dropPinButton setTitle:@"Drop Marker At My Location" forState:UIControlStateNormal];
     [dropPinButton addTarget:self action:@selector(dropMarker:) forControlEvents:UIControlEventTouchUpInside];
     
-    UISwitch *centerOnLocationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(50, 110, 40, 20)];
+    UILabel *centerLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 109, 95, 20)];
+    [centerLabel setText:@"Center Map"];
+    
+    UISwitch *centerOnLocationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(102, 107, 40, 20)];
     [centerOnLocationSwitch addTarget:self action:@selector(toggleCenterOnLocation:) forControlEvents:UIControlEventValueChanged];
     [centerOnLocationSwitch setOn:[[[ContainerViewController sharedContainer] theMapViewController] centerOnCurrentLocation] animated:TRUE];
     
-    UISegmentedControl *mapTypeControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Map", @"Hybrid", @"Sat", nil]];
+    UISegmentedControl *mapTypeControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Map", @"Sat", nil]];
     [mapTypeControl addTarget:self action:@selector(toggleSateliteView:) forControlEvents:UIControlEventValueChanged];
-    [mapTypeControl setFrame:CGRectMake(135, 110, 180, 27)];
+    [mapTypeControl setFrame:CGRectMake(185, 107, 130, 27)];
     if([[[[ContainerViewController sharedContainer] theMapViewController] mapView] mapType] == MKMapTypeStandard)
     {
         [mapTypeControl setSelectedSegmentIndex:0];
     }
-    else if([[[[ContainerViewController sharedContainer] theMapViewController] mapView] mapType] == MKMapTypeStandard)
-    {
-        [mapTypeControl setSelectedSegmentIndex:1];
-    }
     else
     {
-        [mapTypeControl setSelectedSegmentIndex:2];
+        [mapTypeControl setSelectedSegmentIndex:1];
     }
     
     
@@ -245,6 +244,7 @@
     [self.contentView addSubview:pin3Image];
     [self.contentView addSubview:centerOnLocationSwitch];
     [self.contentView addSubview:mapTypeControl];
+    [self.contentView addSubview:centerLabel];
     
     //Init Pin Labels
     UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(2, 40, 106, 30)];

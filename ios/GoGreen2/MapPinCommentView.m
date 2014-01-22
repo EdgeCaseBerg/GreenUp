@@ -22,20 +22,15 @@
     self = [super initWithFrame:frame];
     if (self)
     {
+        [self setAlpha:0];
+        
         //Start Invisible Then Fade In
         self.containerView = [[UIView alloc] initWithFrame:frame];
         [self.containerView setBackgroundColor:[UIColor blackColor]];
         [self.containerView setAlpha:.8];
         [self addSubview:self.containerView];
         
-        [self setAlpha:0];
-        
-        self.labelBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(10 - 320, 50, 300, 90)];
-        //[self.labelBackgroundView.layer setCornerRadius:5];
-        [self.labelBackgroundView setBackgroundColor:[UIColor clearColor]];
-        [self addSubview:self.labelBackgroundView];
-        
-        self.labelField = [[UILabel alloc] initWithFrame:CGRectMake(15, 35, 290, 100)];
+        self.labelField = [[UILabel alloc] initWithFrame:CGRectMake(-320, 35, 290, 100)];
         [self.labelField setTextColor:[UIColor whiteColor]];
         [self.labelField setNumberOfLines:0];
         [self.labelField setTextAlignment:NSTextAlignmentCenter];
@@ -46,12 +41,11 @@
         
         if([UIScreen mainScreen].bounds.size.height == 568.0)
         {
-            self.messageField = [[UITextView alloc] initWithFrame:CGRectMake(10 + 320, 150, 255, 188)];
-            
+            self.messageField = [[UITextView alloc] initWithFrame:CGRectMake(10 + 320, 150, 300, 148)];
         }
         else
         {
-            self.messageField = [[UITextView alloc] initWithFrame:CGRectMake(10 + 320, 150, 255, 100)];
+            self.messageField = [[UITextView alloc] initWithFrame:CGRectMake(10 + 320, 150, 300, 60)];
         }
         [self.messageField.layer setCornerRadius:5];
         [self.messageField setBackgroundColor:[UIColor whiteColor]];
@@ -59,16 +53,22 @@
         [self addSubview:self.messageField];
         
         self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.doneButton setImage:[UIImage imageNamed:@"check.png"] forState:UIControlStateNormal];
-        [self.doneButton setFrame:CGRectMake(270 + 320, 150, 40, 48)];
+        [self.doneButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+        [self.doneButton setFrame:CGRectMake(320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 70, 45)];
         [self.doneButton addTarget:self action:@selector(doneButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.doneButton];
         
         self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.cancelButton setImage:[UIImage imageNamed:@"notCheck.png"] forState:UIControlStateNormal];
-        [self.cancelButton setFrame:CGRectMake(270 + 320, 202, 40, 48)];
+        [self.cancelButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+        [self.cancelButton setFrame:CGRectMake(10 + 70 + 10 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 70, 45)];
         [self.cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.cancelButton];
+        
+        self.messageType = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Message", @"Hazard", nil]];
+        [self.messageType setFrame:CGRectMake(10 + 70 + 10 + 70 + 10 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 140, 45)];
+        [self.messageType setSelectedSegmentIndex:0];
+        [self.messageType addTarget:self action:@selector(typeChanged:) forControlEvents:UIControlEventValueChanged];
+        [self addSubview:self.messageType];
         
         //Set With Keyboard Out
         [self.messageField becomeFirstResponder];
@@ -77,21 +77,36 @@
         VoidBlock animationBlock =
         ^{
             [self setAlpha:1];
-            [self.labelBackgroundView setFrame:CGRectMake(10, 50, 300, 90)];
+            [self.labelField setFrame:CGRectMake(15, 35, 290, 100)];
             if([UIScreen mainScreen].bounds.size.height == 568.0)
             {
-                [self.messageField setFrame:CGRectMake(10, 150, 255, 188)];
+                [self.messageField setFrame:CGRectMake(10, 150, 300, 148)];
             }
             else
             {
-                [self.messageField setFrame:CGRectMake(10, 150, 255, 100)];
+                [self.messageField setFrame:CGRectMake(10, 150, 300, 60)];
             }
-            [self.doneButton setFrame:CGRectMake(270, 150, 40, 48)];
-            [self.cancelButton setFrame:CGRectMake(270, 202, 40, 48)];
+            
+            [self.doneButton setFrame:CGRectMake(10, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 70, 45)];
+            [self.cancelButton setFrame:CGRectMake(10 + 70 + 10, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 70, 45)];
+            
+            [self.messageType setFrame:CGRectMake(10 + 70 + 10 + 70 + 10, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 140, 45)];
         };
         [UIView animateWithDuration:ANIMATION_DURATION animations:animationBlock];
     }
     return self;
+}
+
+-(IBAction)typeChanged:(UISegmentedControl *)sender
+{
+    if(sender.selectedSegmentIndex == 0)
+    {
+        [self.messageType setTintColor:[UIColor blueColor]];
+    }
+    else
+    {
+        [self.messageType setTintColor:[UIColor redColor]];
+    }
 }
 
 -(IBAction)doneButtonPressed:(id)sender
@@ -120,8 +135,8 @@
         };
         [UIView animateWithDuration:ANIMATION_DURATION animations:animationBlock];
         [self performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:ANIMATION_DURATION];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"postMarker" object:self.messageField.text];
+    
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"postMarker" object:[NSArray arrayWithObjects:self.messageField.text, self.messageType, nil]];
     }
 }
 
@@ -133,17 +148,19 @@
     VoidBlock animationBlock =
     ^{
         [self setAlpha:0];
-        [self.labelBackgroundView setFrame:CGRectMake(10 - 320, 50, 300, 90)];
+        [self.labelField setFrame:CGRectMake(-320, 35, 290, 100)];
         if([UIScreen mainScreen].bounds.size.height == 568.0)
         {
-            [self.messageField setFrame:CGRectMake(10 + 320, 150, 255, 188)];
+            [self.messageField setFrame:CGRectMake(10 + 320, 150, 300, 148)];
         }
         else
         {
-            [self.messageField setFrame:CGRectMake(10 + 320, 150, 255, 100)];
+            [self.messageField setFrame:CGRectMake(10 + 320, 150, 300, 60)];
         }
-        [self.doneButton setFrame:CGRectMake(270 + 320, 150, 40, 48)];
-        [self.cancelButton setFrame:CGRectMake(270 + 320, 202, 40, 48)];
+        
+        [self.doneButton setFrame:CGRectMake(10 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 70, 30)];
+        [self.cancelButton setFrame:CGRectMake(10 + 70 + 10 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 70, 45)];
+        [self.messageType setFrame:CGRectMake(10 + 70 + 10 + 70 + 10 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 140, 45)];
     };
     
     [self.messageField resignFirstResponder];

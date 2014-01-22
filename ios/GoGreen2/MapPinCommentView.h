@@ -11,10 +11,10 @@
 @interface MapPinCommentView : UIView
 
 @property (nonatomic, strong) UILabel *labelField;
-@property (nonatomic, strong) UIView *labelBackgroundView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UITextView *messageField;
 @property (nonatomic, strong) UIButton *doneButton;
 @property (nonatomic, strong) UIButton *cancelButton;
+@property (nonatomic, strong) UISegmentedControl *messageType;
 
 @end
