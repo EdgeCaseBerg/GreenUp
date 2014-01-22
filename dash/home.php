@@ -1,10 +1,12 @@
 <?php
 
+
+
     if(isset($_POST['username']) && isset($_POST['password'])){
         $ch = curl_init();
         $str = '{ "id" : "'.$_POST['username'].'", "us" : "'.$_POST['password'].'" }';
 
-        curl_setopt($ch, CURLOPT_URL,            "http://localhost/green-web/dash-auth/api/auth" );
+        curl_setopt($ch, CURLOPT_URL,            "https://dev.xenonapps.com/green-web/dash-auth/api/auth.php" );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($ch, CURLOPT_POST,           1 );
         curl_setopt($ch, CURLOPT_POSTFIELDS,     $str );
@@ -12,10 +14,12 @@
         $result=json_decode(curl_exec ($ch));
         if(!isset($result->token)){
             echo "no token";
+            echo "<br />";
+            echo $result;
 //            header('Location: index.php');
         }
     }else{
-
+        echo "no username pass";
 //        header('Location: index.php');
     }
 
