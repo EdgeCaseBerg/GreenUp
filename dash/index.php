@@ -29,7 +29,7 @@
 
 
 
-
+    echo "hello";
 
     $base = str_replace( basename($_SERVER['REQUEST_URI'], "") , "" , $_SERVER['REQUEST_URI']);
 
