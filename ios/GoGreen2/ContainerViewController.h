@@ -17,13 +17,6 @@
 #define Map_VIEW 1
 #define MESSAGE_VIEW 2
 
-#define API_PORT 31337
-
-#define BASE_HOST @"199.195.248.180"
-#define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
-#define COMMENTS_RELATIVE_URL @"/api/comments"
-#define PINS_RELATIVE_URL @"/api/pins"
-
 @interface ContainerViewController : UIViewController <UITabBarDelegate>
 
 @property (strong, nonatomic) NSArray *views;

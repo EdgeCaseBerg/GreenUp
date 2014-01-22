@@ -21,6 +21,7 @@
 #import "NetworkingController.h"
 #import "MessageTypes.h"
 #import "MarkerTypes.h"
+#import "NetworkingController.h"
 
 #define ALERT_VIEW_TOGGLE_ON 0
 #define ALERT_VIEW_TOGGLE_OFF 1
@@ -1085,6 +1086,7 @@
     
     if(parameters != nil)
     {
+#warning UPDATE WITH NETWORKING CONTROLLER WTF WAS I THINKING!!!!
         NSLog(@"Network - Message: Updaing Toggled Message with Message ID: %@", self.toggledMessageRef.pinID.stringValue);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             //Background Process Block
