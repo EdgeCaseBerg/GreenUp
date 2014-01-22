@@ -6,7 +6,7 @@
         $ch = curl_init();
         $str = '{ "id" : "'.$_POST['username'].'", "us" : "'.$_POST['password'].'" }';
 
-        curl_setopt($ch, CURLOPT_URL,            "https://dev.xenonapps.com/green-web/dash-auth/api/auth.php" );
+        curl_setopt($ch, CURLOPT_URL,            "http://dev.xenonapps.com/green-web/dash-auth/api/auth.php" );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($ch, CURLOPT_POST,           1 );
         curl_setopt($ch, CURLOPT_POSTFIELDS,     $str );
