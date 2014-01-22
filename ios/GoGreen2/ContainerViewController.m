@@ -15,10 +15,6 @@
 #include <arpa/inet.h>
 #import "UIColor+methods.h"
 
-#define Message_Type_ADMIN @"ADMIN"
-#define Message_Type_MARKER @"MARKER"
-#define Message_Type_COMMENT @"COMMENT"
-
 @interface ContainerViewController ()
 
 @property (nonatomic, strong) UITabBarItem *item1;

@@ -54,6 +54,9 @@
 		DF040185188E9C6F005A9EAF /* hazardMarker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF040181188E9C6F005A9EAF /* hazardMarker@2x.png */; };
 		DF040186188E9C6F005A9EAF /* marker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF040182188E9C6F005A9EAF /* marker.png */; };
 		DF040187188E9C6F005A9EAF /* marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF040183188E9C6F005A9EAF /* marker@2x.png */; };
+		DF05ECF01890279D00781671 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF05ECEA1890279D00781671 /* libTestFlight.a */; };
+		DF05ECF11890279D00781671 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DF05ECEB1890279D00781671 /* README.md */; };
+		DF05ECF21890279D00781671 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = DF05ECEC1890279D00781671 /* release_notes.md */; };
 		DF0A949D188DB1C2009B049E /* icon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A9495188DB1C2009B049E /* icon-57.png */; };
 		DF0A949E188DB1C2009B049E /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A9496188DB1C2009B049E /* icon-72.png */; };
 		DF0A949F188DB1C2009B049E /* icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A9497188DB1C2009B049E /* icon-76.png */; };
@@ -62,9 +65,6 @@
 		DF0A94A2188DB1C2009B049E /* icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949A188DB1C2009B049E /* icon-144.png */; };
 		DF0A94A3188DB1C2009B049E /* icon-152.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949B188DB1C2009B049E /* icon-152.png */; };
 		DF0A94A4188DB1C2009B049E /* icon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949C188DB1C2009B049E /* icon-1024.png */; };
-		DF29ACF0188716D000574314 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF29ACEA188716D000574314 /* libTestFlight.a */; };
-		DF29ACF1188716D000574314 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DF29ACEB188716D000574314 /* README.md */; };
-		DF29ACF2188716D000574314 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = DF29ACEC188716D000574314 /* release_notes.md */; };
 		DF2E5D03180F43A4000B9824 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF2E5CFF180F43A4000B9824 /* greenhttp.c */; };
 		DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3F00FD17E25CD000530A4D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DF3F010517E3E5E200530A4D /* trasbag.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010317E3E5E200530A4D /* trasbag.png */; };
@@ -239,6 +239,13 @@
 		DF040181188E9C6F005A9EAF /* hazardMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hazardMarker@2x.png"; path = "Images/hazardMarker@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF040182188E9C6F005A9EAF /* marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = marker.png; path = Images/marker.png; sourceTree = SOURCE_ROOT; };
 		DF040183188E9C6F005A9EAF /* marker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "marker@2x.png"; path = "Images/marker@2x.png"; sourceTree = SOURCE_ROOT; };
+		DF05ECE81890259100781671 /* MarkerTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MarkerTypes.h; sourceTree = "<group>"; };
+		DF05ECEA1890279D00781671 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		DF05ECEB1890279D00781671 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		DF05ECEC1890279D00781671 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		DF05ECED1890279D00781671 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		DF05ECEE1890279D00781671 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		DF05ECEF1890279D00781671 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		DF0A9495188DB1C2009B049E /* icon-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-57.png"; path = "Images/icon-57.png"; sourceTree = SOURCE_ROOT; };
 		DF0A9496188DB1C2009B049E /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-72.png"; path = "Images/icon-72.png"; sourceTree = SOURCE_ROOT; };
 		DF0A9497188DB1C2009B049E /* icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-76.png"; path = "Images/icon-76.png"; sourceTree = SOURCE_ROOT; };
@@ -247,12 +254,6 @@
 		DF0A949A188DB1C2009B049E /* icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-144.png"; path = "Images/icon-144.png"; sourceTree = SOURCE_ROOT; };
 		DF0A949B188DB1C2009B049E /* icon-152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-152.png"; path = "Images/icon-152.png"; sourceTree = SOURCE_ROOT; };
 		DF0A949C188DB1C2009B049E /* icon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-1024.png"; path = "Images/icon-1024.png"; sourceTree = SOURCE_ROOT; };
-		DF29ACEA188716D000574314 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		DF29ACEB188716D000574314 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		DF29ACEC188716D000574314 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
-		DF29ACED188716D000574314 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
-		DF29ACEE188716D000574314 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
-		DF29ACEF188716D000574314 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		DF2E5CFF180F43A4000B9824 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = greenhttp.c; sourceTree = "<group>"; };
 		DF2E5D00180F43A4000B9824 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = greenhttp.h; sourceTree = "<group>"; };
 		DF3F00FC17E25CD000530A4D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = SOURCE_ROOT; };
@@ -350,6 +351,7 @@
 		DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPinCommentView.m; sourceTree = "<group>"; };
 		DFA9C39117E22F9900FBE61F /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Images/logo.png; sourceTree = SOURCE_ROOT; };
 		DFA9C39217E22F9D00FBE61F /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo@2x.png"; path = "Images/logo@2x.png"; sourceTree = SOURCE_ROOT; };
+		DFCEC12C1890230C001EAE06 /* MessageTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageTypes.h; sourceTree = "<group>"; };
 		DFD73A181800824700202D57 /* blueLeaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueLeaf.png; path = Images/blueLeaf.png; sourceTree = SOURCE_ROOT; };
 		DFD73A191800824700202D57 /* blueLeaf@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blueLeaf@2x.png"; path = "Images/blueLeaf@2x.png"; sourceTree = SOURCE_ROOT; };
 		DFD73A1A1800824700202D57 /* greenLeaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = greenLeaf.png; path = Images/greenLeaf.png; sourceTree = SOURCE_ROOT; };
@@ -372,7 +374,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF29ACF0188716D000574314 /* libTestFlight.a in Frameworks */,
 				DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */,
 				39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */,
 				39592580177519730035E351 /* SystemConfiguration.framework in Frameworks */,
@@ -382,6 +383,7 @@
 				39592578177519480035E351 /* libicucore.dylib in Frameworks */,
 				395925761775193C0035E351 /* libc++.dylib in Frameworks */,
 				395925741775192F0035E351 /* ImageIO.framework in Frameworks */,
+				DF05ECF01890279D00781671 /* libTestFlight.a in Frameworks */,
 				39592572177519220035E351 /* GLKit.framework in Frameworks */,
 				395925701775191B0035E351 /* CoreText.framework in Frameworks */,
 				3959256E177519120035E351 /* CoreLocation.framework in Frameworks */,
@@ -559,6 +561,8 @@
 		392B9DE51790CA1300C40B64 /* Container */ = {
 			isa = PBXGroup;
 			children = (
+				DFCEC12C1890230C001EAE06 /* MessageTypes.h */,
+				DF05ECE81890259100781671 /* MarkerTypes.h */,
 				39E46BDD179C6CDF008590A6 /* Tabbar */,
 				390415A91798C342005EC308 /* Menu */,
 				392E747A1798B82800C71680 /* ContainerView.h */,
@@ -660,7 +664,7 @@
 		3959252C177518690035E351 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				DF29ACE9188716D000574314 /* TestFlightSDK2.1.3 */,
+				DF05ECE91890279D00781671 /* TestFlightSDK2.1.3 */,
 				DF4F48DD1881E59B00C4A9AC /* NetworkingController */,
 				DF3F00FB17E25CBC00530A4D /* Reachability Library */,
 				DFA9ABFC17D664E9006F58A5 /* Categories */,
@@ -713,15 +717,15 @@
 			path = GoGreen2/greenHttp;
 			sourceTree = "<group>";
 		};
-		DF29ACE9188716D000574314 /* TestFlightSDK2.1.3 */ = {
+		DF05ECE91890279D00781671 /* TestFlightSDK2.1.3 */ = {
 			isa = PBXGroup;
 			children = (
-				DF29ACEA188716D000574314 /* libTestFlight.a */,
-				DF29ACEB188716D000574314 /* README.md */,
-				DF29ACEC188716D000574314 /* release_notes.md */,
-				DF29ACED188716D000574314 /* TestFlight+AsyncLogging.h */,
-				DF29ACEE188716D000574314 /* TestFlight+ManualSessions.h */,
-				DF29ACEF188716D000574314 /* TestFlight.h */,
+				DF05ECEA1890279D00781671 /* libTestFlight.a */,
+				DF05ECEB1890279D00781671 /* README.md */,
+				DF05ECEC1890279D00781671 /* release_notes.md */,
+				DF05ECED1890279D00781671 /* TestFlight+AsyncLogging.h */,
+				DF05ECEE1890279D00781671 /* TestFlight+ManualSessions.h */,
+				DF05ECEF1890279D00781671 /* TestFlight.h */,
 			);
 			path = TestFlightSDK2.1.3;
 			sourceTree = SOURCE_ROOT;
@@ -884,6 +888,7 @@
 				DFA9ABC117D63C5B006F58A5 /* bubble_green_bottom_reverse@2x.png in Resources */,
 				DFA9ABC217D63C5B006F58A5 /* bubble_green_bottom.png in Resources */,
 				DFA9ABC317D63C5B006F58A5 /* bubble_green_bottom@2x.png in Resources */,
+				DF05ECF21890279D00781671 /* release_notes.md in Resources */,
 				DFA9ABC417D63C5B006F58A5 /* bubble_green_center.png in Resources */,
 				DFA9ABC517D63C5B006F58A5 /* bubble_green_center@2x.png in Resources */,
 				DFA9ABC617D63C5B006F58A5 /* bubble_green_top.png in Resources */,
@@ -908,6 +913,7 @@
 				DFA9ABD317D63C5B006F58A5 /* bubble_red_bottom@2x.png in Resources */,
 				DF0A949F188DB1C2009B049E /* icon-76.png in Resources */,
 				DFA9ABD417D63C5B006F58A5 /* bubble_red_center.png in Resources */,
+				DF05ECF11890279D00781671 /* README.md in Resources */,
 				DFA9ABD517D63C5B006F58A5 /* bubble_red_center@2x.png in Resources */,
 				DFA9ABD617D63C5B006F58A5 /* bubble_red_top.png in Resources */,
 				DFA9ABD717D63C5B006F58A5 /* bubble_red_top@2x.png in Resources */,
@@ -941,7 +947,6 @@
 				DFA9ABF217D63C5B006F58A5 /* Start@2x.png in Resources */,
 				DFA9ABF317D63C5B006F58A5 /* Stop.png in Resources */,
 				DFA9ABF417D63C5B006F58A5 /* Stop@2x.png in Resources */,
-				DF29ACF1188716D000574314 /* README.md in Resources */,
 				DFA9C38517D94ABE00FBE61F /* pinwheel.png in Resources */,
 				DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */,
 				DFA9C39317E22FA000FBE61F /* logo.png in Resources */,
@@ -957,7 +962,6 @@
 				DF0A94A4188DB1C2009B049E /* icon-1024.png in Resources */,
 				DF60D5F517F4FD3200105121 /* currentLocationButtonBackground.png in Resources */,
 				DF60D5F617F4FD3200105121 /* currentLocationButtonBackground@2x.png in Resources */,
-				DF29ACF2188716D000574314 /* release_notes.md in Resources */,
 				DF0A94A3188DB1C2009B049E /* icon-152.png in Resources */,
 				DFD73A241800824800202D57 /* blueLeaf.png in Resources */,
 				DFD73A251800824800202D57 /* blueLeaf@2x.png in Resources */,
@@ -1159,6 +1163,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/jordanrouille/Desktop/OLD\\ DESKTOP/GreenUp/ios/TestFlightSDK2.1.3",
+					"/Users/jordanrouille/Documents/green-apps/ios/TestFlightSDK2.1.3",
 				);
 				PRODUCT_NAME = GoGreen;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1180,6 +1185,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/jordanrouille/Desktop/OLD\\ DESKTOP/GreenUp/ios/TestFlightSDK2.1.3",
+					"/Users/jordanrouille/Documents/green-apps/ios/TestFlightSDK2.1.3",
 				);
 				PRODUCT_NAME = GoGreen;
 				TARGETED_DEVICE_FAMILY = "1,2";

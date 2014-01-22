@@ -9,6 +9,8 @@
 #import "MessageCell.h"
 #import "UIFont+methods.h"
 #import "ContainerViewController.h"
+#import "MessageTypes.h"
+#import "MarkerTypes.h"
 
 @implementation MessageCell
 
@@ -23,7 +25,7 @@
         
         self.messageObject = messageObject;
 
-        if([messageObject.messageType isEqualToString:Message_Type_ADMIN])
+        if([messageObject.messageType isEqualToString:MESSAGE_TYPE_PICK_UP])
         {
             //Text Content Label
             self.textContentLabel = [[UILabel alloc] init];
@@ -84,7 +86,75 @@
             [self.contentView addSubview:self.timeStampLabel];
             [self.contentView addSubview:self.showPinOnMap];
         }
-        else if([messageObject.messageType isEqualToString:Message_Type_MARKER])
+        else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_HAZARD])
+        {
+#warning NOT IMPLEMENTED YET!
+            //Gesture Recognizer For Marking As Addressed
+            UILongPressGestureRecognizer *addressedGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(toggleAddressed:)];
+            [addressedGesture setMinimumPressDuration:1];
+            [self addGestureRecognizer:addressedGesture];
+            
+            //Text Content Label
+            self.textContentLabel = [[UILabel alloc] init];
+            [self.textContentLabel setText:messageObject.messageContent];
+            [self.textContentLabel setNumberOfLines:0];
+            [self.textContentLabel setBackgroundColor:[UIColor clearColor]];
+            [self.textContentLabel setFont:[UIFont messageFont]];
+            
+            //Get Height of Text With Font And Set Frame
+            CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
+            
+            [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 260, contentSize.height)];
+            
+            //Top Slice
+            self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_top.png"]];
+            [self.topBackgroundImage setFrame:CGRectMake(10, extraTop, 300, 6)];
+            
+            //Variable Middle Slice
+            self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height + 20)];
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_green_center.png"]]];
+            
+            //Buttom Slice
+            if(backwards)
+            {
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom_reverse.png"]];
+            }
+            else
+            {
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom.png"]];
+            }
+            [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
+            
+            self.timeStampLabel = [[UILabel alloc] initWithFrame:CGRectMake(45, self.textContentLabel.frame.origin.y + self.textContentLabel.frame.size.height , 230, 20)];
+            NSDate *currentDate = [NSDate date];
+            NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:messageObject.messageTimeStamp];
+            NSDate *date = [NSDate dateWithTimeIntervalSinceNow:elaspedTime];
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"EEE MMM dd yyyy hh:mm:ss a"];
+            [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+            NSString *formattedDate = [dateFormatter stringFromDate:date];
+            [self.timeStampLabel setText:[NSString stringWithFormat:@"Posted %@", formattedDate]];
+            [self.timeStampLabel setBackgroundColor:[UIColor clearColor]];
+            [self.timeStampLabel setFont:[self.timeStampLabel.font fontWithSize:10]];
+            [self.timeStampLabel setTextAlignment:NSTextAlignmentLeft];
+            
+            int height = self.textContentLabel.frame.size.height + self.timeStampLabel.frame.size.height;
+            int origin = self.textContentLabel.frame.origin.y;
+            origin += (height / 2) - 17;
+            
+            self.showPinOnMap = [[UIButton alloc] initWithFrame:CGRectMake(18, origin, 19, 29)];
+            [self.showPinOnMap setBackgroundImage:[UIImage imageNamed:@"marker.png"] forState:UIControlStateNormal];
+            [self.showPinOnMap addTarget:self action:@selector(bringMeToMapPin:) forControlEvents:UIControlEventTouchUpInside];
+            
+            //Add Subviews to ContentView
+            [self.contentView addSubview:self.topBackgroundImage];
+            [self.contentView addSubview:self.middleBackgroundImage];
+            [self.contentView addSubview:self.bottomBackgroundImage];
+            [self.contentView addSubview:self.textContentLabel];
+            [self.contentView addSubview:self.timeStampLabel];
+            [self.contentView addSubview:self.showPinOnMap];
+        }
+        else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_USER_MARKER])
         {
             //Gesture Recognizer For Marking As Addressed
             UILongPressGestureRecognizer *addressedGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(toggleAddressed:)];
@@ -151,7 +221,7 @@
             [self.contentView addSubview:self.timeStampLabel];
             [self.contentView addSubview:self.showPinOnMap];
         }
-        else if([messageObject.messageType isEqualToString:Message_Type_COMMENT])
+        else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_MESSAGE])
         {
             //Text Content Label
             self.textContentLabel = [[UILabel alloc] init];

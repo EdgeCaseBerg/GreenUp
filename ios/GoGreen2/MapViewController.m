@@ -17,6 +17,8 @@
 #import <netdb.h>
 #include <arpa/inet.h>
 #import "NetworkingController.h"
+#import "MessageTypes.h"
+#import "MarkerTypes.h"
 
 //#include "FTLocationSimulator.h"
 
@@ -286,7 +288,7 @@
     }
     else if([annotation isKindOfClass:[HeatMapPin class]])
     {
-        if([((HeatMapPin *)annotation).type isEqualToString:Message_Type_ADMIN])
+        if([((HeatMapPin *)annotation).type isEqualToString:MARKER_TYPE_PICK_UP])
         {
             static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
             
@@ -306,7 +308,7 @@
             
             return annotationView;
         }
-        else if([((HeatMapPin *)annotation).type isEqualToString:Message_Type_MARKER])
+        else if([((HeatMapPin *)annotation).type isEqualToString:MARKER_TYPE_MARKER])
         {
             static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
             
@@ -437,7 +439,7 @@
             [self.locationManager stopUpdatingLocation];
             
             //Create Pin For Current Location
-            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:Message_Type_MARKER];
+            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:MESSAGE_TYPE_USER_MARKER];
             self.tempPinRef = currentLocationPin;
             
             //Save pin
@@ -476,7 +478,7 @@
             }
             
             //Create Pin For Current Location
-            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:Message_Type_MARKER];
+            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:MESSAGE_TYPE_USER_MARKER];
             self.tempPinRef = currentLocationPin;
             
             //Save pin
@@ -729,7 +731,7 @@
             CGPoint point = [sender locationInView:self.mapView];
             CLLocationCoordinate2D coord = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
             
-            HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andValiditity:TRUE andTitle:@"Custom Pin" andType:Message_Type_MARKER];
+            HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andValiditity:TRUE andTitle:@"Custom Pin" andType:MESSAGE_TYPE_USER_MARKER];
             self.tempPinRef = customPin;
             
             //Save pin
@@ -905,7 +907,8 @@
 
 -(IBAction)postMarker:(NSNotification *)sender
 {
-    [[NetworkingController shared] postMarkerWithPin:self.tempPinRef andMessage:sender.object];
+    NSArray *parameters = sender.object;
+    [[NetworkingController shared] postMarkerWithPin:self.tempPinRef andMessage:[parameters objectAtIndex:0] andType:[parameters objectAtIndex:1]];
     /*
     NSLog(@"Network - Map: Pushing New Marker With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])

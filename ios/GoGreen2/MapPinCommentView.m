@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIFont+methods.h"
 #import "UIColor+methods.h"
+#import "MessageTypes.h"
 
 #define ANIMATION_DURATION .5
 
@@ -136,7 +137,16 @@
         [UIView animateWithDuration:ANIMATION_DURATION animations:animationBlock];
         [self performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:ANIMATION_DURATION];
     
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"postMarker" object:[NSArray arrayWithObjects:self.messageField.text, self.messageType, nil]];
+        NSString *messageType = nil;
+        if(self.messageType.selectedSegmentIndex == 0)
+        {
+            messageType = MESSAGE_TYPE_USER_MARKER;
+        }
+        else
+        {
+            messageType = MESSAGE_TYPE_HAZARD;
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"postMarker" object:[NSArray arrayWithObjects:self.messageField.text, messageType, nil]];
     }
 }
 

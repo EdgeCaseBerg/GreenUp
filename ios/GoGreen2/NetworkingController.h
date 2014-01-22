@@ -17,7 +17,7 @@
 //Map
 -(void)getMapPinsWithMap:(MKMapView *)mapView;
 -(void)getMapPinsForPinShowWithMap:(MKMapView *)mapView;
--(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message;
+-(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message andType:(NSString *)type;
 -(void)pushHeatMapPoints;
 -(void)getHeatDataPointsWithSpan:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location;
 

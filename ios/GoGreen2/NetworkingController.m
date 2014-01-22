@@ -898,7 +898,7 @@ static NetworkingController *sharedNetworkingController;
     getMapPinsForShowConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
--(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message
+-(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message andType:(NSString *)type
 {
     //Build Request URL
     NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@", BASE_HOST, API_PORT, PINS_RELATIVE_URL, [[ContainerViewController sharedContainer] theMapViewController].pinIDToShow.stringValue];
@@ -909,7 +909,7 @@ static NetworkingController *sharedNetworkingController;
     NSMutableArray *objects = [[NSMutableArray alloc] init];
     [objects addFloat:pin.coordinate.latitude];
     [objects addFloat:pin.coordinate.longitude];
-    [objects addObject:Message_Type_MARKER];
+    [objects addObject:type];
     [objects addObject:message];
     [objects addBool:FALSE];
     
@@ -918,7 +918,7 @@ static NetworkingController *sharedNetworkingController;
     NSLog(@"Network - Map: Pushing New Marker With Data,");
     NSLog(@"--- Data - Map: Lat = %f", pin.coordinate.latitude);
     NSLog(@"--- Data - Map: Lon = %f", pin.coordinate.longitude);
-    NSLog(@"--- Data - Map: Type = %@", Message_Type_MARKER);
+    NSLog(@"--- Data - Map: Type = %@", type);
     NSLog(@"--- Data - Map: Message = %@", message);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]

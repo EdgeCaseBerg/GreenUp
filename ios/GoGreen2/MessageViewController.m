@@ -19,6 +19,8 @@
 #import "HeatMapPin.h"
 #import "ContainerViewController.h"
 #import "NetworkingController.h"
+#import "MessageTypes.h"
+#import "MarkerTypes.h"
 
 #define ALERT_VIEW_TOGGLE_ON 0
 #define ALERT_VIEW_TOGGLE_OFF 1
@@ -513,7 +515,7 @@
 
 -(IBAction)postMessage:(id)sender
 {
-    self.currentMessageType = Message_Type_COMMENT;
+    self.currentMessageType = MESSAGE_TYPE_MESSAGE;
     [[NetworkingController shared] postMessageWithMessageType:self.currentMessageType andMessage:self.messageTextView.text];
     /*
     NSLog(@"Network - Message: Post New Message");
@@ -736,7 +738,7 @@
     NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
     
     CGSize size;
-    if([msg.messageType isEqualToString:Message_Type_ADMIN] || [msg.messageType isEqualToString:Message_Type_MARKER])
+    if([msg.messageType isEqualToString:MESSAGE_TYPE_PICK_UP] || [msg.messageType isEqualToString:MESSAGE_TYPE_USER_MARKER] || [msg.messageType isEqualToString:MESSAGE_TYPE_HAZARD])
     {
         size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
         size.height += + 20 + 6;
