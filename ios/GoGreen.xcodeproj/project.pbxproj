@@ -36,10 +36,6 @@
 		3959254F177518690035E351 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39592527177518690035E351 /* Foundation.framework */; };
 		39592557177518690035E351 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39592555177518690035E351 /* InfoPlist.strings */; };
 		3959255A177518690035E351 /* GoGreen2Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 39592559177518690035E351 /* GoGreen2Tests.m */; };
-		39592564177518BD0035E351 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39592563177518BD0035E351 /* GoogleMaps.framework */; };
-		39592565177518BD0035E351 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39592563177518BD0035E351 /* GoogleMaps.framework */; };
-		39592567177518DD0035E351 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 39592566177518DD0035E351 /* GoogleMaps.bundle */; };
-		39592568177518DD0035E351 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 39592566177518DD0035E351 /* GoogleMaps.bundle */; };
 		3959256A177519010035E351 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39592569177519010035E351 /* AVFoundation.framework */; };
 		3959256C177519090035E351 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3959256B177519090035E351 /* CoreData.framework */; };
 		3959256E177519120035E351 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3959256D177519120035E351 /* CoreLocation.framework */; };
@@ -54,9 +50,22 @@
 		39592580177519730035E351 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3959257F177519730035E351 /* SystemConfiguration.framework */; };
 		39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D06AFC1783A6A300DD94B7 /* MapKit.framework */; };
 		39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E46BE3179C7000008590A6 /* GoGreenTabBar.m */; };
+		DF040184188E9C6F005A9EAF /* hazardMarker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF040180188E9C6F005A9EAF /* hazardMarker.png */; };
+		DF040185188E9C6F005A9EAF /* hazardMarker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF040181188E9C6F005A9EAF /* hazardMarker@2x.png */; };
+		DF040186188E9C6F005A9EAF /* marker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF040182188E9C6F005A9EAF /* marker.png */; };
+		DF040187188E9C6F005A9EAF /* marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF040183188E9C6F005A9EAF /* marker@2x.png */; };
+		DF0A949D188DB1C2009B049E /* icon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A9495188DB1C2009B049E /* icon-57.png */; };
+		DF0A949E188DB1C2009B049E /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A9496188DB1C2009B049E /* icon-72.png */; };
+		DF0A949F188DB1C2009B049E /* icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A9497188DB1C2009B049E /* icon-76.png */; };
+		DF0A94A0188DB1C2009B049E /* icon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A9498188DB1C2009B049E /* icon-114.png */; };
+		DF0A94A1188DB1C2009B049E /* icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A9499188DB1C2009B049E /* icon-120.png */; };
+		DF0A94A2188DB1C2009B049E /* icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949A188DB1C2009B049E /* icon-144.png */; };
+		DF0A94A3188DB1C2009B049E /* icon-152.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949B188DB1C2009B049E /* icon-152.png */; };
+		DF0A94A4188DB1C2009B049E /* icon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949C188DB1C2009B049E /* icon-1024.png */; };
+		DF29ACF0188716D000574314 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF29ACEA188716D000574314 /* libTestFlight.a */; };
+		DF29ACF1188716D000574314 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DF29ACEB188716D000574314 /* README.md */; };
+		DF29ACF2188716D000574314 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = DF29ACEC188716D000574314 /* release_notes.md */; };
 		DF2E5D03180F43A4000B9824 /* greenhttp.c in Sources */ = {isa = PBXBuildFile; fileRef = DF2E5CFF180F43A4000B9824 /* greenhttp.c */; };
-		DF2E5D08181079A5000B9824 /* marker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF2E5D06181079A5000B9824 /* marker.png */; };
-		DF2E5D09181079A5000B9824 /* marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF2E5D07181079A5000B9824 /* marker@2x.png */; };
 		DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3F00FD17E25CD000530A4D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DF3F010517E3E5E200530A4D /* trasbag.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010317E3E5E200530A4D /* trasbag.png */; };
 		DF3F010617E3E5E200530A4D /* trashbag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010417E3E5E200530A4D /* trashbag@2x.png */; };
@@ -64,6 +73,7 @@
 		DF3F010B17E3FEED00530A4D /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010817E3FEED00530A4D /* check@2x.png */; };
 		DF3F010C17E3FEED00530A4D /* notCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010917E3FEED00530A4D /* notCheck.png */; };
 		DF3F010E17E3FF2A00530A4D /* notCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010D17E3FF2A00530A4D /* notCheck@2x.png */; };
+		DF5AC59518874D2F0010B346 /* sampleRoute4.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DF5AC59418874D2F0010B346 /* sampleRoute4.gpx */; };
 		DF60D5F317F4FD3200105121 /* currentLocation.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5EF17F4FD3200105121 /* currentLocation.png */; };
 		DF60D5F417F4FD3200105121 /* currentLocation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5F017F4FD3200105121 /* currentLocation@2x.png */; };
 		DF60D5F517F4FD3200105121 /* currentLocationButtonBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5F117F4FD3200105121 /* currentLocationButtonBackground.png */; };
@@ -71,6 +81,7 @@
 		DF62E07417C1992700B29D43 /* BDHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DF62E07317C1992700B29D43 /* BDHost.m */; };
 		DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF62E07517C1996700B29D43 /* CFNetwork.framework */; };
 		DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */; };
+		DF81175F18895C6700B2C271 /* NetworkingController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF81175E18895C6700B2C271 /* NetworkingController.m */; };
 		DFA9AA7817D25AEA006F58A5 /* CSocketController.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9AA7717D25AEA006F58A5 /* CSocketController.m */; };
 		DFA9AA7C17D2666B006F58A5 /* NSArray+Primitive.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9AA7B17D2666B006F58A5 /* NSArray+Primitive.m */; };
 		DFA9ABBE17D63C5B006F58A5 /* bottom_menu.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9AB8517D63C5B006F58A5 /* bottom_menu.png */; };
@@ -135,7 +146,6 @@
 		DFA9C38517D94ABE00FBE61F /* pinwheel.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C38317D94ABE00FBE61F /* pinwheel.png */; };
 		DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C38417D94ABE00FBE61F /* pinwheel@2x.png */; };
 		DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */; };
-		DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */; };
 		DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */; };
 		DFA9C39317E22FA000FBE61F /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39117E22F9900FBE61F /* logo.png */; };
 		DFA9C39417E22FA000FBE61F /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39217E22F9D00FBE61F /* logo@2x.png */; };
@@ -193,25 +203,23 @@
 		393743E41798B98A005597FF /* HeatMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HeatMapView.m; path = HeatMap/HeatMapView.m; sourceTree = SOURCE_ROOT; };
 		393743E71798BB25005597FF /* MessageView_IPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageView_IPhone.xib; sourceTree = "<group>"; };
 		393743E91798BB36005597FF /* MessageView_IPhone5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageView_IPhone5.xib; sourceTree = "<group>"; };
-		39592522177518690035E351 /* GoogleGreenMapTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoogleGreenMapTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		39592522177518690035E351 /* GoGreen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoGreen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39592525177518690035E351 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		39592527177518690035E351 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		39592529177518690035E351 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		3959252D177518690035E351 /* GoogleGreenMapTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleGreenMapTest-Info.plist"; sourceTree = "<group>"; };
+		3959252D177518690035E351 /* GoGreen-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoGreen-Info.plist"; sourceTree = "<group>"; };
 		3959252F177518690035E351 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		39592531177518690035E351 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		39592533177518690035E351 /* GoogleGreenMapTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GoogleGreenMapTest-Prefix.pch"; sourceTree = "<group>"; };
+		39592533177518690035E351 /* GoGreen-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GoGreen-Prefix.pch"; sourceTree = "<group>"; };
 		39592537177518690035E351 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		39592539177518690035E351 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		3959253B177518690035E351 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		3959254B177518690035E351 /* GoogleGreenMapTestTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GoogleGreenMapTestTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3959254C177518690035E351 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		39592554177518690035E351 /* GoogleGreenMapTestTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleGreenMapTestTests-Info.plist"; sourceTree = "<group>"; };
+		39592554177518690035E351 /* GoGreenTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoGreenTests-Info.plist"; sourceTree = "<group>"; };
 		39592556177518690035E351 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		39592558177518690035E351 /* GoGreen2Tests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GoGreen2Tests.h; sourceTree = "<group>"; };
 		39592559177518690035E351 /* GoGreen2Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GoGreen2Tests.m; sourceTree = "<group>"; };
-		39592563177518BD0035E351 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
-		39592566177518DD0035E351 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
 		39592569177519010035E351 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3959256B177519090035E351 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3959256D177519120035E351 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -227,10 +235,26 @@
 		39D06AFC1783A6A300DD94B7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39E46BE2179C7000008590A6 /* GoGreenTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoGreenTabBar.h; sourceTree = "<group>"; };
 		39E46BE3179C7000008590A6 /* GoGreenTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoGreenTabBar.m; sourceTree = "<group>"; };
+		DF040180188E9C6F005A9EAF /* hazardMarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = hazardMarker.png; path = Images/hazardMarker.png; sourceTree = SOURCE_ROOT; };
+		DF040181188E9C6F005A9EAF /* hazardMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hazardMarker@2x.png"; path = "Images/hazardMarker@2x.png"; sourceTree = SOURCE_ROOT; };
+		DF040182188E9C6F005A9EAF /* marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = marker.png; path = Images/marker.png; sourceTree = SOURCE_ROOT; };
+		DF040183188E9C6F005A9EAF /* marker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "marker@2x.png"; path = "Images/marker@2x.png"; sourceTree = SOURCE_ROOT; };
+		DF0A9495188DB1C2009B049E /* icon-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-57.png"; path = "Images/icon-57.png"; sourceTree = SOURCE_ROOT; };
+		DF0A9496188DB1C2009B049E /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-72.png"; path = "Images/icon-72.png"; sourceTree = SOURCE_ROOT; };
+		DF0A9497188DB1C2009B049E /* icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-76.png"; path = "Images/icon-76.png"; sourceTree = SOURCE_ROOT; };
+		DF0A9498188DB1C2009B049E /* icon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-114.png"; path = "Images/icon-114.png"; sourceTree = SOURCE_ROOT; };
+		DF0A9499188DB1C2009B049E /* icon-120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-120.png"; path = "Images/icon-120.png"; sourceTree = SOURCE_ROOT; };
+		DF0A949A188DB1C2009B049E /* icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-144.png"; path = "Images/icon-144.png"; sourceTree = SOURCE_ROOT; };
+		DF0A949B188DB1C2009B049E /* icon-152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-152.png"; path = "Images/icon-152.png"; sourceTree = SOURCE_ROOT; };
+		DF0A949C188DB1C2009B049E /* icon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-1024.png"; path = "Images/icon-1024.png"; sourceTree = SOURCE_ROOT; };
+		DF29ACEA188716D000574314 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		DF29ACEB188716D000574314 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		DF29ACEC188716D000574314 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		DF29ACED188716D000574314 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		DF29ACEE188716D000574314 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		DF29ACEF188716D000574314 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		DF2E5CFF180F43A4000B9824 /* greenhttp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = greenhttp.c; sourceTree = "<group>"; };
 		DF2E5D00180F43A4000B9824 /* greenhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = greenhttp.h; sourceTree = "<group>"; };
-		DF2E5D06181079A5000B9824 /* marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = marker.png; sourceTree = "<group>"; };
-		DF2E5D07181079A5000B9824 /* marker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker@2x.png"; sourceTree = "<group>"; };
 		DF3F00FC17E25CD000530A4D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = SOURCE_ROOT; };
 		DF3F00FD17E25CD000530A4D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = SOURCE_ROOT; };
 		DF3F010317E3E5E200530A4D /* trasbag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trasbag.png; path = Images/trasbag.png; sourceTree = SOURCE_ROOT; };
@@ -239,6 +263,7 @@
 		DF3F010817E3FEED00530A4D /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "check@2x.png"; path = "Images/check@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF3F010917E3FEED00530A4D /* notCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notCheck.png; path = Images/notCheck.png; sourceTree = SOURCE_ROOT; };
 		DF3F010D17E3FF2A00530A4D /* notCheck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "notCheck@2x.png"; path = "Images/notCheck@2x.png"; sourceTree = SOURCE_ROOT; };
+		DF5AC59418874D2F0010B346 /* sampleRoute4.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sampleRoute4.gpx; sourceTree = "<group>"; };
 		DF60D5EF17F4FD3200105121 /* currentLocation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = currentLocation.png; path = Images/currentLocation.png; sourceTree = SOURCE_ROOT; };
 		DF60D5F017F4FD3200105121 /* currentLocation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "currentLocation@2x.png"; path = "Images/currentLocation@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF60D5F117F4FD3200105121 /* currentLocationButtonBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = currentLocationButtonBackground.png; path = Images/currentLocationButtonBackground.png; sourceTree = SOURCE_ROOT; };
@@ -248,6 +273,8 @@
 		DF62E07517C1996700B29D43 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		DF6C594817AB411C005FA0E8 /* HeatMapPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeatMapPoint.h; sourceTree = "<group>"; };
 		DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPoint.m; sourceTree = "<group>"; };
+		DF81175D18895C6700B2C271 /* NetworkingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingController.h; sourceTree = "<group>"; };
+		DF81175E18895C6700B2C271 /* NetworkingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkingController.m; sourceTree = "<group>"; };
 		DFA9AA7617D25AE9006F58A5 /* CSocketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSocketController.h; sourceTree = "<group>"; };
 		DFA9AA7717D25AEA006F58A5 /* CSocketController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSocketController.m; sourceTree = "<group>"; };
 		DFA9AA7A17D2666B006F58A5 /* NSArray+Primitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+Primitive.h"; path = "GoGreen2/NSArray+Primitive.h"; sourceTree = "<group>"; };
@@ -319,8 +346,6 @@
 		DFA9C38417D94ABE00FBE61F /* pinwheel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pinwheel@2x.png"; path = "Images/pinwheel@2x.png"; sourceTree = SOURCE_ROOT; };
 		DFA9C38717D95E1D00FBE61F /* HeatMapPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeatMapPin.h; sourceTree = "<group>"; };
 		DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPin.m; sourceTree = "<group>"; };
-		DFA9C38B17DF916900FBE61F /* GreenUpMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GreenUpMapView.h; sourceTree = "<group>"; };
-		DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GreenUpMapView.m; sourceTree = "<group>"; };
 		DFA9C38E17DFB1F800FBE61F /* MapPinCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapPinCommentView.h; sourceTree = "<group>"; };
 		DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPinCommentView.m; sourceTree = "<group>"; };
 		DFA9C39117E22F9900FBE61F /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Images/logo.png; sourceTree = SOURCE_ROOT; };
@@ -347,6 +372,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF29ACF0188716D000574314 /* libTestFlight.a in Frameworks */,
 				DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */,
 				39D06AFD1783A6A300DD94B7 /* MapKit.framework in Frameworks */,
 				39592580177519730035E351 /* SystemConfiguration.framework in Frameworks */,
@@ -364,7 +390,6 @@
 				39592526177518690035E351 /* UIKit.framework in Frameworks */,
 				39592528177518690035E351 /* Foundation.framework in Frameworks */,
 				3959252A177518690035E351 /* CoreGraphics.framework in Frameworks */,
-				39592564177518BD0035E351 /* GoogleMaps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,7 +400,6 @@
 				3959254D177518690035E351 /* SenTestingKit.framework in Frameworks */,
 				3959254E177518690035E351 /* UIKit.framework in Frameworks */,
 				3959254F177518690035E351 /* Foundation.framework in Frameworks */,
-				39592565177518BD0035E351 /* GoogleMaps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,8 +418,18 @@
 		390415AD1798DC50005EC308 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				DF2E5D06181079A5000B9824 /* marker.png */,
-				DF2E5D07181079A5000B9824 /* marker@2x.png */,
+				DF040180188E9C6F005A9EAF /* hazardMarker.png */,
+				DF040181188E9C6F005A9EAF /* hazardMarker@2x.png */,
+				DF040182188E9C6F005A9EAF /* marker.png */,
+				DF040183188E9C6F005A9EAF /* marker@2x.png */,
+				DF0A9495188DB1C2009B049E /* icon-57.png */,
+				DF0A9496188DB1C2009B049E /* icon-72.png */,
+				DF0A9497188DB1C2009B049E /* icon-76.png */,
+				DF0A9498188DB1C2009B049E /* icon-114.png */,
+				DF0A9499188DB1C2009B049E /* icon-120.png */,
+				DF0A949A188DB1C2009B049E /* icon-144.png */,
+				DF0A949B188DB1C2009B049E /* icon-152.png */,
+				DF0A949C188DB1C2009B049E /* icon-1024.png */,
 				DFD73A181800824700202D57 /* blueLeaf.png */,
 				DFD73A191800824700202D57 /* blueLeaf@2x.png */,
 				DFD73A1A1800824700202D57 /* greenLeaf.png */,
@@ -507,7 +541,6 @@
 		392B9DE41790C9F500C40B64 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				DFA9C38A17DF914600FBE61F /* MKMapKit Subclass */,
 				DFA9ABFA17D653BF006F58A5 /* Data Model Objects */,
 				392E74851798B83E00C71680 /* MapViewController.h */,
 				392E74861798B83E00C71680 /* MapViewController.m */,
@@ -562,6 +595,7 @@
 		39592519177518690035E351 = {
 			isa = PBXGroup;
 			children = (
+				DF5AC59418874D2F0010B346 /* sampleRoute4.gpx */,
 				DFE59BDF180CB3CC00357899 /* sampleRoute3.gpx */,
 				DFE59BDD180CB3C400357899 /* sampleRoute2.gpx */,
 				DFE59BDB180CB3BD00357899 /* sampleRoute1.gpx */,
@@ -577,7 +611,7 @@
 		39592523177518690035E351 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				39592522177518690035E351 /* GoogleGreenMapTest.app */,
+				39592522177518690035E351 /* GoGreen.app */,
 				3959254B177518690035E351 /* GoogleGreenMapTestTests.octest */,
 			);
 			name = Products;
@@ -601,8 +635,6 @@
 				3959256D177519120035E351 /* CoreLocation.framework */,
 				3959256B177519090035E351 /* CoreData.framework */,
 				39592569177519010035E351 /* AVFoundation.framework */,
-				39592566177518DD0035E351 /* GoogleMaps.bundle */,
-				39592563177518BD0035E351 /* GoogleMaps.framework */,
 				39592525177518690035E351 /* UIKit.framework */,
 				39592527177518690035E351 /* Foundation.framework */,
 				39592529177518690035E351 /* CoreGraphics.framework */,
@@ -628,15 +660,16 @@
 		3959252C177518690035E351 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DF29ACE9188716D000574314 /* TestFlightSDK2.1.3 */,
 				DF4F48DD1881E59B00C4A9AC /* NetworkingController */,
 				DF3F00FB17E25CBC00530A4D /* Reachability Library */,
 				DFA9ABFC17D664E9006F58A5 /* Categories */,
 				DFA9AA7517D25ABF006F58A5 /* CSocketController / C Socket Library */,
 				390415AD1798DC50005EC308 /* Images */,
-				3959252D177518690035E351 /* GoogleGreenMapTest-Info.plist */,
+				3959252D177518690035E351 /* GoGreen-Info.plist */,
 				3959252E177518690035E351 /* InfoPlist.strings */,
 				39592531177518690035E351 /* main.m */,
-				39592533177518690035E351 /* GoogleGreenMapTest-Prefix.pch */,
+				39592533177518690035E351 /* GoGreen-Prefix.pch */,
 				39592537177518690035E351 /* Default.png */,
 				39592539177518690035E351 /* Default@2x.png */,
 				3959253B177518690035E351 /* Default-568h@2x.png */,
@@ -657,7 +690,7 @@
 		39592553177518690035E351 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				39592554177518690035E351 /* GoogleGreenMapTestTests-Info.plist */,
+				39592554177518690035E351 /* GoGreenTests-Info.plist */,
 				39592555177518690035E351 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -680,6 +713,19 @@
 			path = GoGreen2/greenHttp;
 			sourceTree = "<group>";
 		};
+		DF29ACE9188716D000574314 /* TestFlightSDK2.1.3 */ = {
+			isa = PBXGroup;
+			children = (
+				DF29ACEA188716D000574314 /* libTestFlight.a */,
+				DF29ACEB188716D000574314 /* README.md */,
+				DF29ACEC188716D000574314 /* release_notes.md */,
+				DF29ACED188716D000574314 /* TestFlight+AsyncLogging.h */,
+				DF29ACEE188716D000574314 /* TestFlight+ManualSessions.h */,
+				DF29ACEF188716D000574314 /* TestFlight.h */,
+			);
+			path = TestFlightSDK2.1.3;
+			sourceTree = SOURCE_ROOT;
+		};
 		DF3F00FB17E25CBC00530A4D /* Reachability Library */ = {
 			isa = PBXGroup;
 			children = (
@@ -692,6 +738,8 @@
 		DF4F48DD1881E59B00C4A9AC /* NetworkingController */ = {
 			isa = PBXGroup;
 			children = (
+				DF81175D18895C6700B2C271 /* NetworkingController.h */,
+				DF81175E18895C6700B2C271 /* NetworkingController.m */,
 			);
 			name = NetworkingController;
 			sourceTree = "<group>";
@@ -747,15 +795,6 @@
 			name = Categories;
 			sourceTree = "<group>";
 		};
-		DFA9C38A17DF914600FBE61F /* MKMapKit Subclass */ = {
-			isa = PBXGroup;
-			children = (
-				DFA9C38B17DF916900FBE61F /* GreenUpMapView.h */,
-				DFA9C38C17DF916900FBE61F /* GreenUpMapView.m */,
-			);
-			name = "MKMapKit Subclass";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -773,7 +812,7 @@
 			);
 			name = GoogleGreenMapTest;
 			productName = GoGreen2;
-			productReference = 39592522177518690035E351 /* GoogleGreenMapTest.app */;
+			productReference = 39592522177518690035E351 /* GoGreen.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3959254A177518690035E351 /* GoogleGreenMapTestTests */ = {
@@ -802,7 +841,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0500;
-				ORGANIZATIONNAME = "Aidan Melen";
+				ORGANIZATIONNAME = "Xenon Apps";
 			};
 			buildConfigurationList = 3959251D177518690035E351 /* Build configuration list for PBXProject "GoGreen" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -831,11 +870,12 @@
 				39592538177518690035E351 /* Default.png in Resources */,
 				3959253A177518690035E351 /* Default@2x.png in Resources */,
 				3959253C177518690035E351 /* Default-568h@2x.png in Resources */,
-				39592567177518DD0035E351 /* GoogleMaps.bundle in Resources */,
 				392E74811798B83300C71680 /* HomeView_IPhone.xib in Resources */,
 				392E74821798B83300C71680 /* HomeView_IPhone5.xib in Resources */,
 				392E74871798B83E00C71680 /* MapView_IPhone.xib in Resources */,
 				392E748D1798B88000C71680 /* MapView_IPhone5.xib in Resources */,
+				DF0A94A1188DB1C2009B049E /* icon-120.png in Resources */,
+				DF040184188E9C6F005A9EAF /* hazardMarker.png in Resources */,
 				393743E81798BB25005597FF /* MessageView_IPhone.xib in Resources */,
 				393743EA1798BB36005597FF /* MessageView_IPhone5.xib in Resources */,
 				DFA9ABBE17D63C5B006F58A5 /* bottom_menu.png in Resources */,
@@ -848,18 +888,25 @@
 				DFA9ABC517D63C5B006F58A5 /* bubble_green_center@2x.png in Resources */,
 				DFA9ABC617D63C5B006F58A5 /* bubble_green_top.png in Resources */,
 				DFA9ABC717D63C5B006F58A5 /* bubble_green_top@2x.png in Resources */,
+				DF040187188E9C6F005A9EAF /* marker@2x.png in Resources */,
 				DFA9ABC817D63C5B006F58A5 /* bubble_orange_bottom_reverse.png in Resources */,
 				DFA9ABC917D63C5B006F58A5 /* bubble_orange_bottom_reverse@2x.png in Resources */,
 				DFA9ABCA17D63C5B006F58A5 /* bubble_orange_bottom.png in Resources */,
+				DF0A949E188DB1C2009B049E /* icon-72.png in Resources */,
 				DFA9ABCB17D63C5B006F58A5 /* bubble_orange_bottom@2x.png in Resources */,
+				DF0A949D188DB1C2009B049E /* icon-57.png in Resources */,
 				DFA9ABCC17D63C5B006F58A5 /* bubble_orange_center.png in Resources */,
+				DF5AC59518874D2F0010B346 /* sampleRoute4.gpx in Resources */,
+				DF0A94A2188DB1C2009B049E /* icon-144.png in Resources */,
 				DFA9ABCD17D63C5B006F58A5 /* bubble_orange_center@2x.png in Resources */,
 				DFA9ABCE17D63C5B006F58A5 /* bubble_orange_top.png in Resources */,
 				DFA9ABCF17D63C5B006F58A5 /* bubble_orange_top@2x.png in Resources */,
 				DFA9ABD017D63C5B006F58A5 /* bubble_red_bottom_reverse.png in Resources */,
+				DF040186188E9C6F005A9EAF /* marker.png in Resources */,
 				DFA9ABD117D63C5B006F58A5 /* bubble_red_bottom_reverse@2x.png in Resources */,
 				DFA9ABD217D63C5B006F58A5 /* bubble_red_bottom.png in Resources */,
 				DFA9ABD317D63C5B006F58A5 /* bubble_red_bottom@2x.png in Resources */,
+				DF0A949F188DB1C2009B049E /* icon-76.png in Resources */,
 				DFA9ABD417D63C5B006F58A5 /* bubble_red_center.png in Resources */,
 				DFA9ABD517D63C5B006F58A5 /* bubble_red_center@2x.png in Resources */,
 				DFA9ABD617D63C5B006F58A5 /* bubble_red_top.png in Resources */,
@@ -890,9 +937,11 @@
 				DFA9ABEF17D63C5B006F58A5 /* map.png in Resources */,
 				DFA9ABF017D63C5B006F58A5 /* map@2x.png in Resources */,
 				DFA9ABF117D63C5B006F58A5 /* Start.png in Resources */,
+				DF040185188E9C6F005A9EAF /* hazardMarker@2x.png in Resources */,
 				DFA9ABF217D63C5B006F58A5 /* Start@2x.png in Resources */,
 				DFA9ABF317D63C5B006F58A5 /* Stop.png in Resources */,
 				DFA9ABF417D63C5B006F58A5 /* Stop@2x.png in Resources */,
+				DF29ACF1188716D000574314 /* README.md in Resources */,
 				DFA9C38517D94ABE00FBE61F /* pinwheel.png in Resources */,
 				DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */,
 				DFA9C39317E22FA000FBE61F /* logo.png in Resources */,
@@ -905,10 +954,14 @@
 				DF3F010E17E3FF2A00530A4D /* notCheck@2x.png in Resources */,
 				DF60D5F317F4FD3200105121 /* currentLocation.png in Resources */,
 				DF60D5F417F4FD3200105121 /* currentLocation@2x.png in Resources */,
+				DF0A94A4188DB1C2009B049E /* icon-1024.png in Resources */,
 				DF60D5F517F4FD3200105121 /* currentLocationButtonBackground.png in Resources */,
 				DF60D5F617F4FD3200105121 /* currentLocationButtonBackground@2x.png in Resources */,
+				DF29ACF2188716D000574314 /* release_notes.md in Resources */,
+				DF0A94A3188DB1C2009B049E /* icon-152.png in Resources */,
 				DFD73A241800824800202D57 /* blueLeaf.png in Resources */,
 				DFD73A251800824800202D57 /* blueLeaf@2x.png in Resources */,
+				DF0A94A0188DB1C2009B049E /* icon-114.png in Resources */,
 				DFD73A261800824800202D57 /* greenLeaf.png in Resources */,
 				DFD73A271800824800202D57 /* greenLeaf@2x.png in Resources */,
 				DFD73A281800824800202D57 /* orangeLeaf.png in Resources */,
@@ -922,8 +975,6 @@
 				DFE59BDC180CB3BD00357899 /* sampleRoute1.gpx in Resources */,
 				DFE59BDE180CB3C400357899 /* sampleRoute2.gpx in Resources */,
 				DFE59BE0180CB3CC00357899 /* sampleRoute3.gpx in Resources */,
-				DF2E5D08181079A5000B9824 /* marker.png in Resources */,
-				DF2E5D09181079A5000B9824 /* marker@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -932,7 +983,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				39592557177518690035E351 /* InfoPlist.strings in Resources */,
-				39592568177518DD0035E351 /* GoogleMaps.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -980,9 +1030,9 @@
 				DFA9AC0217D66543006F58A5 /* UIColor+methods.m in Sources */,
 				DFA9C38017D9419B00FBE61F /* MapPinSelectorView.m in Sources */,
 				DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */,
-				DFA9C38D17DF916900FBE61F /* GreenUpMapView.m in Sources */,
 				DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */,
 				DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */,
+				DF81175F18895C6700B2C271 /* NetworkingController.m in Sources */,
 				DF2E5D03180F43A4000B9824 /* greenhttp.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1037,7 +1087,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Anders Melen (WJ6U5FY8CS)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Anders Melen (WJ6U5FY8CS)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1056,6 +1107,7 @@
 					"-ObjC",
 					"-licucore",
 				);
+				PROVISIONING_PROFILE = "3ABDDFC9-831D-40FD-AC65-F1EC8BE4FDBC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1073,7 +1125,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Anders Melen (WJ6U5FY8CS)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Anders Melen (WJ6U5FY8CS)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1085,6 +1138,7 @@
 					"-ObjC",
 					"-licucore",
 				);
+				PROVISIONING_PROFILE = "3ABDDFC9-831D-40FD-AC65-F1EC8BE4FDBC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1099,10 +1153,15 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GoGreen2/GoogleGreenMapTest-Prefix.pch";
-				INFOPLIST_FILE = "GoGreen2/GoogleGreenMapTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				PRODUCT_NAME = GoogleGreenMapTest;
+				GCC_PREFIX_HEADER = "GoGreen2/GoGreen-Prefix.pch";
+				INFOPLIST_FILE = "GoGreen2/GoGreen-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/jordanrouille/Desktop/OLD\\ DESKTOP/GreenUp/ios/TestFlightSDK2.1.3",
+				);
+				PRODUCT_NAME = GoGreen;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1115,10 +1174,15 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GoGreen2/GoogleGreenMapTest-Prefix.pch";
-				INFOPLIST_FILE = "GoGreen2/GoogleGreenMapTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				PRODUCT_NAME = GoogleGreenMapTest;
+				GCC_PREFIX_HEADER = "GoGreen2/GoGreen-Prefix.pch";
+				INFOPLIST_FILE = "GoGreen2/GoGreen-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/jordanrouille/Desktop/OLD\\ DESKTOP/GreenUp/ios/TestFlightSDK2.1.3",
+				);
+				PRODUCT_NAME = GoGreen;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

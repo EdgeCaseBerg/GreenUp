@@ -1,6 +1,5 @@
 #ifndef __LIB_GREEN_HTTP_
 	#include "greenhttp.h"
-	
 	#include <stdio.h>
 	#include <sys/socket.h>
 	#include <arpa/inet.h>
@@ -60,6 +59,9 @@ char * gh_make_request(char * request, char * host, char * str_ip, int port) {
     sent = 0;
   	while(sent < strlen(request)) {
     	tmpres = send(sock, request+sent, strlen(request)-sent, 0);
+        
+        //fprintf(stderr, "%s\n", request+sent);
+        
     	if(tmpres == -1){
     	  	perror("Can't send query");
 	      	return "PROBLEM";
@@ -89,7 +91,14 @@ char * gh_make_request(char * request, char * host, char * str_ip, int port) {
     	}
     	if(htmlstart){
             if( htmlBufsUsed < htmlBufsNeeded){
-                strcat(htmlBuf,htmlcontent);
+                /*fprintf(stderr, "-----");
+                printf("%s", htmlBuf);
+                fprintf(stderr, "\n");
+                fprintf(stderr, "\n");
+                fprintf(stderr, "\n");
+                printf("%s", htmlcontent);*/
+                strncat(htmlBuf, htmlcontent, BUFSIZ);
+                //strcat(htmlBuf,htmlcontent);
             }else{
                 /*Grow buffer first*/
                 indirectionBufferPointer = realloc(htmlBuf, strlen(htmlBuf) + strlen(buf) + sizeof(char));

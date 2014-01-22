@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^VoidBlock)(void);
-
 @interface MapPinCommentView : UIView
 
 @property (nonatomic, strong) UILabel *labelField;

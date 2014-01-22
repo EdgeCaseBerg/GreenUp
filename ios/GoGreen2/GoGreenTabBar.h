@@ -14,7 +14,6 @@
 
 @required
 -(void)goGreenTabBar:(GoGreenTabBar *)bar didSelectItem:(UITabBarItem *)item;
--(void)setSelectedItem:(int)item;
 
 @end
 

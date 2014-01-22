@@ -14,7 +14,6 @@
 #import "HeatMap.h"
 #import "HeatMapView.h"
 #import "BDHost.h"
-#import "GreenUpMapView.h"
 #import "Reachability.h"
 
 #define Message_Type_ADMIN @"ADMIN"
@@ -25,7 +24,7 @@
 
 @interface MapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>
 
-@property (strong, nonatomic) IBOutlet GreenUpMapView *mapView;
+@property (strong, nonatomic) MKMapView *mapView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 //@property (strong, nonatomic) UIButton *toggleGeoLogging;
 @property (strong, nonatomic) UIButton *clearPoints;
@@ -54,12 +53,14 @@
 @property BOOL pusheMapPins;
 
 @property BOOL pushOverdue;
+@property BOOL centerOnCurrentLocation;
+@property BOOL sateliteView;
+@property BOOL drivingAlertShown;
 
 @property (strong, nonatomic) NSDictionary *lastViewedLocation;
 
 
 -(MapViewController *)init;
--(IBAction)dumpAllPoints:(id)sender;
 -(IBAction)toggleLogging:(id)sender;
 -(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location;
 -(void)pushHeatMapDataToServer;

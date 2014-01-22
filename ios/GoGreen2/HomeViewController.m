@@ -69,6 +69,16 @@
 {
     if(![[[ContainerViewController sharedContainer] theMapViewController] logging])
     {
+        NSLog(@"Action - Home: Starting Clean Up");
+        NSDate *currentDate = [NSDate date];
+        NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:self.startDate];
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:elaspedTime];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm:ss"];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        NSString *formattedDate = [dateFormatter stringFromDate:date];
+        NSLog(@"Action - Home: Started Clean Up At: %@", formattedDate);
+        
         if([[ContainerViewController sharedContainer] networkingReachability])
         {
             [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
@@ -86,6 +96,16 @@
     }
     else
     {
+        NSDate *currentDate = [NSDate date];
+        NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:self.startDate];
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:elaspedTime];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm:ss"];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        NSString *formattedDate = [dateFormatter stringFromDate:date];
+        NSLog(@"Action - Home: Stopping Clean Up At: %@", formattedDate);
+        NSLog(@"Message - Home: Total Clean Up Time: %f", (-1 * [self.startDate timeIntervalSinceNow]));
+        
         [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
         
         [self.previousLoggingTimes addObject:[NSNumber numberWithDouble:(-1 * [self.startDate timeIntervalSinceNow])]];

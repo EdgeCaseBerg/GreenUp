@@ -7,26 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
+
+@class MKMapView, HeatMapPin, HeatMapPoint, CLLocation;
 
 @interface NetworkingController : NSObject <NSURLConnectionDataDelegate, NSURLConnectionDataDelegate>
 
-@property (nonatomic, strong) NSMutableData *responseData;
-@property (nonatomic, strong) NSString *currentRequest;
-@property NSInteger statusCode;
+//Map
+-(void)getMapPinsWithMap:(MKMapView *)mapView;
+-(void)getMapPinsForPinShowWithMap:(MKMapView *)mapView;
+-(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message;
+-(void)pushHeatMapPoints;
+-(void)getHeatDataPointsWithSpan:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location;
 
-//Map Pins
--(void)getMapPinsWithParameters:(NSDictionary *)parameters;
--(void)getMapPinForPinShowWithPinID:(int)pinID;
-
--(void)postNewPinWithParameters:(NSDictionary *)parameters;
-
-//Message Board
+//Messages
+-(void)getMessageForFirstPageOfShowMessage;
 -(void)getMessages;
--(void)getMessageForFirstPage;
--(void)getMessageByAppendingPageForScrolling;
--(void)getMessageByAppendingPageForShowMessage;
-
--(void)postNewMessage;
+-(void)getMessageForAppendingPageForScrollingWithPageURL:(NSString *)pageURL;
+-(void)getMessageByAppendingPageForShowMessageWithPageURL:(NSString *)pageURL;
+-(void)postMessageWithMessageType:(NSString *)type andMessage:(NSString *)message;
 
 + (NetworkingController *)shared;
 

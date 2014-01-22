@@ -29,9 +29,5 @@
     
 }
 
--(void)setSelectedItem:(int)item
-{
-    self.selectedItem = item;
-}
 
 @end

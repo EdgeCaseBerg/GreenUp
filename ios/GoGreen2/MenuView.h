@@ -12,7 +12,6 @@
 #define MENU_MAP_VIEW @"MenuMapView"
 #define MENU_MESSAGE_VIEW @"MenuMessageView"
 
-typedef void (^VoidBlock)(void);
 
 @interface MenuView : UIView
 

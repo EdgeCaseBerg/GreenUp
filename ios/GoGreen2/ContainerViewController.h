@@ -24,8 +24,6 @@
 #define COMMENTS_RELATIVE_URL @"/api/comments"
 #define PINS_RELATIVE_URL @"/api/pins"
 
-typedef void (^VoidBlock)(void);
-
 @interface ContainerViewController : UIViewController <UITabBarDelegate>
 
 @property (strong, nonatomic) NSArray *views;
@@ -38,6 +36,8 @@ typedef void (^VoidBlock)(void);
 @property (strong, nonatomic) UIView *loadingView;
 @property (nonatomic, strong) UIView *statusBarFix;
 
+@property int heightFix;
+
 +(ContainerViewController *)sharedContainer;
 
 -(IBAction)hideMenu:(id)sender;
@@ -49,10 +49,9 @@ typedef void (^VoidBlock)(void);
 -(void)switchMessageView;
 -(IBAction)shiftRight:(id)sender;
 -(IBAction)shiftLeft:(id)sender;
--(void)hideAllButtHomeView;
--(void)hideAllButtMapView;
--(void)hideAllButtMessageView;
--(char *)getIPFromHost:(NSString *)host;
+-(IBAction)hideAllButtHomeView:(id)sender;
+-(IBAction)hideAllButtMapView:(id)sender;
+-(IBAction)hideAllButtMessageView:(id)sender;
 
 -(BOOL)networkingReachability;
 

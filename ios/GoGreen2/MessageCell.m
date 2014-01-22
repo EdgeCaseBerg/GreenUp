@@ -23,8 +23,6 @@
         
         self.messageObject = messageObject;
 
-
-        NSLog(@"MESSAGE TYPE: %@", messageObject.messageType);
         if([messageObject.messageType isEqualToString:Message_Type_ADMIN])
         {
             //Text Content Label
