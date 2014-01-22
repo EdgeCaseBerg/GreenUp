@@ -156,15 +156,15 @@
     dsfsdfsdf
         <div class="row">
             <div class="col-md-4">
-            sdfsdf
+            zzzzzzzz
             </div>
 
             <div class="col-md-4">
-            sdfsdf
+            ffffff
             </div>
 
             <div class="col-md-4">
-            sdfsdfs
+            hhhhh
             </div>
 
         </div>
