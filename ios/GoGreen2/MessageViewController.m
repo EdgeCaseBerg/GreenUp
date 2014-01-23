@@ -429,7 +429,7 @@
 
 -(void)getMessageByAppendingPageForShowMessage
 {
-    [[NetworkingController shared] getMessageForFirstPageOfShowMessage];
+    [[NetworkingController shared] getMessageByAppendingPageForShowMessageWithPageURL:self.nextPageURL];
     /*
     NSLog(@"Network - Message: Getting Next Page Of Messages For Show Message With URL %@", self.nextPageURL);
     if([[ContainerViewController sharedContainer] networkingReachability])

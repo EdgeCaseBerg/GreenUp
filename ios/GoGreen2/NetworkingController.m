@@ -1134,7 +1134,7 @@ static NetworkingController *sharedNetworkingController;
     [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
     
     //Fire Off Request
-    getMessagesForAppendingForScrollingConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+    getMessagesForAppendingForShowConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
 
 -(void)postMessageWithMessageType:(NSString *)type andMessage:(NSString *)message
@@ -1164,6 +1164,7 @@ static NetworkingController *sharedNetworkingController;
         
         //Create Data From Request Dictionary
         NSData *requestData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+        
         [request setHTTPBody:requestData];
         
         [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
