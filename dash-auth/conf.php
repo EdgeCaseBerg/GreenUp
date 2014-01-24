@@ -1,11 +1,9 @@
 <?php
-require "LocalConfig.php";
-$config = new LocalConfig();
-
-define("DB_USER", $config->DB_USER);
-define("DB_HOST", $config->HOST);
-define("DB_PASS", $config->DB_PASS);
-define("DB_NAME", $config->DB_NAME);
+$conf = json_decode(file_get_contents("/etc/conf/local.conf"));
+define("DB_USER", $config["mysql-user");
+define("DB_HOST", $config["host"]);
+define("DB_PASS", $config["mysql-password"]);
+define("DB_NAME", $config["db-name"]);
 
 //define("DB_USER", "mysqlUser");
 //define("DB_HOST", "dev.xenonapps.com");

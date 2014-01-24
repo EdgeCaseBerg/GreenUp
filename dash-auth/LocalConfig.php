@@ -11,8 +11,7 @@ class LocalConfig
     public $DB_NAME = null;
 	// class used to create a configuration object from a configuration file.
 	public function __construct(){
-		$raw_conf = file_get_contents("/etc/conf/local.conf");
-		$conf = json_decode($raw_conf, true);
+		$conf = json_decode(file_get_contents("/etc/conf/local.conf"));
 
 		// setup named constants
 		$this->DB_USER = $conf['mysql-user'];
