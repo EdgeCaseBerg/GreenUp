@@ -438,15 +438,7 @@
             //Stop Getting Updates
             [self.locationManager stopUpdatingLocation];
             
-            //Create Pin For Current Location
-            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:MESSAGE_TYPE_USER_MARKER];
-            self.tempPinRef = currentLocationPin;
-            
-            //Save pin
-            [self.gatheredMapPins addObject:currentLocationPin];
-            
-            //Add Pin To Map
-            [self.mapView addAnnotation:currentLocationPin];
+            self.tempPinLocation = location.coordinate;
             
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
@@ -477,15 +469,7 @@
                 }
             }
             
-            //Create Pin For Current Location
-            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:MESSAGE_TYPE_USER_MARKER];
-            self.tempPinRef = currentLocationPin;
-            
-            //Save pin
-            [self.gatheredMapPins addObject:currentLocationPin];
-            
-            //Add Pin To Map
-            [self.mapView addAnnotation:currentLocationPin];
+            self.tempPinLocation = location.coordinate;
             
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
@@ -731,14 +715,7 @@
             CGPoint point = [sender locationInView:self.mapView];
             CLLocationCoordinate2D coord = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
             
-            HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andValiditity:TRUE andTitle:@"Custom Pin" andType:MESSAGE_TYPE_USER_MARKER];
-            self.tempPinRef = customPin;
-            
-            //Save pin
-            [self.gatheredMapPins addObject:customPin];
-            
-            //Add Pin To Map
-            [self.mapView addAnnotation:customPin];
+            self.tempPinLocation = coord;
             
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
@@ -908,7 +885,17 @@
 -(IBAction)postMarker:(NSNotification *)sender
 {
     NSArray *parameters = sender.object;
-    [[NetworkingController shared] postMarkerWithPin:self.tempPinRef andMessage:[parameters objectAtIndex:0] andType:[parameters objectAtIndex:1]];
+
+    HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:self.tempPinLocation andValiditity:TRUE andTitle:@"Custom Pin" andType:[parameters objectAtIndex:1]];
+    self.tempPinRef = customPin;
+    
+    //Save pin
+    [self.gatheredMapPins addObject:customPin];
+    
+    //Add Pin To Map
+    [self.mapView addAnnotation:customPin];
+    
+    [[NetworkingController shared] postMarkerWithPin:customPin andMessage:[parameters objectAtIndex:0] andType:[parameters objectAtIndex:1]];
     /*
     NSLog(@"Network - Map: Pushing New Marker With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])

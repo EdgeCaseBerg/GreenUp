@@ -10,7 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 
-#define API_PORT 31337
+#define API_PORT 31338
 
 //#define BASE_HOST @"http://199.195.248.180"
 #define BASE_HOST @"http://dev.xenonapps.com"

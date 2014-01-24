@@ -14,6 +14,8 @@
 
 #define ANIMATION_DURATION .5
 
+UIColor *defaultTint = nil;
+
 @implementation MapPinCommentView
 
 - (id)initWithFrame:(CGRect)frame
@@ -31,13 +33,13 @@
         [self.containerView setAlpha:.8];
         [self addSubview:self.containerView];
         
-        self.labelField = [[UILabel alloc] initWithFrame:CGRectMake(-320, 30, 290, 100)];
+        self.labelField = [[UILabel alloc] initWithFrame:CGRectMake(-320, 25, 290, 110)];
         [self.labelField setTextColor:[UIColor whiteColor]];
         [self.labelField setNumberOfLines:0];
         [self.labelField setTextAlignment:NSTextAlignmentCenter];
         [self.labelField setFont:[UIFont messageFont]];
         [self.labelField setBackgroundColor:[UIColor clearColor]];
-        [self.labelField setText:@"Post a messages to the community\n\nMessage:\tAsking for help with large items.\nHazards:\tAlerting the GreenUp organizers of dangerous materials.\nMessage must be less than 140 characters."];
+        [self.labelField setText:@"Post messages to the community\nHelp Needed:\tAsking for help with large items.\nHazards:\tAlerting the GreenUp organizers of dangerous materials.\nMessage must be less than 140 characters."];
         [self addSubview:self.labelField];
         
         if([UIScreen mainScreen].bounds.size.height == 568.0)
@@ -53,19 +55,22 @@
         [self.messageField setFont:[UIFont messageFont]];
         [self addSubview:self.messageField];
         
-        self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.doneButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+        self.doneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        //[self.doneButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+        [self.doneButton setTitle:@"Post" forState:UIControlStateNormal];
         [self.doneButton setFrame:CGRectMake(320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
         [self.doneButton addTarget:self action:@selector(doneButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.doneButton];
         
-        self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.cancelButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+        self.cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        //[self.cancelButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+        [self.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
         [self.cancelButton setFrame:CGRectMake(10 + 60 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
         [self.cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.cancelButton];
         
-        self.messageType = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Help Needed", @"Hazard", nil]];
+        self.messageType = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Help", @"Hazard", nil]];
+        defaultTint = self.messageType.tintColor;
         [self.messageType setFrame:CGRectMake(10 + 60 + 5 + 60 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 170, 45)];
         [self.messageType setSelectedSegmentIndex:0];
         [self.messageType addTarget:self action:@selector(typeChanged:) forControlEvents:UIControlEventValueChanged];
@@ -78,7 +83,7 @@
         VoidBlock animationBlock =
         ^{
             [self setAlpha:1];
-            [self.labelField setFrame:CGRectMake(15, 30, 290, 100)];
+            [self.labelField setFrame:CGRectMake(15, 25, 290, 110)];
             if([UIScreen mainScreen].bounds.size.height == 568.0)
             {
                 [self.messageField setFrame:CGRectMake(10, 140, 300, 158)];
@@ -102,7 +107,7 @@
 {
     if(sender.selectedSegmentIndex == 0)
     {
-        [self.messageType setTintColor:[UIColor blueColor]];
+        [self.messageType setTintColor:defaultTint];
     }
     else
     {
@@ -158,7 +163,7 @@
     VoidBlock animationBlock =
     ^{
         [self setAlpha:0];
-        [self.labelField setFrame:CGRectMake(-320, 30, 290, 100)];
+        [self.labelField setFrame:CGRectMake(-320, 25, 290, 110)];
         if([UIScreen mainScreen].bounds.size.height == 568.0)
         {
             [self.messageField setFrame:CGRectMake(10 + 320, 140, 300, 158)];
