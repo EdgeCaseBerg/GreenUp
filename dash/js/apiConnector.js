@@ -6,8 +6,8 @@ function ApiConnector(){
 
     this.LOCALHOST = "http://localhost/green-web"
     this.PROXYBASE = "/proxy.php?url=";
-    this.HOST = "http://199.195.248.180";
-    this.PORT = ":31337"
+    this.HOST = "http://dev.xenonapps.com";
+    this.PORT = ":31338"
     this.BASE = "/api";
 
 
@@ -43,7 +43,12 @@ function ApiConnector(){
         if(!window.HELPER.isNull(USE_URL) && USE_URL == 1){
             // leave the URL alone
         }else{
-            URL = this.LOCALHOST+this.PROXYBASE+this.HOST+this.PORT+this.BASE+URL;
+            if(document.URL.indexOf("localhost") != -1 || document.URL.indexOf("127.0.0.1") != -1){
+                URL = this.LOCALHOST+this.PROXYBASE+this.HOST+this.PORT+this.BASE+URL;
+            }else{
+                URL = this.HOST+this.PORT+this.BASE+URL;
+
+            }
         }
         console.log(URL);
 		$.ajax({
