@@ -7,9 +7,6 @@
 //
 
 #import "MessageViewController.h"
-//#import "FSNConnection.h"
-#import "CSocketController.h"
-#import "greenhttp.h"
 #import "ContainerViewController.h"
 #import "MessageCell.h"
 #import "UIFont+methods.h"
@@ -1085,6 +1082,8 @@
     if(parameters != nil)
     {
 #warning UPDATE WITH NETWORKING CONTROLLER WTF WAS I THINKING!!!!
+        
+        /*
         NSLog(@"Network - Message: Updaing Toggled Message with Message ID: %@", self.toggledMessageRef.pinID.stringValue);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             //Background Process Block
@@ -1165,7 +1164,7 @@
                     self.toggledMessageRef = nil;
                 }
             });
-        });
+        });*/
     }
 }
 

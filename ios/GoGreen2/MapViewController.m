@@ -7,9 +7,7 @@
 
 #import "MapViewController.h"
 #import "ContainerViewController.h"
-#import "greenhttp.h"
 #import "HeatMapPoint.h"
-#import "CSocketController.h"
 #import "NSArray+Primitive.h"
 #import "MapPinSelectorView.h"
 #import "HeatMapPin.h"

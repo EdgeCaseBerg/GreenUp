@@ -1186,9 +1186,7 @@ static NetworkingController *sharedNetworkingController;
         [request setHTTPBody:requestData];
         
         request.timeoutInterval = 10;
-        
-        postMessageConnection = [NSURLConnection alloc]
-        
+      
         //Fire Off Request
         postMessageConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     }
