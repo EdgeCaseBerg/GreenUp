@@ -13,6 +13,8 @@
 #import "HeatMapPoint.h"
 #import "NSArray+Primitive.h"
 
+#import <AFNetworking/AFNetworking.h>
+
 #define UPLOAD_QUEUE_LENGTH 5
 
 //Map Requests
@@ -496,84 +498,7 @@ static NetworkingController *sharedNetworkingController;
         getMessagesForFirstPageOfShowData = nil;
         getMessagesForFirstPageOfShowStatusCode = -1;
     }
-    else if([connection isEqual:getMessagesConnection])
-    {
-        NSDictionary *response = nil;
-        if(getMessagesData != nil)
-            response = [NSJSONSerialization JSONObjectWithData:getMessagesData options:0 error:nil];
-        
-        NSString *statusCode = [response objectForKey:@"status_code"];
-        NSLog(@"Network - Message: Recieved Status Code: %@", statusCode);
-        
-        if([statusCode integerValue] == 200)
-        {
-            //Remove Old Messages Incase Removed
-            [[[ContainerViewController sharedContainer] theMessageViewController].messages removeAllObjects];
-            
-            NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
-            NSLog(@"--- Data - Message: Messages,");
-            NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
-            
-            NSArray *comments = [response objectForKey:@"comments"];
-            //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
-            for(NSDictionary *comment in comments)
-            {
-                NetworkMessage *newMessage = [[NetworkMessage alloc] init];
-                newMessage.messageContent = [comment objectForKey:@"message"];
-                newMessage.messageID = [comment objectForKey:@"id"];
-                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateFormat:@"E M d H:m:s y"];
-                newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
-                
-                newMessage.messageType = [comment objectForKey:@"type"];
-                id pinID = [comment objectForKey:@"pin"];
-                if([pinID isKindOfClass:[NSNumber class]])
-                {
-                    newMessage.pinID = [comment objectForKey:@"pin"];
-                }
-                else
-                {
-                    newMessage.pinID = nil;
-                }
-                
-                newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
-                
-                [[[ContainerViewController sharedContainer] theMessageViewController].messages addObject:newMessage];
-                //[newDownloadedMessages addObject:newMessage];
-            }
-            
-            NSSortDescriptor* sortByDate = [NSSortDescriptor sortDescriptorWithKey:@"messageTimeStamp" ascending:FALSE];
-            [[[ContainerViewController sharedContainer] theMessageViewController].messages sortUsingDescriptors:[NSArray arrayWithObject:sortByDate]];
-            //[self.messages sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:TRUE]]];
-            
-            NSLog(@"--- Data - Message: Pages,");
-            NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
-            
-            
-            NSDictionary *pages = [response objectForKey:@"page"];
-            if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
-            {
-                NSString *fullURL = [pages objectForKey:@"next"];
-                NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
-                [[ContainerViewController sharedContainer] theMessageViewController].nextPageURL = [NSString stringWithFormat:@"/api/%@", [components objectAtIndex:1]];
-            }
-            else
-            {
-                [[ContainerViewController sharedContainer] theMessageViewController].nextPageURL = nil;
-            }
-            
-            
-            [[[ContainerViewController sharedContainer] theMessageViewController].theTableView reloadData];
-        }
-        else
-        {
-            [self printResponseFromFailedRequest:response andStatusCode:getMessagesStatusCode];
-        }
-        
-        getMessagesConnection = nil;
-        getMessagesData = nil;
-        getMessagesStatusCode = -1;
-    }
+    
     else if([connection isEqual:getMessagesForAppendingForScrollingConnection])
     {
         NSDictionary *response = nil;
@@ -823,17 +748,7 @@ static NetworkingController *sharedNetworkingController;
         
         [self printResponseFromFailedRequest:response andStatusCode:getMessagesForFirstPageOfShowStatusCode];
     }
-    else if([connection isEqual:getMessagesConnection])
-    {
-        NSDictionary *response = nil;
-        if(getMessagesData != nil)
-            response = [NSJSONSerialization JSONObjectWithData:getMessagesData options:0 error:nil];
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        //[alert show];
-        
-        [self printResponseFromFailedRequest:response andStatusCode:getMessagesStatusCode];
-    }
+
     else if([connection isEqual:getMessagesForAppendingForScrollingConnection])
     {
         NSDictionary *response = nil;
@@ -1104,17 +1019,84 @@ static NetworkingController *sharedNetworkingController;
     
     NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, MESSAGES_RELATIVE_URL];
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
-                                                           cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
-                                                       timeoutInterval:10];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id response)
+    {
+        NSLog(@"Network - Message: Recieved Status Code: %d", [operation.response statusCode]);
+        
+        if([operation.response statusCode] == 200)
+        {
+            //Remove Old Messages Incase Removed
+            [[[ContainerViewController sharedContainer] theMessageViewController].messages removeAllObjects];
+            
+            NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
+            NSLog(@"--- Data - Message: Messages,");
+            NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
+            
+            NSArray *comments = [response objectForKey:@"comments"];
+            //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
+            for(NSDictionary *comment in comments)
+            {
+                NetworkMessage *newMessage = [[NetworkMessage alloc] init];
+                newMessage.messageContent = [comment objectForKey:@"message"];
+                newMessage.messageID = [comment objectForKey:@"id"];
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                [dateFormatter setDateFormat:@"E M d H:m:s y"];
+                newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
+                
+                newMessage.messageType = [comment objectForKey:@"type"];
+                id pinID = [comment objectForKey:@"pin"];
+                if([pinID isKindOfClass:[NSNumber class]])
+                {
+                    newMessage.pinID = [comment objectForKey:@"pin"];
+                }
+                else
+                {
+                    newMessage.pinID = nil;
+                }
+                
+                newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
+                
+                [[[ContainerViewController sharedContainer] theMessageViewController].messages addObject:newMessage];
+                //[newDownloadedMessages addObject:newMessage];
+            }
+            
+            NSSortDescriptor* sortByDate = [NSSortDescriptor sortDescriptorWithKey:@"messageTimeStamp" ascending:FALSE];
+            [[[ContainerViewController sharedContainer] theMessageViewController].messages sortUsingDescriptors:[NSArray arrayWithObject:sortByDate]];
+            //[self.messages sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:TRUE]]];
+            
+            NSLog(@"--- Data - Message: Pages,");
+            NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
+            
+            
+            NSDictionary *pages = [response objectForKey:@"page"];
+            if(![[pages objectForKey:@"next"] isEqualToString:@"null"])
+            {
+                NSString *fullURL = [pages objectForKey:@"next"];
+                NSArray *components = [fullURL componentsSeparatedByString:@"/api/"];
+                [[ContainerViewController sharedContainer] theMessageViewController].nextPageURL = [NSString stringWithFormat:@"/api/%@", [components objectAtIndex:1]];
+            }
+            else
+            {
+                [[ContainerViewController sharedContainer] theMessageViewController].nextPageURL = nil;
+            }
+            
+            
+            [[[ContainerViewController sharedContainer] theMessageViewController].theTableView reloadData];
+        }
+        else
+        {
+            [self printResponseFromFailedRequest:response andStatusCode:getMessagesStatusCode];
+        }
+    }
+    failure:^(AFHTTPRequestOperation *operation, NSError *error)
+    {
+        NSLog(@"Error: %@", error);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
     
-    //Configure Request
-    [request setHTTPMethod: @"GET"];
-    NSError *requestError = nil;
-    NSURLResponse *urlResponse = nil;
-    
-    //Fire Off Request
-    getMessagesConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+        [self printResponseFromFailedRequest:error andStatusCode:[operation.response statusCode]];
+    }];
 }
 
 -(void)getMessageForAppendingPageForScrollingWithPageURL:(NSString *)pageURL
@@ -1194,14 +1176,14 @@ static NetworkingController *sharedNetworkingController;
 
 #pragma mark - Utility Methods
 
--(void)printResponseFromFailedRequest:(NSDictionary *)response andStatusCode:(int)statusCode
+-(void)printResponseFromFailedRequest:(id)error andStatusCode:(int)statusCode
 {
     NSLog(@"Network - Map: ***************************************");
     NSLog(@"Network - Map: ***************************************");
     NSLog(@"Network - Map: *************** WANRING ***************");
     NSLog(@"Network - Map: *********** Request Failed ************");
     NSLog(@"Network - Map: ****** Header Status Code: %d *********", statusCode);
-    NSLog(@"Network - Map: %@", response);
+    NSLog(@"Network - Map: %@", error);
     NSLog(@"Network - Map: ***************************************");
     NSLog(@"Network - Map: ***************************************");
     
