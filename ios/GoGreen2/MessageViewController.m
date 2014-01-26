@@ -50,8 +50,6 @@
     self.keyboardIsOut = FALSE;
     self.appendingMessages = FALSE;
     
-    [self getMessages];
-    
 
     NSLog(@"***************** %f", self.view.frame.size.height - 50);
     [self.messageViewContainer setBackgroundColor:[UIColor grayColor]];
@@ -140,7 +138,7 @@
 {
     if(self.pinIDToShow == nil)
     {
-        [self getMessages];
+        //[self getMessages];
         [self.theTableView reloadData];
     }
 }

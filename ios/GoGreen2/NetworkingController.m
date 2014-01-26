@@ -16,6 +16,8 @@
 #define UPLOAD_QUEUE_LENGTH 5
 
 //Map Requests
+NSMutableData *otherData = nil;
+
 NSURLConnection *getMapPinsConnection = nil;
 NSMutableData *getMapPinsData = nil;
 int getMapPinsStatusCode = -1;
@@ -129,6 +131,11 @@ static NetworkingController *sharedNetworkingController;
         postMessageData = [[NSMutableData alloc] init];
         postMessageStatusCode = [(NSHTTPURLResponse *)response statusCode];
     }
+    else
+    {
+        otherData = [[NSMutableData alloc] init];
+        NSLog(@"SSTOP");
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -161,6 +168,20 @@ static NetworkingController *sharedNetworkingController;
     else if([connection isEqual:getMessagesConnection])
     {
         [getMessagesData appendData:data];
+        
+        NSLog(@"##################################################################");
+        NSLog(@"##################################################################");
+        NSLog(@"##################################################################");
+        NSLog(@"##################################################################");
+        NSLog(@"##################################################################");
+        
+        NSLog(@"%@",[NSJSONSerialization JSONObjectWithData:data options:0 error:nil]);
+        NSLog(@"##################################################################");
+        NSLog(@"##################################################################");
+        NSLog(@"##################################################################");
+        NSLog(@"##################################################################");
+        NSLog(@"##################################################################");
+        
     }
     else if([connection isEqual:getMessagesForAppendingForScrollingConnection])
     {
@@ -173,6 +194,12 @@ static NetworkingController *sharedNetworkingController;
     else if([connection isEqual:postMessageConnection])
     {
         [postMessageData appendData:data];
+    }
+    else
+    {
+        [otherData appendData:data];
+        NSLog(@"STOP..");
+        NSLog(@"%@",[NSJSONSerialization JSONObjectWithData:data options:0 error:nil]);
     }
 }
 
@@ -723,6 +750,11 @@ static NetworkingController *sharedNetworkingController;
         postMessageData = nil;
         postMessageStatusCode = -1;
     }
+    else
+    {
+        NSLog(@"SSTOP");
+        NSLog(@"%@", [NSJSONSerialization JSONObjectWithData:otherData options:0 error:nil]);
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -827,13 +859,17 @@ static NetworkingController *sharedNetworkingController;
     else if([connection isEqual:postMessageConnection])
     {
         NSDictionary *response = nil;
-        if(getMessagesData != nil)
-            response = [NSJSONSerialization JSONObjectWithData:getMessagesData options:0 error:nil];
+        if(postMessageData != nil)
+            response = [NSJSONSerialization JSONObjectWithData:postMessageData options:0 error:nil];
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Message" message:@"You dont appear to have a network connection, please connect and retry posting your message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
         
         [self printResponseFromFailedRequest:response andStatusCode:postMessageStatusCode];
+    }
+    else
+    {
+        NSLog(@"SSTOP");
     }
 }
 
@@ -860,8 +896,6 @@ static NetworkingController *sharedNetworkingController;
     NSError *requestError;
     NSURLResponse *urlResponse = nil;
     
-    [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
-    
     //Fire Off Request
     getMapPinsConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
@@ -882,8 +916,6 @@ static NetworkingController *sharedNetworkingController;
     [request setHTTPMethod: @"GET"];
     NSError *requestError;
     NSURLResponse *urlResponse = nil;
-    
-    [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
     
     //Fire Off Request
     getMapPinsForShowConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
@@ -922,8 +954,6 @@ static NetworkingController *sharedNetworkingController;
     //Create Data From Request Dictionary
     NSData *requestData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
     [request setHTTPBody:requestData];
-    
-    [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
     
     request.timeoutInterval = 10;
     
@@ -989,8 +1019,6 @@ static NetworkingController *sharedNetworkingController;
             
             request.timeoutInterval = 10;
             
-            [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
-            
             //Fire Off Request
             pushHeatMapConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
         }
@@ -1045,8 +1073,6 @@ static NetworkingController *sharedNetworkingController;
     NSError *requestError = nil;
     NSURLResponse *urlResponse = nil;
 
-    [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
-    
     //Fire Off Request
     getHeatMapConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
@@ -1068,8 +1094,6 @@ static NetworkingController *sharedNetworkingController;
     NSError *requestError = nil;
     NSURLResponse *urlResponse = nil;
     
-    [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
-    
     //Fire Off Request
     getMessagesForFirstPageOfShowConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
@@ -1088,8 +1112,6 @@ static NetworkingController *sharedNetworkingController;
     [request setHTTPMethod: @"GET"];
     NSError *requestError = nil;
     NSURLResponse *urlResponse = nil;
-    
-    [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
     
     //Fire Off Request
     getMessagesConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
@@ -1110,8 +1132,6 @@ static NetworkingController *sharedNetworkingController;
     NSError *requestError = nil;
     NSURLResponse *urlResponse = nil;
     
-    [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
-    
     //Fire Off Request
     getMessagesForAppendingForScrollingConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
@@ -1131,8 +1151,6 @@ static NetworkingController *sharedNetworkingController;
     NSError *requestError = nil;
     NSURLResponse *urlResponse = nil;
     
-    [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
-    
     //Fire Off Request
     getMessagesForAppendingForShowConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
@@ -1140,7 +1158,7 @@ static NetworkingController *sharedNetworkingController;
 -(void)postMessageWithMessageType:(NSString *)type andMessage:(NSString *)message
 {
     NSLog(@"Network - Message: Post New Message");
-    
+
     if([message isEqualToString:@""])
     {
         NSLog(@"Message - Message: Message is Blank!");
@@ -1167,9 +1185,9 @@ static NetworkingController *sharedNetworkingController;
         
         [request setHTTPBody:requestData];
         
-        [NSURLConnection sendAsynchronousRequest:request queue:0 completionHandler:nil];
-        
         request.timeoutInterval = 10;
+        
+        postMessageConnection = [NSURLConnection alloc]
         
         //Fire Off Request
         postMessageConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];

@@ -327,6 +327,25 @@
             
             return annotationView;
         }
+        else if([((HeatMapPin *)annotation).type isEqualToString:MARKER_TYPE_HAZARD])
+        {
+            static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
+            
+            MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
+            
+            if (annotationView == nil)
+            {
+                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
+            }
+            
+            annotationView.image = [UIImage imageNamed:@"hazardMarker.png"];
+            
+            annotationView.centerOffset = CGPointMake(0, -15);
+            
+            annotationView.annotation = annotation;
+            
+            return annotationView;
+        }
         else
             return nil;
     }
@@ -615,7 +634,15 @@
         
         //Add Fake Pin Overlay
         CGPoint pinPointInSuperView = [self.mapView convertCoordinate:pinToShow.coordinate toPointToView:self.view];
-        UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"marker.png"]];
+        UIImageView *fakePin = nil;
+        if([pinToShow.type isEqualToString:MARKER_TYPE_HAZARD])
+        {
+            fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hazardMarker.png"]];
+        }
+        else
+        {
+            fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"marker.png"]];
+        }
         [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 9.5, pinPointInSuperView.y - 29, 19, 29)];
         
         [self.fadeView addSubview:fakePin];
