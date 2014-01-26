@@ -140,10 +140,8 @@ if(!isset($_COOKIE[session_name()])){
                 $('#loginButton').text("Administrative Dashboard");
             });
 
-            $('#loginButton').mouseleave(function(){
-                $('#loginButton').click(function(){
-                    window.location = "index.php?logout=true"
-                });
+            $('#loginButton').click(function(){
+                window.location = "index.php?logout=true"
             });
         });
 
