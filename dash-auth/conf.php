@@ -1,9 +1,10 @@
 <?php
-$conf = json_decode(file_get_contents("/etc/conf/local.conf"));
-define("DB_USER", $config["mysql-user");
-define("DB_HOST", $config["host"]);
-define("DB_PASS", $config["mysql-password"]);
-define("DB_NAME", $config["db-name"]);
+$conf = json_decode(file_get_contents("/etc/conf/local.conf"), 1);
+define("DB_USER", $conf["mysql-user"]);
+define("DB_HOST", $conf["host"]);
+define("HOST", $conf["host"]);
+define("DB_PASS", $conf["mysql-password"]);
+define("DB_NAME", $conf["db-name"]);
 
 //define("DB_USER", "mysqlUser");
 //define("DB_HOST", "dev.xenonapps.com");

@@ -1,21 +1,33 @@
 <?php
 
+    require "../dash-auth/conf.php";
+
 
 
     if(isset($_POST['username']) && isset($_POST['password'])){
         $ch = curl_init();
-        $str = '{ "id" : "'.$_POST['username'].'", "us" : "'.$_POST['password'].'" }';
 
-        curl_setopt($ch, CURLOPT_URL,            "http://dev.xenonapps.com/green-web/dash-auth/api/auth.php" );
+        $arr = array();
+        $arr['id'] = $_POST['username'];
+        $arr['us'] = $_POST['password'];
+        $str = json_encode($arr);
+
+//        print_r($str);
+        echo "<br />";
+        curl_setopt($ch, CURLOPT_URL,            "http://".HOST."/green-web/dash-auth/api/auth.php" );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($ch, CURLOPT_POST,           1 );
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     $str );
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
         curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/json'));
-        $result=json_decode(curl_exec ($ch));
+        $res = curl_exec($ch);
+//        print_r($res);
+        $result=json_decode($res);
         if(!isset($result->token)){
-            echo "no token";
+            echo "<br />no token --";
             echo "<br />";
-            echo $result;
+            print_r($result);
+            print_r(json_last_error( ));
+            print_r(curl_errno ( $ch ));
 //            header('Location: index.php');
         }
     }else{
