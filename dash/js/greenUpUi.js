@@ -175,12 +175,19 @@ function UiHandle(){
 	UiHandle.prototype.toggleCommentsSlider = function toggleCommentsSlider(){
 		if(window.UI.isCommentsSliderVisible){
 			window.UI.isCommentsSliderVisible = false;
-			$('#commentsDialog').css({"right":"-530px"});
+
+			    $('#commentsDialog').css({"right":"-530px"});
+
+                setTimeout(function() {
+                    $('#commentsDialog').hide();
+                }, 1000);
+
 			
 		}else{
 			window.UI.isCommentsSliderVisible = true;
-			$('#commentsDialog').css({"right":"-3px"});
-			
+            $('#commentsDialog').show(function(){
+			    $('#commentsDialog').css({"display":"block","right":"-3px"});
+            });
 		}
 	}
 

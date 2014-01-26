@@ -49,7 +49,7 @@ if(isset($_GET['logout'])){
         #loginContainer{
            display: none;
            height: 90%;
-           margin-top: -20px;
+           margin-top: -43px;
            background: url('images/backgrounds/80_percent_black.png');
            padding: 10px;
         }
