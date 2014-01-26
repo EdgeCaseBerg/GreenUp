@@ -16,6 +16,11 @@ if(isset($_GET['errorno'])){
     }
 }
 
+if(isset($_GET['logout'])){
+    $_SESSION = null;
+    session_destroy();
+}
+
 
 
 
@@ -36,6 +41,10 @@ if(isset($_GET['errorno'])){
             margin-top: 10px;
             margin-right: 10px;
         }
+
+
+
+
 
         #loginContainer{
            display: none;

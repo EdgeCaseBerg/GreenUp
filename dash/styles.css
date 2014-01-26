@@ -340,6 +340,12 @@ ul{
 	width:350px;
 }
 
+#loginButton{
+    margin-top: 10px;
+    margin-right: 10px;
+    width: 200px;
+}
+
 .markerTypeInputLabel{
 /*	padding:90px 0px 40px 0px;*/
 	/*float:left;*/
@@ -472,7 +478,7 @@ ul{
 	min-width:500px;
 	width:100%;
 	height:100%;
-	position: absolute	top:0px;
+	top:0px;
 	/*z-index:950;*/
 	/*background-image: url('images/backgrounds/80_percent_black.png');*/
 }
