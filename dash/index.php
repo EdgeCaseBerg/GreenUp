@@ -42,6 +42,14 @@ if(isset($_GET['logout'])){
             margin-right: 10px;
         }
 
+        .spacer100{
+            height: 100px;
+        }
+
+        .main_left{
+            padding-left: 50px;
+        }
+
 
 
 
@@ -59,8 +67,6 @@ if(isset($_GET['logout'])){
             width: 350px;
             padding: 20px;
             background: #eee;
-            margin: auto;
-            margin-top: 60px;
         }
 
         #submitButton{
@@ -88,8 +94,16 @@ if(isset($_GET['logout'])){
 
         }
 
-        .col-md-4{
-            border:solid 2px #fff;
+        .inputLabel{
+            text-align: right
+        }
+
+        .loginInput{
+            margin-left: 10px;
+        }
+
+        .col-md-6{
+            /*border:solid 2px #fff;*/
           }
     </style>
 
@@ -154,18 +168,45 @@ if(isset($_GET['logout'])){
     </div><!-- /.navbar-collapse -->
   </nav>
     <div id="mainContainer">
-    dsfsdfsdf
+        <div class="row spacer100">
+
+        </div>
         <div class="row">
-            <div class="col-md-4">
-            zzzzzzzz
+            <div class="col-md-6 main_left">
+                <h2>
+                    Welcome to the Green-Up VT<br />Administrative Dashboard.
+                </h2>
+                <h4>
+                    Please log in to continue.
+                </h4>
             </div>
 
-            <div class="col-md-4">
-            ffffff
-            </div>
+            <div class="col-md-6 main_right">
+                <div id="loginNest">
+                    <div class="errorMessage">
+                        <? echo $errorMsg; ?>
+                    </div>
+                    <form method="POST" name="login" id="loginForm" action="home.php">
+                        <table>
+                            <tr>
+                                <td class="inputLabel">email:</td><td><input type="email" name= "username" id="username" class="loginInput"/></td>
+                            </tr>
 
-            <div class="col-md-4">
-            hhhhh
+                            <tr>
+                                <td class="inputLabel">password:</td><td><input type="password" name="password" id="password" class="loginInput"/></td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <input type="submit" value="submit" id="submitButton" class="btn btn-default btn-md" style="margin-left: 10px;"/>
+                                    <input type="button" value="cancel" id="loginCancelButton" class="btn btn-default btn-md"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><a href="forgotPassword.php" style="font-size: 0.9em;">forgot password</a>
+                    </form>
+                </div>
             </div>
 
         </div>
@@ -181,10 +222,23 @@ if(isset($_GET['logout'])){
                     <? echo $errorMsg; ?>
                 </div>
                 <form method="POST" name="login" id="loginForm" action="home.php">
-                    email:<br /><input type="email" name= "username" id="username"/><br />
-                    password:<br /><input type="password" name="password" id="password"/><br />
-                    <input type="submit" value="submit" id="submitButton" class="btn btn-default btn-md"/>
-                    <input type="button" value="cancel" id="loginCancelButton" class="btn btn-default btn-md"/><br />
+
+                    <table>
+                        <tr>
+                            <td class="inputLabel">email:</td><td><input type="email" name= "username" id="username"/></td>
+                        </tr>
+
+                        <tr>
+                            <td class="inputLabel">password:</td><td><input type="password" name="password" id="password"/></td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td><input type="submit" value="submit" id="submitButton" class="btn btn-default btn-md"/>
+                                <input type="button" value="cancel" id="loginCancelButton" class="btn btn-default btn-md"/>
+                            </td>
+                        </tr>
+                    </table>
                     <br /><a href="forgotPassword.php" style="font-size: 0.9em;">forgot password</a>
                 </form>
             </div>
