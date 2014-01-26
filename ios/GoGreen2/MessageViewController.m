@@ -135,7 +135,7 @@
 {
     if(self.pinIDToShow == nil)
     {
-        //[self getMessages];
+        [self getMessages];
         [self.theTableView reloadData];
     }
 }
