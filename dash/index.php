@@ -1,37 +1,20 @@
 <?php
 
-    if (!function_exists('json_last_error_msg')){
-        function json_last_error_msg()
-        {
-            switch (json_last_error()) {
-                default:
-                    return;
-                case JSON_ERROR_DEPTH:
-                    $error = 'Maximum stack depth exceeded';
-                break;
-                case JSON_ERROR_STATE_MISMATCH:
-                    $error = 'Underflow or the modes mismatch';
-                break;
-                case JSON_ERROR_CTRL_CHAR:
-                    $error = 'Unexpected control character found';
-                break;
-                case JSON_ERROR_SYNTAX:
-                    $error = 'Syntax error, malformed JSON';
-                break;
-                case JSON_ERROR_UTF8:
-                    $error = 'Malformed UTF-8 characters, possibly incorrectly encoded';
-                break;
-            }
-            throw new Exception($error);
-        }
+$errorMsg = "";
+
+$base = str_replace( basename($_SERVER['REQUEST_URI'], "") , "" , $_SERVER['REQUEST_URI']);
+
+if(!isset($_SESSION["userid"]) || !isset($_SESSION["hashword"])){
+    session_start();
+}
+
+if(isset($_GET['errorno'])){
+    if($_GET['errorno'] == 1){
+        $errorMsg = "Username and/or password incorrect.";
+    }else if($_GET['errorno'] == 2){
+        $errorMsg = "Username and/or password incorrect.";
     }
-
-
-    $base = str_replace( basename($_SERVER['REQUEST_URI'], "") , "" , $_SERVER['REQUEST_URI']);
-
-    if(!isset($_SESSION["userid"]) || !isset($_SESSION["hashword"])){
-        session_start();
-    }
+}
 
 
 
@@ -43,6 +26,12 @@
 <head>
     <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <style type="text/css">
+
+        .errorMessage{
+            color: #b50000;
+            font-size: 0.8em;
+        }
+
         #loginButton{
             margin-top: 10px;
             margin-right: 10px;
@@ -58,7 +47,7 @@
 
         #loginNest{
             font-size: 1.5em;
-            width: 300px;
+            width: 350px;
             padding: 20px;
             background: #eee;
             margin: auto;
@@ -99,6 +88,9 @@
     <script src="js/lib/jquery.cookie.js"></script>
 
     <script>
+        $(document).ready(function(){
+
+
         <?
         if($_SERVER['HTTPS'] != null){
             echo("var base = 'https://" . $_SERVER['SERVER_NAME'] . $base . "';");
@@ -106,11 +98,15 @@
             echo("var base = 'http://" . $_SERVER['SERVER_NAME'] . $base . "';");
         }
 
+        if($errorMsg != ""){
+            echo "$('#loginContainer').show();";
+        }
+
         echo "console.log(base);";
 
         ?>
 
-        $(document).ready(function(){
+
 //            $('#loginForm').attr("action", base+"home.php");
 
             $('#loginButton').click(function(){
@@ -172,11 +168,15 @@
         <!-- not shown  -->
         <div id="loginContainer">
             <div id="loginNest">
+                <div class="errorMessage">
+                    <? echo $errorMsg; ?>
+                </div>
                 <form method="POST" name="login" id="loginForm" action="home.php">
-                    email:<input type="email" name= "username" id="username"/><br />
-                    password:<input type="password" name="password" id="password"/><br />
+                    email:<br /><input type="email" name= "username" id="username"/><br />
+                    password:<br /><input type="password" name="password" id="password"/><br />
                     <input type="submit" value="submit" id="submitButton" class="btn btn-default btn-md"/>
-                    <input type="button" value="cancel" id="loginCancelButton" class="btn btn-default btn-md"/>
+                    <input type="button" value="cancel" id="loginCancelButton" class="btn btn-default btn-md"/><br />
+                    <br /><a href="forgotPassword.php" style="font-size: 0.9em;">forgot password</a>
                 </form>
             </div>
         </div>

@@ -3,47 +3,38 @@
     require "../dash-auth/conf.php";
 
 
+    // check if we used HTTPS, if not, redirect to https
+    if(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'){}else{
+        //        header("Location: https://".HOST."/green-web/dash/index.php");
+    }
 
+    // login creds
     if(isset($_POST['username']) && isset($_POST['password'])){
+        // call up the auth server with CURL
         $ch = curl_init();
-
         $arr = array();
         $arr['id'] = $_POST['username'];
         $arr['us'] = $_POST['password'];
         $str = json_encode($arr);
 
-//        print_r($str);
-        echo "<br />";
         curl_setopt($ch, CURLOPT_URL,            "http://".HOST."/green-web/dash-auth/api/auth.php" );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($ch, CURLOPT_POST,           1 );
         curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
         curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/json'));
         $res = curl_exec($ch);
-//        print_r($res);
+        // check our results, then redirect if need be, with error codes.
         $result=json_decode($res);
         if(!isset($result->token)){
-            echo "<br />no token --";
-            echo "<br />";
-            print_r($result);
-            print_r(json_last_error( ));
-            print_r(curl_errno ( $ch ));
-//            header('Location: index.php');
+            header('Location: index.php?errorno=2');
         }
     }else{
-        echo "no username pass";
-//        header('Location: index.php');
+        header('Location: index.php?errorno=1');
     }
-
 
     if(!isset($_COOKIE[session_name()])){
         session_start();
     }
-
-
-
-
-
 
 ?>
 
