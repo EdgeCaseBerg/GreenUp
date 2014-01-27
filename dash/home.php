@@ -53,7 +53,7 @@ if(!isset($_COOKIE[session_name()])){
     <script src="js/lib/jquery/jquery.js"></script>
     <script src="js/lib/BigNumber.js"></script>
 
-
+    <script src="js/lib/jstween-1.1.min.js"></script>
     <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
     <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
     <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.datepicker.js"> </script>
