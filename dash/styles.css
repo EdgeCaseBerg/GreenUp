@@ -751,10 +751,19 @@ input[type=checkbox] {
 
 #addMarkerDashContent{
     text-align: left;
-    width: 50%;
+    width: 90%;
     margin: auto;
     margin-top: 20px;
     /*border:solid 1px red;*/
+}
+
+.newMarkerCoordInput{
+    width: 100%;
+}
+
+.newMarkerCoordLabel{
+    padding: 0px 0px 0px 5%;
+    font-weight: bold;
 }
 
 #addMarkerDashContent div{

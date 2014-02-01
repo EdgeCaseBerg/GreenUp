@@ -3,12 +3,20 @@ function ApiConnector(){
 	var markerData = []; 
 	var commentData = [];
 
-
     this.LOCALHOST = "http://localhost/green-web"
     this.PROXYBASE = "/proxy.php?url=";
     this.HOST = "http://dev.xenonapps.com";
     this.PORT = ""
-    this.BASE = "/api";
+    this.PATH = "/api";
+
+    this.TRUEBASE = "";
+
+
+    if(window.HOST.indexOf("localhost") != -1 || window.HOST.indexOf("127.0.0.1") != -1){
+        this.TRUEBASE = this.LOCALHOST+this.PROXYBASE+this.HOST+this.PATH;
+    }else{
+        this.TRUEBASE = this.HOST+this.PATH;
+    }
 
 
 	// api URLs have been moved into each of the functions using them as per issue 46
@@ -44,9 +52,9 @@ function ApiConnector(){
             // leave the URL alone
         }else{
             if(document.URL.indexOf("localhost") != -1 || document.URL.indexOf("127.0.0.1") != -1){
-                URL = this.LOCALHOST+this.PROXYBASE+this.HOST+this.PORT+this.BASE+URL;
+                URL = this.LOCALHOST+this.PROXYBASE+this.HOST+this.PORT+this.PATH+URL;
             }else{
-                URL = this.HOST+this.PORT+this.BASE+URL;
+                URL = this.HOST+this.PORT+this.PATH+URL;
 
             }
         }
@@ -99,8 +107,9 @@ function ApiConnector(){
 
 
 	ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
-		console.log(jsonObj);
-		var pinsURI = "/pins";
+		console.log("new pin:")
+        console.log(jsonObj);
+		var pinsURI = this.TRUEBASE+"/pins";
 		$.ajax({
 			type: "POST",
 			url: pinsURI,
@@ -108,9 +117,10 @@ function ApiConnector(){
     		cache: false,
 			// processData: false,
 			dataType: "json",
-			// contentType: "application/json",
+			contentType: "application/json",
 			success: function(data){
 				console.log("INFO: Pin successfully sent");
+                console.log(data);
 				if(window.UI.isAddMarkerDialogVisible){
 					window.UI.toggleAddMarkerOptions();
 				}
@@ -145,6 +155,8 @@ function ApiConnector(){
 						break;
 					case 200:
 						console.log("Request successful");
+                        console.log(error);
+                        console.log(xhr);
 						break;
 					default:
 						window.LOGGER.logEvent("Unknown Error Code", "ApiConnector: pushNewPin()");
@@ -279,7 +291,7 @@ function ApiConnector(){
 	}
 
 	ApiConnector.prototype.pullTestData = function pullTestData(){
-		this.pullApiData(BASE, "JSON", "GET", window.UI.updateTest);
+		this.pullApiData(this.PATH, "JSON", "GET", window.UI.updateTest);
 		this.pullCommentData("needs", null);
 		this.pullCommentData("messages", null);
 		this.pullCommentData("", null);
