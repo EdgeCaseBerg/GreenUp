@@ -167,15 +167,17 @@ if ( !$url ) {
   $ch = curl_init( $url );
   
   if ( strtolower($_SERVER['REQUEST_METHOD']) == 'post' ) {
-    // var_dump($_POST);
+    error_log("#####  POST ##### -----");
+    error_log("Body: ".$HTTP_RAW_POST_DATA);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
     curl_setopt($ch, CURLOPT_POST, true );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $HTTP_RAW_POST_DATA);
     curl_setopt($ch, CURLOPT_HEADER, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   }else if(strtolower($_SERVER['REQUEST_METHOD']) == 'put' ){
-//    error_log("fell into put");
+    error_log("**** PUT ****");
     $body = file_get_contents("php://input");
+    error_log("body: ".$body);
     $fp = fopen('php://temp/maxmemory:256000', 'w');
     if (!$fp) {
       die('could not open temp memory data');

@@ -98,6 +98,10 @@ if(!isset($_COOKIE[session_name()])){
     <script>
 
         $(document).ready(function(){
+
+            <?
+                echo "window.HOST = '".HOST."';";
+            ?>
             //
             window.TOKEN = getParameterByName("token");
             window.userID = getParameterByName("user");
@@ -242,51 +246,6 @@ if(!isset($_COOKIE[session_name()])){
 
         </div> <!-- end extendedAnalyticsDialog -->
 
-        <div id="analyticsDialog">
-            <div class="analyticsColumnContainer">
-
-                <div class="nestedAnalyticsColumn row1AnalyticsColumn">
-                    <div class="analyticsHeader">
-                        Analytics Sample Period
-                    </div>
-                    <div class="analyticsData">
-                        <ul>
-                            <li>Start Date:&nbsp;<input type="text" class="datePicker" id="startDateInput"/></li>
-                            <li> End Date: &nbsp;&nbsp;<input type="text" class="datePicker" id="endDateInput"/></li>
-                            <li><input type="button" value="update" id="updateAnalyticsButton" /></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="nestedAnalyticsColumn row1AnalyticsColumn">
-                    <div class="analyticsHeader">
-                        User Device Breakdown
-                    </div>
-                    <div class="analyticsData">
-                        <div class="analyticsDataNestColumn usageDataNestColumn">
-                            <ul>
-                                <li>iPhone  <span class="analyticsDataPoint" id="pctIphone"></span></li>
-                                <li>Android <span class="analyticsDataPoint" id="pctAndroid"></span></li>
-                                <li>Web <span class="analyticsDataPoint" id="pctOther"></span></li>
-                            </ul>
-                        </div>
-                        <div class="analyticsDataNestColumn usageDataNestColumn usageDataChart" id="usageDataPieChart"></div>
-                    </div>
-                </div>
-
-                <div class="nestedAnalyticsColumn row1AnalyticsColumn">
-                    <div class="analyticsHeader">
-                        Users Per Day
-                    </div>
-                    <div class="analyticsData">
-                        <div class="usageDataChart" id="usageDataLineChart"></div>
-                    </div>
-                </div>
-            </div>
-        </div> <!-- end analyticsDialog -->
-
-
-
     </div>
 </div>
 
@@ -302,67 +261,39 @@ if(!isset($_COOKIE[session_name()])){
             Add a marker to the map
         </div>
         <div id="addMarkerDashContent">
-            <ul>
-                <li class="inputLocationTypeLi">
-                    <input type="radio" name="group" class="locationTypeMenuItem" id="latLonSelect" checked>&nbsp;&nbsp;&nbsp;Latitude / Longitude
-                </li>
-                <li class="inputLocationTypeLi">
-                    <input type="radio" name="group" class="locationTypeMenuItem" id="streetSelect">&nbsp;&nbsp;&nbsp;Street Address
-                </li>
-            </ul>
 
-            <div id="coordsInputContainer" class="locationTypeInputContainer">
-                <ul id="coordsInputNest" class="markerInputNest">
+            <div id="markerSelectContainer">
+                <ul>
                     <li>
-                        <div class="inputLabel">Latitude</div>
-                        <div class="inputInput">
-                            <input type="text" name="coords" id="markerLat" />
-                        </div>
+                        <h4>Select a marker to use</h4>
+                    </li>
                     <li>
-                        <div class="inputLabel">Longitude</div>
-                        <div class="inputInput">
-                            <input type="text" name="coords" id="markerLng" />
-                        </div>
+                        <select class="form-control" id="markerSelector">
+                            <option data-var="MARKER" class="default">Trash Pickup Point</option>
+                            <option data-var="HAZARD">Hazard</option>
+                            <option data-var="GENERAL">General</option>
+                            <option data-var="ADMIN">Administrative</option>
+                        </select>
+                    </li>
+                    <li style="padding-top: 10px"></li>
+                    <li><h4>Location for Marker</h4></li>
+                    <li>
+                        <table style="width: 100%">
+                            <tr>
+                                <td class="newMarkerCoordLabel">Latitude</td><td style="width: 66%"><input type="text" name="coords" id="markerLat" class="newMarkerCoordInput" /></td>
+                            </tr>
+                            <tr>
+                                <td class="newMarkerCoordLabel">Longitude</td><td style="width: 66%"><input type="text" name="coords" id="markerLng" class="newMarkerCoordInput"/></td>
+                            </tr>
+
+                        </table>
+                    </li>
+                    <li style="padding-top: 10px"></li>
+                    <li><h4>Comments</h4></li>
+                    <li><textarea id="markerTextarea"></textarea></li>
+                    <li><input type="button" value="Add Marker" id="addMarkerGoButton"/><input type="button" id="addMarkerCaneclButton" value="Cancel" /></li>
                 </ul>
             </div>
-
-            <div id="streetInputContainer" class="locationTypeInputContainer">
-                <form id="streetInputForm">
-                    <ul id="streetInputNest" class="markerInputNest">
-                        <li>
-                            <div class="inputLabel">Address 1</div>
-                            <div class="inputInput">
-                                <input type="text" name="streetAddress1" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="inputLabel">Address 2</div>
-                            <div class="inputInput">
-                                <input type="text" name="streetAddress2" />
-                            </div>
-                        <li>
-                            <div class="inputLabel">City</div>
-                            <div class="inputInput">
-                                <input type="text" name="streetAddressCity" />
-                            </div>
-                        <li>
-                            <div class="inputLabel">State</div>
-                            <div class="inputInput">
-                                <input type="text" name="streetAddressState" />
-                            </div>
-                        <li>
-                            <div class="inputLabel">Zip</div>
-                            <div class="inputInput">
-                                <input type="text" name="streetAddressZip" />
-                            </div>
-                    </ul>
-            </div>
-            <ul>
-                <li>Comment</li>
-                <li><textarea id="markerTextarea"></textarea></li>
-                <li><input type="button" value="Add Marker" id="addMarkerGoButton"/><input type="button" id="addMarkerCaneclButton" value="Cancel" /></li>
-            </ul>
-            </form>
         </div>
     </div>
 </div>

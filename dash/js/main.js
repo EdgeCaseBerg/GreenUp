@@ -6,6 +6,7 @@ function Pin(){
     this.lonDegrees;
     this.type; 
     this.message = "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?";
+    this.addressed = false;
 }
 
 

@@ -113,16 +113,6 @@ function UiHandle(){
             }
         });
 
-        $('#streetSelect').click(function(){
-            $('.locationTypeInputContainer').slideUp().removeClass("visible");
-
-            if($('#streetInputContainer').hasClass("visible")){
-                $('#streetInputContainer').slideUp().removeClass("visible");
-            }else{
-                $('#streetInputContainer').slideDown().addClass("visible");
-            }
-        });
-
         $('#updateAnalyticsButton').click(function(){
             queryCoreReportingApi(window.ANALYTICS_PROFILE, $('#startDateInput').val(), $('#endDateInput').val());
         });
@@ -166,7 +156,7 @@ function UiHandle(){
             window.UI.isOptionsVisible = true;
             $('.markerTypeSelectDialog').css({"top":"35px"});
             setTimeout(function(){
-                $('#extendedAnalyticsDialog').css({"top":"235px"});
+                $('#extendedAnalyticsDialog').css({"top":"15px"});
             }, 100);
 
         }
@@ -325,70 +315,45 @@ function UiHandle(){
 
     UiHandle.prototype.toggleAddMarkerOptions = function toggleAddMarkerOptions(point){
         if(window.UI.isAddMarkerDialogVisible){
-            $('#addMarkerDashContainer').fadeOut(500);
-            window.UI.isAddMarkerDialogVisible = false;
+            $('#addMarkerDashContainer').fadeOut(400, function(){
+                window.UI.isAddMarkerDialogVisible = false;
+                $('#markerTextarea').val("");
+                $('#markerSelector .default').attr("selected", "selected");
+            });
         }else{
+            console.log("point:");
             console.log(point);
             var lat = point.latLng.lat();
             var lng = point.latLng.lng();
-
+            // set our inputs
             $('#markerLat').val(lat);
             $('#markerLng').val(lng);
 
-            window.ApiConnector.getStreetFromLatLng(lat, lng)
-            $('#addMarkerDashContainer').fadeIn(500);
+            $('#addMarkerDashContainer').fadeIn(400);
             window.UI.isAddMarkerDialogVisible = true;
 
             var streetAddress = [];
-            $('#addMarkerGoButton').click(function(){
-                console.log("clicked");
-                // collect the street address data from the form
-                var streetAddr = {
-                    "street" : $("input[name='streetAddress1']").val(),
-                    "city" : $("input[name='streetCity']").val(),
-                    "state": $("input[name='streetAddressState']").val()
-                }
+            var markerType = "MARKER";
 
-                var pin = new Pin();
-                pin.latDegrees = $('#markerLat').val();
-                pin.lonDegrees = $('#markerLng').val();
-                pin.message = $('#markerTextarea').val();
-                pin.type = "TRASH PICKUP";
-
-                // we're using normal latlng for our pin
-                if(pin.latDegrees.length > 1 && pin.lonDegrees.length >1 && pin.message.length >1){
-                    window.ApiConnector.pushNewPin(JSON.stringify(pin));
-                }else{ // we're using a street address
-                    var fieldCount = 0;
-                    // check we've got the needed fields
-                    for(prop in streetAddr){
-                        if(prop.length > 0){
-                            fieldCount++;
-                        }
-                    }
-
-                    if(fieldCount > 2){
-                        console.log("new pin");
-                        var pin = new Pin();
-                        pin.message = $('#markerTextarea').val();
-                        window.streetAddr = streetAddr;
-                        window.ApiConnector.getLatLngFromStreet(streetAddr, pin, window.ApiConnector.buildNewPin);
-                    }
-                }
-
-
-                // streetAddr["number"] + "+"+
-                // 		streetAddr["street"] + "+" +
-                // 		streetAddr["streetType"] + ",+" +
-                // 		streetAddr["city"] + ",+" +
-                // 		streetAddr["state"]
-
-                // window.ApiConnector.getLatLngFromStreet()
-
-
+            $('#markerSelector').change(function(){
+                markerType = $('#markerSelector option:selected').data("var");
             });
 
+            // we're submitting our form
+            $('#addMarkerGoButton').click(function(){
+                var pin = new Pin();
+                pin.latDegrees = parseFloat($('#markerLat').val());
+                pin.lonDegrees = parseFloat($('#markerLng').val());
+                pin.message = $('#markerTextarea').val();
+                pin.type = markerType;
+                pin.addressed = false;
 
+                if(!window.HELPER.isNull(pin.latDegrees) && !window.HELPER.isNull(pin.lonDegrees)){
+                    window.ApiConnector.pushNewPin(JSON.stringify(pin));
+                }else{
+                    alert("You must include a latitude, longitude, and message for your marker");
+                }
+            });
         }
     }
 
@@ -408,7 +373,6 @@ function UiHandle(){
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
-                console.log(ii + "-" + totalSecondsWorked);
             }
         }else{
             console.log("Data grid not found --> ");
@@ -527,10 +491,10 @@ function UiHandle(){
             }
 
             switch(comments[ii]['type']){
-                case 'FORUM':
-                    div.className += " bubbleForum";
+                case 'HAZARD':
+                    div.className += " bubbleHazard";
                     break;
-                case 'TRASH PICKUP':
+                case 'MARKER':
                     div.className += " bubbleNeeds";
                     break;
                 case 'GENERAL MESSAGE':
