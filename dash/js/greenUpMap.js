@@ -146,20 +146,20 @@ function MapHandle(){
 
 		var iconUrl; 
 		switch(markerType){
-			case "GENERAL MESSAGE":
-				pin.type = "GENERAL MESSAGE";
+			case "HAZARD":
+				pin.type = "HAZARD";
 				iconUrl = "images/icons/orangeCircle.png";
 				break;
-			case "HELP NEEDED":
-				pin.type = "HELP NEEDED";
+			case "ADMIN":
+				pin.type = "ADMIN";
 				iconUrl = "images/icons/blueCircle.png";
 				break;
-			case "TRASH PICKUP":
-				pin.type = "TRASH PICKUP";
+			case "MARKER":
+				pin.type = "MARKER";
 				iconUrl = "images/icons/new_trash1_sm_test.png";
 				break;
 			default:
-				pin.type = "GENERAL MESSAGE";
+				pin.type = "COMMENT";
 				iconUrl = "images/icons/orangeCircle.png";
 				break;
 		}
