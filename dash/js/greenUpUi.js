@@ -156,7 +156,7 @@ function UiHandle(){
             window.UI.isOptionsVisible = true;
             $('.markerTypeSelectDialog').css({"top":"35px"});
             setTimeout(function(){
-                $('#extendedAnalyticsDialog').css({"top":"235px"});
+                $('#extendedAnalyticsDialog').css({"top":"15px"});
             }, 100);
 
         }

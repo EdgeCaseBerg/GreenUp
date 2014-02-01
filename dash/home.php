@@ -246,51 +246,6 @@ if(!isset($_COOKIE[session_name()])){
 
         </div> <!-- end extendedAnalyticsDialog -->
 
-        <div id="analyticsDialog">
-            <div class="analyticsColumnContainer">
-
-                <div class="nestedAnalyticsColumn row1AnalyticsColumn">
-                    <div class="analyticsHeader">
-                        Analytics Sample Period
-                    </div>
-                    <div class="analyticsData">
-                        <ul>
-                            <li>Start Date:&nbsp;<input type="text" class="datePicker" id="startDateInput"/></li>
-                            <li> End Date: &nbsp;&nbsp;<input type="text" class="datePicker" id="endDateInput"/></li>
-                            <li><input type="button" value="update" id="updateAnalyticsButton" /></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="nestedAnalyticsColumn row1AnalyticsColumn">
-                    <div class="analyticsHeader">
-                        User Device Breakdown
-                    </div>
-                    <div class="analyticsData">
-                        <div class="analyticsDataNestColumn usageDataNestColumn">
-                            <ul>
-                                <li>iPhone  <span class="analyticsDataPoint" id="pctIphone"></span></li>
-                                <li>Android <span class="analyticsDataPoint" id="pctAndroid"></span></li>
-                                <li>Web <span class="analyticsDataPoint" id="pctOther"></span></li>
-                            </ul>
-                        </div>
-                        <div class="analyticsDataNestColumn usageDataNestColumn usageDataChart" id="usageDataPieChart"></div>
-                    </div>
-                </div>
-
-                <div class="nestedAnalyticsColumn row1AnalyticsColumn">
-                    <div class="analyticsHeader">
-                        Users Per Day
-                    </div>
-                    <div class="analyticsData">
-                        <div class="usageDataChart" id="usageDataLineChart"></div>
-                    </div>
-                </div>
-            </div>
-        </div> <!-- end analyticsDialog -->
-
-
-
     </div>
 </div>
 
