@@ -315,8 +315,11 @@ function UiHandle(){
 
     UiHandle.prototype.toggleAddMarkerOptions = function toggleAddMarkerOptions(point){
         if(window.UI.isAddMarkerDialogVisible){
-            $('#addMarkerDashContainer').fadeOut(500);
-            window.UI.isAddMarkerDialogVisible = false;
+            $('#addMarkerDashContainer').fadeOut(400, function(){
+                window.UI.isAddMarkerDialogVisible = false;
+                $('#markerTextarea').val("");
+                $('#markerSelector .default').attr("selected", "selected");
+            });
         }else{
             console.log("point:");
             console.log(point);
@@ -326,7 +329,7 @@ function UiHandle(){
             $('#markerLat').val(lat);
             $('#markerLng').val(lng);
 
-            $('#addMarkerDashContainer').fadeIn(500);
+            $('#addMarkerDashContainer').fadeIn(400);
             window.UI.isAddMarkerDialogVisible = true;
 
             var streetAddress = [];
@@ -370,7 +373,6 @@ function UiHandle(){
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
-                console.log(ii + "-" + totalSecondsWorked);
             }
         }else{
             console.log("Data grid not found --> ");
@@ -489,10 +491,10 @@ function UiHandle(){
             }
 
             switch(comments[ii]['type']){
-                case 'FORUM':
-                    div.className += " bubbleForum";
+                case 'HAZARD':
+                    div.className += " bubbleHazard";
                     break;
-                case 'TRASH PICKUP':
+                case 'MARKER':
                     div.className += " bubbleNeeds";
                     break;
                 case 'GENERAL MESSAGE':

@@ -314,7 +314,7 @@ if(!isset($_COOKIE[session_name()])){
                     </li>
                     <li>
                         <select class="form-control" id="markerSelector">
-                            <option data-var="MARKER">Trash Pickup Point</option>
+                            <option data-var="MARKER" class="default">Trash Pickup Point</option>
                             <option data-var="HAZARD">Hazard</option>
                             <option data-var="GENERAL">General</option>
                             <option data-var="ADMIN">Administrative</option>
