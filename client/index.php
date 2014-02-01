@@ -1,6 +1,8 @@
 <?php
     if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['HTTP_USER_AGENT'], "android") === false ){
-        header("Location: phone_frame.html");
+        if(!isset($_GET['frame'])){
+            header("Location: phone_frame.html");
+        }
     }
 ?>
 
