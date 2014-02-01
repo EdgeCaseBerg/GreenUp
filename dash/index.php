@@ -29,6 +29,7 @@ if(isset($_GET['logout'])){
 
 <html>
 <head>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <style type="text/css">
 
