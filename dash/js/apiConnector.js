@@ -463,8 +463,9 @@ function ApiConnector(){
                 console.log("[ERROR] Failed to DELETE comment "+commentId+": "+errMsg);
             },
             success: function(data){
-                console.log("[INFO] DELETE comment success");
-                window.ApiConnector.pullCommentData("", null);
+                window.LOGGER.info(arguments.callee.name, "DELETE comment success");
+//                window.ApiConnector.pullCommentData("", null);
+                window.ApiConnector.pullMarkerData();
             }
         });//Ajax
 

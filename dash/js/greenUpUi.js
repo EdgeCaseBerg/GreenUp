@@ -597,7 +597,7 @@ function UiHandle(){
                 if(window.PINS[ii].id == pinId){
                     var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees);
                     window.MAP.map.setCenter(centerPoint);
-                    window.MAP.map.setZoom(20);
+                    window.MAP.map.setZoom(16);
                 }
             }
         });
