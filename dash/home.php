@@ -123,12 +123,15 @@ if(!isset($_COOKIE[session_name()])){
             // build out the google map
             window.MAP = new MapHandle();
             window.MAP.initMap();
+
+            window.LOGGER.serverLog("Testing server logging", arguments.callee.name);
             // grab our comments, map markers, and heatmap data
             window.ApiConnector.pullCommentData();
             window.ApiConnector.pullMarkerData();
             window.ApiConnector.pullHeatmapData();
             window.ApiConnector.pullRawHeatmapData();
             window.ApiConnector.pullServerLog(window.UI.updateLogContent);
+
 
             $('#loginButton').click(function(){
                 window.location = "index.php?logout=true"

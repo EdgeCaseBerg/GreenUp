@@ -8,6 +8,12 @@ function Pin(){
     this.addressed = false;
 }
 
+function LogEvent(message, stackTrace, origin){
+    this.message = message;
+    this.stackTrace = stackTrace,
+    this.origin = origin;
+}
+
 
 //We cannot call this Comment because it's reserved by javascript
 function FCommment(){
@@ -52,8 +58,10 @@ function ClientLogger(){
         console.log('%c [ERROR] ' + str, 'background: #fff; color: red');
     }
 
-    ClientLogger.prototype.sendLogEvent = function sendLogEvent(event){
-
+    ClientLogger.prototype.serverLog = function serverLog(message, stacktrace){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        var event = new LogEvent(message, stacktrace, "Green-UP Admin Dash");
+        window.ApiConnector.postLogEvent(event, window.ApiConnector.pullServerLog(window.UI.updateLogContent));
     }
 }
 
