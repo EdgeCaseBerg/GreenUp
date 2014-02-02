@@ -40,8 +40,8 @@ ul{
 
 .navbar{
     background: #ededed;
-    position:relative;
-    z-index: 300;
+    /*position:relative;*/
+    /*z-index: 300;*/
     border-bottom: solid 2px #999;
 }
 
@@ -344,10 +344,10 @@ ul{
 	width:350px;
 }
 
-#loginButton{
+.navButtons{
     margin-top: 10px;
     margin-right: 10px;
-    width: 200px;
+    width: 140px;
 }
 
 .markerTypeInputLabel{
@@ -362,7 +362,7 @@ ul{
 	/*display:inline-block;*/
 	/*transform: rotate(-90deg);*/
 	/*-ms-transform: rotate(-90deg); /* IE 9 */
-	/*-webkit-transform: rotate(-90deg); /* Safari and Chrome */*/
+	/*-webkit-transform: rotate(-90deg); /* Safari and Chrome */
 }
 
 .markerTypeNestColumn{
@@ -709,7 +709,7 @@ input[type=checkbox] {
 }
 
 
-#addMarkerDashContainer{
+.modal-full{
     display:none;
     float:left;
     position: absolute;
