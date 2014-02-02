@@ -265,7 +265,8 @@ if(!isset($_COOKIE[session_name()])){
 
     </div>
     <div id="logPageControl">
-        <button id="prevLogPage" data-var="">prev</button>
+        <button id="prevLogPage" data-var="">previous</button>
+        <div id="logPageNo"></div>
         <button id="nextLogPage" data-var="">next</button>
     </div>
 </div>

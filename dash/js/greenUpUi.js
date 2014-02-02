@@ -176,6 +176,7 @@ function UiHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.LOGGER.obj(data, arguments.callee.name, null);
         $('#logNest').html("");
+        $('#logPageNo').html("Page: <b>"+data.page.index+"</b>");
         $('#prevLogPage').attr("data-var", data.page.previous);
         $('#nextLogPage').attr("data-var", data.page.next);
         $('#nextLogPage').click(function(){
@@ -207,7 +208,7 @@ function UiHandle(){
             $('#logDialog').tween({
                 left:{
                     start: 0,
-                    stop: -530,
+                    stop: -640,
                     time: 0,
                     duration: 1,
                     units: 'px',
@@ -227,7 +228,7 @@ function UiHandle(){
 
             $('#logDialog').tween({
                 left:{
-                    start: -530,
+                    start: -640,
                     stop: 0,
                     time: 0,
                     duration: 1,

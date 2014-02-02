@@ -263,12 +263,12 @@ ul{
     background: #eee;
     position:absolute;
     top:72px;
-    left: -530px;
+    left: -630px;
     border:solid 1px #222;
     height: 80%;
     min-height: 410px;
     overflow-y: scroll;
-    width: 525px;
+    width: 625px;
     z-index: 300;
     -webkit-box-shadow: 0px 14px 8px 0px rgba(3, 3, 3, 0.2);
     box-shadow: 0px 14px 8px 0px rgba(3, 3, 3, 0.2);
@@ -277,6 +277,13 @@ ul{
     /*-o-transition: all .4s ease;*/
     /*-ms-transition: all .4s ease;*/
     /*transition: all .4s ease;*/
+}
+
+#logPageNo{
+    display:inline-block;
+    padding: 3px;
+    background: #C9F9FF;
+    border:solid 1px #000;
 }
 
 .mapViewLinks{
@@ -290,13 +297,13 @@ ul{
 
 #logPageControl{
     width: 100%;
-    padding: 5px 1% 5px 1%;
+    padding: 8px 1% 8px 1%;
     text-align: center;
     border-top: solid 2px #888;
 }
 
 #logPageControl button{
-    width: 47%;
+    width: 40%;
 }
 
 .logTime{
