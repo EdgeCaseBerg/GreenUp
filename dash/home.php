@@ -43,57 +43,30 @@ if(!isset($_COOKIE[session_name()])){
 <!DOCTYPE html>
 <html style="height: 100%; background: #eee">
 <head>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-
     <title>GreenUp-VT Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <!-- Bootstrap -->
     <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <!-- Our css -->
     <link href="styles.css" rel="stylesheet" media="screen">
-    <link href="js/lib/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" media="screen">
+    <!-- <link href="js/lib/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" media="screen">-->
     <!-- logging framework -->
     <!-- <script src="js/lib/log4javascript_production.js"></script>-->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/lib/jquery/jquery.js"></script>
     <script src="js/lib/BigNumber.js"></script>
     <script src="js/lib/dropdown.js"></script>
-
     <script src="js/lib/jstween-1.1.min.js"></script>
-    <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
-    <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
-    <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.datepicker.js"> </script>
-
     <script src="js/main.js"></script>
-
     <script src="js/Helper.js"></script>
-
     <script src="js/apiConnector.js"></script>
     <script src="js/greenUpMap.js"></script>
     <script src="js/greenUpComments.js"></script>
-
     <script src="js/greenUpUi.js"></script>
-
-
-
-
 
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
-
-
-
-    <!-- Include all compiled plugins (below), or include individual files as needed
-  <script src="bootstrap-3.0.0/dist/js/bootstrap.min.js"></script> -->
-
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript"
-            src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'ru'}]}"></script>
-
-    <!--<script src="https://apis.google.com/js/client.js?onload=loadAnalytics"></script>-->
-
-    <script src="js/lib/jquery.cookie.js"></script>
 
 
     <script>
@@ -207,7 +180,6 @@ if(!isset($_COOKIE[session_name()])){
                     <div class="analyticsData">
                         <div class="timeComponentNest">
                             <div class="timeComponent" id="totalDaysWorked"></div>
-                            <!-- <div class="timeComponent">100</div> -->
                             <div class="timeComponentLabel">DAYS</div>
                         </div>
 

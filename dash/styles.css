@@ -319,6 +319,14 @@ ul{
     margin-bottom: 2px;
 }
 
+.authBubble{
+    color: blue;
+}
+
+.errorBubble{
+    color: red;
+}
+
 .analyticsColumnContainer{
     height:100%;
     width: 100%;

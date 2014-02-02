@@ -90,7 +90,6 @@ function UiHandle(){
             }
         });
 
-        $('.datePicker').datepicker({ dateFormat: "yy-mm-dd" });
 
         $('#infoIcon').mouseenter(function(){
             $(this).attr("src", "images/info-icon-light.png");
@@ -192,7 +191,14 @@ function UiHandle(){
         });
 
         for(var ii=0; ii<data.messages.length; ii++){
-            var str = "<div class='logBubble'>";
+            if(data.messages[ii].message.indexOf("AUTH") != -1){
+                var str = "<div class='logBubble authBubble'>";
+            }else if(data.messages[ii].message.indexOf("AUTH") != -1){
+                var str = "<div class='logBubble errorBubble'>";
+            }else{
+                var str = "<div class='logBubble'>";
+            }
+
             str += "<div class='logTime'>"+data.messages[ii].timestamp+"</div>";
             str += "<div class='logMessage'>"+data.messages[ii].message+"</div>";
             str += "</div>";
