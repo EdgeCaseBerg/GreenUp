@@ -302,12 +302,17 @@ function ApiConnector(){
 
     ApiConnector.prototype.pullServerLog = function pullServerLog(callback, url){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        var logURI = "";
+        if(window.HOST.indexOf("localhost") != -1 || window.HOST.indexOf("127.0.0.1") != -1){
+            logURI += this.LOCALHOST+this.PROXYBASE;
 
-        if(!window.HELPER.isNull(url)){
-            var logURI = this.LOCALHOST+this.PROXYBASE+url;
-        }else{
-            var logURI = this.TRUEBASE+"/debug";
         }
+        if(!window.HELPER.isNull(url)){
+            logURI += url;
+        }else{
+            logURI = this.TRUEBASE+"/debug";
+        }
+
 
         window.LOGGER.debug(arguments.callee.name, "url: "+logURI);
         $.ajax({
