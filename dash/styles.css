@@ -235,7 +235,7 @@ ul{
 
 #commentsDialog{
     display:none;
-    padding: 5px 0px 5px 3px;
+    padding: 5px 0px 5px 0px;
     background: #eee;
     position:absolute;
     top:72px;
@@ -254,6 +254,10 @@ ul{
     /*-ms-transition: all .4s ease;*/
     /*transition: all .4s ease;*/
 
+}
+
+#logDialog .sliderTitle{
+    width: 630px;
 }
 
 #logDialog{
@@ -279,6 +283,8 @@ ul{
     /*transition: all .4s ease;*/
 }
 
+
+
 #logPageNo{
     display:inline-block;
     padding: 3px;
@@ -291,7 +297,8 @@ ul{
 }
 
 #logNest{
-    height: 93%;
+    margin-top: 20px;
+    height: 90%;
     overflow-y: scroll;
 }
 
@@ -309,6 +316,19 @@ ul{
 .logTime{
     font-style: italic;
     font-size: 0.8em;
+}
+
+.sliderTitle{
+    float: left;
+    margin-top: -5px;
+    font-weight: bold;
+    font-size: 1.2em;
+    position: fixed;
+    text-align: center;
+    width: 530px;
+    background: #eee;
+    border-bottom: solid 1px #333;
+    z-index: 600;
 }
 
 .logBubble{

@@ -227,14 +227,19 @@ if(!isset($_COOKIE[session_name()])){
 </div>
 
 <div id="commentsDialog">
-    <div id="bubbleContainer">
+    <div class="sliderTitle">
+        Comments
+    </div>
+    <div id="bubbleContainer" style="margin-top: 25px">
     </div>
 </div>
 
 
 <div id="logDialog">
+    <div class="sliderTitle">
+        Server Log
+    </div>
     <div id="logNest">
-
     </div>
     <div id="logPageControl">
         <button id="prevLogPage" data-var="">previous</button>
