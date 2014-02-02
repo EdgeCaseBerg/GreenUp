@@ -256,6 +256,35 @@ ul{
 
 }
 
+#logDialog{
+    border:solid 1px red;
+    /*display:none;*/
+    padding: 5px 0px 5px 3px;
+    background: #eee;
+    position:absolute;
+    top:72px;
+    left: -530px;
+    border:solid 1px #222;
+    height: 60%;
+    min-height: 410px;
+    overflow-y: scroll;
+    width: 525px;
+    z-index: 300;
+    -webkit-box-shadow: 0px 14px 8px 0px rgba(3, 3, 3, 0.2);
+    box-shadow: 0px 14px 8px 0px rgba(3, 3, 3, 0.2);
+    /*-webkit-transition: all .4s ease;*/
+    /*-moz-transition: all .4s ease;*/
+    /*-o-transition: all .4s ease;*/
+    /*-ms-transition: all .4s ease;*/
+    /*transition: all .4s ease;*/
+}
+
+.logBubble{
+    padding: 5px;
+    border: solid 1px #a3a3a3;
+    margin-right: 3px;
+}
+
 .analyticsColumnContainer{
     height:100%;
     width: 100%;
@@ -524,6 +553,9 @@ ul{
 .iconWrapper:hover{
     background: #bbb;
 }
+
+
+
 
 .commentTextNest{
     vertical-align: top;

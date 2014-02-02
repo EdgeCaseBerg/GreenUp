@@ -104,7 +104,7 @@ if(!isset($_COOKIE[session_name()])){
                 echo "window.HOST = '".HOST."';";
             ?>
 
-            window.DEBUG = false;
+            window.DEBUG = true;
 
             window.LOGGER = new ClientLogger();
             window.HELPER = new Helper();
@@ -128,6 +128,7 @@ if(!isset($_COOKIE[session_name()])){
             window.ApiConnector.pullMarkerData();
             window.ApiConnector.pullHeatmapData();
             window.ApiConnector.pullRawHeatmapData();
+            window.ApiConnector.pullServerLog(window.UI.updateLogContent);
 
             $('#loginButton').click(function(){
                 window.location = "index.php?logout=true"
@@ -166,7 +167,7 @@ if(!isset($_COOKIE[session_name()])){
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-
+            <li><button type="button"  id="viewLogButton" class="navButtons btn btn-default btn-md">Server Log</button></li>
             <li><button type="button"  id="loginButton" class="navButtons btn btn-default btn-md">Logout</button></li>
         </ul>
     </div><!-- /.navbar-collapse -->
@@ -232,6 +233,7 @@ if(!isset($_COOKIE[session_name()])){
 
                     </div>
                 </div>
+
             </div>
 
         </div> <!-- end extendedAnalyticsDialog -->
@@ -242,6 +244,10 @@ if(!isset($_COOKIE[session_name()])){
 <div id="commentsDialog">
     <div id="bubbleContainer">
     </div>
+</div>
+
+<div id="logDialog">
+    fsgsgsg
 </div>
 
 <div id="addMarkerDashContainer" class="modal-full">

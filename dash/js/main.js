@@ -41,9 +41,19 @@ function ClientLogger(){
         console.log('%c [INFO] ' + str, 'background: #fff; color: green');
     }
 
+    ClientLogger.prototype.obj = function obj(object, methodName, details){
+        this.info(details, methodName);
+        console.log(object)
+        this.info("******", "******");
+    }
+
     ClientLogger.prototype.error = function error(eventString, methodNameString){
         var str = methodNameString + ' - ' +eventString;
         console.log('%c [ERROR] ' + str, 'background: #fff; color: red');
+    }
+
+    ClientLogger.prototype.sendLogEvent = function sendLogEvent(event){
+
     }
 }
 

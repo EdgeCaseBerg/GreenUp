@@ -18,6 +18,7 @@ function UiHandle(){
 
     this.isOptionsVisible = false;
     this.isCommentsSliderVisible = false;
+    this.isLogSliderVisible = false;
 
     this.isClockRunning = false;
     this.clockHrs = 00;
@@ -35,6 +36,10 @@ function UiHandle(){
 
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+
+        $('#viewLogButton').click(function(){
+            window.UI.toggleLogSlider();
+        });
 
         $('#addMarkerCaneclButton').click(function(){
             window.UI.toggleAddMarkerOptions();
@@ -164,6 +169,67 @@ function UiHandle(){
                 $('#extendedAnalyticsDialog').css({"top":"15px"});
             }, 100);
 
+        }
+    }
+
+    UiHandle.prototype.updateLogContent = function updateLogContent(data){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.obj(data, arguments.callee.name, null);
+        $('#logDialog').html("");
+        for(var ii=0; ii<data.messages.length; ii++){
+            var str = "<div class='logBubble'>";
+            str += "<div class='logTime'>"+data.messages[ii].timestamp+"</div>";
+            str += "<div class='logMessage'>"+data.messages[ii].message+"</div>";
+            str += "</div>";
+            $('#logDialog').append(str);
+        }
+    }
+
+    UiHandle.prototype.toggleLogSlider = function toggleLogSlider(){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+
+        if(window.UI.isLogSliderVisible){
+            window.UI.isLogSliderVisible = false;
+            $('#logDialog').tween({
+                left:{
+                    start: 0,
+                    stop: -530,
+                    time: 0,
+                    duration: 1,
+                    units: 'px',
+                    effect: 'easeInOut',
+                    onStop: function(){
+                        // do stuff
+                    }
+                }
+            });
+
+            $.play();
+            setTimeout(function() {
+                $('#logDialog').hide();
+            }, 1000);
+
+
+        }else{
+            $('#logDialog').show();
+            window.UI.isLogSliderVisible = true;
+
+
+            $('#logDialog').tween({
+                left:{
+                    start: -530,
+                    stop: 0,
+                    time: 0,
+                    duration: 1,
+                    units: 'px',
+                    effect: 'easeInOut',
+                    onStop: function(){
+                        // do stuff
+                    }
+                }
+            });
+
+            $.play();
         }
     }
 

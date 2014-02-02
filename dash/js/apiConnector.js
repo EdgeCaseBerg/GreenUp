@@ -300,6 +300,27 @@ function ApiConnector(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
 	}
 
+    ApiConnector.prototype.pullServerLog = function pullServerLog(callback){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        var logURI = this.TRUEBASE+"/debug";
+        $.ajax({
+            type:'GET',
+            url: logURI,
+            dataType:"json",
+            failure: function(errMsg){
+                window.LOGGER.error(arguments.callee.name,"[ERROR] Failed to GET server logs: "+errMsg);
+            },
+            success: function(data){
+                if(window.HELPER.isNull(data.contents)){
+                    callback(data);
+                }else{
+                    callback(data.contents);
+                }
+
+            }
+        });//Ajax
+    }
+
 
     // DELETE a comment
     ApiConnector.prototype.deleteComment = function deleteComment(commentId){
