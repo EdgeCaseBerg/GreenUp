@@ -313,7 +313,7 @@ function ApiConnector(){
             logURI = this.TRUEBASE+"/debug";
         }
 
-        logURI.replace("199.195.248.180:31337", "greenup.xenonapps.com");
+        logURI = logURI.replace("199.195.248.180:31337", "greenup.xenonapps.com");
 
 
         window.LOGGER.debug(arguments.callee.name, "url: "+logURI);
