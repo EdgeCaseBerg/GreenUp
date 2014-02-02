@@ -279,6 +279,10 @@ ul{
     /*transition: all .4s ease;*/
 }
 
+.mapViewLinks{
+    cursor:pointer;
+}
+
 #logNest{
     height: 93%;
     overflow-y: scroll;

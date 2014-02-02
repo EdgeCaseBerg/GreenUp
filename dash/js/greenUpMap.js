@@ -42,6 +42,25 @@ function MapHandle(){
             window.MAP.updateBounds();
         });
 
+        $('#toggleHeatmap').click(function(){
+            window.MAP.toggleHeatmap();
+        });
+
+        $('#toggleMarkers').click(function(){
+           window.MAP.toggleIcons();
+        });
+
+        $('#toggleHybrid').click(function(){
+            if(!window.MAP.isHeatmapVisible){
+                window.MAP.toggleHeatmap();
+            }
+
+            if(!window.UI.isMarkerVisible){
+                window.MAP.toggleIcons();
+            }
+
+        });
+
         // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
         google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.mapTouchDown);
         google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.mapTouchUp);

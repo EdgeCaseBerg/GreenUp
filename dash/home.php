@@ -169,6 +169,14 @@ if(!isset($_COOKIE[session_name()])){
                     <li><a href="http://www.greenupvermont.org/">Green-Up Vermont</a></li>
                 </ul>
             </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">View<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a id="toggleHeatmap" class="mapViewLinks">Toggle Heatmap</a></li>
+                    <li><a id="toggleMarkers" class="mapViewLinks">Toggle Markers</a></li>
+                    <li><a id="toggleHybrid" class="mapViewLinks">Toggle Hybrid Map</a></li>
+                </ul>
+            </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><button type="button"  id="viewLogButton" class="navButtons btn btn-default btn-md">Server Log</button></li>
