@@ -103,6 +103,7 @@ if(!isset($_COOKIE[session_name()])){
             <?
                 echo "window.HOST = '".HOST."';";
                 echo "window.ActiveUser = '".$_POST['username']."';";
+                echo "window.ActiveUserIP = '".$_SERVER['REMOTE_ADDR']."';";
             ?>
 
             window.DEBUG = true;
@@ -125,7 +126,7 @@ if(!isset($_COOKIE[session_name()])){
             window.MAP = new MapHandle();
             window.MAP.initMap();
 
-            window.LOGGER.serverLog("[INFO] Admin Dash Accessed by "+window.ActiveUser, "dash/home.php MAIN()");
+            window.LOGGER.serverLog("[AUTH] Admin Dash Accessed by "+window.ActiveUser + " from "+window.ActiveUserIP, "dash/home.php MAIN()");
             // grab our comments, map markers, and heatmap data
             window.ApiConnector.pullCommentData();
             window.ApiConnector.pullMarkerData();
