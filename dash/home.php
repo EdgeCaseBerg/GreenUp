@@ -43,20 +43,29 @@ if(!isset($_COOKIE[session_name()])){
 <!DOCTYPE html>
 <html style="height: 100%; background: #eee">
 <head>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+
     <title>GreenUp-VT Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
     <!-- Bootstrap -->
     <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="styles.css" rel="stylesheet" media="screen">
     <link href="js/lib/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" media="screen">
+    <!-- logging framework -->
+    <!-- <script src="js/lib/log4javascript_production.js"></script>-->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/lib/jquery/jquery.js"></script>
     <script src="js/lib/BigNumber.js"></script>
+    <script src="js/lib/dropdown.js"></script>
 
     <script src="js/lib/jstween-1.1.min.js"></script>
     <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
     <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
     <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.datepicker.js"> </script>
+
+    <script src="js/main.js"></script>
 
     <script src="js/Helper.js"></script>
 
@@ -65,7 +74,7 @@ if(!isset($_COOKIE[session_name()])){
     <script src="js/greenUpComments.js"></script>
 
     <script src="js/greenUpUi.js"></script>
-    <script src="js/main.js"></script>
+
 
 
 
@@ -87,73 +96,48 @@ if(!isset($_COOKIE[session_name()])){
     <script src="js/lib/jquery.cookie.js"></script>
 
 
-
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="../../assets/js/html5shiv.js"></script>
-    <script src="../../assets/js/respond.min.js"></script>
-    <![endif]-->
-
     <script>
 
         $(document).ready(function(){
 
             <?
                 echo "window.HOST = '".HOST."';";
+                echo "window.ActiveUser = '".$_POST['username']."';";
             ?>
-            //
-            window.TOKEN = getParameterByName("token");
-            window.userID = getParameterByName("user");
-            console.log(window.TOKEN);
-            console.log(window.userID);
 
-            window.HELPER = new Helper();
-            console.log("window helper");
+            window.DEBUG = true;
+
             window.LOGGER = new ClientLogger();
-            window.INPUT_TYPE = new INPUT_TYPE();
+            window.HELPER = new Helper();
 
-
-
-            // instansiate the api
+            // instansiate the api connector
             window.ApiConnector = new ApiConnector();
-            window.ApiConnector.authenticateToken(window.userID, window.TOKEN);
+//            window.ApiConnector.authenticateToken(window.userID, window.TOKEN);
+
             // instansiate the forum
             window.Comments = new CommentsHandle();
+
             // instansiate /initialize the UI controls
             window.UI = new UiHandle();
             window.UI.init();
-            // build out the google map
 
+            // build out the google map
             window.MAP = new MapHandle();
-            if(!window.DEBUG){
-                window.MAP.initMap();
-            }
+            window.MAP.initMap();
+
+            window.LOGGER.serverLog("[INFO] Admin Dash Accessed by "+window.ActiveUser, "dash/home.php MAIN()");
             // grab our comments, map markers, and heatmap data
             window.ApiConnector.pullCommentData();
             window.ApiConnector.pullMarkerData();
             window.ApiConnector.pullHeatmapData();
             window.ApiConnector.pullRawHeatmapData();
+            window.ApiConnector.pullServerLog(window.UI.updateLogContent);
 
-
-            $('#loginButton').mouseenter(function(){
-                $('#loginButton').text("Logout");
-            });
-
-            $('#loginButton').mouseleave(function(){
-                $('#loginButton').text("Administrative Dashboard");
-            });
 
             $('#loginButton').click(function(){
                 window.location = "index.php?logout=true"
             });
         });
-
-        function getParameterByName(name) {
-            var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-            return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-        }
-
 
 
     </script>
@@ -175,9 +159,28 @@ if(!isset($_COOKIE[session_name()])){
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">About<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://github.com/EJEHardenberg/GreenUp/blob/master/README.md" target="_blank">Project Overview</a></li>
+                    <li><a href="https://github.com/EJEHardenberg/green-serv/blob/master/README.md" target="_blank">Server Setup Instructions</a></li>
+                    <li><a href="https://github.com/EJEHardenberg/GreenUp/blob/master/api/readme.md" target="_blank">API Specification</a></li>
+                    <li class="divider"></li>
+                    <li><a href="http://www.greenupvermont.org/">Green-Up Vermont</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">View<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a id="toggleHeatmap" class="mapViewLinks">Toggle Heatmap</a></li>
+                    <li><a id="toggleMarkers" class="mapViewLinks">Toggle Markers</a></li>
+                    <li><a id="toggleHybrid" class="mapViewLinks">Toggle Hybrid Map</a></li>
+                </ul>
+            </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><button type="button"  id="loginButton" class="btn btn-default btn-md">Administrative Dashboard</button></li>
+            <li><button type="button"  id="viewLogButton" class="navButtons btn btn-default btn-md">Server Log</button></li>
+            <li><button type="button"  id="loginButton" class="navButtons btn btn-default btn-md">Logout</button></li>
         </ul>
     </div><!-- /.navbar-collapse -->
 </nav>
@@ -242,6 +245,7 @@ if(!isset($_COOKIE[session_name()])){
 
                     </div>
                 </div>
+
             </div>
 
         </div> <!-- end extendedAnalyticsDialog -->
@@ -254,7 +258,18 @@ if(!isset($_COOKIE[session_name()])){
     </div>
 </div>
 
-<div id="addMarkerDashContainer">
+
+<div id="logDialog">
+    <div id="logNest">
+
+    </div>
+    <div id="logPageControl">
+        <button id="prevLogPage" data-var="">prev</button>
+        <button id="nextLogPage" data-var="">next</button>
+    </div>
+</div>
+
+<div id="addMarkerDashContainer" class="modal-full">
     <div id="addMarkerDashNest">
         <div id="addMarkerDashHeader">
             <img src="images/icons/new_trash1.png" />
@@ -297,6 +312,7 @@ if(!isset($_COOKIE[session_name()])){
         </div>
     </div>
 </div>
+
 
 
 

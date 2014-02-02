@@ -40,8 +40,8 @@ ul{
 
 .navbar{
     background: #ededed;
-    position:relative;
-    z-index: 300;
+    /*position:relative;*/
+    /*z-index: 300;*/
     border-bottom: solid 2px #999;
 }
 
@@ -234,7 +234,7 @@ ul{
 }
 
 #commentsDialog{
-    /*display:none;*/
+    display:none;
     padding: 5px 0px 5px 3px;
     background: #eee;
     position:absolute;
@@ -254,6 +254,62 @@ ul{
     /*-ms-transition: all .4s ease;*/
     /*transition: all .4s ease;*/
 
+}
+
+#logDialog{
+    border:solid 1px red;
+    /*display:none;*/
+    padding: 5px 0px 5px 3px;
+    background: #eee;
+    position:absolute;
+    top:72px;
+    left: -530px;
+    border:solid 1px #222;
+    height: 80%;
+    min-height: 410px;
+    overflow-y: scroll;
+    width: 525px;
+    z-index: 300;
+    -webkit-box-shadow: 0px 14px 8px 0px rgba(3, 3, 3, 0.2);
+    box-shadow: 0px 14px 8px 0px rgba(3, 3, 3, 0.2);
+    /*-webkit-transition: all .4s ease;*/
+    /*-moz-transition: all .4s ease;*/
+    /*-o-transition: all .4s ease;*/
+    /*-ms-transition: all .4s ease;*/
+    /*transition: all .4s ease;*/
+}
+
+.mapViewLinks{
+    cursor:pointer;
+}
+
+#logNest{
+    height: 93%;
+    overflow-y: scroll;
+}
+
+#logPageControl{
+    width: 100%;
+    padding: 5px 1% 5px 1%;
+    text-align: center;
+    border-top: solid 2px #888;
+}
+
+#logPageControl button{
+    width: 47%;
+}
+
+.logTime{
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+.logBubble{
+    padding: 5px;
+    border: solid 1px #ababab;
+    background-color: #fff;
+    margin-right: 3px;
+    margin-bottom: 2px;
 }
 
 .analyticsColumnContainer{
@@ -344,10 +400,10 @@ ul{
 	width:350px;
 }
 
-#loginButton{
+.navButtons{
     margin-top: 10px;
     margin-right: 10px;
-    width: 200px;
+    width: 140px;
 }
 
 .markerTypeInputLabel{
@@ -362,7 +418,7 @@ ul{
 	/*display:inline-block;*/
 	/*transform: rotate(-90deg);*/
 	/*-ms-transform: rotate(-90deg); /* IE 9 */
-	/*-webkit-transform: rotate(-90deg); /* Safari and Chrome */*/
+	/*-webkit-transform: rotate(-90deg); /* Safari and Chrome */
 }
 
 .markerTypeNestColumn{
@@ -524,6 +580,9 @@ ul{
 .iconWrapper:hover{
     background: #bbb;
 }
+
+
+
 
 .commentTextNest{
     vertical-align: top;
@@ -709,7 +768,7 @@ input[type=checkbox] {
 }
 
 
-#addMarkerDashContainer{
+.modal-full{
     display:none;
     float:left;
     position: absolute;

@@ -18,6 +18,7 @@ function UiHandle(){
 
     this.isOptionsVisible = false;
     this.isCommentsSliderVisible = false;
+    this.isLogSliderVisible = false;
 
     this.isClockRunning = false;
     this.clockHrs = 00;
@@ -34,6 +35,11 @@ function UiHandle(){
     this.commentsPrevPageUrl = "";
 
     UiHandle.prototype.init = function init(){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+
+        $('#viewLogButton').click(function(){
+            window.UI.toggleLogSlider();
+        });
 
         $('#addMarkerCaneclButton').click(function(){
             window.UI.toggleAddMarkerOptions();
@@ -118,6 +124,8 @@ function UiHandle(){
         });
     } // end init
 
+    // for writing google charts
+    /*
     UiHandle.prototype.drawVisualisation = function drawVisualization(pieData, lineData){
 
         var lineOptions = {
@@ -142,8 +150,10 @@ function UiHandle(){
 
         // Create and draw the visualization.
     }
+    */
 
     UiHandle.prototype.toggleMapOptions = function toggleMapOptions(){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         if(window.UI.isOptionsVisible){
             window.UI.isOptionsVisible = false;
             $('#extendedAnalyticsDialog').css({"top":"-235px"});
@@ -162,8 +172,79 @@ function UiHandle(){
         }
     }
 
-    UiHandle.prototype.toggleCommentsSlider = function toggleCommentsSlider(){
+    UiHandle.prototype.updateLogContent = function updateLogContent(data){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.obj(data, arguments.callee.name, null);
+        $('#logNest').html("");
+        $('#prevLogPage').attr("data-var", data.page.previous);
+        $('#nextLogPage').attr("data-var", data.page.next);
+        $('#nextLogPage').click(function(){
+            if(!window.HELPER.isNull($(this).attr("data-var"))){
+                window.ApiConnector.pullServerLog(updateLogContent, $(this).data("var"));
+            }
+        });
 
+        $('#prevLogPage').click(function(){
+            if(!window.HELPER.isNull($(this).data("var"))){
+                window.ApiConnector.pullServerLog(updateLogContent, $(this).data("var"));
+            }
+        });
+
+        for(var ii=0; ii<data.messages.length; ii++){
+            var str = "<div class='logBubble'>";
+            str += "<div class='logTime'>"+data.messages[ii].timestamp+"</div>";
+            str += "<div class='logMessage'>"+data.messages[ii].message+"</div>";
+            str += "</div>";
+            $('#logNest').append(str);
+        }
+    }
+
+    UiHandle.prototype.toggleLogSlider = function toggleLogSlider(){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+
+        if(window.UI.isLogSliderVisible){
+            window.UI.isLogSliderVisible = false;
+            $('#logDialog').tween({
+                left:{
+                    start: 0,
+                    stop: -530,
+                    time: 0,
+                    duration: 1,
+                    units: 'px',
+                    effect: 'easeInOut',
+                    onStop: function(){
+                        $('#logDialog').hide();
+                    }
+                }
+            });
+
+            $.play();
+
+        }else{
+            $('#logDialog').show();
+            window.UI.isLogSliderVisible = true;
+
+
+            $('#logDialog').tween({
+                left:{
+                    start: -530,
+                    stop: 0,
+                    time: 0,
+                    duration: 1,
+                    units: 'px',
+                    effect: 'easeInOut',
+                    onStop: function(){
+                        // do stuff
+                    }
+                }
+            });
+
+            $.play();
+        }
+    }
+
+    UiHandle.prototype.toggleCommentsSlider = function toggleCommentsSlider(){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
 
         if(window.UI.isCommentsSliderVisible){
             window.UI.isCommentsSliderVisible = false;
@@ -176,24 +257,16 @@ function UiHandle(){
                     units: 'px',
                     effect: 'easeInOut',
                     onStop: function(){
-                        // do stuff
+                        $('#commentsDialog').hide();
                     }
                 }
             });
 
             $.play();
-            // $('#commentsDialog').css({"right":"-530px"});
-
-            setTimeout(function() {
-                $('#commentsDialog').hide();
-            }, 1000);
-
 
         }else{
             $('#commentsDialog').show();
             window.UI.isCommentsSliderVisible = true;
-
-
             $('#commentsDialog').tween({
                 right:{
                     start: -530,
@@ -215,13 +288,14 @@ function UiHandle(){
     }
 
     UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         document.getElementById("markerTypeDialog").style.display = "none";
         window.UI.isMarkerDisplayVisible = false;
     }
 
     // shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
     UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(){
-        console.log("marker");
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         // add marker type selectors
         // alert("marker");
         document.getElementById("markerTypeDialog").className = "markerTypePanel2";
@@ -239,13 +313,14 @@ function UiHandle(){
 
     // called after the map has loaded, and hides the loading screen
     UiHandle.prototype.setMapLoaded = function setMapLoaded(){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.MAP.isMapLoaded = true;
     }
 
 
     // when the user chooses which type of marker to add to the map
     UiHandle.prototype.markerTypeSelect = function markerTypeSelect(markerType){
-        console.log(markerType);
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         // first we need to show the marker on the map
         // var iconUrl = "img/icons/blueCircle.png";
         var iconUrl = "";
@@ -286,8 +361,8 @@ function UiHandle(){
 
     // track how long the user's finger was toucking to determine click while allowing map to be usable (touch-scroll)
     UiHandle.prototype.mapTouchDown = function mapTouchDown(event){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         // set the coords of the marker event
-
         window.MAP.markerEvent = event;
         this.MOUSEDOWN_TIME = new Date().getTime() / 1000;
 
@@ -295,6 +370,7 @@ function UiHandle(){
 
     // show the marker type select dialog
     UiHandle.prototype.mapTouchUp = function mapTouchUp(){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         // set the coords of the marker event
         MOUSEUP_TIME = (new Date().getTime());
         MOUSEUP_TIME = MOUSEUP_TIME / 1000;
@@ -314,6 +390,7 @@ function UiHandle(){
     }
 
     UiHandle.prototype.toggleAddMarkerOptions = function toggleAddMarkerOptions(point){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         if(window.UI.isAddMarkerDialogVisible){
             $('#addMarkerDashContainer').fadeOut(400, function(){
                 window.UI.isAddMarkerDialogVisible = false;
@@ -361,13 +438,12 @@ function UiHandle(){
 
     // ******* DOM updaters (callbacks for the ApiConnector pull methods) ***********
     UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
-        console.log("Heatmap data returned from api, preparing to apply data to map.");
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.MAP.applyHeatMap(data);
     }
 
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
-        console.log("raw heatmap data: ");
-        console.log(data);
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
         var totalSecondsWorked = new BigNumber(0);
         if(!window.HELPER.isNull(data.grid)){
@@ -378,8 +454,6 @@ function UiHandle(){
             console.log("Data grid not found --> ");
             console.log(data);
         }
-
-        // alert(data.grid[0].secondsWorked + " - " + data.grid[(data.grid.length - 1)].secondsWorked);
 
         var metersPerSecond = 0.25; // this is a guess
         var sqMeters = (totalSecondsWorked * metersPerSecond);
@@ -395,8 +469,7 @@ function UiHandle(){
 
     // markers coming from the apiconnector comes here to be added to the UI
     UiHandle.prototype.updateMarker = function updateMarker(data){
-        console.log("marker response: ");
-        console.log(data);
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
 
         window.PINS = [];
         window.PINS = data.pins;
@@ -409,18 +482,14 @@ function UiHandle(){
     }
 
     // data is passed from the api connector to here to update the forum.
+    // !!!! all listeners for comments controls are in here, too
+    // todo: refactor this
     UiHandle.prototype.updateForum = function updateForum(data){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         document.getElementById("bubbleContainer").innerHTML = "";
-        console.log("In Update forum");
-        // console.log("Comment data: "+data);
-        // document.getElementById("bubbleContainer").innerHTML = "";
-        console.log(data);
         window.COMMENTS = data;
         dataObj = data;
-        // var dataObj = JSON.parse(data);
         var comments = dataObj.comments;
-        // window.UI.commentsPrevPageUrl = dataObj.page.previous;
-        // window.UI.commentsNextPageUrl = dataObj.page.next;
         if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.next)){
             var nextArr = dataObj.page.next.split("greenupapp.appspot.com/api");
             window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
@@ -433,9 +502,6 @@ function UiHandle(){
         }else{
             window.UI.commentsPrevPageUrl = null;
         }
-
-        console.log("comments: ");
-        console.log(comments);
 
         for(var ii=0; ii<comments.length; ii++){
 
@@ -531,16 +597,16 @@ function UiHandle(){
                 if(window.PINS[ii].id == pinId){
                     var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees);
                     window.MAP.map.setCenter(centerPoint);
-                    window.MAP.map.setZoom(20);
+                    window.MAP.map.setZoom(16);
                 }
             }
-            // console.log(pinId);
         });
 
         $('.closeIconWrapper').click(function(){
             var commentId = $(this).parent().parent().find(".commentIdHolder").val();
-            // alert(commentId);
+            alert(commentId);
             $(this).parent().parent().fadeOut();
+            window.ApiConnector.deleteComment(commentId);
         });
 
         $('.addressIconWrapper').click(function(){
@@ -549,55 +615,11 @@ function UiHandle(){
         });
     }
 
-    UiHandle.prototype.updateMarkerAddStreetAddr = function updateMarkerAddStreetAddr(data){
-        console.log("geocode data");
-        console.log(data);
-    }
-
-
-    // updates the clock over time
-    UiHandle.prototype.updateClock = function updateClock(){
-        if(window.UI.clockSecs == 59){
-            window.UI.clockSecs = 00;
-            if(window.UI.clockMins == 59){
-                window.UI.clockMins = 00;
-                window.UI.clockHrs++;
-            }else{
-                window.UI.clockMins++;
-            }
-        }else{
-            window.UI.clockSecs++;
-        }
-        var clockSecStr = (window.UI.clockSecs < 10) ? "0"+window.UI.clockSecs : window.UI.clockSecs;
-        var clockMinStr = (window.UI.clockMins < 10) ? "0"+window.UI.clockMins : window.UI.clockMins;
-        var clockHrStr = (window.UI.clockHrs < 10) ? "0"+window.UI.clockHrs : window.UI.clockHrs;
-
-        document.getElementById("timeSpentClockDigits").innerHTML = clockHrStr + ":" + clockMinStr + ":" + clockSecStr;
-    }
-    // ******** End DOM Updaters *********
-
-    // ---- begin COMMENT pagination control toggle ----
-    UiHandle.prototype.showNextCommentsButton = function showNextCommentsButton(){
-        document.getElementById("nextPage").style.display = "inline-block";
-    }
-
-    UiHandle.prototype.hideNextCommentsButton = function hideNextCommentsButton(){
-        document.getElementById("nextPage").style.display = "none";
-    }
-
-    UiHandle.prototype.showPrevCommentsButton = function showPrevCommentsButton(){
-        document.getElementById("prevPage").style.display = "inline-block";
-    }
-
-    UiHandle.prototype.hidePrevCommentsButton = function hidePrevCommentsButton(){
-        document.getElementById("prevPage").style.display = "none";
-    }
-    // ---- end COMMENT pagination control toggle
 
 
     // mock callback function for logging data that would ordinarily hit one of the UI updates
     UiHandle.prototype.updateTest = function updateTest(data){
-        console.log(data);
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
     }
 
 } // end UiHandle class def

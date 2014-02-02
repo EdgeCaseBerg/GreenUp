@@ -1,4 +1,10 @@
-
+<?php
+    if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['HTTP_USER_AGENT'], "android") === false ){
+        if(!isset($_GET['frame'])){
+            header("Location: welcome.html");
+        }
+    }
+?>
 
 <!DOCTYPE html>
 <html>

@@ -82,30 +82,30 @@ function ApiConnector(){
 					case 500:
 						// internal server error
 						// consider leaving app
-						window.LOGGER.logEvent("Error: api response = 500", "ApiConnector: pushNewPin()");
+						window.LOGGER.log("Error: api response = 500", "ApiConnector: pushNewPin()");
 
 						break;
 					case 503:
-						window.LOGGER.logEvent("Service Unavailable");
+						window.LOGGER.log("Service Unavailable");
 						break;
 
 					case 404:
 						// not found, stop trying
 						// consider leaving app
-						window.LOGGER.logEvent('Error: api response = 404', "ApiConnector: pushNewPin()");
+						window.LOGGER.log('Error: api response = 404', "ApiConnector: pushNewPin()");
 						break;
 					case 400:
 						// bad request
-						window.LOGGER.logEvent("Error: api response = 400", "ApiConnector: pushNewPin()");
+						window.LOGGER.log("Error: api response = 400", "ApiConnector: pushNewPin()");
 						break;
 					case 422:
-						window.LOGGER.logEvent("Error: api response = 422", "ApiConnector: pushNewPin()");
+						window.LOGGER.log("Error: api response = 422", "ApiConnector: pushNewPin()");
 						break;
 					case 200:
 						console.log("Request successful");
 						break;
 					default:
-						window.LOGGER.logEvent("Unknown Error Code", "ApiConnector: pushNewPin()");
+						window.LOGGER.log("Unknown Error Code", "ApiConnector: pushNewPin()");
 						break;
 				}
 			}
@@ -1210,13 +1210,6 @@ function FCommment(){
 	this.message ="FORUM";
 	this.pin = null;
 	this.type = "";
-}
-
-function INPUT_TYPE(){
-	this.NONE  = -1;
-	this.PIN = 0;
-	this.MARKER = 0;
-	this.COMMENT = 1;
 }
 
 // logger for reporting problems to the server

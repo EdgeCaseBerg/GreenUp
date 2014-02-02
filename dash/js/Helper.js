@@ -131,7 +131,7 @@ function Helper(){
 	        }else if(metric.type == "CAT"){
                 return window.UI.buildCatMetricDiv(metric);
 	        }else{
-	        	console.log("Helper.createMetricDiv : unable to determine metric type");
+	        	window.LOGGER.error("Helper.createMetricDiv : unable to determine metric type");
 	        }
 	    }
     };
@@ -169,12 +169,11 @@ function Helper(){
     }
 
     Helper.prototype.isTrue = function isTrue(o){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
 
         if(o == undefined){
-            throw "undefined boolean type: "+(new Error).lineNumber;
+            window.LOGGER.error(arguments.callee.name, "cannot test TRUE/FALSE for undefined object");
         }
-//        console.log("** isTrue:");
-//        console.log(o);
 
         if(o === true || o == true){
             return true;
@@ -196,6 +195,7 @@ function Helper(){
     }
 
     Helper.prototype.getGoogleFormattedDate = function getGoogleFormattedDate(dateObj){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var monthString = dateObj.getMonth().toString();
         var dayString = dateObj.getDay().toString();
         if(dateObj.getMonth() < 10){
@@ -212,11 +212,12 @@ function Helper(){
     }
 
     Helper.prototype.metersToAcres = function metersToAcres(sqMeters){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         return (sqMeters * 0.000247105);
     }
 
     Helper.prototype.secondsToHoursMinutesSeconds = function secondsToHoursMinutesSeconds(seconds){
-
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var remainderSeconds = (seconds % 60);
         var minutes = ((seconds - remainderSeconds) / 60);
         var remainderMinutes = (minutes % 60);
@@ -235,7 +236,7 @@ function Helper(){
         }
 
         var results = {"days": days, "hours" : remainderHours, "minutes" : remainderMinutes, "seconds" : remainderSeconds};
-        console.log(results);
+
         return results;
     }
 		
