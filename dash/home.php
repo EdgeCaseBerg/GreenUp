@@ -102,6 +102,7 @@ if(!isset($_COOKIE[session_name()])){
 
             <?
                 echo "window.HOST = '".HOST."';";
+                echo "window.ActiveUser = '".$_POST['username']."';";
             ?>
 
             window.DEBUG = true;
@@ -124,7 +125,7 @@ if(!isset($_COOKIE[session_name()])){
             window.MAP = new MapHandle();
             window.MAP.initMap();
 
-            window.LOGGER.serverLog("Testing server logging", arguments.callee.name);
+            window.LOGGER.serverLog("[INFO] Admin Dash Accessed by "+window.ActiveUser, "dash/home.php MAIN()");
             // grab our comments, map markers, and heatmap data
             window.ApiConnector.pullCommentData();
             window.ApiConnector.pullMarkerData();
@@ -249,8 +250,15 @@ if(!isset($_COOKIE[session_name()])){
     </div>
 </div>
 
+
 <div id="logDialog">
-    fsgsgsg
+    <div id="logNest">
+
+    </div>
+    <div id="logPageControl">
+        <button id="prevLogPage" data-var="">prev</button>
+        <button id="nextLogPage" data-var="">next</button>
+    </div>
 </div>
 
 <div id="addMarkerDashContainer" class="modal-full">
@@ -297,9 +305,6 @@ if(!isset($_COOKIE[session_name()])){
     </div>
 </div>
 
-<div id="docSelectContainer" class="modal-full">
-
-</div>
 
 
 

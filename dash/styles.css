@@ -234,7 +234,7 @@ ul{
 }
 
 #commentsDialog{
-    /*display:none;*/
+    display:none;
     padding: 5px 0px 5px 3px;
     background: #eee;
     position:absolute;
@@ -265,7 +265,7 @@ ul{
     top:72px;
     left: -530px;
     border:solid 1px #222;
-    height: 60%;
+    height: 80%;
     min-height: 410px;
     overflow-y: scroll;
     width: 525px;
@@ -279,10 +279,33 @@ ul{
     /*transition: all .4s ease;*/
 }
 
+#logNest{
+    height: 93%;
+    overflow-y: scroll;
+}
+
+#logPageControl{
+    width: 100%;
+    padding: 5px 1% 5px 1%;
+    text-align: center;
+    border-top: solid 2px #888;
+}
+
+#logPageControl button{
+    width: 47%;
+}
+
+.logTime{
+    font-style: italic;
+    font-size: 0.8em;
+}
+
 .logBubble{
     padding: 5px;
-    border: solid 1px #a3a3a3;
+    border: solid 1px #ababab;
+    background-color: #fff;
     margin-right: 3px;
+    margin-bottom: 2px;
 }
 
 .analyticsColumnContainer{

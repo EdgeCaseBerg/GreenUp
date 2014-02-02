@@ -175,13 +175,27 @@ function UiHandle(){
     UiHandle.prototype.updateLogContent = function updateLogContent(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.LOGGER.obj(data, arguments.callee.name, null);
-        $('#logDialog').html("");
+        $('#logNest').html("");
+        $('#prevLogPage').attr("data-var", data.page.previous);
+        $('#nextLogPage').attr("data-var", data.page.next);
+        $('#nextLogPage').click(function(){
+            if(!window.HELPER.isNull($(this).attr("data-var"))){
+                window.ApiConnector.pullServerLog(updateLogContent, $(this).data("var"));
+            }
+        });
+
+        $('#prevLogPage').click(function(){
+            if(!window.HELPER.isNull($(this).data("var"))){
+                window.ApiConnector.pullServerLog(updateLogContent, $(this).data("var"));
+            }
+        });
+
         for(var ii=0; ii<data.messages.length; ii++){
             var str = "<div class='logBubble'>";
             str += "<div class='logTime'>"+data.messages[ii].timestamp+"</div>";
             str += "<div class='logMessage'>"+data.messages[ii].message+"</div>";
             str += "</div>";
-            $('#logDialog').append(str);
+            $('#logNest').append(str);
         }
     }
 
@@ -199,16 +213,12 @@ function UiHandle(){
                     units: 'px',
                     effect: 'easeInOut',
                     onStop: function(){
-                        // do stuff
+                        $('#logDialog').hide();
                     }
                 }
             });
 
             $.play();
-            setTimeout(function() {
-                $('#logDialog').hide();
-            }, 1000);
-
 
         }else{
             $('#logDialog').show();
@@ -247,24 +257,16 @@ function UiHandle(){
                     units: 'px',
                     effect: 'easeInOut',
                     onStop: function(){
-                        // do stuff
+                        $('#commentsDialog').hide();
                     }
                 }
             });
 
             $.play();
-            // $('#commentsDialog').css({"right":"-530px"});
-
-            setTimeout(function() {
-                $('#commentsDialog').hide();
-            }, 1000);
-
 
         }else{
             $('#commentsDialog').show();
             window.UI.isCommentsSliderVisible = true;
-
-
             $('#commentsDialog').tween({
                 right:{
                     start: -530,

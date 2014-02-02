@@ -300,9 +300,16 @@ function ApiConnector(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
     }
 
-    ApiConnector.prototype.pullServerLog = function pullServerLog(callback){
+    ApiConnector.prototype.pullServerLog = function pullServerLog(callback, url){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        var logURI = this.TRUEBASE+"/debug";
+
+        if(!window.HELPER.isNull(url)){
+            var logURI = this.LOCALHOST+this.PROXYBASE+url;
+        }else{
+            var logURI = this.TRUEBASE+"/debug";
+        }
+
+        window.LOGGER.debug(arguments.callee.name, "url: "+logURI);
         $.ajax({
             type:'GET',
             url: logURI,
@@ -363,18 +370,24 @@ function ApiConnector(){
 
     ApiConnector.prototype.postLogEvent = function postLogEvent(event, callback){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.obj(event, arguments.callee.name, "event to be posted");
         var logURI = this.TRUEBASE+"/debug";
         if(!window.HELPER.isNull(event)){
-            var jsonObj = JSON.stringify(event);
+            var jsonEvent = JSON.stringify(event);
+            window.LOGGER.debug(jsonEvent, arguments.callee.name);
             $.ajax({
                 type:'POST',
                 url: logURI,
-                dataType:"json",
-                data: jsonObj,
+                cache: false,
+                // processData: false,
+                dataType: "json",
+                contentType: "application/json",
+                data: jsonEvent,
                 failure: function(errMsg){
                     window.LOGGER.error(arguments.callee.name,"[ERROR] Failed to GET server logs: "+errMsg);
                 },
                 success: function(data){
+                    window.LOGGER.obj(data, arguments.callee.name, "result of posting log event");
                     if(!window.HELPER.isNull(callback)){
                         if(window.HELPER.isNull(data.contents)){
                             callback(data);
