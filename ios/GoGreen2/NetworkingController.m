@@ -132,6 +132,10 @@ static NetworkingController *sharedNetworkingController;
     {
         postMessageData = [[NSMutableData alloc] init];
         postMessageStatusCode = [(NSHTTPURLResponse *)response statusCode];
+        
+        NSLog(@"********************");
+        NSLog(@"%@", response);
+        NSLog(@"********************");
     }
     else
     {
@@ -849,7 +853,7 @@ static NetworkingController *sharedNetworkingController;
     [objects addFloat:pin.coordinate.longitude];
     [objects addObject:type];
     [objects addObject:message];
-    [objects addBool:FALSE];
+    [objects addObject:@"false"];
     
     NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", @"addressed", nil]];
     
@@ -1019,6 +1023,7 @@ static NetworkingController *sharedNetworkingController;
     
     NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, MESSAGES_RELATIVE_URL];
     
+
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id response)
     {
@@ -1081,7 +1086,6 @@ static NetworkingController *sharedNetworkingController;
                 [[ContainerViewController sharedContainer] theMessageViewController].nextPageURL = nil;
             }
             
-            
             [[[ContainerViewController sharedContainer] theMessageViewController].theTableView reloadData];
         }
         else
@@ -1094,7 +1098,6 @@ static NetworkingController *sharedNetworkingController;
         NSLog(@"Error: %@", error);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
-    
         [self printResponseFromFailedRequest:error andStatusCode:[operation.response statusCode]];
     }];
 }
@@ -1102,13 +1105,10 @@ static NetworkingController *sharedNetworkingController;
 -(void)getMessageForAppendingPageForScrollingWithPageURL:(NSString *)pageURL
 {
     NSLog(@"Network - Message: Getting Next Page Of Messages For Scrolling With URL %@", pageURL);
-    
     NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, pageURL];
-    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                        timeoutInterval:10];
-    
     //Configure Request
     [request setHTTPMethod: @"GET"];
     NSError *requestError = nil;

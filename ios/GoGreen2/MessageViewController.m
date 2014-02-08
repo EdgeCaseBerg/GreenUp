@@ -121,12 +121,18 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingMessageForFirstPageOfShowMessage:) name:@"finishedGettingMessageForFirstPageOfShowMessage" object:nil];
 
+    
     return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
+    [self.theTableView addSubview:refreshControl];
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -656,6 +662,13 @@
     }
 }
 
+#pragma mark - Refresh Controls
+
+- (void)refresh:(UIRefreshControl *)refreshControl {
+    [self getMessages];
+    [refreshControl endRefreshing];
+}
+
 #pragma mark - TABLE VIEW DATA SOURCE
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -670,38 +683,67 @@
     static NSString *CellIdentifier = @"cellID";
     
     UITableViewCell *cell = [self.theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
+    
     if (cell != nil)
     {
         for(UIView *subview in cell.contentView.subviews)
         {
             [subview removeFromSuperview];
         }
-    }
-    
-    NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
-    
-    if(indexPath.row % 2 == 0)
-    {
-        if(indexPath.row == 0)
+        
+        if(indexPath.row % 2 == 0)
         {
-            cell = [[MessageCell alloc] initWithMessage:msg isBackwards:TRUE isFirst:TRUE andResueIdentifier:CellIdentifier];
+            if(indexPath.row == 0)
+            {
+                [((MessageCell *)cell) updateCellWithMessage:msg isBackwards:TRUE isFirst:TRUE andResueIdentifier:CellIdentifier];
+            }
+            else
+            {
+                [((MessageCell *)cell) updateCellWithMessage:msg isBackwards:TRUE isFirst:FALSE andResueIdentifier:CellIdentifier];
+            }
         }
         else
         {
-            cell = [[MessageCell alloc] initWithMessage:msg isBackwards:TRUE isFirst:FALSE andResueIdentifier:CellIdentifier];
+            if(indexPath.row == 0)
+            {
+                [((MessageCell *)cell) updateCellWithMessage:msg isBackwards:FALSE isFirst:TRUE andResueIdentifier:CellIdentifier];
+            }
+            else
+            {
+                [((MessageCell *)cell) updateCellWithMessage:msg isBackwards:FALSE isFirst:FALSE andResueIdentifier:CellIdentifier];
+            }
         }
     }
     else
     {
-        if(indexPath.row == 0)
+        if(indexPath.row % 2 == 0)
         {
-            cell = [[MessageCell alloc] initWithMessage:msg isBackwards:FALSE isFirst:TRUE andResueIdentifier:CellIdentifier];
+            if(indexPath.row == 0)
+            {
+                cell = [[MessageCell alloc] initWithMessage:msg isBackwards:TRUE isFirst:TRUE andResueIdentifier:CellIdentifier];
+            }
+            else
+            {
+                cell = [[MessageCell alloc] initWithMessage:msg isBackwards:TRUE isFirst:FALSE andResueIdentifier:CellIdentifier];
+            }
         }
         else
         {
-            cell = [[MessageCell alloc] initWithMessage:msg isBackwards:FALSE isFirst:FALSE andResueIdentifier:CellIdentifier];
+            if(indexPath.row == 0)
+            {
+                cell = [[MessageCell alloc] initWithMessage:msg isBackwards:FALSE isFirst:TRUE andResueIdentifier:CellIdentifier];
+            }
+            else
+            {
+                cell = [[MessageCell alloc] initWithMessage:msg isBackwards:FALSE isFirst:FALSE andResueIdentifier:CellIdentifier];
+            }
         }
     }
+    
+
+    
     return cell;
 }
 /*

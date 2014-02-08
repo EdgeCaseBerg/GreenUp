@@ -21,5 +21,6 @@
 @property (nonatomic, strong) UILabel *timeStampLabel;
 
 -(id)initWithMessage:(NetworkMessage *)messageObject isBackwards:(BOOL)backwards isFirst:(BOOL)first andResueIdentifier:(NSString *)reuseIdentifier;
+-(void)updateCellWithMessage:(NetworkMessage *)messageObject isBackwards:(BOOL)backwards isFirst:(BOOL)first andResueIdentifier:(NSString *)reuseIdentifier;
 
 @end
