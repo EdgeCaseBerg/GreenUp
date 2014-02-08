@@ -1219,6 +1219,12 @@ function ClientLogger(){
 	}
 }
 
+function INPUT_TYPE(){
+	this.NONE  = -1;
+	this.PIN = 0;
+	this.MARKER = 0;
+	this.COMMENT = 1;
+}
 
 /**
 * This is where all the action begins (once content is loaded)

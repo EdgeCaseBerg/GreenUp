@@ -13,8 +13,8 @@
 
 
 <!-- Prototype fonts -->
-<link href='http://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/styles.css">
 
 <script type="text/javascript"
@@ -58,7 +58,6 @@
         <input type="hidden" id="initLat" value="23" />
         <input type="hidden" id="initLon" value=="22" />
 		<div class="panel" id="panel1">
-
             <!-- Main Page Content -->
             <div id="bodyContainer">
                 <img src="img/greenup_logo.png" id="greenupLogo">
