@@ -14,7 +14,10 @@ function CommentsHandle(){
 		if (offset > 90){
 			window.Comments.scrollPosition += offset;
 			window.ApiConnector.pullCommentData(null, window.UI.commentsNextPageUrl);
-		}
+		}else if(offset < 10){
+            window.Comments.scrollPosition -= offset;
+            window.ApiConnector.pullCommentData(null, window.UI.commentsPrevPageUrl);
+        }
 	} // end updateScroll()
 
 	// when the comments checkboxes are toggled, this turns the comments on or off
