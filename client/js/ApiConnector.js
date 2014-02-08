@@ -66,10 +66,15 @@ function ApiConnector(){
             success: function(data){
                 console.log("Pull API Data: SUCCESS");
                 // console.log(data);
+                data = JSON.parse(data);
                 if(!window.HELPER.isNull(data.contents)){
                     data = data.contents;
+//                    window.LOGGER.error("data.contents")
+                    CALLBACK(data);
+                }else{
+                    CALLBACK(data);
                 }
-                CALLBACK(data);
+
             },
             error: function(xhr, errorType, error){
                 // alert("error: "+xhr.status);
@@ -551,16 +556,16 @@ function MapHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         console.log("Heatmap data to be applied to map: ");
         console.log(data);
-        // var dataObj = eval(data);
         var dataObj = data;
+//        var dataObj = data;
         var heatmapData = [];
         // console.log(dataObj[ii].latDegrees);
-        if(!window.HELPER.isNull(dataObj.grid)){
+//        if(!window.HELPER.isNull(dataObj.grid)){
             for(var ii=0; ii<dataObj.grid.length; ii++){
                 heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
 
             }
-        }
+//        }
 
         console.log("Processed heatmap data:");
         console.log(heatmapData);
