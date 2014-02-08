@@ -235,7 +235,7 @@ ul{
 
 #commentsDialog{
     display:none;
-    padding: 5px 0px 5px 3px;
+    padding: 5px 0px 5px 0px;
     background: #eee;
     position:absolute;
     top:72px;
@@ -256,6 +256,10 @@ ul{
 
 }
 
+#logDialog .sliderTitle{
+    width: 630px;
+}
+
 #logDialog{
     border:solid 1px red;
     /*display:none;*/
@@ -263,12 +267,12 @@ ul{
     background: #eee;
     position:absolute;
     top:72px;
-    left: -530px;
+    left: -630px;
     border:solid 1px #222;
     height: 80%;
     min-height: 410px;
     overflow-y: scroll;
-    width: 525px;
+    width: 625px;
     z-index: 300;
     -webkit-box-shadow: 0px 14px 8px 0px rgba(3, 3, 3, 0.2);
     box-shadow: 0px 14px 8px 0px rgba(3, 3, 3, 0.2);
@@ -279,29 +283,52 @@ ul{
     /*transition: all .4s ease;*/
 }
 
+
+
+#logPageNo{
+    display:inline-block;
+    padding: 3px;
+    background: #C9F9FF;
+    border:solid 1px #000;
+}
+
 .mapViewLinks{
     cursor:pointer;
 }
 
 #logNest{
-    height: 93%;
+    margin-top: 20px;
+    height: 90%;
     overflow-y: scroll;
 }
 
 #logPageControl{
     width: 100%;
-    padding: 5px 1% 5px 1%;
+    padding: 8px 1% 8px 1%;
     text-align: center;
     border-top: solid 2px #888;
 }
 
 #logPageControl button{
-    width: 47%;
+    width: 40%;
 }
 
 .logTime{
     font-style: italic;
     font-size: 0.8em;
+}
+
+.sliderTitle{
+    float: left;
+    margin-top: -5px;
+    font-weight: bold;
+    font-size: 1.2em;
+    position: fixed;
+    text-align: center;
+    width: 530px;
+    background: #eee;
+    border-bottom: solid 1px #333;
+    z-index: 600;
 }
 
 .logBubble{
@@ -310,6 +337,14 @@ ul{
     background-color: #fff;
     margin-right: 3px;
     margin-bottom: 2px;
+}
+
+.authBubble{
+    color: blue;
+}
+
+.errorBubble{
+    color: red;
 }
 
 .analyticsColumnContainer{

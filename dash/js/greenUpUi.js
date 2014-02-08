@@ -90,7 +90,6 @@ function UiHandle(){
             }
         });
 
-        $('.datePicker').datepicker({ dateFormat: "yy-mm-dd" });
 
         $('#infoIcon').mouseenter(function(){
             $(this).attr("src", "images/info-icon-light.png");
@@ -176,6 +175,7 @@ function UiHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.LOGGER.obj(data, arguments.callee.name, null);
         $('#logNest').html("");
+        $('#logPageNo').html("Page: <b>"+data.page.index+"</b>");
         $('#prevLogPage').attr("data-var", data.page.previous);
         $('#nextLogPage').attr("data-var", data.page.next);
         $('#nextLogPage').click(function(){
@@ -191,7 +191,14 @@ function UiHandle(){
         });
 
         for(var ii=0; ii<data.messages.length; ii++){
-            var str = "<div class='logBubble'>";
+            if(data.messages[ii].message.indexOf("AUTH") != -1){
+                var str = "<div class='logBubble authBubble'>";
+            }else if(data.messages[ii].message.indexOf("AUTH") != -1){
+                var str = "<div class='logBubble errorBubble'>";
+            }else{
+                var str = "<div class='logBubble'>";
+            }
+
             str += "<div class='logTime'>"+data.messages[ii].timestamp+"</div>";
             str += "<div class='logMessage'>"+data.messages[ii].message+"</div>";
             str += "</div>";
@@ -207,7 +214,7 @@ function UiHandle(){
             $('#logDialog').tween({
                 left:{
                     start: 0,
-                    stop: -530,
+                    stop: -640,
                     time: 0,
                     duration: 1,
                     units: 'px',
@@ -227,7 +234,7 @@ function UiHandle(){
 
             $('#logDialog').tween({
                 left:{
-                    start: -530,
+                    start: -640,
                     stop: 0,
                     time: 0,
                     duration: 1,
@@ -489,19 +496,28 @@ function UiHandle(){
         document.getElementById("bubbleContainer").innerHTML = "";
         window.COMMENTS = data;
         dataObj = data;
+
+        window.LOGGER.obj(data, "updateForum", "data from update forum");
+
         var comments = dataObj.comments;
         if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.next)){
-            var nextArr = dataObj.page.next.split("greenupapp.appspot.com/api");
-            window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
+            var nextArr = dataObj.page.next.split("/api");
+            window.UI.commentsNextPageUrl = nextArr[1];
+            window.LOGGER.debug("url stored: "+window.UI.commentsNextPageUrl, "", "");
         }else{
             window.UI.commentsNextPageUrl = null;
         }
         if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.previous)){
-            var prevArr = dataObj.page.previous.split("greenupapp.appspot.com/api");
-            window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
+            var prevArr = dataObj.page.previous.split("/api");
+            window.UI.commentsPrevPageUrl = prevArr[1];
+            window.LOGGER.debug("url stored: "+window.UI.commentsPrevPageUrl);
+
+//            window.UI.commentsPrevPageUrl = dataObj.page.previous;
         }else{
             window.UI.commentsPrevPageUrl = null;
         }
+
+
 
         for(var ii=0; ii<comments.length; ii++){
 
@@ -604,7 +620,6 @@ function UiHandle(){
 
         $('.closeIconWrapper').click(function(){
             var commentId = $(this).parent().parent().find(".commentIdHolder").val();
-            alert(commentId);
             $(this).parent().parent().fadeOut();
             window.ApiConnector.deleteComment(commentId);
         });

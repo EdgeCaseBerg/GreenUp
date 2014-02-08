@@ -43,57 +43,30 @@ if(!isset($_COOKIE[session_name()])){
 <!DOCTYPE html>
 <html style="height: 100%; background: #eee">
 <head>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-
     <title>GreenUp-VT Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <!-- Bootstrap -->
     <link href="bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <!-- Our css -->
     <link href="styles.css" rel="stylesheet" media="screen">
-    <link href="js/lib/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" media="screen">
+    <!-- <link href="js/lib/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" media="screen">-->
     <!-- logging framework -->
     <!-- <script src="js/lib/log4javascript_production.js"></script>-->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/lib/jquery/jquery.js"></script>
     <script src="js/lib/BigNumber.js"></script>
     <script src="js/lib/dropdown.js"></script>
-
     <script src="js/lib/jstween-1.1.min.js"></script>
-    <script src="js/lib/jquery-ui-1.10.3/ui/jquery-ui.js"> </script>
-    <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.widget.js"> </script>
-    <script src="js/lib/jquery-ui-1.10.3/ui/jquery.ui.datepicker.js"> </script>
-
     <script src="js/main.js"></script>
-
     <script src="js/Helper.js"></script>
-
     <script src="js/apiConnector.js"></script>
     <script src="js/greenUpMap.js"></script>
     <script src="js/greenUpComments.js"></script>
-
     <script src="js/greenUpUi.js"></script>
-
-
-
-
 
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
-
-
-
-    <!-- Include all compiled plugins (below), or include individual files as needed
-  <script src="bootstrap-3.0.0/dist/js/bootstrap.min.js"></script> -->
-
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript"
-            src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'ru'}]}"></script>
-
-    <!--<script src="https://apis.google.com/js/client.js?onload=loadAnalytics"></script>-->
-
-    <script src="js/lib/jquery.cookie.js"></script>
 
 
     <script>
@@ -103,6 +76,7 @@ if(!isset($_COOKIE[session_name()])){
             <?
                 echo "window.HOST = '".HOST."';";
                 echo "window.ActiveUser = '".$_POST['username']."';";
+                echo "window.ActiveUserIP = '".$_SERVER['REMOTE_ADDR']."';";
             ?>
 
             window.DEBUG = true;
@@ -125,7 +99,7 @@ if(!isset($_COOKIE[session_name()])){
             window.MAP = new MapHandle();
             window.MAP.initMap();
 
-            window.LOGGER.serverLog("[INFO] Admin Dash Accessed by "+window.ActiveUser, "dash/home.php MAIN()");
+            window.LOGGER.serverLog("[AUTH] Admin Dash Accessed by "+window.ActiveUser + " from "+window.ActiveUserIP, "dash/home.php MAIN()");
             // grab our comments, map markers, and heatmap data
             window.ApiConnector.pullCommentData();
             window.ApiConnector.pullMarkerData();
@@ -206,7 +180,6 @@ if(!isset($_COOKIE[session_name()])){
                     <div class="analyticsData">
                         <div class="timeComponentNest">
                             <div class="timeComponent" id="totalDaysWorked"></div>
-                            <!-- <div class="timeComponent">100</div> -->
                             <div class="timeComponentLabel">DAYS</div>
                         </div>
 
@@ -253,18 +226,24 @@ if(!isset($_COOKIE[session_name()])){
     </div>
 </div>
 
-<div id="commentsDialog">
-    <div id="bubbleContainer">
+<div id="commentsDialog" onscroll="window.Comments.updateScroll(this)">
+    <div class="sliderTitle">
+        Comments
+    </div>
+    <div id="bubbleContainer" style="margin-top: 25px" >
     </div>
 </div>
 
 
 <div id="logDialog">
+    <div class="sliderTitle">
+        Server Log
+    </div>
     <div id="logNest">
-
     </div>
     <div id="logPageControl">
-        <button id="prevLogPage" data-var="">prev</button>
+        <button id="prevLogPage" data-var="">previous</button>
+        <div id="logPageNo"></div>
         <button id="nextLogPage" data-var="">next</button>
     </div>
 </div>
@@ -313,8 +292,16 @@ if(!isset($_COOKIE[session_name()])){
     </div>
 </div>
 
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+    ga('create', 'UA-47079120-2', 'xenonapps.com');
+    ga('send', 'pageview');
 
+</script>
 
 </body>
 
