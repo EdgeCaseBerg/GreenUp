@@ -13,7 +13,6 @@ function CommentsHandle(){
 		var offset = element.scrollTop - window.Comments.scrollPosition;
 		if (offset > 90){
 			window.Comments.scrollPosition += offset;
-			// alert(window.UI.commentsNextPageUrl);
 			window.ApiConnector.pullCommentData(null, window.UI.commentsNextPageUrl);
 		}
 	} // end updateScroll()

@@ -47,6 +47,7 @@ function ApiConnector(){
     // performs the ajax call to get our data
     ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK, USE_URL){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug("URL:"+URL, "[METHOD]")
         if(!window.HELPER.isNull(USE_URL) && USE_URL == 1){
             // leave the URL alone
         }else{
@@ -218,6 +219,7 @@ function ApiConnector(){
     // by passing the url as an argument, we can use this method to get next pages
     ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(url, "URL");
         var urlStr = "";
         if(url == null || url == "null"){
             urlStr += "/comments";

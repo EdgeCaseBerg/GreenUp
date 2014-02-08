@@ -226,11 +226,11 @@ if(!isset($_COOKIE[session_name()])){
     </div>
 </div>
 
-<div id="commentsDialog">
+<div id="commentsDialog" onscroll="window.Comments.updateScroll(this)">
     <div class="sliderTitle">
         Comments
     </div>
-    <div id="bubbleContainer" style="margin-top: 25px">
+    <div id="bubbleContainer" style="margin-top: 25px" >
     </div>
 </div>
 

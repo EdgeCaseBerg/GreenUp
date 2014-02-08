@@ -496,19 +496,28 @@ function UiHandle(){
         document.getElementById("bubbleContainer").innerHTML = "";
         window.COMMENTS = data;
         dataObj = data;
+
+        window.LOGGER.obj(data, "updateForum", "data from update forum");
+
         var comments = dataObj.comments;
         if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.next)){
-            var nextArr = dataObj.page.next.split("greenupapp.appspot.com/api");
-            window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
+            var nextArr = dataObj.page.next.split("/api");
+            window.UI.commentsNextPageUrl = nextArr[1];
+            window.LOGGER.debug("url stored: "+window.UI.commentsNextPageUrl, "", "");
         }else{
             window.UI.commentsNextPageUrl = null;
         }
         if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.previous)){
-            var prevArr = dataObj.page.previous.split("greenupapp.appspot.com/api");
-            window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
+            var prevArr = dataObj.page.previous.split("/api");
+            window.UI.commentsPrevPageUrl = prevArr[1];
+            window.LOGGER.debug("url stored: "+window.UI.commentsPrevPageUrl);
+
+//            window.UI.commentsPrevPageUrl = dataObj.page.previous;
         }else{
             window.UI.commentsPrevPageUrl = null;
         }
+
+
 
         for(var ii=0; ii<comments.length; ii++){
 
@@ -611,7 +620,6 @@ function UiHandle(){
 
         $('.closeIconWrapper').click(function(){
             var commentId = $(this).parent().parent().find(".commentIdHolder").val();
-            alert(commentId);
             $(this).parent().parent().fadeOut();
             window.ApiConnector.deleteComment(commentId);
         });
