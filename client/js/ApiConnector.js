@@ -21,6 +21,7 @@ function ApiConnector(){
 		// construct get request URL depending on document.url() ** TODO <-- utility method to figure out 
 		// where this is coming from and update
 		fq = this.LOCALHOST + this.PROXYBASE + this.HOST + this.PORT + this.BASE + URL
+        console.log(fq);
 		$.ajax({
 			type: QUERYTYPE,
 			url: fq,
@@ -28,6 +29,9 @@ function ApiConnector(){
 			success: function(data){
 				console.log("Pull API Data: SUCCESS");
 				// console.log(data);
+                if(!window.HELPER.isNull(data.contents)){
+                    data = data.contents;
+                }
 				CALLBACK(data);
 			},
 			error: function(xhr, errorType, error){
@@ -68,13 +72,16 @@ function ApiConnector(){
 		var pinsURI = "/pins";
 		$.ajax({
 			type: "POST",
-			url: BASE+pinsURI,
+			url: this.BASE+pinsURI,
 			data: jsonObj,
     		cache: false,
 			// processData: false,
 			dataType: "json",
 			// contentType: "application/json",
 			success: function(data){
+                if(!window.HELPER.isNull(data.contents)){
+                    data = data.contents;
+                }
 				console.log("INFO: Pin successfully sent");
 				//Becuase of the datastore's eventual consistency you must wait a brief moment for new data to be available.
 				setTimeout(function(){window.ApiConnector.pullMarkerData();},1500);
@@ -124,7 +131,7 @@ function ApiConnector(){
 			To be extra safe we could do if(typeof(param) === "undefined" || param == null),
 			but there is an implicit cast against undefined defined for double equals in javascript
 		*/
-		var heatmapURI = "/heatmap?precision=4";
+		var heatmapURI = "/heatmap";
 		var params = "";
 		if(latDegrees != null){
 			params = "&";
@@ -143,7 +150,7 @@ function ApiConnector(){
 			params += "lonOffset" + lonOffset + "&";
 		}
 		console.log("Preparing to pull heatmap data");
-		var URL = this.BASE+heatmapURI+params;
+		var URL = heatmapURI+params;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
 
 	}
@@ -185,7 +192,7 @@ function ApiConnector(){
 			// contentType: "application/json",
 			success: function(data){
 				console.log("INFO: Comment successfully sent");
-				window.ApiConnector.pullCommentData(JSON.parse(jsonObj).type, null);
+				window.ApiConnector.pullCommentData(jsonObj.type, null);
 			},
 			error: function(xhr, errorType, error){
 				// // alert("error: "+xhr.status);
@@ -223,7 +230,7 @@ function ApiConnector(){
 	}
 
 	ApiConnector.prototype.pullTestData = function pullTestData(){
-		this.pullApiData(BASE, "JSON", "GET", window.UI.updateTest);
+		this.pullApiData(this.BASE, "JSON", "GET", window.UI.updateTest);
 		this.pullCommentData("needs", null);
 		this.pullCommentData("messages", null);
 		this.pullCommentData("", null);
@@ -489,13 +496,15 @@ function MapHandle(){
 		console.log("Heatmap data to be applied to map: ");
 		console.log(data);
 		// var dataObj = eval(data);
-		var dataObj = JSON.parse(data);
+		var dataObj = data;
 		var heatmapData = [];
 			// console.log(dataObj[ii].latDegrees);
-		for(var ii=0; ii<dataObj.grid.length; ii++){
-			heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
-			
-		}
+        if(!window.HELPER.isNull(dataObj.grid)){
+            for(var ii=0; ii<dataObj.grid.length; ii++){
+                heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
+
+            }
+        }
 
 		console.log("Processed heatmap data:");
 		console.log(heatmapData);
@@ -1066,17 +1075,19 @@ function UiHandle(){
 	// ******* DOM updaters (callbacks for the ApiConnector pull methods) *********** 
 	UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
 		console.log("Heatmap data returned from api, preparing to apply data to map.");
-		window.MAP.applyHeatMap(data);
+		console.log(data);
+        window.MAP.applyHeatMap(data);
 	}
 
 	// markers coming from the apiconnector comes here to be added to the UI
 	UiHandle.prototype.updateMarker = function updateMarker(data){
 		console.log("marker response: "+data);
-		var dataArr = JSON.parse(data);
-        for(ii=0; ii<dataArr.pins.length; ii++){
-            window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
+		var dataArr = data;
+        if(!window.HELPER.isNull(dataArr.pins)){
+            for(ii=0; ii<dataArr.pins.length; ii++){
+                window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
+            }
         }
-
 	}
 
 	// data is passed from the api connector to here to update the forum.
@@ -1085,70 +1096,72 @@ function UiHandle(){
 		console.log("In Update forum");
 		// console.log("Comment data: "+data);
 		// document.getElementById("bubbleContainer").innerHTML = "";
-		var dataObj = JSON.parse(data);
+		var dataObj = data;
 		var comments = dataObj.comments;
 		// window.UI.commentsPrevPageUrl = dataObj.page.previous;
 		// window.UI.commentsNextPageUrl = dataObj.page.next;
-		if(dataObj.page.next != null){
-			var nextArr = dataObj.page.next.split("greenupapp.appspot.com/api");
-			window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
-		}else{
-			window.UI.commentsNextPageUrl = null;
-		}
-		if(dataObj.page.previous != null){
-			var prevArr = dataObj.page.previous.split("greenupapp.appspot.com/api");
-			window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
-		}else{
-			window.UI.commentsPrevPageUrl = null;
-		}
+        if(!window.HELPER.isNull(dataObj.page)){
+            if(dataObj.page.next != null){
+                var nextArr = dataObj.page.next.split("greenupapp.appspot.com/api");
+                window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
+            }else{
+                window.UI.commentsNextPageUrl = null;
+            }
+            if(dataObj.page.previous != null){
+                var prevArr = dataObj.page.previous.split("greenupapp.appspot.com/api");
+                window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
+            }else{
+                window.UI.commentsPrevPageUrl = null;
+            }
 
-		console.log("comments: ");
-		console.log(comments);
+            console.log("comments: ");
+            console.log(comments);
 
-		for(var ii=0; ii<comments.length; ii++){
+            for(var ii=0; ii<comments.length; ii++){
 
-				var div = document.createElement("div");
-				var timeDiv = document.createElement("div");
-				var messageContent = document.createElement("span");
-				var currentDate = new Date();
-				var timezoneOffsetMillis = currentDate.getTimezoneOffset()*60*1000;
-				var messageDate = new Date(comments[ii]['timestamp']);
-				var diffMins = Math.round((((timezoneOffsetMillis + currentDate.getTime()) - messageDate.getTime())/1000)/60);
-				if(diffMins > 59){
-					var mins = (diffMins % 60);
-					var timeSinceMessage = ((diffMins - mins)/60)+"hrs, "+mins+"mins ago"; 
-				}else{
-					var timeSinceMessage = diffMins+"mins ago"; 
-				}
-				
-				messageContent.innerHTML = comments[ii]['message'];
-				timeDiv.innerHTML = timeSinceMessage;
-				timeDiv.className = "bubbleTime";
-				if(ii % 2 == 0){
-					div.className = "bubbleRight bubble"; 
-				}else{
-					div.className = "bubbleLeft bubble";
-				}
+                    var div = document.createElement("div");
+                    var timeDiv = document.createElement("div");
+                    var messageContent = document.createElement("span");
+                    var currentDate = new Date();
+                    var timezoneOffsetMillis = currentDate.getTimezoneOffset()*60*1000;
+                    var messageDate = new Date(comments[ii]['timestamp']);
+                    var diffMins = Math.round((((timezoneOffsetMillis + currentDate.getTime()) - messageDate.getTime())/1000)/60);
+                    if(diffMins > 59){
+                        var mins = (diffMins % 60);
+                        var timeSinceMessage = ((diffMins - mins)/60)+"hrs, "+mins+"mins ago";
+                    }else{
+                        var timeSinceMessage = diffMins+"mins ago";
+                    }
 
-				switch(comments[ii]['type']){
-					case 'FORUM':
-						div.className += " bubbleForum";
-					break;
-					case 'TRASH PICKUP':
-						div.className += " bubbleNeeds";
-					break;
-					case 'GENERAL MESSAGE':
-						div.className += " bubbleMessage";
-					break;
-					default:
-						div.className += " bubbleForum";
-					break;
-				}
-				div.appendChild(timeDiv);
-				div.appendChild(messageContent);
-				document.getElementById("bubbleContainer").appendChild(div);
+                    messageContent.innerHTML = comments[ii]['message'];
+                    timeDiv.innerHTML = timeSinceMessage;
+                    timeDiv.className = "bubbleTime";
+                    if(ii % 2 == 0){
+                        div.className = "bubbleRight bubble";
+                    }else{
+                        div.className = "bubbleLeft bubble";
+                    }
 
-		}
+                    switch(comments[ii]['type']){
+                        case 'FORUM':
+                            div.className += " bubbleForum";
+                        break;
+                        case 'TRASH PICKUP':
+                            div.className += " bubbleNeeds";
+                        break;
+                        case 'GENERAL MESSAGE':
+                            div.className += " bubbleMessage";
+                        break;
+                        default:
+                            div.className += " bubbleForum";
+                        break;
+                    }
+                    div.appendChild(timeDiv);
+                    div.appendChild(messageContent);
+                    document.getElementById("bubbleContainer").appendChild(div);
+
+            }
+        }
 	}
 
 
@@ -1222,6 +1235,251 @@ function ClientLogger(){
 	}
 }
 
+
+// the helper object is for storing all our misc functions.
+
+function Helper(){
+
+    // in JS there's a lot of ways that soemthign could be null
+    Helper.prototype.isNull = function isNull(testVar){
+        if(testVar == "undefined"){
+            return true;
+        }else if (testVar == undefined){
+            return true;
+        }else if(testVar == null){
+            return true;
+        }else if(testVar == ""){
+            return true;
+        }else if(testVar === null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    Helper.prototype.isString = function isString(o) {
+        return typeof o == "string" || (typeof o == "object" && o.constructor === String);
+    }
+
+    Helper.prototype.isArray = function isArray(obj){
+        if( Object.prototype.toString.call( obj ) === '[object Array]' ) {
+            // it's an array
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    Helper.prototype.stripTags = function stripTags(string){
+        if(this.isString(string)){
+            var cleanText = string.replace(/<\/?[^>]+(>|$)/g, "");
+            return cleanText;
+        }else{
+            return string;
+        }
+    }
+
+    // iterates over a dictionary and returns the values in an array
+    Helper.prototype.objToArray = function objToArray(obj){
+        var arr = [];
+        for (key in obj){
+            arr.push(obj[key]);
+        }
+        return arr;
+    }
+
+    // returns an int to indicate the size of a dictionary object
+    Helper.prototype.dictSize = function dictSize(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
+
+    Helper.prototype.isJson = function isJson(str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
+    Helper.prototype.isArray = function isArray(value){
+        if (value instanceof Array) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // used for checking if a player object has been changed during the update player operations
+    // returns a boolean indicating
+    Helper.prototype.hasPlayerChanged = function hasPlayerChanged(beforePlayer, afterPlayer){
+        try{
+            for(property in beforePlayer){
+                if(beforePlayer[property] != afterPlayer[property]){
+                    return true;
+                }
+            }
+        }catch(e){
+            // the property was not likely found in both objects
+            console.log("EXCEPTION: attempt to determine if the player object has changed: "+e);
+            return true;
+        }
+        return false;
+    }
+
+    // searches through the player and team dictionaries to identify players not assigned
+    // to teams, and returns an array of those player objects
+    Helper.prototype.findPlayersNotOnTeam = function findPlayersNotOnTeam(){
+        var results = [];
+        for(key in window.playerDict){
+            var player = window.playerDict[key];
+            var isOnTeam = false;
+
+            for(t in window.teamDict){
+                for(var ii=0; ii<t.players.length; ii++){
+                    if(players[ii].player_id == player.player_id){
+                        isOnTeam = true;
+                    }
+                }
+            }
+
+            if(!isOnTeam){
+                results.push(player);
+            }
+
+        }
+        return results;
+    }
+
+    // returns empty metrics divs based on the metric type
+    // used in LoadSnippet.showPlayerDetail()
+    // todo: should probably be in the UI class
+    Helper.prototype.createMetricDiv = function createMetricDiv(metric){
+        if(metric.type == "STAR"){
+            return window.UI.buildStarMetricDiv(metric);
+        }else{
+            if(metric.type == "QUANT"){
+                return window.UI.buildQuantMetricDiv(metric);
+            }else if(metric.type == "BOOL"){
+                return window.UI.buildBoolMetricDiv(metric);
+            }else if(metric.type == "CAT"){
+                return window.UI.buildCatMetricDiv(metric);
+            }else{
+                window.LOGGER.error("Helper.createMetricDiv : unable to determine metric type");
+            }
+        }
+    };
+
+    Helper.prototype.createCookie = function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+
+    Helper.prototype.readCookie = function readCookie(name) {
+        var nameEQ = escape(name) + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return unescape(c.substring(nameEQ.length, c.length));
+        }
+        return null;
+    }
+
+    Helper.prototype.eraseCookie = function eraseCookie(name) {
+        window.Helper.createCookie(name, "", -1);
+    }
+
+    Helper.prototype.isNumber = function isNumber(o){
+        try{
+            return ! isNaN (o-0) && o !== null && o.replace(/^\s\s*/, '') !== "" && o !== false;
+        }catch(e){
+            return false;
+        }
+    }
+
+    Helper.prototype.isTrue = function isTrue(o){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+
+        if(o == undefined){
+            window.LOGGER.error(arguments.callee.name, "cannot test TRUE/FALSE for undefined object");
+        }
+
+        if(o === true || o == true){
+            return true;
+        }
+
+        if(window.Helper.isString(o)){
+            if(o == "1"){
+                return true;
+            }else if(o.toLowerCase() == "true"){
+                return true;
+            }
+        }else if(window.Helper.isNumber(o)){
+            if(o != 0 && o != -1){
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    Helper.prototype.getGoogleFormattedDate = function getGoogleFormattedDate(dateObj){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        var monthString = dateObj.getMonth().toString();
+        var dayString = dateObj.getDay().toString();
+        if(dateObj.getMonth() < 10){
+            monthString = "0"+monthString;
+        }
+        if(dateObj.getDay() < 10){
+            dayString = "0"+dayString;
+        }
+
+        var result = dateObj.getFullYear().toString() + "-"+
+            monthString + "-" + dayString;
+
+        return result;
+    }
+
+    Helper.prototype.metersToAcres = function metersToAcres(sqMeters){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        return (sqMeters * 0.000247105);
+    }
+
+    Helper.prototype.secondsToHoursMinutesSeconds = function secondsToHoursMinutesSeconds(seconds){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        var remainderSeconds = (seconds % 60);
+        var minutes = ((seconds - remainderSeconds) / 60);
+        var remainderMinutes = (minutes % 60);
+        var hours = ((minutes - remainderMinutes) / 60);
+        var remainderHours = (hours % 24);
+        var days = ((hours - remainderHours) / 24);
+
+        if(remainderHours < 10){
+            remainderHours = ("0"+remainderHours);
+        }
+        if(remainderMinutes < 10){
+            remainderMinutes = ("0"+remainderMinutes);
+        }
+        if(remainderSeconds < 10){
+            remainderSeconds = ("0"+remainderSeconds);
+        }
+
+        var results = {"days": days, "hours" : remainderHours, "minutes" : remainderMinutes, "seconds" : remainderSeconds};
+
+        return results;
+    }
+
+}
+
 function INPUT_TYPE(){
 	this.NONE  = -1;
 	this.PIN = 0;
@@ -1237,6 +1495,8 @@ document.addEventListener('DOMContentLoaded',function(){
 	window.LOGGER = new ClientLogger();
 	window.INPUT_TYPE = new INPUT_TYPE();
 	window.DEBUG = false;
+
+    window.HELPER = new Helper();
 	// are we currently logging GPS data?
 	window.logging = false;
 
