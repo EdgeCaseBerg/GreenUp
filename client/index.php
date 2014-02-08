@@ -199,9 +199,9 @@
     </div>
     <div id="navContainer">
         <ul class="nav" id="navbar">
-            <li><a id="pan1">Home</a></li>
-            <li><a id="pan2">Maps</a></li>
-            <li><a id="pan3">Comments</a></li>
+            <li><a id="homeNavButton">Home</a></li>
+            <li><a id="mapsNavButton">Maps</a></li>
+            <li><a id="commentsNavButton">Comments</a></li>
         </ul>
     </div>
 

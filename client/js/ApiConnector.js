@@ -10,17 +10,20 @@ function ApiConnector(){
 
     this.LOCALHOST = "http://localhost/green-web"
     this.PROXYBASE = "/proxy.php?url=";
-    this.HOST = "http://199.195.248.180";
-    this.PORT = "31337"
+    this.HOST = "http://199.195.248.180"; // change to fqdn of server 
+    this.PORT = ":31337"
     this.BASE = "/api";
 
 	// performs the ajax call to get our data
 	ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
 		console.log("pull api data URL:")
 		console.log(URL);
+		// construct get request URL depending on document.url() ** TODO <-- utility method to figure out 
+		// where this is coming from and update
+		fq = this.LOCALHOST + this.PROXYBASE + this.HOST + this.PORT + this.BASE + URL
 		$.ajax({
 			type: QUERYTYPE,
-			url: URL,
+			url: fq,
 			dataType: DATATYPE,
 			success: function(data){
 				console.log("Pull API Data: SUCCESS");
@@ -140,7 +143,7 @@ function ApiConnector(){
 			params += "lonOffset" + lonOffset + "&";
 		}
 		console.log("Preparing to pull heatmap data");
-		var URL = BASE+heatmapURI+params;
+		var URL = this.BASE+heatmapURI+params;
 		this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
 
 	}
@@ -739,9 +742,9 @@ function UiHandle(){
     	document.getElementById("topSlideDown").className = "sliderHidden";
 	    // controls the main panel movement
 	    document.getElementById("timeSpentClockDigits").innerHTML = "0"+window.UI.clockHrs+":0"+window.UI.clockMins+":0"+window.UI.clockSecs;
-	    document.getElementById("pan1").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
-	    document.getElementById("pan2").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
-	    document.getElementById("pan3").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
+	    document.getElementById("homeNavButton").addEventListener('mousedown', function(){UI.setActiveDisplay(0);});
+	    document.getElementById("mapsNavButton").addEventListener('mousedown', function(){UI.setActiveDisplay(1);});
+	    document.getElementById("commentsNavButton").addEventListener('mousedown', function(){UI.setActiveDisplay(2);});
 	    document.getElementById("panel1SlideDownContent").style.display = "block";
 
 	    window.UI.setActiveDisplay(0);
@@ -899,7 +902,7 @@ function UiHandle(){
 			case 0:
 				this.currentDisplay = 1;
 				document.getElementById("homeNavButton").src="img/home_active.png";
-				document.getElementById("mapNavButton").src="img/map.png";
+				document.getElementById("mapsNavButton").src="img/map.png";
 				document.getElementById("commentsNavButton").src="img/comments.png";
 				document.getElementById("topSlideDown").className = "sliderHidden";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
@@ -909,7 +912,7 @@ function UiHandle(){
 			break;
 			case 1:
 				this.currentDisplay = 2;
-				document.getElementById("mapNavButton").src="img/map_active.png";
+				document.getElementById("mapsNavButton").src="img/map_active.png";
 				document.getElementById("homeNavButton").src="img/home.png";
 				document.getElementById("commentsNavButton").src="img/comments.png";
 				document.getElementById("topSlideDown").className = "sliderUp";
@@ -921,13 +924,13 @@ function UiHandle(){
 			case 2:
 				this.currentDisplay = 3;
 				document.getElementById("commentsNavButton").src="img/comments_active.png";
-				document.getElementById("mapNavButton").src="img/map.png";
+				document.getElementById("mapsNavButton").src="img/map.png";
 				document.getElementById("homeNavButton").src="img/home.png";
 				document.getElementById("topSlideDown").className = "sliderUp";
 				document.getElementById("panel1SlideDownContent").style.display = "none";
 				document.getElementById("panel2SlideDownContent").style.display = "none";
 				document.getElementById("panel3SlideDownContent").style.display = "block";
-				window.ApiConnector.updateComments();
+				window.ApiConnector.pullCommentData();
 				this.navbarSlideDown();
 				container.className = "panel3Center";
 			break;
