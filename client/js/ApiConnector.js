@@ -709,13 +709,13 @@ function CommentsHandle(){
     this.commentType;
 
     CommentsHandle.prototype.init = function init(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[init]");
         // add the listener to our add comments button
     } // end init()
 
     // when the comments nest is scrolled to a position defined in home.php, more comments are added
     CommentsHandle.prototype.updateScroll = function updateScroll(element){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[updateScroll]");
         // console.log("Scrolling");
         // var offset = window.pageYOffset;
         var offset = element.scrollTop - window.Comments.scrollPosition;
@@ -728,16 +728,19 @@ function CommentsHandle(){
 
     // when the comments checkboxes are toggled, this turns the comments on or off
     CommentsHandle.prototype.toggleComments = function toggleComments(type){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[toggleComments]");
+
         switch(type){
             case('forum'):
                 var bubbleNodeList = document.getElementsByClassName('bubbleForum');
                 if(document.getElementById("toggleForum").checked){
+                	document.getElementById('toggleForumLabel').classList.toggle('buttonShadow');
                     var forumBubbles = document.getElementsByClassName("bubbleForum");
                     for(var i=0; i<forumBubbles.length; i++){
                         forumBubbles[i].style.display = "block";
                     }
                 }else{
+                	document.getElementById('toggleForumLabel').classList.toggle('buttonShadow');
                     var forumBubbles = document.getElementsByClassName("bubbleForum");
                     for(var i=0; i<forumBubbles.length; i++){
                         forumBubbles[i].style.display = "none";
@@ -747,11 +750,13 @@ function CommentsHandle(){
             case('needs'):
                 var bubbleNodeList = document.getElementsByClassName('bubbleNeeds');
                 if(document.getElementById("toggleNeeds").checked){
+                	document.getElementById('toggleNeedsLabel').classList.toggle('buttonShadow');
                     var forumBubbles = document.getElementsByClassName("bubbleNeeds");
                     for(var i=0; i<forumBubbles.length; i++){
                         forumBubbles[i].style.display = "block";
                     }
                 }else{
+                	document.getElementById('toggleNeedsLabel').classList.toggle('buttonShadow');
                     var forumBubbles = document.getElementsByClassName("bubbleNeeds");
                     for(var i=0; i<forumBubbles.length; i++){
                         forumBubbles[i].style.display = "none";
@@ -761,11 +766,13 @@ function CommentsHandle(){
             case('message'):
                 var bubbleNodeList = document.getElementsByClassName('bubbleMessage');
                 if(document.getElementById("toggleMessages").checked){
+                	document.getElementById('toggleMessagesLabel').classList.toggle('buttonShadow');
                     var forumBubbles = document.getElementsByClassName("bubbleMessage");
                     for(var i=0; i<forumBubbles.length; i++){
                         forumBubbles[i].style.display = "block";
                     }
                 }else{
+                	document.getElementById('toggleMessagesLabel').classList.toggle('buttonShadow');
                     var forumBubbles = document.getElementsByClassName("bubbleMessage");
                     for(var i=0; i<forumBubbles.length; i++){
                         forumBubbles[i].style.display = "none";

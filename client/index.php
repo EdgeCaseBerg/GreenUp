@@ -136,25 +136,22 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
             <div class="slideDownNest">
                 <ul>
                     <li class="filterType">
-                        <div class="roundedTwo">
-                            <input type="checkbox" value="None" id="toggleForum" onchange="window.Comments.toggleComments('forum')" class="checkboxUnder" name="check" checked />
-                            <label for="toggleForum"></label>
-                        </div>
-                        <span>Forum</span>
+                        <label id="toggleForumLabel" class="filterButton buttonShadow">
+                            <input type="checkbox" value="None" id="toggleForum" onchange="window.Comments.toggleComments('forum')" class="checkboxUnder" name="check"  checked />
+                            Forum
+                        </label>
                     </li>
                     <li class="filterType">
-                        <div class="roundedTwo">
+                        <label id ="toggleNeedsLabel" class="filterButton buttonShadow">
                             <input type="checkbox" value="None" id="toggleNeeds" onchange="window.Comments.toggleComments('needs')" class="checkboxUnder" name="check" checked />
-                            <label for="toggleNeeds"></label>
-                        </div>
-                        <span>Needs</span>
+                            Needs
+                        </label>
                     </li>
                     <li class="filterType">
-                        <div class="roundedTwo">
+                        <label id="toggleMessagesLabel" class="filterButton buttonShadow">
                             <input type="checkbox" value="None" id="toggleMessages" onchange="window.Comments.toggleComments('message')" class="checkboxUnder" name="check" checked />
-                            <label for="toggleMessages"></label>
-                        </div>
-                        <span>Messages</span>
+                            Messages
+                        </label>
                     </li>
                     <li><div class="addCommentButton commentButton" id="addCommentButton" onclick="window.UI.showMarkerTypeSelect('comment')">+ New Comment</div></li>
                     <input type="hidden" id="commentTypeToBePosted" value="null" />
