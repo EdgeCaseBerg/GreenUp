@@ -12,8 +12,8 @@
 
 #define API_PORT 31337
 
-//#define BASE_HOST @"http://199.195.248.180"
-#define BASE_HOST @"http://dev.xenonapps.com"
+#define BASE_HOST @"http://199.195.248.180"
+//#define BASE_HOST @"http://dev.xenonapps.com"
 #define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
 #define COMMENTS_RELATIVE_URL @"/api/comments"
 #define PINS_RELATIVE_URL @"/api/pins"

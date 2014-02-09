@@ -1165,12 +1165,24 @@ static NetworkingController *sharedNetworkingController;
         //Create Data From Request Dictionary
         NSData *requestData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
         
+        NSLog(@"SIZE:::::::::::::: %d", requestData.length);
+        
         [request setHTTPBody:requestData];
         
         request.timeoutInterval = 10;
-      
+        
+
+        [request addValue:@"Keep-Alive" forHTTPHeaderField:@"Connection"];
+        [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        
+
         //Fire Off Request
         postMessageConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        
+        NSDictionary *test = [request allHTTPHeaderFields];
+        
+        NSLog(@"%@", test);
+
     }
 }
 
