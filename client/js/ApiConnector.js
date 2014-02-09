@@ -644,8 +644,9 @@ function MapHandle(){
     }
 
     MapHandle.prototype.toggleIcons = function toggleIcons(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[toggleIcons]");        
         console.log("toggle icons: "+window.MAP.pickupMarkers.length);
+        document.getElementById('toggleMarkerLabel').classList.toggle('buttonShadow');
         if(window.UI.isMarkerVisible){
             window.UI.isMarkerVisible = false;
         }else{
@@ -657,7 +658,8 @@ function MapHandle(){
     }
 
     MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[toggleHeatmap]");
+        document.getElementById('toggleHeatLabel').classList.toggle('buttonShadow');
         if(window.MAP.isHeatmapVisible){
             window.MAP.heatmap.setMap(null);
             window.MAP.isHeatmapVisible = false;

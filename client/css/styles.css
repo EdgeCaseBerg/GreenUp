@@ -1256,4 +1256,10 @@ input[type=checkbox] {
     box-shadow:         inset 0 0 15px #000000;
 }
 
+#toggleMarkerLabel, #toggleHeatLabel{
+    height: 5.7em;
+}
+#toggleMarkerLabel {
+    margin-top:.2em;
+}
 

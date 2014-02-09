@@ -111,27 +111,29 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
 
 <div id="topSlideDown" class="sliderUp">
     <div id="slideContentContainer">
-        <div id="panel1SlideDownContent" class="panelSlideDownContent">
-            1111111111
-        </div>
-        <div id="panel2SlideDownContent" class="panelSlideDownContent">
+        <div id="panel1SlideDownContent" class="panelSlideDownContent"></div>
+        <div id="panel2SlideDownContent" class="panelSlideDownContent"> <!-- map slide down content -->
             <div class="slideDownNest">
-                <div id="heatChoice" class="mapToggleContainer">
-                    <div class="roundedTwo">
-                        <input type="checkbox" value="None" id="toggleHeat" onchange="window.MAP.toggleHeatmap()" class="checkboxUnder" name="check" checked />
-                        <label for="toggleHeat"></label>
-                    </div>
-                    <span>Heat Map</span>
-                </div>
-                <div id="markerChoice" class="mapToggleContainer">
-                    <div class="roundedTwo">
-                        <input type="checkbox" value="None" id="toggleIcons" onchange="window.MAP.toggleIcons()" class="checkboxUnder" name="check" checked />
-                        <label for="toggleIcons"></label>
-                    </div>
-                    <span>Markers</span>
-                </div>
-            </div>
-        </div>
+                <ul>
+                    <li>
+                        <label id="toggleHeatLabel" class="filterButton buttonShadow">
+                            <input type="checkbox" value="None" id="toggleHeat" onchange="window.MAP.toggleHeatmap()" class="checkboxUnder" name="check"  checked />
+                            <p></p>
+                            <span>Heat Map</span>
+                        </label>
+                    </li>
+
+                    <li>
+                        <label id="toggleMarkerLabel" class="filterButton buttonShadow">
+                            <input type="checkbox" value="None" id="toggleIcons" onchange="window.MAP.toggleIcons()" class="checkboxUnder" name="check"  checked />
+                            <p></p>
+                            <span>Markers</span>
+                        </label>
+                    </li>
+                </ul>
+            </div> <!-- end slide down nest -->
+        </div><!-- end map slide down content -->
+
         <div id="panel3SlideDownContent" class="panelSlideDownContent"> <!-- comments slide down content -->
             <div class="slideDownNest">
                 <ul>
@@ -158,7 +160,7 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
                     <input type="hidden" id="commentToBePosted" value="null" />
                 </ul>
             </div>
-        </div>
+        </div><!-- end comments slide down content -->
     </div>
 
     <div id="hamburgerNest">
