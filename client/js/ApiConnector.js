@@ -226,14 +226,13 @@ function ApiConnector(){
 
     // by passing the url as an argument, we can use this method to get next pages
     ApiConnector.prototype.pullCommentData = function pullCommentData(commentType, url){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[pullCommentData]");
         var urlStr = "";
         if(url == null || url == "null"){
             urlStr += "/comments";
         }else{
             urlStr += url;
         }
-
         this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
     } // end pullCommentData()
 
@@ -723,8 +722,11 @@ function CommentsHandle(){
         var offset = element.scrollTop - window.Comments.scrollPosition;
         if (offset > 90){
             window.Comments.scrollPosition += offset;
-            // alert(window.UI.commentsNextPageUrl);
-            window.ApiConnector.pullCommentData(null, window.UI.commentsNextPageUrl);
+
+            if (window.UI.commentsNextPageUrl != "/comments?page=null"){
+            	// make sure we stop when there's nothing else to add.
+            	window.ApiConnector.pullCommentData(null, window.UI.commentsNextPageUrl);	
+            }
         }
     } // end updateScroll()
 
@@ -841,7 +843,7 @@ function UiHandle(){
     this.commentsPrevPageUrl = "";
 
     UiHandle.prototype.init = function init(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[UiHandle init]");
 
         // top slider dropdown
         document.getElementById("hamburger").addEventListener('mousedown', function(){UI.topSliderToggle();});
@@ -1206,31 +1208,35 @@ function UiHandle(){
 
     // data is passed from the api connector to here to update the forum.
     UiHandle.prototype.updateForum = function updateForum(data){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[updateForum]");
         document.getElementById("bubbleContainer").innerHTML = "";
-        console.log("In Update forum");
-        // console.log("Comment data: "+data);
-        // document.getElementById("bubbleContainer").innerHTML = "";
         var dataObj = data;
         var comments = dataObj.comments;
-        // window.UI.commentsPrevPageUrl = dataObj.page.previous;
-        // window.UI.commentsNextPageUrl = dataObj.page.next;
+
+        // phelan
+
         if(!window.HELPER.isNull(dataObj.page)){
             if(dataObj.page.next != null){
-                var nextArr = dataObj.page.next.split("greenupapp.appspot.com/api");
-                window.UI.commentsNextPageUrl = window.ApiConnector.BASE+"/"+nextArr[1];
+                var str = dataObj.page.next;
+                var n = str.indexOf("=");
+           		// we only want to know the next page number, and add that to comments
+                window.UI.commentsNextPageUrl = "/comments?page=" + str.substring(n+1, str.length);
             }else{
                 window.UI.commentsNextPageUrl = null;
             }
             if(dataObj.page.previous != null){
-                var prevArr = dataObj.page.previous.split("greenupapp.appspot.com/api");
-                window.UI.commentsPrevPageUrl = window.ApiConnector.BASE+"/"+prevArr[1];
+                var str = dataObj.page.previous;
+                var n = str.indexOf("=");
+           		// we only want to know the previous page number, and add that to comments
+                window.UI.commentsPrevPageUrl = "/comments?page=" + str.substring(n+1, str.length);              
             }else{
                 window.UI.commentsPrevPageUrl = null;
             }
 
             console.log("comments: ");
             console.log(comments);
+            console.log(window.UI.commentsNextPageUrl);
+            console.log(dataObj.page);
 
             for(var ii=0; ii<comments.length; ii++){
 
