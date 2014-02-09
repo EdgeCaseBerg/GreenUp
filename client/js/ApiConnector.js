@@ -62,7 +62,7 @@ function ApiConnector(){
     	} 
     	else {
     		// request from remote
-    		return this.REMOTEHOST
+    		return this.REMOTEHOST + this.BASE;
     	}
     }
 
@@ -128,7 +128,8 @@ function ApiConnector(){
         var pinsURI = "/pins";
         $.ajax({
             type: "POST",
-            url: this.BASE+pinsURI,
+            // url: this.BASE+pinsURI,
+            url: pinsURI,
             data: jsonObj,
             cache: false,
             // processData: false,
@@ -236,12 +237,13 @@ function ApiConnector(){
     } // end pullCommentData()
 
     ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[pushCommentData]");
         var commentsURI = "/comments";
         console.log("json to push: "+jsonObj);
         console.log("Push comment data to: "+commentsURI);
         $.ajax({
             type: "POST",
+            // url: this.BASE+commentsURI,
             url: commentsURI,
             data: jsonObj,
             cache: false,
@@ -301,8 +303,12 @@ function ApiConnector(){
     //Clears the local storage after upload
     ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(){
         window.LOGGER.debug(arguments.callee.name, "[pushHeatmapData]");
-        // var heatmapURI = "proxy.php?url=http://199.195.248.180:31337/api/heatmap";
-        var heatmapURI = "CRAP/heatmap";
+        if (document.URL.search("localhost") > 0){
+        	var heatmapURI = "http://localhost/proxy.php?url=http://199.195.248.180:31337/api/heatmap";
+        }
+        else{
+	        var heatmapURI = "/heatmap";
+        }
         if(window.logging){
             //server/addgriddata.php
             var jsonArray = [];
