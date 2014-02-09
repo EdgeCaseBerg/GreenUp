@@ -477,7 +477,16 @@ a, a:hover, a:visited{
     opacity: 1;
 }
 
+.filterType {
+    background-color: white;
+    height:4.9em;
+    width:99%;
+    
+}
 
+#slideDownNest > ul {
+    /*padding: 1em;*/
+}
 
 
 #markerTypeDialog{
@@ -485,10 +494,11 @@ a, a:hover, a:visited{
     position:absolute;
     top:0px;
     z-index:100;
-    width:33.2%;
+    width:100%;
     height:100%;
     background: url('../img/backgrounds/80_percent_black.png');
     display:none;
+    left:0;
 }
 
 .markerTypePanel1{
@@ -504,13 +514,13 @@ a, a:hover, a:visited{
 }
 
 .tileContainer{
-/*    position:absolute;
-    top: 0px;*/
-    height:30%;
-    width:90%;
-    margin:auto;
-    margin-top: 20%;
-    /*border:solid 1px white;*/
+    position: relative;
+    top: 35%;
+    height: 30%;
+    width: 90%;
+    margin: auto;
+    margin-top: 50%;
+    margin: 0px auto;
 }
 
 .tile{

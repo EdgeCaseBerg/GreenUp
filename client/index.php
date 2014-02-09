@@ -13,12 +13,12 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
 
 
     <!-- Prototype fonts -->
-    <link href='https://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Armata' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="css/styles.css">
 
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
+            src="http://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
     <script src="js/markerwithlabel.js"></script>
     <script type="text/javascript" src="js/lawnchair-js.js"></script>
     <script type="text/javascript" src="js/JSON.js"></script>
@@ -132,24 +132,24 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
                 </div>
             </div>
         </div>
-        <div id="panel3SlideDownContent" class="panelSlideDownContent">
+        <div id="panel3SlideDownContent" class="panelSlideDownContent"> <!-- comments slide down content -->
             <div class="slideDownNest">
                 <ul>
-                    <li>
+                    <li class="filterType">
                         <div class="roundedTwo">
                             <input type="checkbox" value="None" id="toggleForum" onchange="window.Comments.toggleComments('forum')" class="checkboxUnder" name="check" checked />
                             <label for="toggleForum"></label>
                         </div>
                         <span>Forum</span>
                     </li>
-                    <li>
+                    <li class="filterType">
                         <div class="roundedTwo">
                             <input type="checkbox" value="None" id="toggleNeeds" onchange="window.Comments.toggleComments('needs')" class="checkboxUnder" name="check" checked />
                             <label for="toggleNeeds"></label>
                         </div>
                         <span>Needs</span>
                     </li>
-                    <li>
+                    <li class="filterType">
                         <div class="roundedTwo">
                             <input type="checkbox" value="None" id="toggleMessages" onchange="window.Comments.toggleComments('message')" class="checkboxUnder" name="check" checked />
                             <label for="toggleMessages"></label>

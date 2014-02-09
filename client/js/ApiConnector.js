@@ -45,27 +45,40 @@ function ApiConnector(){
     var markerData = [];
     var commentData = [];
 
-    this.LOCALHOST = "http://localhost/green-web"
+    this.REMOTEHOST = "http://dev.xenonapps.com";
+    this.LOCALHOST = "http://localhost";
     this.PROXYBASE = "/proxy.php?url=";
     this.HOST = "http://199.195.248.180"; // change to fqdn of server 
-    this.PORT = ":31337"
+    this.PORT = ":31337";
     this.BASE = "/api";
+
+    // determine where the page is loaded from and form the url base accordingly
+    ApiConnector.prototype.checkOrigin = function(){
+    	window.LOGGER.debug(arguments.callee.name, "[checkOrigin]");
+    	var origin = document.URL;
+    	if (origin.search("localhost") > 0){
+    		// request is from localhost
+    		return this.LOCALHOST + this.PROXYBASE + this.HOST + this.PORT + this.BASE 
+    	} 
+    	else {
+    		// request from remote
+    		return this.REMOTEHOST
+    	}
+    }
 
     // performs the ajax call to get our data
     ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        console.log(URL);
-        // construct get request URL depending on document.url() ** TODO <-- utility method to figure out
-        // where this is coming from and update
-        fq = this.LOCALHOST + this.PROXYBASE + this.HOST + this.PORT + this.BASE + URL
-        console.log(fq);
+        // build url based on origin
+        var fq = this.checkOrigin();
+        fq = fq + URL;
+
         $.ajax({
             type: QUERYTYPE,
             url: fq,
             dataType: DATATYPE,
             success: function(data){
                 console.log("Pull API Data: SUCCESS");
-                // console.log(data);
                 data = JSON.parse(data);
                 if(!window.HELPER.isNull(data.contents)){
                     data = data.contents;
