@@ -270,6 +270,7 @@ a, a:hover, a:visited{
     position: fixed;
     top:94%;
     z-index:190;
+    margin-left: .15em;
 }
 
 #navbarPullUpTab{

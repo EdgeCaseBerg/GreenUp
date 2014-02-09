@@ -1213,8 +1213,6 @@ function UiHandle(){
         var dataObj = data;
         var comments = dataObj.comments;
 
-        // phelan
-
         if(!window.HELPER.isNull(dataObj.page)){
             if(dataObj.page.next != null){
                 var str = dataObj.page.next;
@@ -1239,7 +1237,6 @@ function UiHandle(){
             console.log(dataObj.page);
 
             for(var ii=0; ii<comments.length; ii++){
-
                 var div = document.createElement("div");
                 var timeDiv = document.createElement("div");
                 var messageContent = document.createElement("span");
@@ -1281,6 +1278,7 @@ function UiHandle(){
                 div.appendChild(messageContent);
                 document.getElementById("bubbleContainer").appendChild(div);
 
+                // for some reason, this seems to be replacing and not appending to the bubblecontainer
             }
         }
     }
