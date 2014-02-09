@@ -243,13 +243,14 @@ function ApiConnector(){
 
     ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
         window.LOGGER.debug(arguments.callee.name, "[pushCommentData]");
+        URL = this.checkOrigin();
         var commentsURI = "/comments";
         console.log("json to push: "+jsonObj);
         console.log("Push comment data to: "+commentsURI);
         $.ajax({
             type: "POST",
             // url: this.BASE+commentsURI,
-            url: commentsURI,
+            url: URL+commentsURI,
             data: jsonObj,
             cache: false,
             // processData: false,
@@ -1214,7 +1215,7 @@ function UiHandle(){
 
         console.log("phelan");
         console.log(dataArr);
-        
+
         if(!window.HELPER.isNull(dataArr.pins)){
             for(ii=0; ii<dataArr.pins.length; ii++){
                 window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
