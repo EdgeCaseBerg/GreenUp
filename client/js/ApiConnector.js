@@ -123,9 +123,14 @@ function ApiConnector(){
 
 
     ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[pushNewPin]");
+        url = this.checkOrigin();
+
+        console.log("Phelan");
+        console.log(url);
         console.log(jsonObj);
-        var pinsURI = "/pins";
+        
+        var pinsURI = url+"/pins";
         $.ajax({
             type: "POST",
             // url: this.BASE+pinsURI,
@@ -343,7 +348,7 @@ function ApiConnector(){
 
     // baseline testing
     ApiConnector.prototype.testObj = function testObj(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[testObj]");
         var URL = testurl;
         this.pullApiData(URL, "JSON", "GET", this.updateTest);
     }
@@ -360,25 +365,25 @@ function LoadingScreen(loadingDiv){
     var loadingTextDiv = document.getElementById("loadingText");
 
     LoadingScreen.prototype.show = function show(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[show]");
         this.ISVISIBLE = true;
         loadingDiv.style.display = "block";
         loadingTextDiv.innerHTML = window.LS.loadingText;
     }
 
     LoadingScreen.prototype.hide = function hide(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[hide]");
         this.ISVISIBLE = false;
         loadingDiv.style.display = "none";
     }
 
     LoadingScreen.prototype.isVisible = function isVisible(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[isVisible]");
         return this.ISVISIBLE;
     }
 
     LoadingScreen.prototype.setLoadingText = function setLoadingText(text){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[setLoadingText]");
         this.loadingText = text;
     }
 } // end LoadingScreen class def
@@ -389,7 +394,7 @@ function LoadingScreen(loadingDiv){
 function GpsHandle(){
 
     GpsHandle.prototype.initGps = function initGps(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[initGps]");
         window.logging = true;
         console.log("initGps");
         window.updateCounter = 0;
@@ -404,7 +409,7 @@ function GpsHandle(){
 
     //Runs the update script:
     GpsHandle.prototype.runUpdate = function runUpdate(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[runUpdate]");
         //Grab the geolocation data from the local machine
         if(window.updateCounter == 5){
             window.updateCounter = 0;
@@ -424,13 +429,13 @@ function GpsHandle(){
     }
 
     GpsHandle.prototype.gpsErrorHandler = function gpsErrorHandler(error){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[gpsErrorHandler]");
         console.log("Gps error: ");
         console.log(error);
     }
 
     GpsHandle.prototype.updateLocation = function updateLocation(position){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[updateLocation]");
         // console.log(position);
         if(window.logging){
             var datetime = new Date().getTime();//generate timestamp
@@ -446,14 +451,14 @@ function GpsHandle(){
     };
 
     GpsHandle.prototype.recenterMap = function recenterMap(lat, lon){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[recenterMap]");
         var newcenter = new google.maps.LatLng(lat, lon);
         centerPoint = newcenter;
         map.panTo(newcenter);
     }
 
     GpsHandle.prototype.start = function start(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[start]");
         document.getElementById("startButton").className = "bigStopButton";
         window.UI.setBigButtonText("Stop Cleaning");
         window.logging = true;
@@ -466,7 +471,7 @@ function GpsHandle(){
 
 
     GpsHandle.prototype.stop = function stop(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[stop]");
         document.getElementById("startButton").className = "bigStartButton";
         window.ApiConnector.pushHeatmapData();
         window.logging = false;
@@ -793,13 +798,13 @@ function CommentsHandle(){
     } // end toggleComments()
 
     CommentsHandle.prototype.goToMarker = function goToMarker(marker){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[goToMarker]");
         // when the user clicks a comment box
     }
 
     //  The user presses the submit button on the comment submission screen
     CommentsHandle.prototype.commentSubmission = function commentSubmission(commentType, commentMessage){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[commentSubmission]");
 
         var comment = new FCommment();
         comment.message = commentMessage;
@@ -920,7 +925,7 @@ function UiHandle(){
 
     // start or stop the UI clock
     UiHandle.prototype.toggleClockRun = function toggleClockRun(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[toggleClockRun]");
         if(window.UI.isClockRunning){
             // stop the clock
             console.log("stopping clock");
@@ -936,14 +941,14 @@ function UiHandle(){
     }
 
     UiHandle.prototype.hideMarkerTypeSelect = function hideMarkerTypeSelect(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[hideMarkerTypeSelect]");
         document.getElementById("markerTypeDialog").style.display = "none";
         window.UI.isMarkerDisplayVisible = false;
     }
 
     // shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
     UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(type){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[showMarkerTypeSelect]");
         if(type == "comment"){
             window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.COMMENT;
         }
@@ -959,7 +964,7 @@ function UiHandle(){
                 window.UI.showTextInput();
             });
             document.getElementById("selectComment").addEventListener('mousedown', function(){
-                window.Comments.commentType = "general message";
+                window.Comments.commentType = "COMMENT";
                 window.UI.hideMarkerTypeSelect();
                 window.UI.showTextInput();
             });
@@ -1206,6 +1211,10 @@ function UiHandle(){
     	window.LOGGER.debug(arguments.callee.name, "[updateMarker]");
         console.log("marker response: "+data);
         var dataArr = data;
+
+        console.log("phelan");
+        console.log(dataArr);
+        
         if(!window.HELPER.isNull(dataArr.pins)){
             for(ii=0; ii<dataArr.pins.length; ii++){
                 window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
