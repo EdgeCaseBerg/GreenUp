@@ -68,7 +68,7 @@ function ApiConnector(){
 
     // performs the ajax call to get our data
     ApiConnector.prototype.pullApiData = function pullApiData(URL, DATATYPE, QUERYTYPE, CALLBACK){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[pullApiData]");
         // build url based on origin
         var fq = this.checkOrigin();
         fq = fq + URL;
@@ -183,7 +183,7 @@ function ApiConnector(){
 
     // ********** specific data pullers *************
     ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[pullHeatmapData]");
         /*
          To be extra safe we could do if(typeof(param) === "undefined" || param == null),
          but there is an implicit cast against undefined defined for double equals in javascript
@@ -209,7 +209,6 @@ function ApiConnector(){
         console.log("Preparing to pull heatmap data");
         var URL = heatmapURI+params;
         this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
-
     }
 
     ApiConnector.prototype.pullMarkerData = function pullMarkerData(){
@@ -289,7 +288,7 @@ function ApiConnector(){
     }
 
     ApiConnector.prototype.pullTestData = function pullTestData(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[pullTestData]");
         this.pullApiData(this.BASE, "JSON", "GET", window.UI.updateTest);
         this.pullCommentData("needs", null);
         this.pullCommentData("messages", null);
@@ -301,8 +300,9 @@ function ApiConnector(){
     //Uploads all local database entries to the Server
     //Clears the local storage after upload
     ApiConnector.prototype.pushHeatmapData = function pushHeatmapData(){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        var heatmapURI = "/heatmap";
+        window.LOGGER.debug(arguments.callee.name, "[pushHeatmapData]");
+        // var heatmapURI = "proxy.php?url=http://199.195.248.180:31337/api/heatmap";
+        var heatmapURI = "CRAP/heatmap";
         if(window.logging){
             //server/addgriddata.php
             var jsonArray = [];
@@ -313,6 +313,7 @@ function ApiConnector(){
 
             console.log(jsonArray);
         }
+        // phelan
 
         // zepto code
         $.ajax({
@@ -565,11 +566,10 @@ function MapHandle(){
     }
 
     MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[applyHeatMap]");
         console.log("Heatmap data to be applied to map: ");
         console.log(data);
         var dataObj = data;
-//        var dataObj = data;
         var heatmapData = [];
         // console.log(dataObj[ii].latDegrees);
 //        if(!window.HELPER.isNull(dataObj.grid)){
@@ -1179,7 +1179,7 @@ function UiHandle(){
 
     // track how long the user's finger was toucking to determine click while allowing map to be usable (touch-scroll)
     UiHandle.prototype.mapTouchDown = function mapTouchDown(event){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[mapTouchDown]");
         // set the coords of the marker event
         if(!window.UI.textInputIsVisible){
             window.MAP.markerEvent = event;
@@ -1189,7 +1189,7 @@ function UiHandle(){
 
     // ******* DOM updaters (callbacks for the ApiConnector pull methods) ***********
     UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.LOGGER.debug(arguments.callee.name, "[updateHeatmap]");
         console.log("Heatmap data returned from api, preparing to apply data to map.");
         console.log(data);
         window.MAP.applyHeatMap(data);
@@ -1197,6 +1197,7 @@ function UiHandle(){
 
     // markers coming from the apiconnector comes here to be added to the UI
     UiHandle.prototype.updateMarker = function updateMarker(data){
+    	window.LOGGER.debug(arguments.callee.name, "[updateMarker]");
         console.log("marker response: "+data);
         var dataArr = data;
         if(!window.HELPER.isNull(dataArr.pins)){
