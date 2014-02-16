@@ -19,7 +19,7 @@
 #define PINS_RELATIVE_URL @"/api/pins"
 #define MESSAGES_RELATIVE_URL @"/api/comments"
 
-@class MKMapView, HeatMapPin, HeatMapPoint, CLLocation;
+@class MKMapView, HeatMapPin, HeatMapPoint, NetworkMessage, CLLocation;
 
 @interface NetworkingController : NSObject <NSURLConnectionDataDelegate, NSURLConnectionDataDelegate>
 
@@ -36,6 +36,7 @@
 -(void)getMessageForAppendingPageForScrollingWithPageURL:(NSString *)pageURL;
 -(void)getMessageByAppendingPageForShowMessageWithPageURL:(NSString *)pageURL;
 -(void)postMessageWithMessageType:(NSString *)type andMessage:(NSString *)message;
+-(void)markMessageAsAddressed:(NetworkMessage *)message;
 
 + (NetworkingController *)shared;
 

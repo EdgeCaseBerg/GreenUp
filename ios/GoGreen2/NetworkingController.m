@@ -13,6 +13,7 @@
 #import "HeatMapPoint.h"
 #import "NSArray+Primitive.h"
 #import "MessageTypes.h"
+#import "NetworkMessage.h"
 
 #import <AFNetworking/AFNetworking.h>
 
@@ -61,6 +62,10 @@ int getMessagesForAppendingForShowStatusCode = -1;
 NSURLConnection *postMessageConnection = nil;
 NSMutableData *postMessageData = nil;
 int postMessageStatusCode = -1;
+
+NSURLConnection *addressMessageConnection = nil;
+NSMutableData *addressMessageData = nil;
+int addressMessageStatusCode = -1;
 
 static NetworkingController *sharedNetworkingController;
 
@@ -133,10 +138,11 @@ static NetworkingController *sharedNetworkingController;
     {
         postMessageData = [[NSMutableData alloc] init];
         postMessageStatusCode = [(NSHTTPURLResponse *)response statusCode];
-        
-        NSLog(@"********************");
-        NSLog(@"%@", response);
-        NSLog(@"********************");
+    }
+    else if([connection isEqual:addressMessageConnection])
+    {
+        addressMessageData = [[NSMutableData alloc] init];
+        addressMessageStatusCode = [(NSHTTPURLResponse *)response statusCode];
     }
     else
     {
@@ -175,20 +181,6 @@ static NetworkingController *sharedNetworkingController;
     else if([connection isEqual:getMessagesConnection])
     {
         [getMessagesData appendData:data];
-        
-        NSLog(@"##################################################################");
-        NSLog(@"##################################################################");
-        NSLog(@"##################################################################");
-        NSLog(@"##################################################################");
-        NSLog(@"##################################################################");
-        
-        NSLog(@"%@",[NSJSONSerialization JSONObjectWithData:data options:0 error:nil]);
-        NSLog(@"##################################################################");
-        NSLog(@"##################################################################");
-        NSLog(@"##################################################################");
-        NSLog(@"##################################################################");
-        NSLog(@"##################################################################");
-        
     }
     else if([connection isEqual:getMessagesForAppendingForScrollingConnection])
     {
@@ -201,6 +193,10 @@ static NetworkingController *sharedNetworkingController;
     else if([connection isEqual:postMessageConnection])
     {
         [postMessageData appendData:data];
+    }
+    else if([connection isEqual:addressMessageConnection])
+    {
+        [addressMessageData appendData:data];
     }
     else
     {
@@ -679,6 +675,25 @@ static NetworkingController *sharedNetworkingController;
         postMessageData = nil;
         postMessageStatusCode = -1;
     }
+    else if([connection isEqual:addressMessageConnection])
+    {
+        NSDictionary *response = nil;
+        if(addressMessageData != nil)
+            response = [NSJSONSerialization JSONObjectWithData:addressMessageData options:0 error:nil];
+        
+        NSString *statusCode = [response objectForKey:@"status_code"];
+        
+        NSLog(@"Network - Addressed Messaged: Recieved Status Code: %@", statusCode);
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedUpdatingMessageStatus" object:nil];
+        
+        if([statusCode integerValue] != 200)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Update Message" message:@"You dont appear to have a network connection, please connect and retry updaing the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+            [alert show];
+            [self printResponseFromFailedRequest:response andStatusCode:addressMessageStatusCode];
+        }
+    }
     else
     {
         NSLog(@"%@", [NSJSONSerialization JSONObjectWithData:otherData options:0 error:nil]);
@@ -784,6 +799,19 @@ static NetworkingController *sharedNetworkingController;
         [alert show];
         
         [self printResponseFromFailedRequest:response andStatusCode:postMessageStatusCode];
+    }
+    else if([connection isEqual:addressMessageConnection])
+    {
+        NSDictionary *response = nil;
+        if(addressMessageData != nil)
+            response = [NSJSONSerialization JSONObjectWithData:addressMessageData options:0 error:nil];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Update Message" message:@"You dont appear to have a network connection, please connect and retry updaing the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+        [alert show];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedUpdatingMessageStatus" object:nil];
+        
+        [self printResponseFromFailedRequest:response andStatusCode:addressMessageStatusCode];
     }
     else
     {
@@ -1164,9 +1192,7 @@ static NetworkingController *sharedNetworkingController;
         
         //Create Data From Request Dictionary
         NSData *requestData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
-        
-        NSLog(@"SIZE:::::::::::::: %d", requestData.length);
-        
+  
         [request setHTTPBody:requestData];
         
         request.timeoutInterval = 10;
@@ -1178,12 +1204,46 @@ static NetworkingController *sharedNetworkingController;
 
         //Fire Off Request
         postMessageConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        
-        NSDictionary *test = [request allHTTPHeaderFields];
-        
-        NSLog(@"%@", test);
-
     }
+}
+
+-(void)markMessageAsAddressed:(NetworkMessage *)message
+{
+    NSLog(@"Network - Message: Updaing Toggled Message with Message ID: %@", message.pinID.stringValue);
+    
+    //Build Request URL
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@",BASE_HOST, API_PORT, PINS_RELATIVE_URL, message.pinID.stringValue];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
+                                                           cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                                                       timeoutInterval:10];
+    
+    NSString *value = nil;
+    if(message.addressed)
+    {
+        value = @"true";
+    }
+    else
+    {
+        value = @"false";
+    }
+    
+    //DATA
+    NSLog(@"--- Data - Marker ID: %@ and Value: %d", message.pinID.stringValue, message.addressed);
+    
+    NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:value, nil] forKeys:[NSArray arrayWithObjects:@"addressed", nil]];
+    
+    //Create Data From Request Dictionary
+    NSData *requestData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+    
+    [request setHTTPBody:requestData];
+    
+    //Configure Request
+    [request setHTTPMethod: @"PUT"];
+    
+    request.timeoutInterval = 10;
+    
+    //Fire Off Request
+    addressMessageConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 #pragma mark - Utility Methods

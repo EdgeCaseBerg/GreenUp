@@ -119,6 +119,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingNewPageForShowingNewMessage:) name:@"finishedGettingNewPageForShowingNewMessage" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingMessageForFirstPageOfShowMessage:) name:@"finishedGettingMessageForFirstPageOfShowMessage" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedUpdatingMessageStatus:) name:@"finishedUpdatingMessageStatus" object:nil];
 
     
     return self;
@@ -666,6 +668,12 @@
     }
 }
 
+-(IBAction)finishedUpdatingMessageStatus:(id)sender
+{
+    self.toggledMessageRef = nil;
+    [self.theTableView reloadData];
+}
+
 #pragma mark - Refresh Controls
 
 - (void)refresh:(UIRefreshControl *)refreshControl {
@@ -1103,13 +1111,15 @@
 #pragma mark - Alert View Delegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSDictionary *parameters = nil;
+    BOOL changesMade = FALSE;
     if(alertView.tag == ALERT_VIEW_TOGGLE_ON)
     {
         if(buttonIndex == 1)
         {
             NSLog(@"Action - Message: Toggled Message To Be NOT ADDRESSED!");
-            parameters = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:TRUE], nil] forKeys:[NSArray arrayWithObjects:@"addressed", nil]];
+            changesMade = TRUE;
+            
+            self.toggledMessageRef.addressed = TRUE;
         }
         else
         {
@@ -1121,7 +1131,9 @@
         if(buttonIndex == 1)
         {
             NSLog(@"Action - Message: Toggled Message To Be ADDRESSED!");
-            parameters = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:FALSE], nil] forKeys:[NSArray arrayWithObjects:@"addressed", nil]];
+            changesMade = TRUE;
+            
+            self.toggledMessageRef.addressed = FALSE;
         }
         else
         {
@@ -1129,92 +1141,9 @@
         }
     }
     
-    if(parameters != nil)
+    if(changesMade != FALSE)
     {
-#warning UPDATE WITH NETWORKING CONTROLLER WTF WAS I THINKING!!!!
-        
-        /*
-        NSLog(@"Network - Message: Updaing Toggled Message with Message ID: %@", self.toggledMessageRef.pinID.stringValue);
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
-            //Background Process Block
-            
-            NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:[NSString stringWithFormat:@"%@?id=%@",PINS_RELATIVE_URL, self.toggledMessageRef.pinID.stringValue] withPort:API_PORT withProperties:parameters];
-            
-            dispatch_async(dispatch_get_main_queue(),^{
-                //Completion Block
-                NSString *statusCode = [response objectForKey:@"status_code"];
-                
-                NSLog(@"Network - Message: Recieved Status Code: %@", statusCode);
-                
-                if([statusCode integerValue] == 200)
-                {
-                    //COMPLETED!
-                    if(alertView.tag == ALERT_VIEW_TOGGLE_ON)
-                    {
-                        [self.toggledMessageRef setAddressed:TRUE];
-                        
-                        //Update Current Downloaded Pins Array
-                        for(HeatMapPin *downloadedPin in [[[ContainerViewController sharedContainer] theMapViewController] downloadedMapPins])
-                        {
-                            if([self.toggledMessageRef.pinID isEqualToNumber:downloadedPin.pinID])
-                            {
-                                downloadedPin.addressed = TRUE;
-                            }
-                        }
-                        
-                        //Update Current Gathered Pins Array
-                        for(HeatMapPin *gatheredPin in [[[ContainerViewController sharedContainer] theMapViewController] gatheredMapPins])
-                        {
-                            if([self.toggledMessageRef.pinID isEqualToNumber:gatheredPin.pinID])
-                            {
-                                gatheredPin.addressed = TRUE;
-                            }
-                        }
-                    }
-                    else if(alertView.tag == ALERT_VIEW_TOGGLE_OFF)
-                    {
-                        [self.toggledMessageRef setAddressed:FALSE];
-                        
-                        //Update Current Downloaded Pins Array
-                        for(HeatMapPin *downloadedPin in [[[ContainerViewController sharedContainer] theMapViewController] downloadedMapPins])
-                        {
-                            if([self.toggledMessageRef.pinID isEqualToNumber:downloadedPin.pinID])
-                            {
-                                downloadedPin.addressed = FALSE;
-                            }
-                        }
-                        
-                        //Update Current Gathered Pins Array
-                        for(HeatMapPin *gatheredPin in [[[ContainerViewController sharedContainer] theMapViewController] gatheredMapPins])
-                        {
-                            if([self.toggledMessageRef.pinID isEqualToNumber:gatheredPin.pinID])
-                            {
-                                gatheredPin.addressed = FALSE;
-                            }
-                        }
-                    }
-                    int row = [self.messages indexOfObject:self.toggledMessageRef];
-                    [self.theTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-                    
-                    self.toggledMessageRef = nil;
-                }
-                else
-                {
-                    NSLog(@"Network - Message: ***************************************");
-                    NSLog(@"Network - Message: ***************************************");
-                    NSLog(@"Network - Message: *************** WANRING ***************");
-                    NSLog(@"Network - Message: ****** Received Bad Status Code *******");
-                    NSLog(@"Network - Message: %@", response);
-                    NSLog(@"Network - Message: ***************************************");
-                    NSLog(@"Network - Message: ***************************************");
-                    //FAILED!
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Request Failed" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
-                    [alert show];
-                    
-                    self.toggledMessageRef = nil;
-                }
-            });
-        });*/
+        [[NetworkingController shared] markMessageAsAddressed:self.toggledMessageRef];
     }
 }
 
