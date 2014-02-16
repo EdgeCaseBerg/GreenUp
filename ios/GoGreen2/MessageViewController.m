@@ -627,7 +627,6 @@
     }
     
     //Insert New Messages Into Table
-    NSMutableArray *newIndexes = [[NSMutableArray alloc] init];
     [self.messages addObjectsFromArray:newMessages];
     
     /*

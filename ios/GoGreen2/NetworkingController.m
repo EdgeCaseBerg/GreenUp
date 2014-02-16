@@ -12,6 +12,7 @@
 #import "HeatMapPin.h"
 #import "HeatMapPoint.h"
 #import "NSArray+Primitive.h"
+#import "MessageTypes.h"
 
 #import <AFNetworking/AFNetworking.h>
 
@@ -204,7 +205,6 @@ static NetworkingController *sharedNetworkingController;
     else
     {
         [otherData appendData:data];
-        NSLog(@"STOP..");
         NSLog(@"%@",[NSJSONSerialization JSONObjectWithData:data options:0 error:nil]);
     }
 }
@@ -455,7 +455,7 @@ static NetworkingController *sharedNetworkingController;
                 newMessage.messageContent = [comment objectForKey:@"message"];
                 newMessage.messageID = [comment objectForKey:@"id"];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateFormat:@"E M d H:m:s y"];
+                [dateFormatter setDateFormat:@"y-M-d H:m:s"];
                 newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                 
                 newMessage.messageType = [comment objectForKey:@"type"];
@@ -528,7 +528,7 @@ static NetworkingController *sharedNetworkingController;
                 newMessage.messageContent = [comment objectForKey:@"message"];
                 newMessage.messageID = [comment objectForKey:@"id"];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateFormat:@"E M d H:m:s y"];
+                [dateFormatter setDateFormat:@"y-M-d H:m:s"];
                 newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                 
                 newMessage.messageType = [comment objectForKey:@"type"];
@@ -600,7 +600,7 @@ static NetworkingController *sharedNetworkingController;
                 newMessage.messageContent = [comment objectForKey:@"message"];
                 newMessage.messageID = [comment objectForKey:@"id"];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateFormat:@"E M d H:m:s y"];
+                [dateFormatter setDateFormat:@"y-M-d H:m:s"];
                 newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                 
                 newMessage.messageType = [comment objectForKey:@"type"];
@@ -681,7 +681,6 @@ static NetworkingController *sharedNetworkingController;
     }
     else
     {
-        NSLog(@"SSTOP");
         NSLog(@"%@", [NSJSONSerialization JSONObjectWithData:otherData options:0 error:nil]);
     }
 }
@@ -1050,6 +1049,7 @@ static NetworkingController *sharedNetworkingController;
                 newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                 
                 newMessage.messageType = [comment objectForKey:@"type"];
+      
                 id pinID = [comment objectForKey:@"pin"];
                 if([pinID isKindOfClass:[NSNumber class]])
                 {

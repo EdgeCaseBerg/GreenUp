@@ -130,7 +130,7 @@
     [scrollViewContainerView.layer setCornerRadius:5];
     
     UILabel *keyLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, scrollViewContainerView.frame.size.width - 10, 20)];
-    [keyLabel setText:@"Session \t \t \t Time Spent Cleaning"];
+    [keyLabel setText:@"Session \t \t \t Time Cleaning"];
     [keyLabel setBackgroundColor:[UIColor clearColor]];
     [keyLabel setTextColor:[UIColor whiteColor]];
     [keyLabel setTextAlignment:NSTextAlignmentCenter];
@@ -280,81 +280,52 @@
 
 -(void)switchToMessageView
 {
-     //Set Background Color
-     [self setBackgroundColor:[UIColor clearColor]];
+    //Set Background Color
+    [self setBackgroundColor:[UIColor clearColor]];
+
+    UIImageView *exampleImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"menuMessageTypes.png"]];
+    [exampleImage setFrame:CGRectMake(10, 5, self.frame.size.width - 20, 68)];
+    [self.contentView addSubview:exampleImage];
     
-    int extraTop = 5;
+    UILabel *markerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 147, 25)];
+    [markerLabel setText:@"Help Needed"];
+    [markerLabel setTextAlignment:NSTextAlignmentCenter];
+    [markerLabel setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:markerLabel];
     
-    //------ USER COMMENT SAMPLE ----------
-    //Top Slice
-    UIImageView *top = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_orange_top.png"]];
-    [top setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 6)];
-    extraTop += 6;
-    //Variable Middle Slice
-    UIView *middle = [[UIView alloc] initWithFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 16)];
-    [middle setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_orange_center.png"]]];
-    UILabel *commentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, -6, middle.frame.size.width - 20, 28)];
-    [commentLabel setText:@"User Comments"];
-    [commentLabel setTextAlignment:NSTextAlignmentCenter];
-    [commentLabel setBackgroundColor:[UIColor clearColor]];
-    [middle addSubview:commentLabel];
-    extraTop += middle.frame.size.height;
-    //Bottom Clise
-    UIImageView *bottom = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_orange_bottom_reverse.png"]];
-    [bottom setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 20)];
+    UILabel *hazardLabel = [[UILabel alloc] initWithFrame:CGRectMake(163, 5, 147, 25)];
+    [hazardLabel setText:@"Hazard Message"];
+    [hazardLabel setTextAlignment:NSTextAlignmentCenter];
+    [hazardLabel setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:hazardLabel];
     
-    extraTop += 22;
+    UILabel *pickUpLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 40, 147, 25)];
+    [pickUpLabel setText:@"Pick Up Location"];
+    [pickUpLabel setTextAlignment:NSTextAlignmentCenter];
+    [pickUpLabel setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:pickUpLabel];
     
-    //------ USER MARKER SAMPLE ----------
-    //Top Slice
-    UIImageView *top2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_top.png"]];
-    [top2 setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 6)];
-    extraTop += 6;
-    //Variable Middle Slice
-    UIView *middle2 = [[UIView alloc] initWithFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 16)];
-    [middle2 setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_green_center.png"]]];
-    UILabel *commentLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(10, -6, middle2.frame.size.width - 20, 28)];
-    [commentLabel2 setText:@"User Markers"];
-    [commentLabel2 setTextAlignment:NSTextAlignmentCenter];
-    [commentLabel2 setBackgroundColor:[UIColor clearColor]];
-    [middle2 addSubview:commentLabel2];
-    extraTop += middle2.frame.size.height;
-    //Bottom Clise
-    UIImageView *bottom2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_green_bottom.png"]];
-    [bottom2 setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 20)];
+    UILabel *generalLabel = [[UILabel alloc] initWithFrame:CGRectMake(163, 40, 147, 25)];
+    [generalLabel setText:@"General Comment"];
+    [generalLabel setTextAlignment:NSTextAlignmentCenter];
+    [generalLabel setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:generalLabel];
     
-    extraTop += 22;
+    UILabel *longPressNote = [[UILabel alloc] initWithFrame:CGRectMake(10, 75, self.frame.size.width - 20, 30)];
+    [longPressNote setBackgroundColor:[UIColor clearColor]];
+    [longPressNote setTextAlignment:NSTextAlignmentCenter];
+    [longPressNote setFont:[longPressNote.font fontWithSize:12]];
+    [longPressNote setText:@"You can mark help needed locations as addressed by long pressing the message"];
+    [longPressNote setNumberOfLines:2];
+    [self.contentView addSubview:longPressNote];
     
-    //------ ADMIN MARKER SAMPLE ----------
-    //Top Slice
-    UIImageView *top3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_top.png"]];
-    [top3 setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 6)];
-    extraTop += 6;
-    //Variable Middle Slice
-    UIView *middle3 = [[UIView alloc] initWithFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 16)];
-    [middle3 setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_red_center.png"]]];
-    UILabel *commentLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(10, -6, middle3.frame.size.width - 20, 28)];
-    [commentLabel3 setText:@"Admin Markers"];
-    [commentLabel3 setTextAlignment:NSTextAlignmentCenter];
-    [commentLabel3 setBackgroundColor:[UIColor clearColor]];
-    [middle3 addSubview:commentLabel3];
-    extraTop += middle3.frame.size.height;
-    //Bottom Clise
-    UIImageView *bottom3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_red_bottom_reverse.png"]];
-    [bottom3 setFrame:CGRectMake(10, extraTop, self.frame.size.width - 20, 20)];
-    
-    [self.contentView addSubview:top];
-    [self.contentView addSubview:middle];
-    [self.contentView addSubview:bottom];
-    
-    [self.contentView addSubview:top2];
-    [self.contentView addSubview:middle2];
-    [self.contentView addSubview:bottom2];
-    
-    [self.contentView addSubview:top3];
-    [self.contentView addSubview:middle3];
-    [self.contentView addSubview:bottom3];
-    
+    UILabel *bringToMarker = [[UILabel alloc] initWithFrame:CGRectMake(10, 105, self.frame.size.width - 20, 30)];
+    [bringToMarker setBackgroundColor:[UIColor clearColor]];
+    [bringToMarker setTextAlignment:NSTextAlignmentCenter];
+    [bringToMarker setFont:[bringToMarker.font fontWithSize:12]];
+    [bringToMarker setText:@"Tapping the marker icon will bring you to the location on the map"];
+    [bringToMarker setNumberOfLines:2];
+    [self.contentView addSubview:bringToMarker];
 }
 
 -(IBAction)dropMarker:(id)sender

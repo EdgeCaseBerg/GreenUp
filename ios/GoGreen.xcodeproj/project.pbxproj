@@ -85,6 +85,8 @@
 		DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF62E07517C1996700B29D43 /* CFNetwork.framework */; };
 		DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */; };
 		DF81175F18895C6700B2C271 /* NetworkingController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF81175E18895C6700B2C271 /* NetworkingController.m */; };
+		DF9D412918B12C52006CA760 /* menuMessageTypes.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9D412718B12C52006CA760 /* menuMessageTypes.png */; };
+		DF9D412A18B12C52006CA760 /* menuMessageTypes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9D412818B12C52006CA760 /* menuMessageTypes@2x.png */; };
 		DFA9AA7C17D2666B006F58A5 /* NSArray+Primitive.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9AA7B17D2666B006F58A5 /* NSArray+Primitive.m */; };
 		DFA9ABBE17D63C5B006F58A5 /* bottom_menu.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9AB8517D63C5B006F58A5 /* bottom_menu.png */; };
 		DFA9ABBF17D63C5B006F58A5 /* bottom_menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9AB8617D63C5B006F58A5 /* bottom_menu@2x.png */; };
@@ -277,6 +279,8 @@
 		DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPoint.m; sourceTree = "<group>"; };
 		DF81175D18895C6700B2C271 /* NetworkingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingController.h; sourceTree = "<group>"; };
 		DF81175E18895C6700B2C271 /* NetworkingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkingController.m; sourceTree = "<group>"; };
+		DF9D412718B12C52006CA760 /* menuMessageTypes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menuMessageTypes.png; path = Images/menuMessageTypes.png; sourceTree = SOURCE_ROOT; };
+		DF9D412818B12C52006CA760 /* menuMessageTypes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "menuMessageTypes@2x.png"; path = "Images/menuMessageTypes@2x.png"; sourceTree = SOURCE_ROOT; };
 		DFA9AA7A17D2666B006F58A5 /* NSArray+Primitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+Primitive.h"; path = "GoGreen2/NSArray+Primitive.h"; sourceTree = "<group>"; };
 		DFA9AA7B17D2666B006F58A5 /* NSArray+Primitive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+Primitive.m"; path = "GoGreen2/NSArray+Primitive.m"; sourceTree = "<group>"; };
 		DFA9AB8517D63C5B006F58A5 /* bottom_menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bottom_menu.png; path = Images/bottom_menu.png; sourceTree = SOURCE_ROOT; };
@@ -420,6 +424,8 @@
 		390415AD1798DC50005EC308 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DF9D412718B12C52006CA760 /* menuMessageTypes.png */,
+				DF9D412818B12C52006CA760 /* menuMessageTypes@2x.png */,
 				DF05ECF318907CA400781671 /* bubble_blue_bottom_reverse.png */,
 				DF05ECF418907CA400781671 /* bubble_blue_bottom_reverse@2x.png */,
 				DF05ECF518907CA400781671 /* bubble_blue_bottom.png */,
@@ -878,6 +884,7 @@
 				DFA9ABC717D63C5B006F58A5 /* bubble_green_top@2x.png in Resources */,
 				DF040187188E9C6F005A9EAF /* marker@2x.png in Resources */,
 				DFA9ABC817D63C5B006F58A5 /* bubble_orange_bottom_reverse.png in Resources */,
+				DF9D412918B12C52006CA760 /* menuMessageTypes.png in Resources */,
 				DFA9ABC917D63C5B006F58A5 /* bubble_orange_bottom_reverse@2x.png in Resources */,
 				DFA9ABCA17D63C5B006F58A5 /* bubble_orange_bottom.png in Resources */,
 				DF0A949E188DB1C2009B049E /* icon-72.png in Resources */,
@@ -915,6 +922,7 @@
 				DFA9ABE217D63C5B006F58A5 /* comments.png in Resources */,
 				DFA9ABE317D63C5B006F58A5 /* comments@2x.png in Resources */,
 				DFA9ABE417D63C5B006F58A5 /* Default-568h@2x.png in Resources */,
+				DF9D412A18B12C52006CA760 /* menuMessageTypes@2x.png in Resources */,
 				DFA9ABE517D63C5B006F58A5 /* Default.png in Resources */,
 				DFA9ABE617D63C5B006F58A5 /* Default@2x.png in Resources */,
 				DF05ED0018907CA400781671 /* bubble_blue_center@2x.png in Resources */,
