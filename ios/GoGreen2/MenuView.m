@@ -311,21 +311,13 @@
     [generalLabel setBackgroundColor:[UIColor clearColor]];
     [self.contentView addSubview:generalLabel];
     
-    UILabel *longPressNote = [[UILabel alloc] initWithFrame:CGRectMake(10, 75, self.frame.size.width - 20, 30)];
+    UILabel *longPressNote = [[UILabel alloc] initWithFrame:CGRectMake(10, 75, self.frame.size.width - 20, 60)];
     [longPressNote setBackgroundColor:[UIColor clearColor]];
     [longPressNote setTextAlignment:NSTextAlignmentCenter];
     [longPressNote setFont:[longPressNote.font fontWithSize:12]];
-    [longPressNote setText:@"You can mark help needed locations as addressed by long pressing the message"];
-    [longPressNote setNumberOfLines:2];
+    [longPressNote setText:@"You can mark help needed pins as addressed by long pressing the message. Addressed pins will not show up on the map and appear gray in the list. Tapping the pin will bring you to its location on the map."];
+    [longPressNote setNumberOfLines:4];
     [self.contentView addSubview:longPressNote];
-    
-    UILabel *bringToMarker = [[UILabel alloc] initWithFrame:CGRectMake(10, 105, self.frame.size.width - 20, 30)];
-    [bringToMarker setBackgroundColor:[UIColor clearColor]];
-    [bringToMarker setTextAlignment:NSTextAlignmentCenter];
-    [bringToMarker setFont:[bringToMarker.font fontWithSize:12]];
-    [bringToMarker setText:@"Tapping the marker icon will bring you to the location on the map"];
-    [bringToMarker setNumberOfLines:2];
-    [self.contentView addSubview:bringToMarker];
 }
 
 -(IBAction)dropMarker:(id)sender

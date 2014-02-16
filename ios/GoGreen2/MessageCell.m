@@ -177,21 +177,49 @@
         [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 260, contentSize.height)];
         
         //Top Slice
-        self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_blue_top.png"]];
+        if(messageObject.addressed)
+        {
+            self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_gray_top.png"]];
+        }
+        else
+        {
+            self.topBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_blue_top.png"]];
+        }
         [self.topBackgroundImage setFrame:CGRectMake(10, extraTop, 300, 6)];
         
         //Variable Middle Slice
         self.middleBackgroundImage = [[UIView alloc] initWithFrame:CGRectMake(10, 6 + extraTop, 300, contentSize.height + 20)];
-        [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_blue_center.png"]]];
+        if(messageObject.addressed)
+        {
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_gray_center.png"]]];
+        }
+        else
+        {
+            [self.middleBackgroundImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bubble_blue_center.png"]]];
+        }
         
         //Buttom Slice
         if(backwards)
         {
-            self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_blue_bottom_reverse.png"]];
+            if(messageObject.addressed)
+            {
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_gray_bottom_reverse.png"]];
+            }
+            else
+            {
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_blue_bottom_reverse.png"]];
+            }
         }
         else
         {
-            self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_blue_bottom.png"]];
+            if(messageObject.addressed)
+            {
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_gray_bottom.png"]];
+            }
+            else
+            {
+                self.bottomBackgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bubble_blue_bottom.png"]];
+            }
         }
         [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
         
