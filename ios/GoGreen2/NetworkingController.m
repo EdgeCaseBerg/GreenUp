@@ -1046,7 +1046,7 @@ static NetworkingController *sharedNetworkingController;
                 newMessage.messageContent = [comment objectForKey:@"message"];
                 newMessage.messageID = [comment objectForKey:@"id"];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateFormat:@"E M d H:m:s y"];
+                [dateFormatter setDateFormat:@"y-M-d H:m:s"];
                 newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                 
                 newMessage.messageType = [comment objectForKey:@"type"];

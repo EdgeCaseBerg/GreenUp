@@ -46,7 +46,6 @@
     self.messages = [[NSMutableArray alloc] init];
     self.keyboardIsOut = FALSE;
     self.appendingMessages = FALSE;
-    
 
     NSLog(@"***************** %f", self.view.frame.size.height - 50);
     [self.messageViewContainer setBackgroundColor:[UIColor grayColor]];
@@ -139,7 +138,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    if(self.pinIDToShow == nil)
+    if(self.messages.count == 0)//self.pinIDToShow == nil)
     {
         [self getMessages];
         [self.theTableView reloadData];
@@ -631,11 +630,13 @@
     NSMutableArray *newIndexes = [[NSMutableArray alloc] init];
     [self.messages addObjectsFromArray:newMessages];
     
+    /*
     for(NetworkMessage *msg in newMessages)
     {
         [newIndexes addObject:[NSIndexPath indexPathForRow:[self.messages indexOfObject:msg] inSection:0]];
     }
     [self.theTableView insertRowsAtIndexPaths:newIndexes withRowAnimation:UITableViewRowAnimationNone];
+    */
     
     if(selectedMessage == nil)
     {
@@ -644,10 +645,14 @@
     }
     else
     {
+        self.appendingMessages = FALSE;
+        
         //Scroll to new position
         NSIndexPath *indexOfSelectedMessage = [NSIndexPath indexPathForRow:[self.messages indexOfObject:selectedMessage] inSection:0];
         
+        [self.theTableView reloadData];
         [self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:FALSE];
+        //[self.theTableView scrollToRowAtIndexPath:indexOfSelectedMessage atScrollPosition:UITableViewScrollPositionMiddle animated:FALSE];
         
         for(int i = 0; i < self.messages.count; i++)
         {
@@ -685,6 +690,10 @@
     UITableViewCell *cell = [self.theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
+    
+    
+    if(indexPath.row > 20)
+        NSLog(@"STOP");
     
     if (cell != nil)
     {

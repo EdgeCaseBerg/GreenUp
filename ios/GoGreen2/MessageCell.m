@@ -77,14 +77,7 @@
         [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
         
         self.timeStampLabel = [[UILabel alloc] initWithFrame:CGRectMake(45, self.textContentLabel.frame.origin.y + self.textContentLabel.frame.size.height , 230, 20)];
-        NSDate *currentDate = [NSDate date];
-        NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:messageObject.messageTimeStamp];
-        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:elaspedTime];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"EEE MMM dd yyyy hh:mm:ss a"];
-        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-        NSString *formattedDate = [dateFormatter stringFromDate:date];
-        [self.timeStampLabel setText:[NSString stringWithFormat:@"Posted %@", formattedDate]];
+        [self.timeStampLabel setText:[self buildTimeSinceString]];
         [self.timeStampLabel setBackgroundColor:[UIColor clearColor]];
         [self.timeStampLabel setFont:[self.timeStampLabel.font fontWithSize:10]];
         [self.timeStampLabel setTextAlignment:NSTextAlignmentLeft];
@@ -106,7 +99,6 @@
     }
     else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_HAZARD])
     {
-#warning NOT IMPLEMENTED YET!
         //Gesture Recognizer For Marking As Addressed
         UILongPressGestureRecognizer *addressedGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(toggleAddressed:)];
         [addressedGesture setMinimumPressDuration:1];
@@ -144,14 +136,7 @@
         [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
         
         self.timeStampLabel = [[UILabel alloc] initWithFrame:CGRectMake(45, self.textContentLabel.frame.origin.y + self.textContentLabel.frame.size.height , 230, 20)];
-        NSDate *currentDate = [NSDate date];
-        NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:messageObject.messageTimeStamp];
-        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:elaspedTime];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"EEE MMM dd yyyy hh:mm:ss a"];
-        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-        NSString *formattedDate = [dateFormatter stringFromDate:date];
-        [self.timeStampLabel setText:[NSString stringWithFormat:@"Posted %@", formattedDate]];
+        [self.timeStampLabel setText:[self buildTimeSinceString]];
         [self.timeStampLabel setBackgroundColor:[UIColor clearColor]];
         [self.timeStampLabel setFont:[self.timeStampLabel.font fontWithSize:10]];
         [self.timeStampLabel setTextAlignment:NSTextAlignmentLeft];
@@ -211,14 +196,7 @@
         [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
         
         self.timeStampLabel = [[UILabel alloc] initWithFrame:CGRectMake(45, self.textContentLabel.frame.origin.y + self.textContentLabel.frame.size.height , 230, 20)];
-        NSDate *currentDate = [NSDate date];
-        NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:messageObject.messageTimeStamp];
-        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:elaspedTime];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"EEE MMM dd yyyy hh:mm:ss a"];
-        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-        NSString *formattedDate = [dateFormatter stringFromDate:date];
-        [self.timeStampLabel setText:[NSString stringWithFormat:@"Posted %@", formattedDate]];
+        [self.timeStampLabel setText:[self buildTimeSinceString]];
         [self.timeStampLabel setBackgroundColor:[UIColor clearColor]];
         [self.timeStampLabel setFont:[self.timeStampLabel.font fontWithSize:10]];
         [self.timeStampLabel setTextAlignment:NSTextAlignmentLeft];
@@ -273,14 +251,8 @@
         [self.bottomBackgroundImage setFrame:CGRectMake(10, contentSize.height + 6 + extraTop + 20, 300, 20)];
         
         self.timeStampLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.textContentLabel.frame.origin.y + self.textContentLabel.frame.size.height , 290, 20)];
-        NSDate *currentDate = [NSDate date];
-        NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:messageObject.messageTimeStamp];
-        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:elaspedTime];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"EEE MMM dd yyyy hh:mm:ss a"];
-        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-        NSString *formattedDate = [dateFormatter stringFromDate:date];
-        [self.timeStampLabel setText:[NSString stringWithFormat:@"Posted %@", formattedDate]];
+        
+        [self.timeStampLabel setText:[self buildTimeSinceString]];
         [self.timeStampLabel setBackgroundColor:[UIColor clearColor]];
         [self.timeStampLabel setFont:[self.timeStampLabel.font fontWithSize:10]];
         [self.timeStampLabel setTextAlignment:NSTextAlignmentLeft];
@@ -294,9 +266,66 @@
     }
 }
 
+-(NSString *)buildTimeSinceString
+{
+    NSDictionary *elaspedTime = [self timeBetween:self.messageObject.messageTimeStamp and:[NSDate date]];
+    NSString *timeString = nil;
+    if(![[elaspedTime objectForKey:@"days"] isEqualToNumber:@0])
+    {
+        timeString = [NSString stringWithFormat:@"Posted: %d days ago", ((NSNumber *)[elaspedTime objectForKey:@"days"]).integerValue];
+    }
+    else if(![[elaspedTime objectForKey:@"hours"] isEqualToNumber:@0])
+    {
+        timeString = [NSString stringWithFormat:@"Posted: %d hours ago", ((NSNumber *)[elaspedTime objectForKey:@"hours"]).integerValue];
+    }
+    else if(![[elaspedTime objectForKey:@"minutes"] isEqualToNumber:@0])
+    {
+        timeString = [NSString stringWithFormat:@"Posted: %d minutes ago", ((NSNumber *)[elaspedTime objectForKey:@"minutes"]).integerValue];
+    }
+    else if(![[elaspedTime objectForKey:@"seconds"] isEqualToNumber:@0])
+    {
+        timeString = [NSString stringWithFormat:@"Posted: %d seconds ago", ((NSNumber *)[elaspedTime objectForKey:@"seconds"]).integerValue];
+    }
+    else
+    {
+        timeString = [NSString stringWithFormat:@"Posted: Just Now"];
+    }
+    return timeString;
+}
+
+- (NSDictionary *)timeBetween:(NSDate *)dt1 and:(NSDate *)dt2
+{
+    NSUInteger secondUnit =  NSSecondCalendarUnit;
+    NSUInteger minuteUnit =  NSMinuteCalendarUnit;
+    NSUInteger hourUnit =  NSHourCalendarUnit;
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSNumber *seconds = nil;
+    NSNumber *minutes = nil;
+    NSNumber *hours = nil;
+    NSNumber *days = nil;
+    if(dt1 == nil)
+    {
+        seconds = @0;
+        minutes = @0;
+        hours = @0;
+        days = @0;
+    }
+    else
+    {
+        seconds = @([[calendar components:secondUnit fromDate:dt1 toDate:dt2 options:0] second] % 60);
+        minutes = @([[calendar components:minuteUnit fromDate:dt1 toDate:dt2 options:0] minute] % 60);
+        hours = @([[calendar components:hourUnit fromDate:dt1 toDate:dt2 options:0] hour] % 60);
+        days = @(floor(hours.floatValue / 24));
+    }
+    
+    NSDictionary *components = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:seconds, minutes, hours, days, nil] forKeys:[NSArray arrayWithObjects:@"seconds", @"minutes", @"hours", @"days", nil]];
+    
+    return components;
+}
+
 -(IBAction)toggleAddressed:(UILongPressGestureRecognizer *)sender
 {
-    if(sender.state == UIGestureRecognizerStateBegan)
+    if(sender.state == UIGestureRecognizerStateBegan && [self.messageObject.messageType isEqualToString:MESSAGE_TYPE_USER_MARKER])
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"toggleMessageAddressed" object:self.messageObject];
     }
