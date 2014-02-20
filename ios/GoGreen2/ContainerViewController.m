@@ -31,19 +31,17 @@ static ContainerViewController* theContainerView = nil;
         if (theContainerView == nil)
         {
             theContainerView = [[self alloc] init];
+            
         }
         return theContainerView;
     }
     return nil;
 }
 
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
-}
-
-
 -(void)viewDidLoad
 {
+    [super viewDidLoad];
+    
     //Initilize the view
     self.heightFix = 11;
     if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)

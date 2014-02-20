@@ -73,6 +73,9 @@
 		DF0A94A4188DB1C2009B049E /* icon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949C188DB1C2009B049E /* icon-1024.png */; };
 		DF23914618B64BCC002D3F07 /* locationMarker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF23914418B64BCC002D3F07 /* locationMarker.png */; };
 		DF23914718B64BCC002D3F07 /* locationMarker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF23914518B64BCC002D3F07 /* locationMarker@2x.png */; };
+		DF3A954C18B699D80090F881 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3A954B18B699D80090F881 /* TutorialViewController.m */; };
+		DF3A954F18B699EB0090F881 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3A954E18B699EB0090F881 /* AboutViewController.m */; };
+		DF3A955518B69FBD0090F881 /* MainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3A955418B69FBD0090F881 /* MainNavigationController.m */; };
 		DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3F00FD17E25CD000530A4D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DF3F010A17E3FEED00530A4D /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010717E3FEED00530A4D /* check.png */; };
 		DF3F010B17E3FEED00530A4D /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010817E3FEED00530A4D /* check@2x.png */; };
@@ -273,6 +276,12 @@
 		DF0A949C188DB1C2009B049E /* icon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-1024.png"; path = "Images/icon-1024.png"; sourceTree = SOURCE_ROOT; };
 		DF23914418B64BCC002D3F07 /* locationMarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = locationMarker.png; path = Images/locationMarker.png; sourceTree = SOURCE_ROOT; };
 		DF23914518B64BCC002D3F07 /* locationMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "locationMarker@2x.png"; path = "Images/locationMarker@2x.png"; sourceTree = SOURCE_ROOT; };
+		DF3A954A18B699D80090F881 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
+		DF3A954B18B699D80090F881 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
+		DF3A954D18B699EB0090F881 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		DF3A954E18B699EB0090F881 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		DF3A955318B69FBD0090F881 /* MainNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainNavigationController.h; sourceTree = "<group>"; };
+		DF3A955418B69FBD0090F881 /* MainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainNavigationController.m; sourceTree = "<group>"; };
 		DF3F00FC17E25CD000530A4D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = SOURCE_ROOT; };
 		DF3F00FD17E25CD000530A4D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = SOURCE_ROOT; };
 		DF3F010717E3FEED00530A4D /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = check.png; path = Images/check.png; sourceTree = SOURCE_ROOT; };
@@ -611,6 +620,10 @@
 				392E747B1798B82800C71680 /* ContainerView.m */,
 				392E74771798B7D500C71680 /* ContainerViewController.h */,
 				392E74781798B7D500C71680 /* ContainerViewController.m */,
+				DF3A955318B69FBD0090F881 /* MainNavigationController.h */,
+				DF3A955418B69FBD0090F881 /* MainNavigationController.m */,
+				DF3A954918B699BA0090F881 /* Tutorial View Controller */,
+				DF3A954818B699B10090F881 /* About View Controller */,
 			);
 			name = Container;
 			sourceTree = "<group>";
@@ -757,6 +770,24 @@
 			);
 			name = greenHttp;
 			path = GoGreen2/greenHttp;
+			sourceTree = "<group>";
+		};
+		DF3A954818B699B10090F881 /* About View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				DF3A954D18B699EB0090F881 /* AboutViewController.h */,
+				DF3A954E18B699EB0090F881 /* AboutViewController.m */,
+			);
+			name = "About View Controller";
+			sourceTree = "<group>";
+		};
+		DF3A954918B699BA0090F881 /* Tutorial View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				DF3A954A18B699D80090F881 /* TutorialViewController.h */,
+				DF3A954B18B699D80090F881 /* TutorialViewController.m */,
+			);
+			name = "Tutorial View Controller";
 			sourceTree = "<group>";
 		};
 		DF3F00FB17E25CBC00530A4D /* Reachability Library */ = {
@@ -1090,9 +1121,12 @@
 				393743E61798B98A005597FF /* HeatMapView.m in Sources */,
 				390415AC1798C359005EC308 /* MenuView.m in Sources */,
 				39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */,
+				DF3A954F18B699EB0090F881 /* AboutViewController.m in Sources */,
 				3915605F179E086100D6E35D /* NetworkMessage.m in Sources */,
 				DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */,
 				DF62E07417C1992700B29D43 /* BDHost.m in Sources */,
+				DF3A954C18B699D80090F881 /* TutorialViewController.m in Sources */,
+				DF3A955518B69FBD0090F881 /* MainNavigationController.m in Sources */,
 				DFA9AA7C17D2666B006F58A5 /* NSArray+Primitive.m in Sources */,
 				DFA9ABF917D653B0006F58A5 /* MessageCell.m in Sources */,
 				DFA9ABFF17D66518006F58A5 /* UIFont+methods.m in Sources */,

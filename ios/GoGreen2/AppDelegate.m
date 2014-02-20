@@ -12,6 +12,7 @@
 #import "MessageViewController.h"
 #import "HeatMapView.h"
 #import "NetworkingController.h"
+#import "MainNavigationController.h"
 
 #import "TestFlight.h"
 
@@ -27,8 +28,10 @@
     //if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
     //{
         self.customContainer = [ContainerViewController sharedContainer];
-        
-        self.window.rootViewController = self.customContainer;
+    
+        MainNavigationController *mainNav = [[MainNavigationController alloc] initWithRootViewController:self.customContainer];
+    
+        self.window.rootViewController = mainNav;
         
         [TestFlight takeOff:@"60fa253d-8284-496a-97c3-34b3f1cb179c"];
     //}

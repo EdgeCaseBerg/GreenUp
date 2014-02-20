@@ -322,12 +322,12 @@
 
 -(void)showAboutUs
 {
-#warning SHOW ABOUT US HERE!
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"showAboutView" object:nil];
 }
 
 -(void)showTutorial
 {
-#warning SHOW TUTORIAL HERE!
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"showTutorial" object:nil];
 }
 
 /*
