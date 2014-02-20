@@ -246,6 +246,7 @@ static NetworkingController *sharedNetworkingController;
                 newPin.message = [networkPin objectForKey:@"message"];
                 newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
                 
+                
                 [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPins addObject:newPin];
             }
             
@@ -1086,6 +1087,11 @@ static NetworkingController *sharedNetworkingController;
                 else
                 {
                     newMessage.pinID = nil;
+                }
+                
+                if([[comment objectForKey:@"addressed"] boolValue] == TRUE)
+                {
+                    NSLog(@"STOP");
                 }
                 
                 newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];

@@ -36,16 +36,13 @@
 {
     if([UIScreen mainScreen].bounds.size.height == 568)
     {
-        self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 499)];
+        self = [super initWithNibName:@"MapView_IPhone5" bundle:nil];
     }
     else
     {
-       self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 411)];
+        self = [super initWithNibName:@"MapView_IPhone" bundle:nil];
     }
-    
-    [self.view addSubview:self.mapView];
-    
-    self = [super initWithNibName:@"MapView_IPhone" bundle:nil];
+
     self.title = @"Map";
     
     self.downloadedMapPoints = [[NSMutableArray alloc] init];
@@ -74,53 +71,34 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingPinsForShowPin:) name:@"finishedGettingPinsForShowPin" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleSateliteView:) name:@"toggleSateliteView" object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleCenterOnLocation:) name:@"toggleCenterOnLocation" object:nil];
-    
-    [self.mapView setShowsUserLocation:TRUE];
-    
-    self.centerOnCurrentLocation = FALSE;
-    
     return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    //THIS BUTTON IS JUST FOR QUICK TESTING. SAME BUTTON AS THE HOME SCREEN!
-    /*
-    //Toggle Logging Button
-    self.toggleGeoLogging = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.toggleGeoLogging setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.toggleGeoLogging setFrame:CGRectMake(0, 65, 150, 30)];
-    if(self.logging)
+    
+    if([UIScreen mainScreen].bounds.size.height == 568)
     {
-        [self.toggleGeoLogging setTitle:@"Stop Logging" forState:UIControlStateNormal];
-        [self.toggleGeoLogging setBackgroundColor:[UIColor redColor]];
+        self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 499)];
     }
     else
     {
-        [self.toggleGeoLogging setTitle:@"Start Logging" forState:UIControlStateNormal];
-        [self.toggleGeoLogging setBackgroundColor:[UIColor greenColor]];
+        self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 411)];
     }
-    [self.toggleGeoLogging addTarget:self action:@selector(toggleLogging:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.toggleGeoLogging];
-    */
+    
+    [self.view addSubview:self.mapView];
+    
+    
+    [self.mapView setShowsUserLocation:TRUE];
+    
+    self.centerOnCurrentLocation = FALSE;
     
     //Gesture Recognizer For Custom Location Map Pin
     UILongPressGestureRecognizer *customLocationMapPinGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(dropCustomMapPin:)];
     [customLocationMapPinGesture setMinimumPressDuration:.2];
     [self.mapView addGestureRecognizer:customLocationMapPinGesture];
-    
-    //Clear Points Button
-    self.clearPoints = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.clearPoints setFrame:CGRectMake(250, 65, 70, 30)];
-    [self.clearPoints setTitle:@"Clear" forState:UIControlStateNormal];
-    [self.clearPoints addTarget:self action:@selector(clearAllPoints:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.clearPoints];
-    
+
     //Map
     MKCoordinateRegion region;
     MKCoordinateSpan span;
@@ -142,7 +120,51 @@
     self.pushOverdue = FALSE;
     
     [self saveLastViewedLocation:self.mapView];
+
+    UIView *controlsView = [[UIView alloc] initWithFrame:CGRectMake(0, self.mapView.frame.size.height - 48, 320, 48)];
+    UIView *tintView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 48)];
+    [tintView setBackgroundColor:[UIColor blackColor]];
+    [tintView setAlpha:0.7];
+    
+    UISegmentedControl *centerOnLocation = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Free", @"Center", nil]];
+    if(self.centerOnCurrentLocation)
+    {
+        [centerOnLocation setSelectedSegmentIndex:1];
+    }
+    else
+    {
+        [centerOnLocation setSelectedSegmentIndex:0];
+    }
+    [centerOnLocation setTintColor:[UIColor whiteColor]];
+    [centerOnLocation setFrame:CGRectMake(5, 5, 130, 27)];
+    [centerOnLocation addTarget:self action:@selector(toggleCenterOnLocation:) forControlEvents:UIControlEventValueChanged];
+    
+    UIButton *dropPinButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [dropPinButton setBackgroundImage:[UIImage imageNamed:@"locationMarker.png"] forState:UIControlStateNormal];
+    [dropPinButton setFrame:CGRectMake((controlsView.frame.size.width / 2) - 12, -2, 22, 34)];
+    [dropPinButton addTarget:self action:@selector(dropMarkerAtCurrentLocation) forControlEvents:UIControlEventTouchUpInside];
+     
+    UISegmentedControl *mapTypeControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Map", @"Sat", nil]];
+    [mapTypeControl setTintColor:[UIColor whiteColor]];
+    [mapTypeControl addTarget:self action:@selector(toggleSateliteView:) forControlEvents:UIControlEventValueChanged];
+    [mapTypeControl setFrame:CGRectMake(controlsView.frame.size.width - 135, 5, 130, 27)];
+    if([[[[ContainerViewController sharedContainer] theMapViewController] mapView] mapType] == MKMapTypeStandard)
+    {
+        [mapTypeControl setSelectedSegmentIndex:0];
+    }
+    else
+    {
+        [mapTypeControl setSelectedSegmentIndex:1];
+    }
+    
+    [self.view addSubview:controlsView];
+    [controlsView addSubview:tintView];
+    
+    [controlsView addSubview:dropPinButton];
+    [controlsView addSubview:mapTypeControl];
+    [controlsView addSubview:centerOnLocation];
 }
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -175,10 +197,9 @@
 
 #pragma mark - Button Callbacks
 
--(void)toggleSateliteView:(NSNotification *)sender
+-(void)toggleSateliteView:(UISegmentedControl *)sender
 {
-    NSNumber *value = sender.object;
-    if(value.integerValue == 0)
+    if(sender.selectedSegmentIndex == 0)
     {
         [self.mapView setMapType:MKMapTypeStandard];
     }
@@ -188,10 +209,16 @@
     }
 }
 
--(void)toggleCenterOnLocation:(NSNotification *)sender
+-(void)toggleCenterOnLocation:(UISegmentedControl *)sender
 {
-    NSNumber *value = sender.object;
-    self.centerOnCurrentLocation = value.boolValue;
+    if(sender.selectedSegmentIndex == 0)
+    {
+        self.centerOnCurrentLocation = FALSE;
+    }
+    else
+    {
+        self.centerOnCurrentLocation = TRUE;
+    }
 }
 
 #pragma mark - MKMapViewDelegate
@@ -578,7 +605,7 @@
 {
     NSLog(@"Action - Map: Cancled Placing Marker");
     //Remove Pin Because WE Canceled
-    [self.mapView removeAnnotation:self.tempPinRef];
+    //[self.mapView removeAnnotation:self.tempPinRef];
     
     //Clear Temp
     //self.tempPinRef = nil;
@@ -699,7 +726,7 @@
     //Add Downloaded Pins
     [self updateMapWithPins:self.downloadedMapPins];
 }
--(IBAction)dropMarkerAtCurrentLocation:(id)sender
+-(void)dropMarkerAtCurrentLocation
 {
     NSLog(@"Action - Map: Dropping Pin At Current Location");
     //Set Logging For Marker Flag

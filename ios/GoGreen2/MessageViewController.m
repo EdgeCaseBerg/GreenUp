@@ -698,10 +698,6 @@
     
     NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
     
-    
-    if(indexPath.row > 20)
-        NSLog(@"STOP");
-    
     if (cell != nil)
     {
         for(UIView *subview in cell.contentView.subviews)

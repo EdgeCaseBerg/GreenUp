@@ -71,6 +71,8 @@
 		DF0A94A2188DB1C2009B049E /* icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949A188DB1C2009B049E /* icon-144.png */; };
 		DF0A94A3188DB1C2009B049E /* icon-152.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949B188DB1C2009B049E /* icon-152.png */; };
 		DF0A94A4188DB1C2009B049E /* icon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0A949C188DB1C2009B049E /* icon-1024.png */; };
+		DF23914618B64BCC002D3F07 /* locationMarker.png in Resources */ = {isa = PBXBuildFile; fileRef = DF23914418B64BCC002D3F07 /* locationMarker.png */; };
+		DF23914718B64BCC002D3F07 /* locationMarker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF23914518B64BCC002D3F07 /* locationMarker@2x.png */; };
 		DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3F00FD17E25CD000530A4D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DF3F010A17E3FEED00530A4D /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010717E3FEED00530A4D /* check.png */; };
 		DF3F010B17E3FEED00530A4D /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010817E3FEED00530A4D /* check@2x.png */; };
@@ -269,6 +271,8 @@
 		DF0A949A188DB1C2009B049E /* icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-144.png"; path = "Images/icon-144.png"; sourceTree = SOURCE_ROOT; };
 		DF0A949B188DB1C2009B049E /* icon-152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-152.png"; path = "Images/icon-152.png"; sourceTree = SOURCE_ROOT; };
 		DF0A949C188DB1C2009B049E /* icon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-1024.png"; path = "Images/icon-1024.png"; sourceTree = SOURCE_ROOT; };
+		DF23914418B64BCC002D3F07 /* locationMarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = locationMarker.png; path = Images/locationMarker.png; sourceTree = SOURCE_ROOT; };
+		DF23914518B64BCC002D3F07 /* locationMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "locationMarker@2x.png"; path = "Images/locationMarker@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF3F00FC17E25CD000530A4D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = SOURCE_ROOT; };
 		DF3F00FD17E25CD000530A4D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = SOURCE_ROOT; };
 		DF3F010717E3FEED00530A4D /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = check.png; path = Images/check.png; sourceTree = SOURCE_ROOT; };
@@ -440,6 +444,8 @@
 		390415AD1798DC50005EC308 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				DF23914418B64BCC002D3F07 /* locationMarker.png */,
+				DF23914518B64BCC002D3F07 /* locationMarker@2x.png */,
 				DF9D412B18B1452D006CA760 /* bubble_gray_top.png */,
 				DF9D412C18B1452D006CA760 /* bubble_gray_top@2x.png */,
 				DF9D412D18B1452D006CA760 /* bubble_gray_center.png */,
@@ -884,6 +890,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF23914618B64BCC002D3F07 /* locationMarker.png in Resources */,
 				39592530177518690035E351 /* InfoPlist.strings in Resources */,
 				DF9D413518B1452D006CA760 /* bubble_gray_center.png in Resources */,
 				39592538177518690035E351 /* Default.png in Resources */,
@@ -988,6 +995,7 @@
 				DF0A94A3188DB1C2009B049E /* icon-152.png in Resources */,
 				DFD73A241800824800202D57 /* blueLeaf.png in Resources */,
 				DF9D413418B1452D006CA760 /* bubble_gray_top@2x.png in Resources */,
+				DF23914718B64BCC002D3F07 /* locationMarker@2x.png in Resources */,
 				DFD73A251800824800202D57 /* blueLeaf@2x.png in Resources */,
 				DF0A94A0188DB1C2009B049E /* icon-114.png in Resources */,
 				DFD73A261800824800202D57 /* greenLeaf.png in Resources */,

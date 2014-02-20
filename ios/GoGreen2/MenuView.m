@@ -125,7 +125,7 @@
     //Update Previous Time Intervals
     self.previousTimeIntervals = [[[ContainerViewController sharedContainer] theHomeViewController] previousLoggingTimes];
     
-    UIView *scrollViewContainerView = [[UIView alloc] initWithFrame:CGRectMake(5, 5, self.frame.size.width - 10, 130)];
+    UIView *scrollViewContainerView = [[UIView alloc] initWithFrame:CGRectMake(5, 5, self.frame.size.width - 10, 90)];
     [scrollViewContainerView setBackgroundColor:[UIColor greenUpGreenColor]];
     [scrollViewContainerView.layer setCornerRadius:5];
     
@@ -136,7 +136,7 @@
     [keyLabel setTextAlignment:NSTextAlignmentCenter];
     [scrollViewContainerView addSubview:keyLabel];
     
-    UIScrollView *previousTimesScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 30, scrollViewContainerView.frame.size.width - 20, 90)];
+    UIScrollView *previousTimesScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 30, scrollViewContainerView.frame.size.width - 20, 55)];
     int height = 0;
     [previousTimesScrollView setBackgroundColor:[UIColor clearColor]];
     
@@ -192,6 +192,18 @@
     
     [self.contentView addSubview:scrollViewContainerView];
     
+    UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [aboutUs setTitle:@"About Us" forState:UIControlStateNormal];
+    [aboutUs addTarget:self action:@selector(showAboutUs) forControlEvents:UIControlEventTouchUpInside];
+    [aboutUs setFrame:CGRectMake(5, 100, (self.contentView.frame.size.width / 2) - 10, 35)];
+    [self.contentView addSubview:aboutUs];
+    
+    UIButton *showTutorial = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [showTutorial setTitle:@"Show Tutorial" forState:UIControlStateNormal];
+    [showTutorial addTarget:self action:@selector(showTutorial) forControlEvents:UIControlEventTouchUpInside];
+    [showTutorial setFrame:CGRectMake((self.contentView.frame.size.width / 2) + 5, 100, (self.contentView.frame.size.width / 2) - 10, 35)];
+    [self.contentView addSubview:showTutorial];
+    
     //Set Background Color
     [self setBackgroundColor:[UIColor clearColor]];
 }
@@ -201,55 +213,32 @@
     //Set Background Color
     [self setBackgroundColor:[UIColor clearColor]];
     
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, self.contentView.frame.size.width - 10, 20)];
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [titleLabel setText:@"Pin Examples"];
+    
+    [self.contentView addSubview:titleLabel];
+    
     //Init the Pin Icons
     UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"marker.png"]];
     UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashMarker.png"]];
     UIImageView *pin3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hazardMarker.png"]];
     
-    UIButton *dropPinButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [dropPinButton setBackgroundImage:[UIImage imageNamed:@"currentLocationButtonBackground.png"] forState:UIControlStateNormal];
-    [dropPinButton setFrame:CGRectMake(40, 72, self.frame.size.width - 80, 30)];
-    [dropPinButton setTitle:@"Drop Marker At My Location" forState:UIControlStateNormal];
-    [dropPinButton addTarget:self action:@selector(dropMarker:) forControlEvents:UIControlEventTouchUpInside];
-    
-    UILabel *centerLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 109, 95, 20)];
-    [centerLabel setText:@"Center Map"];
-    
-    UISwitch *centerOnLocationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(102, 107, 40, 20)];
-    [centerOnLocationSwitch addTarget:self action:@selector(toggleCenterOnLocation:) forControlEvents:UIControlEventValueChanged];
-    [centerOnLocationSwitch setOn:[[[ContainerViewController sharedContainer] theMapViewController] centerOnCurrentLocation] animated:TRUE];
-    
-    UISegmentedControl *mapTypeControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Map", @"Sat", nil]];
-    [mapTypeControl addTarget:self action:@selector(toggleSateliteView:) forControlEvents:UIControlEventValueChanged];
-    [mapTypeControl setFrame:CGRectMake(185, 107, 130, 27)];
-    if([[[[ContainerViewController sharedContainer] theMapViewController] mapView] mapType] == MKMapTypeStandard)
-    {
-        [mapTypeControl setSelectedSegmentIndex:0];
-    }
-    else
-    {
-        [mapTypeControl setSelectedSegmentIndex:1];
-    }
-    
-    
     //Set Pin Image Frames
-    [pin1Image setFrame:CGRectMake(42, 5, 30, 40)];
-    [pin2Image setFrame:CGRectMake(144, 5, 40, 40)];
-    [pin3Image setFrame:CGRectMake(251, 5, 30, 40)];
+    [pin1Image setFrame:CGRectMake(42, 30, 30, 40)];
+    [pin2Image setFrame:CGRectMake(144, 30, 40, 40)];
+    [pin3Image setFrame:CGRectMake(251, 30, 30, 40)];
     
     
     //Add pin images to view
     [self.contentView addSubview:pin1Image];
     [self.contentView addSubview:pin2Image];
     [self.contentView addSubview:pin3Image];
-    [self.contentView addSubview:centerOnLocationSwitch];
-    [self.contentView addSubview:mapTypeControl];
-    [self.contentView addSubview:centerLabel];
-    
+
     //Init Pin Labels
-    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(2, 40, 106, 30)];
-    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(112, 40, 102, 30)];
-    UILabel *pin3 = [[UILabel alloc] initWithFrame:CGRectMake(214, 40, 106, 30)];
+    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(2, 65, 106, 30)];
+    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(112, 65, 102, 30)];
+    UILabel *pin3 = [[UILabel alloc] initWithFrame:CGRectMake(214, 65, 106, 30)];
     
     //Set Pins Text
     [pin1 setText:@"Help Needed"];
@@ -275,7 +264,18 @@
     [self.contentView addSubview:pin1];
     [self.contentView addSubview:pin2];
     [self.contentView addSubview:pin3];
-    [self.contentView addSubview:dropPinButton];
+    
+    UIButton *moreInfo = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [moreInfo addTarget:self action:@selector(showMorePinInfo:) forControlEvents:UIControlEventTouchUpInside];
+    [moreInfo setFrame:CGRectMake(5, 95, self.contentView.frame.size.width - 10, 40)];
+    [moreInfo setTitle:@"Tap For More Information" forState:UIControlStateNormal];
+    [self.contentView addSubview:moreInfo];
+}
+
+-(void)showMorePinInfo:(id)sender
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"What are Pins?" message:@"Pick up pins are only posted by the Green Up organizers. They are locations where you can drop off trash bags.\nIf you find hazardous materials you should drop a hazard pin with a description so a Green Up organizer can take care of it.\nNeed help pins can be dropped when you need assistance from the community. Once a location has been cleaned users can mark the pin as addressed and it will be removed from the map." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 -(void)switchToMessageView
@@ -320,20 +320,14 @@
     [self.contentView addSubview:longPressNote];
 }
 
--(IBAction)dropMarker:(id)sender
+-(void)showAboutUs
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"dropMarker" object:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"toggleMenu" object:nil];
+#warning SHOW ABOUT US HERE!
 }
 
--(IBAction)toggleCenterOnLocation:(UISwitch *)sender
+-(void)showTutorial
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"toggleCenterOnLocation" object:@(sender.isOn)];
-}
-
--(IBAction)toggleSateliteView:(UISegmentedControl *)sender
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"toggleSateliteView" object:@(sender.selectedSegmentIndex)];
+#warning SHOW TUTORIAL HERE!
 }
 
 /*
