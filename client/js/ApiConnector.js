@@ -46,7 +46,7 @@ function ApiConnector(){
     var commentData = [];
 
 
-    this.API_PATH = "http://199.195.248.180:31337/api";
+    this.API_PATH = "http://dev.xenonapps.com/api";
 
 
 
