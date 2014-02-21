@@ -45,12 +45,10 @@ function ApiConnector(){
     var markerData = [];
     var commentData = [];
 
-    this.REMOTEHOST = "http://dev.xenonapps.com";
-    this.LOCALHOST = "http://localhost";
-    this.PROXYBASE = "/proxy.php?url=";
-    this.HOST = "http://199.195.248.180"; // change to fqdn of server 
-    this.PORT = ":31337";
-    this.BASE = "/api";
+
+    this.API_PATH = "http://199.195.248.180:31337/api";
+
+
 
     // determine where the page is loaded from and form the url base accordingly
     ApiConnector.prototype.checkOrigin = function(){
@@ -58,11 +56,11 @@ function ApiConnector(){
     	var origin = document.URL;
     	if (origin.search("localhost") > 0){
     		// request is from localhost
-    		return this.LOCALHOST + this.PROXYBASE + this.HOST + this.PORT + this.BASE 
+    		return window.PROXY + this.API_PATH;
     	} 
     	else {
     		// request from remote
-    		return this.REMOTEHOST + this.BASE;
+    		return this.API_PATH;
     	}
     }
 
@@ -133,7 +131,6 @@ function ApiConnector(){
         var pinsURI = url+"/pins";
         $.ajax({
             type: "POST",
-            // url: this.BASE+pinsURI,
             url: pinsURI,
             data: jsonObj,
             cache: false,
@@ -249,7 +246,6 @@ function ApiConnector(){
         console.log("Push comment data to: "+commentsURI);
         $.ajax({
             type: "POST",
-            // url: this.BASE+commentsURI,
             url: URL+commentsURI,
             data: jsonObj,
             cache: false,
@@ -297,7 +293,7 @@ function ApiConnector(){
 
     ApiConnector.prototype.pullTestData = function pullTestData(){
         window.LOGGER.debug(arguments.callee.name, "[pullTestData]");
-        this.pullApiData(this.BASE, "JSON", "GET", window.UI.updateTest);
+        this.pullApiData(this.checkOrigin(), "JSON", "GET", window.UI.updateTest);
         this.pullCommentData("needs", null);
         this.pullCommentData("messages", null);
         this.pullCommentData("", null);
