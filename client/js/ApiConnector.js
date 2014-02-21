@@ -240,7 +240,7 @@ function ApiConnector(){
 
     ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
         window.LOGGER.debug(arguments.callee.name, "[pushCommentData]");
-        var URL = this.checkOrigin() + /comments;
+        var URL = this.checkOrigin() + "/comments";
         var commentsURI = "/comments";
         console.log("json to push: "+jsonObj);
         console.log("Push comment data to: "+commentsURI);
