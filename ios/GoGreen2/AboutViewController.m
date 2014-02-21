@@ -7,6 +7,7 @@
 //
 
 #import "AboutViewController.h"
+#import "UIColor+methods.h"
 
 @interface AboutViewController ()
 
@@ -14,11 +15,12 @@
 
 @implementation AboutViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNavRef:(UINavigationController *)nav
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super init];
     if (self)
     {
+        self.navigationController = nav;
         if([UIScreen mainScreen].bounds.size.height == 568.0)
         {
             if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
@@ -50,6 +52,8 @@
     [super viewDidLoad];
 
     //FOR HTML [[VERSION_BUILD]]
+    
+    [self.navigationController setNavigationBarHidden:FALSE];
     
     UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     [webView setUserInteractionEnabled:FALSE];

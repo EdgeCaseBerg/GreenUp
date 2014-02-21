@@ -141,7 +141,7 @@
     
     UIButton *dropPinButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [dropPinButton setBackgroundImage:[UIImage imageNamed:@"locationMarker.png"] forState:UIControlStateNormal];
-    [dropPinButton setFrame:CGRectMake((controlsView.frame.size.width / 2) - 12, -2, 22, 34)];
+    [dropPinButton setFrame:CGRectMake(140, 5, 40, 27)];
     [dropPinButton addTarget:self action:@selector(dropMarkerAtCurrentLocation) forControlEvents:UIControlEventTouchUpInside];
      
     UISegmentedControl *mapTypeControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Map", @"Sat", nil]];
@@ -732,10 +732,24 @@
     //Set Logging For Marker Flag
     self.loggingForMarker = TRUE;
     
+    //Give us .5 seconds to see if we get a lock before showing a alert
+    [self performSelector:@selector(checkIfGPSWasFoundForMakerDrop) withObject:nil afterDelay:0.5];
+    
     //If we arn't collecting GPS data start so we can drop a marker at our current location
     if(!self.logging)
     {
         [self startStandardUpdates];
+    }
+}
+
+-(void)checkIfGPSWasFoundForMakerDrop
+{
+    if(self.loggingForMarker == TRUE)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"GPS Lock Not Found" message:@"You can try again in a few moments when you attain a GPS lock or perform a long press on the map and drop a custom location pin" delegate:Nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+        [alert show];
+        
+        self.loggingForMarker = FALSE;
     }
 }
 

@@ -12,7 +12,6 @@
 #import "MessageViewController.h"
 #import "HeatMapView.h"
 #import "NetworkingController.h"
-#import "MainNavigationController.h"
 
 #import "TestFlight.h"
 
@@ -29,9 +28,11 @@
     //{
         self.customContainer = [ContainerViewController sharedContainer];
     
-        MainNavigationController *mainNav = [[MainNavigationController alloc] initWithRootViewController:self.customContainer];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.customContainer];
     
-        self.window.rootViewController = mainNav;
+        [nav setNavigationBarHidden:TRUE];
+    
+        self.window.rootViewController = nav;
         
         [TestFlight takeOff:@"60fa253d-8284-496a-97c3-34b3f1cb179c"];
     //}

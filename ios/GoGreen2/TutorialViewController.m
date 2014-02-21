@@ -7,6 +7,7 @@
 //
 
 #import "TutorialViewController.h"
+#import "UIColor+methods.h"
 
 @interface TutorialViewController ()
 
@@ -14,11 +15,12 @@
 
 @implementation TutorialViewController
 
-- (id)init
+- (id)initWithNavRef:(UINavigationController *)nav
 {
     self = [super init];
     if (self)
     {
+        self.navigationController = nav;
         if([UIScreen mainScreen].bounds.size.height == 568.0)
         {
             if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
@@ -50,9 +52,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    UILabel *test = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 20, 320, 20)];
-    [test setBackgroundColor:[UIColor redColor]];
-    [self.view addSubview:test];
+    [self.navigationController setNavigationBarHidden:FALSE];
 }
 
 - (void)didReceiveMemoryWarning

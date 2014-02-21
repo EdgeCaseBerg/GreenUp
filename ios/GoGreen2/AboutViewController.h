@@ -10,4 +10,8 @@
 
 @interface AboutViewController : UIViewController
 
+@property (nonatomic, strong) UINavigationController *navigationController;
+
+- (id)initWithNavRef:(UINavigationController *)nav;
+
 @end

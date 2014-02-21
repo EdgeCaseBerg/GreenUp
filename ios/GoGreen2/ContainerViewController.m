@@ -9,6 +9,8 @@
 #import "ContainerViewController.h"
 #import "NetworkMessage.h"
 #import "UIColor+methods.h"
+#import "AboutViewController.h"
+#import "TutorialViewController.h"
 
 @interface ContainerViewController ()
 
@@ -41,6 +43,9 @@ static ContainerViewController* theContainerView = nil;
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAboutView) name:@"showAboutView" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showTutorial) name:@"showTutorial" object:nil];
     
     //Initilize the view
     self.heightFix = 11;
@@ -169,6 +174,11 @@ static ContainerViewController* theContainerView = nil;
     [self hideAllButtHomeView:nil];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:TRUE];
+}
+
 #pragma mark - Tab Bar Delegate
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
@@ -290,6 +300,19 @@ static ContainerViewController* theContainerView = nil;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Tutorial & About Screen
+-(void)showTutorial
+{
+    TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNavRef:self.navigationController];
+    [self.navigationController pushViewController:tutorialVC animated:FALSE];
+}
+
+-(void)showAboutView
+{
+    AboutViewController *aboutVC = [[AboutViewController alloc] initWithNavRef:self.navigationController];
+    [self.navigationController pushViewController:aboutVC animated:FALSE];
 }
 
 #pragma mark - Menu
