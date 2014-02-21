@@ -105,7 +105,7 @@ function ApiConnector(){
                         console.log("Error: api response = 400");
                         break;
                     case 422:
-                        console.log("Error: api response = 422");
+                        window.LOGGER.error(xhr, "Error: api response = 422");
                         break;
                     case 200:
                         console.log("Pull API data: 200");
@@ -240,13 +240,13 @@ function ApiConnector(){
 
     ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
         window.LOGGER.debug(arguments.callee.name, "[pushCommentData]");
-        URL = this.checkOrigin();
+        var URL = this.checkOrigin() + /comments;
         var commentsURI = "/comments";
         console.log("json to push: "+jsonObj);
         console.log("Push comment data to: "+commentsURI);
         $.ajax({
             type: "POST",
-            url: URL+commentsURI,
+            url: URL,
             data: jsonObj,
             cache: false,
             // processData: false,
@@ -279,6 +279,7 @@ function ApiConnector(){
                         break;
                     case 422:
                         console.log("Error: api response = 422");
+                        throw xhr.error;
                         break;
                     case 200:
                         console.log("Request successful");
