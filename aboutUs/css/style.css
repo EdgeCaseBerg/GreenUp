@@ -106,9 +106,12 @@ a:active {color:white;}
 	position: absolute;
 }
 @media screen and (min-width: 321px){
-  #content {
+	#content {
 	position: relative;
 	top:0em;
 	margin-left:1em;
+	}
+	p {
+		line-height: 90%;
 	}
 }
