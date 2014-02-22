@@ -80,6 +80,7 @@
 		DF3F010B17E3FEED00530A4D /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010817E3FEED00530A4D /* check@2x.png */; };
 		DF3F010C17E3FEED00530A4D /* notCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010917E3FEED00530A4D /* notCheck.png */; };
 		DF3F010E17E3FF2A00530A4D /* notCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3F010D17E3FF2A00530A4D /* notCheck@2x.png */; };
+		DF53B87318B91F93009740DE /* aboutUs.html in Resources */ = {isa = PBXBuildFile; fileRef = DF53B86E18B91F93009740DE /* aboutUs.html */; };
 		DF5AC59518874D2F0010B346 /* sampleRoute4.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DF5AC59418874D2F0010B346 /* sampleRoute4.gpx */; };
 		DF60D5F317F4FD3200105121 /* currentLocation.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5EF17F4FD3200105121 /* currentLocation.png */; };
 		DF60D5F417F4FD3200105121 /* currentLocation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5F017F4FD3200105121 /* currentLocation@2x.png */; };
@@ -285,6 +286,7 @@
 		DF3F010817E3FEED00530A4D /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "check@2x.png"; path = "Images/check@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF3F010917E3FEED00530A4D /* notCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notCheck.png; path = Images/notCheck.png; sourceTree = SOURCE_ROOT; };
 		DF3F010D17E3FF2A00530A4D /* notCheck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "notCheck@2x.png"; path = "Images/notCheck@2x.png"; sourceTree = SOURCE_ROOT; };
+		DF53B86E18B91F93009740DE /* aboutUs.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = aboutUs.html; sourceTree = "<group>"; };
 		DF5AC59418874D2F0010B346 /* sampleRoute4.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sampleRoute4.gpx; sourceTree = "<group>"; };
 		DF60D5EF17F4FD3200105121 /* currentLocation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = currentLocation.png; path = Images/currentLocation.png; sourceTree = SOURCE_ROOT; };
 		DF60D5F017F4FD3200105121 /* currentLocation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "currentLocation@2x.png"; path = "Images/currentLocation@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -770,6 +772,7 @@
 		DF3A954818B699B10090F881 /* About View Controller */ = {
 			isa = PBXGroup;
 			children = (
+				DF53B86D18B91F93009740DE /* aboutUs */,
 				DF3A954D18B699EB0090F881 /* AboutViewController.h */,
 				DF3A954E18B699EB0090F881 /* AboutViewController.m */,
 			);
@@ -801,6 +804,14 @@
 				DF81175E18895C6700B2C271 /* NetworkingController.m */,
 			);
 			name = NetworkingController;
+			sourceTree = "<group>";
+		};
+		DF53B86D18B91F93009740DE /* aboutUs */ = {
+			isa = PBXGroup;
+			children = (
+				DF53B86E18B91F93009740DE /* aboutUs.html */,
+			);
+			path = aboutUs;
 			sourceTree = "<group>";
 		};
 		DFA9AA7917D26654006F58A5 /* NSArray+Primitives */ = {
@@ -1006,6 +1017,7 @@
 				DFA9ABF417D63C5B006F58A5 /* Stop@2x.png in Resources */,
 				DFA9C38517D94ABE00FBE61F /* pinwheel.png in Resources */,
 				DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */,
+				DF53B87318B91F93009740DE /* aboutUs.html in Resources */,
 				DFA9C39317E22FA000FBE61F /* logo.png in Resources */,
 				DFA9C39417E22FA000FBE61F /* logo@2x.png in Resources */,
 				DF3F010A17E3FEED00530A4D /* check.png in Resources */,

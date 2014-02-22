@@ -17,7 +17,7 @@
 
 - (id)initWithNavRef:(UINavigationController *)nav
 {
-    self = [super init];
+    self = [super initWithNibName:nil bundle:nil];
     if (self)
     {
         self.navigationController = nav;
@@ -51,15 +51,14 @@
 {
     [super viewDidLoad];
 
-    //FOR HTML [[VERSION_BUILD]]
-    
     [self.navigationController setNavigationBarHidden:FALSE];
     
     UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    [webView setUserInteractionEnabled:FALSE];
+    [webView setDelegate:self];
+    //[webView setUserInteractionEnabled:FALSE];
     [webView setBackgroundColor:[UIColor blackColor]];
     
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"http:www.google.com" ofType:@"html"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"aboutUs" ofType:@"html"];
     
     //-- Set up the web view with some content
     NSFileHandle *readHandle = [NSFileHandle fileHandleForReadingAtPath:path];
@@ -78,6 +77,7 @@
                                    options:NSLiteralSearch
                                      range:NSMakeRange(0, [htmlString length])];
     
+    
     [self.view addSubview:webView];
 }
 
@@ -87,4 +87,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - UIWebViewDelegate
+-(BOOL) webView:(UIWebView *)inWeb shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType {
+    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+        return NO;
+    }
+    
+    return YES;
+}
 @end
