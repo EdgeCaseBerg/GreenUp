@@ -105,3 +105,10 @@ a:active {color:white;}
     z-index: -10; 
 	position: absolute;
 }
+@media screen and (min-width: 321px){
+  #content {
+	position: relative;
+	top:0em;
+	margin-left:1em;
+	}
+}
