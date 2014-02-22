@@ -13,7 +13,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "273"
          endingLineNumber = "273"
-         landmarkName = "-getHeatDataFromServer:andLocation:"
+         landmarkName = "-mapView:regionDidChangeAnimated:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
