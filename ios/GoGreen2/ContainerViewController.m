@@ -305,12 +305,14 @@ static ContainerViewController* theContainerView = nil;
 #pragma mark - Tutorial & About Screen
 -(void)showTutorial
 {
+    NSLog(@"ACTION - Home: Showing Tutorial View Controller");
     TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNavRef:self.navigationController];
     [self.navigationController pushViewController:tutorialVC animated:FALSE];
 }
 
 -(void)showAboutView
 {
+    NSLog(@"ACTION - Home: Showing About View Controller");
     AboutViewController *aboutVC = [[AboutViewController alloc] initWithNavRef:self.navigationController];
     [self.navigationController pushViewController:aboutVC animated:FALSE];
 }

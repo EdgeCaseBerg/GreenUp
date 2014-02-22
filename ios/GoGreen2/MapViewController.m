@@ -466,6 +466,7 @@
     NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
     if(abs(howRecent) < 1.0)
     {
+        NSLog(@"Message - Map: Found GPS Location");
         [self centerMapWithCurrentLocation:location];
         
         //ADD POINTS
@@ -552,10 +553,10 @@
     {
         //Update Map Location
         MKCoordinateRegion region;
-        MKCoordinateSpan span;
-        span.latitudeDelta = 0.005;
-        span.longitudeDelta = 0.005;
-        region.span = span;
+        //MKCoordinateSpan span;
+        //span.latitudeDelta = 0.005;
+        //span.longitudeDelta = 0.005;
+        region.span = self.mapView.region.span;
         region.center = location.coordinate;
         [self.mapView setRegion:region animated:TRUE];
         [self.mapView regionThatFits:region];
@@ -746,6 +747,8 @@
 {
     if(self.loggingForMarker == TRUE)
     {
+        NSLog(@"Message - Map: GPS location could not be attained for dropping marker at current location. Alert has been issued to user");
+        
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"GPS Lock Not Found" message:@"You can try again in a few moments when you attain a GPS lock or perform a long press on the map and drop a custom location pin" delegate:Nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
         [alert show];
         
