@@ -12,6 +12,7 @@
 #import "MessageViewController.h"
 #import "HeatMapView.h"
 #import "NetworkingController.h"
+#import "TutorialViewController.h"
 
 #import "TestFlight.h"
 
@@ -29,6 +30,16 @@
         self.customContainer = [ContainerViewController sharedContainer];
     
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.customContainer];
+    
+        if(![[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
+        {
+            NSLog(@"ACTION - AppDelegate: First launch showing tutorial!");
+            [[NSUserDefaults standardUserDefaults] setObject: @YES forKey: @"HasLaunchedOnce"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNavRef:nav];
+            [nav pushViewController:tutorialVC animated:FALSE];
+        }
     
         [nav setNavigationBarHidden:TRUE];
     

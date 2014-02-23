@@ -11,6 +11,9 @@
 @interface TutorialViewController : UIViewController
 
 @property (nonatomic, strong) UINavigationController *navigationController;
+@property (nonatomic, strong) NSMutableArray *tutorialImages;
+@property (nonatomic, strong) UIImageView *tutorialImage;
+@property int currentIndex;
 
 - (id)initWithNavRef:(UINavigationController *)nav;
 

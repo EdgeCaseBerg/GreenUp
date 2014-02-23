@@ -325,9 +325,7 @@
             }
             
             annotationView.image = [UIImage imageNamed:@"trashMarker.png"];
-            CGRect test = annotationView.frame;
-            NSLog(@"%f - %f - %f - %f", test.origin.x, test.origin.y, test.size.width, test.size.height);
-            [annotationView setFrame:CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y - annotationView.frame.size.height, annotationView.frame.size.height, annotationView.frame.size.width)];
+            annotationView.centerOffset = CGPointMake(0, -17);
             
             annotationView.annotation = annotation;
             

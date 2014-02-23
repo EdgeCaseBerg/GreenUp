@@ -14,6 +14,7 @@
 #import "NSArray+Primitive.h"
 #import "MessageTypes.h"
 #import "NetworkMessage.h"
+#import "MarkerTypes.h"
 
 #import <AFNetworking/AFNetworking.h>
 
@@ -242,7 +243,14 @@ static NetworkingController *sharedNetworkingController;
                 newPin.pinID = [f numberFromString:stringPinID];
                 newPin.message = [networkPin objectForKey:@"message"];
                 newPin.coordinate = CLLocationCoordinate2DMake([[networkPin objectForKey:@"latDegrees"] doubleValue], [[networkPin objectForKey:@"lonDegrees"] doubleValue]);
-                newPin.type = [networkPin objectForKey:@"type"];
+                if([newPin.pinID isEqualToNumber:@5649])
+                {
+                    newPin.type = MARKER_TYPE_PICK_UP;
+                }
+                else
+                {
+                    newPin.type = [networkPin objectForKey:@"type"];
+                }
                 newPin.message = [networkPin objectForKey:@"message"];
                 newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
                 
