@@ -243,7 +243,7 @@ static NetworkingController *sharedNetworkingController;
                 newPin.pinID = [f numberFromString:stringPinID];
                 newPin.message = [networkPin objectForKey:@"message"];
                 newPin.coordinate = CLLocationCoordinate2DMake([[networkPin objectForKey:@"latDegrees"] doubleValue], [[networkPin objectForKey:@"lonDegrees"] doubleValue]);
-                if([newPin.pinID isEqualToNumber:@5649])
+                if([newPin.pinID isEqualToNumber:@5650])
                 {
                     newPin.type = MARKER_TYPE_PICK_UP;
                 }
@@ -312,6 +312,10 @@ static NetworkingController *sharedNetworkingController;
         else
         {
             [self printResponseFromFailedRequest:response andStatusCode:getMapPinsForShowStatusCode];
+            
+            [[ContainerViewController sharedContainer] removeLoadingViewFromView];
+            
+            [self showNoNetworkAlert];
             
             [[ContainerViewController sharedContainer] theMapViewController].finishedDownloadingMapPins = TRUE;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingPinsForShowPin" object:[NSNumber numberWithInt:statusCode.integerValue]];
@@ -698,8 +702,7 @@ static NetworkingController *sharedNetworkingController;
         
         if([statusCode integerValue] != 200)
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Update Message" message:@"You dont appear to have a network connection, please connect and retry updaing the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-            [alert show];
+            [self showNoNetworkAlert];
             [self printResponseFromFailedRequest:response andStatusCode:addressMessageStatusCode];
         }
     }
@@ -722,8 +725,7 @@ static NetworkingController *sharedNetworkingController;
         [[ContainerViewController sharedContainer] theMapViewController].finishedDownloadingMapPins = TRUE;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:@"-1"];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        //[alert show];
+        [self showNoNetworkAlert];
     }
     else if([connection isEqual:getMapPinsForShowConnection])
     {
@@ -731,13 +733,14 @@ static NetworkingController *sharedNetworkingController;
         if(getMapPinsForShowData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMapPinsForShowData options:0 error:nil];
         
+        [[ContainerViewController sharedContainer] removeLoadingViewFromView];
+        
         [self printResponseFromFailedRequest:response andStatusCode:getMapPinsForShowStatusCode];
         
         [[ContainerViewController sharedContainer] theMapViewController].finishedDownloadingMapPins = TRUE;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:[NSNumber numberWithInt:-1]];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        //[alert show];
+        [self showNoNetworkAlert];
     }
     else if([connection isEqual:postMarkerConnection])
     {
@@ -747,8 +750,7 @@ static NetworkingController *sharedNetworkingController;
         
         [self printResponseFromFailedRequest:response andStatusCode:postMarkerStatusCode];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Pin" message:@"You dont appear to have a network connection, please connect and retry posting the pin." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
+        [self showNoNetworkAlert];
     }
     else if([connection isEqual:pushHeatMapConnection])
     {
@@ -771,6 +773,8 @@ static NetworkingController *sharedNetworkingController;
         if(getMessagesForFirstPageOfShowData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMessagesForFirstPageOfShowData options:0 error:nil];
         
+        //[self showNoNetworkAlert];
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingMessageForFirstPageOfShowMessage" object:[NSNumber numberWithInt:-1]];
         
         [self printResponseFromFailedRequest:response andStatusCode:getMessagesForFirstPageOfShowStatusCode];
@@ -782,8 +786,7 @@ static NetworkingController *sharedNetworkingController;
         if(getMessagesForAppendingForScrollingData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMessagesForAppendingForScrollingData options:0 error:nil];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
+        [self showNoNetworkAlert];
         
         [self printResponseFromFailedRequest:response andStatusCode:getMessagesForAppendingForScrollingStatusCode];
     }
@@ -793,8 +796,7 @@ static NetworkingController *sharedNetworkingController;
         if(getMessagesForAppendingForShowData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMessagesForAppendingForShowData options:0 error:nil];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
+        [self showNoNetworkAlert];
         
         [self printResponseFromFailedRequest:response andStatusCode:getMessagesForAppendingForShowStatusCode];
     }
@@ -804,8 +806,7 @@ static NetworkingController *sharedNetworkingController;
         if(postMessageData != nil)
             response = [NSJSONSerialization JSONObjectWithData:postMessageData options:0 error:nil];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Message" message:@"You dont appear to have a network connection, please connect and retry posting your message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
+        [self showNoNetworkAlert];
         
         [self printResponseFromFailedRequest:response andStatusCode:postMessageStatusCode];
     }
@@ -815,8 +816,7 @@ static NetworkingController *sharedNetworkingController;
         if(addressMessageData != nil)
             response = [NSJSONSerialization JSONObjectWithData:addressMessageData options:0 error:nil];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Update Message" message:@"You dont appear to have a network connection, please connect and retry updaing the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
+        [self showNoNetworkAlert];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedUpdatingMessageStatus" object:nil];
         
@@ -824,22 +824,22 @@ static NetworkingController *sharedNetworkingController;
     }
     else
     {
-        NSLog(@"SSTOP");
+        NSLog(@"****WARNING**** NETWORKING CONTROLLER - INVAID REQUEST FAILED");
     }
 }
 
 #pragma mark - Map Request Methods
 
--(void)getMapPinsWithMap:(MKMapView *)mapView
+-(void)getMapPinsWithDictionary:(NSDictionary *)buffer
 {
     //Build Request URL
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f", BASE_HOST, API_PORT, PINS_RELATIVE_URL, mapView.region.center.latitude, mapView.region.center.longitude, mapView.region.span.latitudeDelta, mapView.region.span.longitudeDelta];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f", BASE_HOST, API_PORT, PINS_RELATIVE_URL, ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue];
     
     NSLog(@"Network - Map: Getting Pins With Data,");
-    NSLog(@"--- Data - Map: Current Lat = %f", mapView.region.center.latitude);
-    NSLog(@"--- Data - Map: Current Lon = %f", mapView.region.center.longitude);
-    NSLog(@"--- Data - Map: Current Lat Delta = %f", mapView.region.span.latitudeDelta);
-    NSLog(@"--- Data - Map: Current Lon Delta = %f", mapView.region.span.longitudeDelta);
+    NSLog(@"--- Data - Map: Current Lat = %f", ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue);
+    NSLog(@"--- Data - Map: Current Lon = %f", ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue);
+    NSLog(@"--- Data - Map: Current Lat Delta = %f", ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue);
+    NSLog(@"--- Data - Map: Current Lon Delta = %f", ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue);
     NSLog(@"Networking - Map: Final URL String: %@", urlString);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
@@ -855,7 +855,7 @@ static NetworkingController *sharedNetworkingController;
     getMapPinsConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
--(void)getMapPinsForPinShowWithMap:(MKMapView *)mapView
+-(void)getMapPinsForPinShow
 {
     //Build Request URL
     NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@", BASE_HOST, API_PORT, PINS_RELATIVE_URL, [[ContainerViewController sharedContainer] theMapViewController].pinIDToShow.stringValue];
@@ -980,44 +980,44 @@ static NetworkingController *sharedNetworkingController;
     }
 }
 
--(void)getHeatDataPointsWithSpan:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
+-(void)getHeatDataPointsWithDictionary:(NSDictionary *)buffer
 {
     [[ContainerViewController sharedContainer] theMapViewController].finishedDownloadingHeatMap = FALSE;
      
     //Generation Properties
     NSNumber *precision = nil;
-    if(location.span.longitudeDelta > 2.0)
+    if(((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue > 2.0)
     {
         precision = @1;
     }
-    else if(location.span.longitudeDelta > 0.5 && location.span.longitudeDelta < 2.0)
+    else if(((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue > 0.5 && ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue < 2.0)
     {
         precision = @2;
     }
-    else if(location.span.longitudeDelta > 0.2 && location.span.longitudeDelta < 0.5)
+    else if(((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue > 0.2 && ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue < 0.5)
     {
         precision = @3;
     }
-    else if(location.span.longitudeDelta > 0.05 && location.span.longitudeDelta < 0.2)
+    else if(((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue > 0.05 && ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue < 0.2)
     {
         precision = @4;
     }
-    else if(location.span.longitudeDelta < 0.05)
+    else if(((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue < 0.05)
     {
         precision = @5;
     }
 
     NSLog(@"Network - Map: Getting Heat Map Data With Data,");
     NSLog(@"--- Data - Map: Current Precision = %f", precision.floatValue);
-    NSLog(@"--- Data - Map: Current Lat = %f", location.center.latitude);
-    NSLog(@"--- Data - Map: Current Lon = %f", location.center.longitude);
-    NSLog(@"--- Data - Map: Current Lat Delta = %f", location.span.latitudeDelta);
-    NSLog(@"--- Data - Map: Current Lon Delta = %f", location.span.longitudeDelta);
+    NSLog(@"--- Data - Map: Current Lat = %f", ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue);
+    NSLog(@"--- Data - Map: Current Lon = %f", ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue);
+    NSLog(@"--- Data - Map: Current Lat Delta = %f", ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue);
+    NSLog(@"--- Data - Map: Current Lon Delta = %f", ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue);
 
     //Build Request URL
-    //NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f&precision=%d", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL, location.center.latitude, location.center.longitude, span.latitudeDelta, span.longitudeDelta, precision.integerValue];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f&precision=%d", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL, ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue, precision.integerValue];
     
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL];
+    //NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
@@ -1097,11 +1097,6 @@ static NetworkingController *sharedNetworkingController;
                     newMessage.pinID = nil;
                 }
                 
-                if([[comment objectForKey:@"addressed"] boolValue] == TRUE)
-                {
-                    NSLog(@"STOP");
-                }
-                
                 newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
                 
                 [[[ContainerViewController sharedContainer] theMessageViewController].messages addObject:newMessage];
@@ -1138,8 +1133,7 @@ static NetworkingController *sharedNetworkingController;
     failure:^(AFHTTPRequestOperation *operation, NSError *error)
     {
         NSLog(@"Error: %@", error);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Messages" message:@"You dont appear to have a network connection, please connect and retry looking at the message." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-        [alert show];
+        [self showNoNetworkAlert];
         [self printResponseFromFailedRequest:error andStatusCode:[operation.response statusCode]];
     }];
 }
@@ -1273,6 +1267,12 @@ static NetworkingController *sharedNetworkingController;
     NSLog(@"Network - Map: ***************************************");
     NSLog(@"Network - Map: ***************************************");
     
+}
+
+-(void)showNoNetworkAlert
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Network" message:@"Please try again when you have service" delegate:Nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 @end

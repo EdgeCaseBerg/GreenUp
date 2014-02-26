@@ -192,14 +192,14 @@
     
     [self.contentView addSubview:scrollViewContainerView];
     
-    UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [aboutUs setTitle:@"About Us" forState:UIControlStateNormal];
+    UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
+    [aboutUs setImage:[UIImage imageNamed:@"aboutUs.png"] forState:UIControlStateNormal];
     [aboutUs addTarget:self action:@selector(showAboutUs) forControlEvents:UIControlEventTouchUpInside];
     [aboutUs setFrame:CGRectMake(5, 100, (self.contentView.frame.size.width / 2) - 10, 35)];
     [self.contentView addSubview:aboutUs];
     
-    UIButton *showTutorial = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [showTutorial setTitle:@"Show Tutorial" forState:UIControlStateNormal];
+    UIButton *showTutorial = [UIButton buttonWithType:UIButtonTypeCustom];
+    [showTutorial setImage:[UIImage imageNamed:@"showTutorial.png"]  forState:UIControlStateNormal];
     [showTutorial addTarget:self action:@selector(showTutorial) forControlEvents:UIControlEventTouchUpInside];
     [showTutorial setFrame:CGRectMake((self.contentView.frame.size.width / 2) + 5, 100, (self.contentView.frame.size.width / 2) - 10, 35)];
     [self.contentView addSubview:showTutorial];
@@ -265,10 +265,10 @@
     [self.contentView addSubview:pin2];
     [self.contentView addSubview:pin3];
     
-    UIButton *moreInfo = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *moreInfo = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreInfo addTarget:self action:@selector(showMorePinInfo:) forControlEvents:UIControlEventTouchUpInside];
     [moreInfo setFrame:CGRectMake(5, 95, self.contentView.frame.size.width - 10, 40)];
-    [moreInfo setTitle:@"Tap For More Information" forState:UIControlStateNormal];
+    [moreInfo setImage:[UIImage imageNamed:@"moreInfo.png"] forState:UIControlStateNormal];
     [self.contentView addSubview:moreInfo];
 }
 

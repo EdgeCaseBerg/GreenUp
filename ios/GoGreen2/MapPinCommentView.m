@@ -55,15 +55,15 @@ UIColor *defaultTint = nil;
         [self.messageField setFont:[UIFont messageFont]];
         [self addSubview:self.messageField];
         
-        self.doneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        //[self.doneButton setImage:[UIImage imageNamed:@"start.png"] forState:UIControlStateNormal];
+        self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.doneButton setImage:[UIImage imageNamed:@"postButton.png"] forState:UIControlStateNormal];
         [self.doneButton setTitle:@"Post" forState:UIControlStateNormal];
         [self.doneButton setFrame:CGRectMake(320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
         [self.doneButton addTarget:self action:@selector(doneButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.doneButton];
         
-        self.cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        //[self.cancelButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+        self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.cancelButton setImage:[UIImage imageNamed:@"cancelButton.png"] forState:UIControlStateNormal];
         [self.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
         [self.cancelButton setFrame:CGRectMake(10 + 60 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
         [self.cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];

@@ -178,7 +178,7 @@
     self.finishedDownloadingMapPins = FALSE;
     
     //Get Updates From Server
-    [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+    [self getHeatDataFromServer];
     [self getMapPins];
 }
 
@@ -293,7 +293,7 @@
             //Get heatmap data and pins from server
             self.finishedDownloadingHeatMap = FALSE;
             self.finishedDownloadingMapPins = FALSE;
-            [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+            [self getHeatDataFromServer];
             [self getMapPins];
         }
     }
@@ -387,6 +387,7 @@
         NSNumber *pinID = selectedMapPin.pinID;
         if(![selectedMapPin.pinID isEqualToNumber:@420])
         {
+            
             [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:pinID];
             [[ContainerViewController sharedContainer] switchMessageView];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"getMessagesForShowingSelectedMessage" object:nil];
@@ -500,7 +501,7 @@
                 [self.gatheredMapPointsQueue addObject:mapPoint];
                 
                 //Update With Server
-                [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+                [self getHeatDataFromServer];
                 [self pushHeatMapDataToServer];
                 [self updateHeatMapOverlay];
             }
@@ -530,7 +531,7 @@
                 [self.gatheredMapPointsQueue addObject:mapPoint];
                 
                 //Update With Server
-                [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+                [self getHeatDataFromServer];
                 [self pushHeatMapDataToServer];
                 [self updateHeatMapOverlay];
             }
@@ -800,7 +801,7 @@
 #pragma mark - Networking Methods
 -(void)getMapPins
 {
-    [[NetworkingController shared] getMapPinsWithMap:self.mapView];
+    [[NetworkingController shared] getMapPinsWithDictionary:self.lastViewedLocation];
     /*
     NSLog(@"Network - Map: Getting Pins With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])
@@ -885,7 +886,7 @@
 
 -(void)getMapPinForPinShow
 {
-    [[NetworkingController shared] getMapPinsForPinShowWithMap:self.mapView];
+    [[NetworkingController shared] getMapPinsForPinShow];
     /*
     NSLog(@"Network - Map: Getting Map Pin for Pin Show");
     if([[ContainerViewController sharedContainer] networkingReachability])
@@ -1118,9 +1119,9 @@
         }
     }*/
 }
--(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
+-(void)getHeatDataFromServer
 {
-    [[NetworkingController shared] getHeatDataPointsWithSpan:span andLocation:location];
+    [[NetworkingController shared] getHeatDataPointsWithDictionary:self.lastViewedLocation];
     /*
     self.finishedDownloadingHeatMap = FALSE;
     

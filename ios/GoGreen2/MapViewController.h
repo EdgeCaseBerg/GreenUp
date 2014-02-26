@@ -61,7 +61,7 @@
 
 -(MapViewController *)init;
 -(IBAction)toggleLogging:(id)sender;
--(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location;
+-(void)getHeatDataFromServer;
 -(void)pushHeatMapDataToServer;
 -(NSDictionary *)convertPointsToHeatMapFormat:(NSMutableArray *)heatMapArray;
 

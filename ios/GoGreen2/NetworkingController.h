@@ -24,11 +24,11 @@
 @interface NetworkingController : NSObject <NSURLConnectionDataDelegate, NSURLConnectionDataDelegate>
 
 //Map
--(void)getMapPinsWithMap:(MKMapView *)mapView;
--(void)getMapPinsForPinShowWithMap:(MKMapView *)mapView;
+-(void)getMapPinsWithDictionary:(NSDictionary *)buffer;
+-(void)getMapPinsForPinShow;
 -(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message andType:(NSString *)type;
 -(void)pushHeatMapPoints;
--(void)getHeatDataPointsWithSpan:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location;
+-(void)getHeatDataPointsWithDictionary:(NSDictionary *)buffer;
 
 //Messages
 -(void)getMessageForFirstPageOfShowMessage;

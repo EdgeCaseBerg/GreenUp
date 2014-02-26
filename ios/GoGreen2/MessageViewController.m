@@ -75,10 +75,10 @@
 
     [self.messageViewContainer addSubview:self.messageTextView];
     
-    self.messageSendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.messageSendButton setTitle:@"Post" forState:UIControlStateNormal];
+    self.messageSendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.messageSendButton setImage:[UIImage imageNamed:@"postMessage.png"] forState:UIControlStateNormal];
     [self.messageSendButton addTarget:self action:@selector(postMessage:) forControlEvents:UIControlEventTouchUpInside];
-    [self.messageSendButton setFrame:CGRectMake(265, 10, 50, 35)];
+    [self.messageSendButton setFrame:CGRectMake(265, 8, 50, 35)];
     [self.messageViewContainer addSubview:self.messageSendButton];
     
     if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
