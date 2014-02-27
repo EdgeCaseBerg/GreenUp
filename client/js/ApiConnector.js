@@ -238,23 +238,24 @@ function ApiConnector(){
         this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
     } // end pullCommentData()
 
-    ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
+    ApiConnector.prototype.pushCommentData = function pushCommentData(commentObj){
         window.LOGGER.debug(arguments.callee.name, "[pushCommentData]");
         var URL = this.checkOrigin() + "/comments";
-        var commentsURI = "/comments";
-        console.log("json to push: "+jsonObj);
+        var commentsURI = "/comments?type="+commentObj.type;
+        var jsonString = JSON.stringify(commentObj);
+        console.log("json to push: "+jsonString);
         console.log("Push comment data to: "+commentsURI);
         $.ajax({
             type: "POST",
             url: URL,
-            data: jsonObj,
+            data: jsonString,
             cache: false,
-            // processData: false,
+            processData: false,
             dataType: "json",
-            // contentType: "application/json",
+            contentType: "application/json",
             success: function(data){
                 console.log("INFO: Comment successfully sent");
-                window.ApiConnector.pullCommentData(jsonObj.type, null);
+                window.ApiConnector.pullCommentData(commentObj.type, null);
             },
             error: function(xhr, errorType, error){
                 // // alert("error: "+xhr.status);
@@ -805,15 +806,9 @@ function CommentsHandle(){
 
         var comment = new FCommment();
         comment.message = commentMessage;
-        comment.pin = null;
         // comment.type = document.getElementById("comment_type").value;
         comment.type = commentType;
-        // comment.type = document.getElementById('comment_type').value;
-
-        var serializedComment = JSON.stringify(comment);
-        console.log(serializedComment);
-
-        window.ApiConnector.pushCommentData(serializedComment);
+        window.ApiConnector.pushCommentData(comment);
 
         //Return false to stop normal form submission form occuring
         return false;
@@ -945,6 +940,10 @@ function UiHandle(){
 
     // shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
     UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(type){
+        if(window.DEBUG){
+            $('#dialogSliderTextarea').text(new Date().toISOString());
+        }
+
         window.LOGGER.debug(arguments.callee.name, "[showMarkerTypeSelect]");
         if(type == "comment"){
             window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.COMMENT;
@@ -955,18 +954,18 @@ function UiHandle(){
             // add marker type selectors
             // alert("comment");
             document.getElementById("markerTypeDialog").className = "markerTypePanel3";
-            document.getElementById("selectPickup").addEventListener('mousedown', function(){
-                window.Comments.commentType = "trash pickup";
+            document.getElementById("selectBlueComment").addEventListener('mousedown', function(){
+                window.Comments.commentType = "ADMIN";
                 window.UI.hideMarkerTypeSelect();
                 window.UI.showTextInput();
             });
-            document.getElementById("selectComment").addEventListener('mousedown', function(){
+            document.getElementById("selectYellowComment").addEventListener('mousedown', function(){
+                window.Comments.commentType = "HAZARD";
+                window.UI.hideMarkerTypeSelect();
+                window.UI.showTextInput();
+            });
+            document.getElementById("selectGreenComment").addEventListener('mousedown', function(){
                 window.Comments.commentType = "COMMENT";
-                window.UI.hideMarkerTypeSelect();
-                window.UI.showTextInput();
-            });
-            document.getElementById("selectTrash").addEventListener('mousedown', function(){
-                window.Comments.commentType = "help needed";
                 window.UI.hideMarkerTypeSelect();
                 window.UI.showTextInput();
             });
@@ -1361,9 +1360,8 @@ function Pin(){
 
 //We cannot call this Comment because it's reserved by javascript
 function FCommment(){
-    this.message ="FORUM";
-    this.pin = null;
-    this.type = "";
+    this.message ="** default comment message **";
+    this.type = "COMMENT";
 }
 
 
