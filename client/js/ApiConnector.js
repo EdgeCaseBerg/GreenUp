@@ -279,7 +279,6 @@ function ApiConnector(){
                         break;
                     case 422:
                         console.log("Error: api response = 422");
-                        throw xhr.error;
                         break;
                     case 200:
                         console.log("Request successful");
