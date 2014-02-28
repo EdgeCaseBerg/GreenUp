@@ -74,7 +74,6 @@
 		DF0B194A18B96E0B00CB3752 /* homeIntro.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0B193F18B96E0B00CB3752 /* homeIntro.png */; };
 		DF0B194E18B96E0B00CB3752 /* homeStartAndMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0B194318B96E0B00CB3752 /* homeStartAndMenu.png */; };
 		DF0B194F18B96E0B00CB3752 /* messagesGeneralMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0B194418B96E0B00CB3752 /* messagesGeneralMessage.png */; };
-		DF0B195018B96E0B00CB3752 /* messagesHelpNeeded.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0B194518B96E0B00CB3752 /* messagesHelpNeeded.png */; };
 		DF0B195118B96E0B00CB3752 /* messagesAddressed.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0B194618B96E0B00CB3752 /* messagesAddressed.png */; };
 		DF0B195218B96E0B00CB3752 /* messagesWithMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0B194718B96E0B00CB3752 /* messagesWithMenu.png */; };
 		DF0B195318B96E0B00CB3752 /* homeCleaning.png in Resources */ = {isa = PBXBuildFile; fileRef = DF0B194818B96E0B00CB3752 /* homeCleaning.png */; };
@@ -109,6 +108,7 @@
 		DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF62E07517C1996700B29D43 /* CFNetwork.framework */; };
 		DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */; };
 		DF81175F18895C6700B2C271 /* NetworkingController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF81175E18895C6700B2C271 /* NetworkingController.m */; };
+		DF9731EA18C006DB00966B01 /* messagesHelpNeeded.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9731E918C006DB00966B01 /* messagesHelpNeeded.png */; };
 		DF9D412918B12C52006CA760 /* menuMessageTypes.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9D412718B12C52006CA760 /* menuMessageTypes.png */; };
 		DF9D412A18B12C52006CA760 /* menuMessageTypes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9D412818B12C52006CA760 /* menuMessageTypes@2x.png */; };
 		DF9D413318B1452D006CA760 /* bubble_gray_top.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9D412B18B1452D006CA760 /* bubble_gray_top.png */; };
@@ -300,7 +300,6 @@
 		DF0B193F18B96E0B00CB3752 /* homeIntro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = homeIntro.png; sourceTree = "<group>"; };
 		DF0B194318B96E0B00CB3752 /* homeStartAndMenu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = homeStartAndMenu.png; sourceTree = "<group>"; };
 		DF0B194418B96E0B00CB3752 /* messagesGeneralMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messagesGeneralMessage.png; sourceTree = "<group>"; };
-		DF0B194518B96E0B00CB3752 /* messagesHelpNeeded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messagesHelpNeeded.png; sourceTree = "<group>"; };
 		DF0B194618B96E0B00CB3752 /* messagesAddressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messagesAddressed.png; sourceTree = "<group>"; };
 		DF0B194718B96E0B00CB3752 /* messagesWithMenu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messagesWithMenu.png; sourceTree = "<group>"; };
 		DF0B194818B96E0B00CB3752 /* homeCleaning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = homeCleaning.png; sourceTree = "<group>"; };
@@ -341,6 +340,7 @@
 		DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPoint.m; sourceTree = "<group>"; };
 		DF81175D18895C6700B2C271 /* NetworkingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingController.h; sourceTree = "<group>"; };
 		DF81175E18895C6700B2C271 /* NetworkingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkingController.m; sourceTree = "<group>"; };
+		DF9731E918C006DB00966B01 /* messagesHelpNeeded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messagesHelpNeeded.png; sourceTree = "<group>"; };
 		DF9D412718B12C52006CA760 /* menuMessageTypes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menuMessageTypes.png; path = Images/menuMessageTypes.png; sourceTree = SOURCE_ROOT; };
 		DF9D412818B12C52006CA760 /* menuMessageTypes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "menuMessageTypes@2x.png"; path = "Images/menuMessageTypes@2x.png"; sourceTree = SOURCE_ROOT; };
 		DF9D412B18B1452D006CA760 /* bubble_gray_top.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bubble_gray_top.png; path = Images/bubble_gray_top.png; sourceTree = SOURCE_ROOT; };
@@ -831,6 +831,7 @@
 		DF0B193E18B96DE400CB3752 /* Tutorial Images */ = {
 			isa = PBXGroup;
 			children = (
+				DF9731E918C006DB00966B01 /* messagesHelpNeeded.png */,
 				DF0B193F18B96E0B00CB3752 /* homeIntro.png */,
 				DF0B194318B96E0B00CB3752 /* homeStartAndMenu.png */,
 				DF0B194418B96E0B00CB3752 /* messagesGeneralMessage.png */,
@@ -838,7 +839,6 @@
 				DFA3921318BE7257001EF36C /* mapWithToolBar.png */,
 				DFA3921418BE7257001EF36C /* mapWithLongPress.png */,
 				DFA3921518BE7257001EF36C /* mapHeatMapAndMarkers.png */,
-				DF0B194518B96E0B00CB3752 /* messagesHelpNeeded.png */,
 				DF0B194618B96E0B00CB3752 /* messagesAddressed.png */,
 				DF0B194718B96E0B00CB3752 /* messagesWithMenu.png */,
 				DF0B194818B96E0B00CB3752 /* homeCleaning.png */,
@@ -1057,7 +1057,6 @@
 				DFA9ABD417D63C5B006F58A5 /* bubble_red_center.png in Resources */,
 				DF05ECFE18907CA400781671 /* bubble_blue_bottom@2x.png in Resources */,
 				DFA9ABD517D63C5B006F58A5 /* bubble_red_center@2x.png in Resources */,
-				DF0B195018B96E0B00CB3752 /* messagesHelpNeeded.png in Resources */,
 				DFA9ABD617D63C5B006F58A5 /* bubble_red_top.png in Resources */,
 				DF1FEAD418BC456B0058D9D0 /* locationMarker@2x.png in Resources */,
 				DF1FEAE418BC4AD50058D9D0 /* postMessage@2x.png in Resources */,
@@ -1147,6 +1146,7 @@
 				DFD73A2D1800824800202D57 /* topBar@2x.png in Resources */,
 				DF1FEAE918BC4D2B0058D9D0 /* showTutorial.png in Resources */,
 				DF05ECFF18907CA400781671 /* bubble_blue_center.png in Resources */,
+				DF9731EA18C006DB00966B01 /* messagesHelpNeeded.png in Resources */,
 				DFD73A2E1800824800202D57 /* trashMarker.png in Resources */,
 				DFD73A2F1800824800202D57 /* trashMarker@2x.png in Resources */,
 				DFE59BDC180CB3BD00357899 /* sampleRoute1.gpx in Resources */,
@@ -1315,7 +1315,7 @@
 					"-ObjC",
 					"-licucore",
 				);
-				PROVISIONING_PROFILE = "804B1A21-C380-4F85-98EF-888172868E2D";
+				PROVISIONING_PROFILE = "4E77B6FD-8A3C-4CFF-BAD3-42190945C3B2";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1346,7 +1346,7 @@
 					"-ObjC",
 					"-licucore",
 				);
-				PROVISIONING_PROFILE = "804B1A21-C380-4F85-98EF-888172868E2D";
+				PROVISIONING_PROFILE = "4E77B6FD-8A3C-4CFF-BAD3-42190945C3B2";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
