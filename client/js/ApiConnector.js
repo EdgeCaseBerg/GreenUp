@@ -1055,7 +1055,7 @@ function UiHandle(){
                 document.getElementById("panel2SlideDownContent").style.display = "none";
                 document.getElementById("panel3SlideDownContent").style.display = "block";
                 window.ApiConnector.pullCommentData();
-                this.navbarSlideDown();
+                // this.navbarSlideDown();
                 container.className = "panel3Center";
                 break;
             default:
@@ -1273,14 +1273,14 @@ function UiHandle(){
                 }
 
                 switch(comments[ii]['type']){
-                    case 'FORUM':
+                    case 'COMMENT':
                         div.className += " bubbleForum";
                         break;
                     case 'TRASH PICKUP':
                         div.className += " bubbleNeeds";
                         break;
-                    case 'GENERAL MESSAGE':
-                        div.className += " bubbleMessage";
+                    case 'HAZARD':
+                        div.className += " bubbleHazard";
                         break;
                     default:
                         div.className += " bubbleForum";
