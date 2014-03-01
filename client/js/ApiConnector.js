@@ -37,6 +37,8 @@ function ClientLogger(){
     }
 }
 
+window.PINS = {};
+
 
 
 // connector class for hooking up to API
@@ -604,13 +606,23 @@ function MapHandle(){
         }
     }
 
-    MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon){
+    MapHandle.prototype.centerOnPin = function centerOnPin(pinId){
+        var pin = window.PINS[pinId];
+        if(window.HELPER.isNull(pin)){
+            window.LOGGER.error("unable to load pin: "+pinId);
+        }
+    }
+
+    MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon, id){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var pin = new Pin();
         pin.message = message;
         pin.type = markerType;
         pin.latDegrees = lat;
         pin.lonDegrees = lon;
+
+        window.PINS[id] = pin;
+
 
         var iconUrl;
         switch(markerType){
@@ -1213,7 +1225,7 @@ function UiHandle(){
 
         if(!window.HELPER.isNull(dataArr.pins)){
             for(ii=0; ii<dataArr.pins.length; ii++){
-                window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
+                window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees, dataArr.pins[ii].id);
             }
         }
     }
@@ -1249,6 +1261,10 @@ function UiHandle(){
             console.log(dataObj.page);
 
             for(var ii=0; ii<comments.length; ii++){
+                var pinIdInput = document.createElement("input");
+                pinIdInput.setAttribute("type", "hidden");
+                pinIdInput.className = "pinId";
+                pinIdInput.setAttribute("value", comments[ii].pin);
                 var div = document.createElement("div");
                 var timeDiv = document.createElement("div");
                 var messageContent = document.createElement("span");
@@ -1287,7 +1303,12 @@ function UiHandle(){
                         break;
                 }
                 div.appendChild(timeDiv);
+                div.appendChild(pinIdInput);
                 div.appendChild(messageContent);
+                if(comments[ii].pin != 0){
+                    window.LOGGER.debug("pin is addressed");
+                    div.addEventListener("mousedown", window.MAP.centerOnPin(comments[ii].pin), false)
+                }
                 document.getElementById("bubbleContainer").appendChild(div);
 
                 // for some reason, this seems to be replacing and not appending to the bubblecontainer
