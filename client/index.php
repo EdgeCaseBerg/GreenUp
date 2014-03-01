@@ -2,7 +2,8 @@
 // use our local config to get the path so that we can both work
 // and each use our own settings
 $confText = json_decode(file_get_contents("/etc/conf/local.conf"), 1);
-echo "<script>window.PROXY = '".$confText['proxy-path']."';console.log(window.PROXY);</script>";
+echo "<script>window.PROXY = '".$confText['proxy-path']."';console.log(window.PROXY);";
+echo "window.UAGENT = '".$_SERVER['HTTP_USER_AGENT']."';</script>";
 
 if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['HTTP_USER_AGENT'], "android") === false ){
     if(!isset($_GET['frame'])){
@@ -33,6 +34,9 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
     <script>
         window.DEBUG = true;
         window.LOGGER = new ClientLogger();
+        console.log("user agent: ");
+        console.log(window.UAGENT);
+
     </script>
 
     <style type="text/css">
