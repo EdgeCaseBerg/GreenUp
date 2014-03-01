@@ -1693,7 +1693,7 @@ document.addEventListener('DOMContentLoaded',function(){
 //    if(window.UAGENT.toLowerCase().indexOf("mozilla") == -1 || window.UAGENT.toLowerCase.indexOf("firefox") == -1){
 //        alert("Loading screen");
 //    }
-        window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
+       window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
 //    }
     // fire up the GPS logger
     window.GPS = new GpsHandle();
