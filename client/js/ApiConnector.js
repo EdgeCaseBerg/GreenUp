@@ -1676,8 +1676,12 @@ document.addEventListener('DOMContentLoaded',function(){
     // instansiate /initialize the UI controls
     window.UI = new UiHandle();
     window.UI.init();
+
     //	instansiate the loading screen dialog
-    window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
+    // mobile firefox doesnt like this so check the user agent
+    if(window.UAGENT.toLowerCase.indexOf("mozilla") == -1 && window.UAGENT.toLowerCase.indexOf("mozilla") == -1){
+        window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
+    }
     // fire up the GPS logger
     window.GPS = new GpsHandle();
     // build out the google map
