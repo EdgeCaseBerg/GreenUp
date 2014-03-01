@@ -607,9 +607,14 @@ function MapHandle(){
     }
 
     MapHandle.prototype.centerOnPin = function centerOnPin(pinId){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var pin = window.PINS[pinId];
         if(window.HELPER.isNull(pin)){
             window.LOGGER.error("unable to load pin: "+pinId);
+        }else{
+            window.UI.setActiveDisplay(1);
+            window.MAP.updateMap(pin.latDegrees, pin.lonDegrees, 20);
+
         }
     }
 
@@ -656,11 +661,12 @@ function MapHandle(){
         window.MAP.pickupMarkers.push(marker);
     }
 
-    MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
+    MapHandle.prototype.updateMap = function updateMap(lat, lon, z){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.UI.isMapLoaded = false;
         var newcenter = new google.maps.LatLng(lat, lon);
         window.MAP.map.panTo(newcenter);
+        window.MAP.map.setZoom(z);
     }
 
     MapHandle.prototype.toggleIcons = function toggleIcons(){
@@ -1302,14 +1308,19 @@ function UiHandle(){
                         div.className += " bubbleForum";
                         break;
                 }
+
+                div.id = ii;
                 div.appendChild(timeDiv);
                 div.appendChild(pinIdInput);
                 div.appendChild(messageContent);
-                if(comments[ii].pin != 0){
-                    window.LOGGER.debug("pin is addressed");
-                    div.addEventListener("mousedown", window.MAP.centerOnPin(comments[ii].pin), false)
-                }
+
                 document.getElementById("bubbleContainer").appendChild(div);
+
+                if(comments[ii].pin != 0){
+                    var pinId = comments[ii].pin;
+                    window.LOGGER.debug("pin "+comments[ii].pin+" is addressed", "[DEBUG]");
+                    document.getElementById(ii).addEventListener("click", function(){window.MAP.centerOnPin(pinId);}, false);
+                }
 
                 // for some reason, this seems to be replacing and not appending to the bubblecontainer
             }
@@ -1642,7 +1653,7 @@ function INPUT_TYPE(){
  * @author Josh
  */
 document.addEventListener('DOMContentLoaded',function(){
-
+    window.PINS = {};
 
     window.INPUT_TYPE = new INPUT_TYPE();
 

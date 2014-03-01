@@ -706,6 +706,7 @@ h1{
     text-align:center;
 }
 .bubble{
+    cursor: pointer;
     opacity: 1;
     transition: opacity .25s ease-in-out;
     vertical-align: top;
