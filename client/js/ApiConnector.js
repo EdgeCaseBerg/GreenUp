@@ -498,8 +498,10 @@ function MapHandle(){
     // fire up our google map
     MapHandle.prototype.initMap = function initMap(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        window.LS.setLoadingText("Please wait while the map loads");
-        window.LS.show();
+        if(!window.HELPER.isNull(window.LS)){
+            window.LS.setLoadingText("Please wait while the map loads");
+            window.LS.show();
+        }
         // define the initial location of our map
         centerPoint = new google.maps.LatLng(window.MAP.currentLat, window.MAP.currentLon);
         var mapOptions = {
@@ -522,8 +524,10 @@ function MapHandle(){
         window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
         // for activating the loading screen while map loads
         google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
-        google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
-        google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
+        if(!window.HELPER.isNull(window.LS)){
+            google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
+            google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
+        }
         // our comment selector initializers
 
         // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
@@ -1021,7 +1025,9 @@ function UiHandle(){
     UiHandle.prototype.setMapLoaded = function setMapLoaded(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.MAP.isMapLoaded = true;
-        window.LS.hide();
+        if(!window.HELPER.isNull(window.LS)){
+            window.LS.hide();
+        }
     }
 
     // centers the appropriate panels (main display panels)
