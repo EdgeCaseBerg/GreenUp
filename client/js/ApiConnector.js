@@ -365,10 +365,12 @@ function LoadingScreen(loadingDiv){
     var loadingTextDiv = document.getElementById("loadingText");
 
     LoadingScreen.prototype.show = function show(){
-        window.LOGGER.debug(arguments.callee.name, "[show]");
-        this.ISVISIBLE = true;
-        loadingDiv.style.display = "block";
-        loadingTextDiv.innerHTML = window.LS.loadingText;
+        if(window.ALLOW_LOADING_SCREEN == true){
+            window.LOGGER.debug(arguments.callee.name, "[show]");
+            this.ISVISIBLE = true;
+            loadingDiv.style.display = "block";
+            loadingTextDiv.innerHTML = window.LS.loadingText;
+        }
     }
 
     LoadingScreen.prototype.hide = function hide(){
@@ -1660,6 +1662,8 @@ function INPUT_TYPE(){
  */
 document.addEventListener('DOMContentLoaded',function(){
     window.PINS = {};
+    window.ALLOW_LOADING_SCREEN = false;
+
 
     window.INPUT_TYPE = new INPUT_TYPE();
 
@@ -1685,9 +1689,12 @@ document.addEventListener('DOMContentLoaded',function(){
 
     //	instansiate the loading screen dialog
     // mobile firefox doesnt like this so check the user agent
-    if(window.UAGENT.toLowerCase.indexOf("mozilla") == -1 && window.UAGENT.toLowerCase.indexOf("mozilla") == -1){
+//    alert(window.UAGENT.toLowerCase());
+//    if(window.UAGENT.toLowerCase().indexOf("mozilla") == -1 || window.UAGENT.toLowerCase.indexOf("firefox") == -1){
+//        alert("Loading screen");
+//    }
         window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
-    }
+//    }
     // fire up the GPS logger
     window.GPS = new GpsHandle();
     // build out the google map
