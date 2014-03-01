@@ -37,6 +37,8 @@ function ClientLogger(){
     }
 }
 
+window.PINS = {};
+
 
 
 // connector class for hooking up to API
@@ -238,23 +240,24 @@ function ApiConnector(){
         this.pullApiData(urlStr, "JSON", "GET",  window.UI.updateForum);
     } // end pullCommentData()
 
-    ApiConnector.prototype.pushCommentData = function pushCommentData(jsonObj){
+    ApiConnector.prototype.pushCommentData = function pushCommentData(commentObj){
         window.LOGGER.debug(arguments.callee.name, "[pushCommentData]");
         var URL = this.checkOrigin() + "/comments";
-        var commentsURI = "/comments";
-        console.log("json to push: "+jsonObj);
+        var commentsURI = "/comments?type="+commentObj.type;
+        var jsonString = JSON.stringify(commentObj);
+        console.log("json to push: "+jsonString);
         console.log("Push comment data to: "+commentsURI);
         $.ajax({
             type: "POST",
             url: URL,
-            data: jsonObj,
+            data: jsonString,
             cache: false,
-            // processData: false,
+            processData: false,
             dataType: "json",
-            // contentType: "application/json",
+            contentType: "application/json",
             success: function(data){
                 console.log("INFO: Comment successfully sent");
-                window.ApiConnector.pullCommentData(jsonObj.type, null);
+                window.ApiConnector.pullCommentData(commentObj.type, null);
             },
             error: function(xhr, errorType, error){
                 // // alert("error: "+xhr.status);
@@ -279,7 +282,6 @@ function ApiConnector(){
                         break;
                     case 422:
                         console.log("Error: api response = 422");
-                        throw xhr.error;
                         break;
                     case 200:
                         console.log("Request successful");
@@ -604,13 +606,28 @@ function MapHandle(){
         }
     }
 
-    MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon){
+    MapHandle.prototype.centerOnPin = function centerOnPin(pinId){
+        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        var pin = window.PINS[pinId];
+        if(window.HELPER.isNull(pin)){
+            window.LOGGER.error("unable to load pin: "+pinId);
+        }else{
+            window.UI.setActiveDisplay(1);
+            window.MAP.updateMap(pin.latDegrees, pin.lonDegrees, 20);
+
+        }
+    }
+
+    MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon, id){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var pin = new Pin();
         pin.message = message;
         pin.type = markerType;
         pin.latDegrees = lat;
         pin.lonDegrees = lon;
+
+        window.PINS[id] = pin;
+
 
         var iconUrl;
         switch(markerType){
@@ -644,11 +661,12 @@ function MapHandle(){
         window.MAP.pickupMarkers.push(marker);
     }
 
-    MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
+    MapHandle.prototype.updateMap = function updateMap(lat, lon, z){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.UI.isMapLoaded = false;
         var newcenter = new google.maps.LatLng(lat, lon);
         window.MAP.map.panTo(newcenter);
+        window.MAP.map.setZoom(z);
     }
 
     MapHandle.prototype.toggleIcons = function toggleIcons(){
@@ -806,15 +824,9 @@ function CommentsHandle(){
 
         var comment = new FCommment();
         comment.message = commentMessage;
-        comment.pin = null;
         // comment.type = document.getElementById("comment_type").value;
         comment.type = commentType;
-        // comment.type = document.getElementById('comment_type').value;
-
-        var serializedComment = JSON.stringify(comment);
-        console.log(serializedComment);
-
-        window.ApiConnector.pushCommentData(serializedComment);
+        window.ApiConnector.pushCommentData(comment);
 
         //Return false to stop normal form submission form occuring
         return false;
@@ -946,6 +958,10 @@ function UiHandle(){
 
     // shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
     UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(type){
+        if(window.DEBUG){
+            $('#dialogSliderTextarea').text(new Date().toISOString());
+        }
+
         window.LOGGER.debug(arguments.callee.name, "[showMarkerTypeSelect]");
         if(type == "comment"){
             window.CURRENT_USER_INPUT_TYPE = window.INPUT_TYPE.COMMENT;
@@ -956,18 +972,18 @@ function UiHandle(){
             // add marker type selectors
             // alert("comment");
             document.getElementById("markerTypeDialog").className = "markerTypePanel3";
-            document.getElementById("selectPickup").addEventListener('mousedown', function(){
-                window.Comments.commentType = "trash pickup";
+            document.getElementById("selectBlueComment").addEventListener('mousedown', function(){
+                window.Comments.commentType = "ADMIN";
                 window.UI.hideMarkerTypeSelect();
                 window.UI.showTextInput();
             });
-            document.getElementById("selectComment").addEventListener('mousedown', function(){
+            document.getElementById("selectYellowComment").addEventListener('mousedown', function(){
+                window.Comments.commentType = "HAZARD";
+                window.UI.hideMarkerTypeSelect();
+                window.UI.showTextInput();
+            });
+            document.getElementById("selectGreenComment").addEventListener('mousedown', function(){
                 window.Comments.commentType = "COMMENT";
-                window.UI.hideMarkerTypeSelect();
-                window.UI.showTextInput();
-            });
-            document.getElementById("selectTrash").addEventListener('mousedown', function(){
-                window.Comments.commentType = "help needed";
                 window.UI.hideMarkerTypeSelect();
                 window.UI.showTextInput();
             });
@@ -1057,7 +1073,7 @@ function UiHandle(){
                 document.getElementById("panel2SlideDownContent").style.display = "none";
                 document.getElementById("panel3SlideDownContent").style.display = "block";
                 window.ApiConnector.pullCommentData();
-                this.navbarSlideDown();
+                // this.navbarSlideDown();
                 container.className = "panel3Center";
                 break;
             default:
@@ -1215,7 +1231,7 @@ function UiHandle(){
 
         if(!window.HELPER.isNull(dataArr.pins)){
             for(ii=0; ii<dataArr.pins.length; ii++){
-                window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
+                window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees, dataArr.pins[ii].id);
             }
         }
     }
@@ -1251,6 +1267,10 @@ function UiHandle(){
             console.log(dataObj.page);
 
             for(var ii=0; ii<comments.length; ii++){
+                var pinIdInput = document.createElement("input");
+                pinIdInput.setAttribute("type", "hidden");
+                pinIdInput.className = "pinId";
+                pinIdInput.setAttribute("value", comments[ii].pin);
                 var div = document.createElement("div");
                 var timeDiv = document.createElement("div");
                 var messageContent = document.createElement("span");
@@ -1275,22 +1295,32 @@ function UiHandle(){
                 }
 
                 switch(comments[ii]['type']){
-                    case 'FORUM':
+                    case 'COMMENT':
                         div.className += " bubbleForum";
                         break;
                     case 'TRASH PICKUP':
                         div.className += " bubbleNeeds";
                         break;
-                    case 'GENERAL MESSAGE':
-                        div.className += " bubbleMessage";
+                    case 'HAZARD':
+                        div.className += " bubbleHazard";
                         break;
                     default:
                         div.className += " bubbleForum";
                         break;
                 }
+
+                div.id = ii;
                 div.appendChild(timeDiv);
+                div.appendChild(pinIdInput);
                 div.appendChild(messageContent);
+
                 document.getElementById("bubbleContainer").appendChild(div);
+
+                if(comments[ii].pin != 0){
+                    var pinId = comments[ii].pin;
+                    window.LOGGER.debug("pin "+comments[ii].pin+" is addressed", "[DEBUG]");
+                    document.getElementById(ii).addEventListener("click", function(){window.MAP.centerOnPin(pinId);}, false);
+                }
 
                 // for some reason, this seems to be replacing and not appending to the bubblecontainer
             }
@@ -1362,9 +1392,8 @@ function Pin(){
 
 //We cannot call this Comment because it's reserved by javascript
 function FCommment(){
-    this.message ="FORUM";
-    this.pin = null;
-    this.type = "";
+    this.message ="** default comment message **";
+    this.type = "COMMENT";
 }
 
 
@@ -1624,7 +1653,7 @@ function INPUT_TYPE(){
  * @author Josh
  */
 document.addEventListener('DOMContentLoaded',function(){
-
+    window.PINS = {};
 
     window.INPUT_TYPE = new INPUT_TYPE();
 

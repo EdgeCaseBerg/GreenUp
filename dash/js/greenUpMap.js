@@ -179,11 +179,12 @@ function MapHandle(){
         window.MAP.pickupMarkers.push(marker);
     }
 
-    MapHandle.prototype.updateMap = function updateMap(lat, lon, zoom){
+    MapHandle.prototype.updateMap = function updateMap(lat, lon, z){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.UI.isMapLoaded = false;
         var newcenter = new google.maps.LatLng(lat, lon);
         window.MAP.map.panTo(newcenter);
+        window.MAP.map.setZoom(z);
 
     }
     MapHandle.prototype.updateBounds = function updateBounds(){
