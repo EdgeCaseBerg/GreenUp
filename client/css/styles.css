@@ -294,6 +294,10 @@ a, a:hover, a:visited{
     border-left:solid 1px #fff;
 }
 
+.nav-active{
+    background: #777;
+}
+
 .nav a:hover {
     background: #777;
 }

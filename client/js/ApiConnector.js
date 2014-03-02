@@ -1051,9 +1051,9 @@ function UiHandle(){
         switch(displayNum){
             case 0:
                 this.currentDisplay = 1;
-                document.getElementById("homeNavButton").src="img/home_active.png";
-                document.getElementById("mapsNavButton").src="img/map.png";
-                document.getElementById("commentsNavButton").src="img/comments.png";
+                document.getElementById("homeNavButton").className = "nav1 nav-active";
+                document.getElementById("mapsNavButton").className = "nav2";
+                document.getElementById("commentsNavButton").className = "nav3";
                 document.getElementById("topSlideDown").className = "sliderHidden";
                 document.getElementById("panel2SlideDownContent").style.display = "none";
                 document.getElementById("panel3SlideDownContent").style.display = "none";
@@ -1062,9 +1062,9 @@ function UiHandle(){
                 break;
             case 1:
                 this.currentDisplay = 2;
-                document.getElementById("mapsNavButton").src="img/map_active.png";
-                document.getElementById("homeNavButton").src="img/home.png";
-                document.getElementById("commentsNavButton").src="img/comments.png";
+                document.getElementById("homeNavButton").className = "nav1";
+                document.getElementById("mapsNavButton").className = "nav2 nav-active";
+                document.getElementById("commentsNavButton").className = "nav3";
                 document.getElementById("topSlideDown").className = "sliderUp";
                 document.getElementById("panel1SlideDownContent").style.display = "none";
                 document.getElementById("panel3SlideDownContent").style.display = "none";
@@ -1073,9 +1073,9 @@ function UiHandle(){
                 break;
             case 2:
                 this.currentDisplay = 3;
-                document.getElementById("commentsNavButton").src="img/comments_active.png";
-                document.getElementById("mapsNavButton").src="img/map.png";
-                document.getElementById("homeNavButton").src="img/home.png";
+                document.getElementById("homeNavButton").className = "nav1";
+                document.getElementById("mapsNavButton").className = "nav2";
+                document.getElementById("commentsNavButton").className = "nav3 nav-active";
                 document.getElementById("topSlideDown").className = "sliderUp";
                 document.getElementById("panel1SlideDownContent").style.display = "none";
                 document.getElementById("panel2SlideDownContent").style.display = "none";
