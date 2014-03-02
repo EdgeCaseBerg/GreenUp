@@ -78,12 +78,16 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
             <img src="img/greenup_logo.png" id="greenupLogo">
 
             <div id="bodyText">
-                <p><h3>Help keep Vermont green.</h3>Track clean up progress.<br />See what areas need the
-                most help.<br /> Find an area to drop off what you pick up.
+                <h3>Help keep Vermont green.</h3>
+                <ul>
+                    <li>Track clean up progress.</li>
+                    <li>See what areas need the most help.</li>
+                    <li>Find an area to drop off what you pick up.</li>
+                </ul>
+
                 <br />
                 <br />
                 To start greening up VT, hit "start clean up." To find a drop off point or to flag an area, go to the maps page.
-                </p>
 
                 <div id="timeSpentClock">
                     <span id="timeSpentClockDigits"></span>
@@ -213,9 +217,9 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
 </div>
 <div id="navContainer">
     <ul class="nav" id="navbar">
-        <li><a id="homeNavButton">Home</a></li>
-        <li><a id="mapsNavButton">Maps</a></li>
-        <li><a id="commentsNavButton">Comments</a></li>
+        <li><a id="homeNavButton" class="nav1">Home</a></li>
+        <li><a id="mapsNavButton" class="nav2">Maps</a></li>
+        <li><a id="commentsNavButton" class="nav3">Comments</a></li>
     </ul>
 </div>
 
