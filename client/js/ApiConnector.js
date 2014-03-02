@@ -999,9 +999,9 @@ function UiHandle(){
             // add marker type selectors
             // alert("marker");
             document.getElementById("markerTypeDialog").className = "markerTypePanel2";
-            document.getElementById("selectPickup").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
-            document.getElementById("selectComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
-            document.getElementById("selectTrash").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
+            document.getElementById("selectBlueComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
+            document.getElementById("selectYellowComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
+            document.getElementById("selectGreenComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
         }
 
         document.getElementById("cancel").addEventListener('mousedown', function(){
