@@ -3,19 +3,19 @@
 
 // logger for reporting problems to the server
 function ClientLogger(){
-    ClientLogger.prototype.debug = function debug(eventString, methodNameString){
+    ClientLogger.prototype.debug = function debug(methodName, message){
         if(window.DEBUG){
-            var str = methodNameString + ' - ' +eventString;
+            var str = message + ' - ' +methodName;
             console.log('%c [DEBUG] ' + str, 'background: #fff; color: blue');
         }
     }
 
-    ClientLogger.prototype.log = function log(eventString, methodNameString){
-        console.log(methodNameString, eventString);
+    ClientLogger.prototype.log = function log(methodName, message){
+        console.log(message, methodName);
     }
 
-    ClientLogger.prototype.info = function info(eventString, methodNameString){
-        var str = methodNameString + ' - ' +eventString;
+    ClientLogger.prototype.info = function info(methodName, message){
+        var str = message + ' - ' +methodName;
         console.log('%c [INFO] ' + str, 'background: #fff; color: green');
     }
 
@@ -25,8 +25,8 @@ function ClientLogger(){
         this.info("******", "******");
     }
 
-    ClientLogger.prototype.error = function error(eventString, methodNameString){
-        var str = methodNameString + ' - ' +eventString;
+    ClientLogger.prototype.error = function error(methodName, message){
+        var str = message + ' - ' +methodName;
         console.log('%c [ERROR] ' + str, 'background: #fff; color: red');
     }
 
@@ -54,9 +54,11 @@ function ApiConnector(){
 
     // determine where the page is loaded from and form the url base accordingly
     ApiConnector.prototype.checkOrigin = function(){
-    	window.LOGGER.debug(arguments.callee.name, "[checkOrigin]");
+    	window.LOGGER.debug(arguments.callee.name, "[METHOD]");
     	var origin = document.URL;
-    	if (origin.search("localhost") > 0){
+    	if (origin.search("localhost") > 0 || window.IP.indexOf("192.168.1.") != -1){
+
+            window.LOGGER.log(arguments.callee.name, "USING PROXY");
     		// request is from localhost
     		return window.PROXY + this.API_PATH;
     	} 
@@ -107,7 +109,7 @@ function ApiConnector(){
                         console.log("Error: api response = 400");
                         break;
                     case 422:
-                        window.LOGGER.error(xhr, "Error: api response = 422");
+                        window.LOGGER.error(xhr, "Error: api response = 422", stack);
                         break;
                     case 200:
                         console.log("Pull API data: 200");
@@ -980,6 +982,7 @@ function UiHandle(){
             document.getElementById("markerTypeDialog").className = "markerTypePanel3";
             document.getElementById("selectBlueComment").addEventListener('mousedown', function(){
                 window.Comments.commentType = "ADMIN";
+                window.Comments.commentType = "ADMIN";
                 window.UI.hideMarkerTypeSelect();
                 window.UI.showTextInput();
             });
@@ -1001,7 +1004,8 @@ function UiHandle(){
             document.getElementById("markerTypeDialog").className = "markerTypePanel2";
             document.getElementById("selectBlueComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
             document.getElementById("selectYellowComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
-            document.getElementById("selectGreenComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
+            document.getElementById("selectGreenComment" +
+                "").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
         }
 
         document.getElementById("cancel").addEventListener('mousedown', function(){
