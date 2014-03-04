@@ -1660,6 +1660,12 @@ function INPUT_TYPE(){
     this.COMMENT = 1;
 }
 
+
+
+
+
+
+
 /**
  * This is where all the action begins (once content is loaded)
  * @author Josh
@@ -1674,6 +1680,8 @@ document.addEventListener('DOMContentLoaded',function(){
     window.HELPER = new Helper();
     // are we currently logging GPS data?
     window.logging = false;
+
+    window.SCROLLER = new Scroller(document.getElementById("bubbleContainer"));
 
 
     // what type of user content are we taking in
@@ -1690,15 +1698,8 @@ document.addEventListener('DOMContentLoaded',function(){
     // instansiate /initialize the UI controls
     window.UI = new UiHandle();
     window.UI.init();
+    window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
 
-    //	instansiate the loading screen dialog
-    // mobile firefox doesnt like this so check the user agent
-//    alert(window.UAGENT.toLowerCase());
-//    if(window.UAGENT.toLowerCase().indexOf("mozilla") == -1 || window.UAGENT.toLowerCase.indexOf("firefox") == -1){
-//        alert("Loading screen");
-//    }
-       window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
-//    }
     // fire up the GPS logger
     window.GPS = new GpsHandle();
     // build out the google map
