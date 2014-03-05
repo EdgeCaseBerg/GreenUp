@@ -3,7 +3,8 @@
 // and each use our own settings
 $confText = json_decode(file_get_contents("/etc/conf/local.conf"), 1);
 echo "<script>window.PROXY = '".$confText['proxy-path']."';console.log(window.PROXY);";
-echo "window.UAGENT = '".$_SERVER['HTTP_USER_AGENT']."';</script>";
+echo "window.UAGENT = '".$_SERVER['HTTP_USER_AGENT']."';";
+echo "window.IP = '".$_SERVER['SERVER_ADDR']."'</script>";
 
 if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['HTTP_USER_AGENT'], "android") === false ){
     if(!isset($_GET['frame'])){
@@ -29,14 +30,14 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
             src="http://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
     <script src="js/markerwithlabel.js"></script>
     <script type="text/javascript" src="js/lawnchair-js.js"></script>
+    <script type="text/javascript" src="js/lib/scrollability.js"></script>
     <script type="text/javascript" src="js/JSON.js"></script>
     <script type="text/javascript" src="js/ApiConnector.js"></script>
     <script>
-        window.DEBUG = true;
+        window.DEBUG = false;
         window.LOGGER = new ClientLogger();
         console.log("user agent: ");
         console.log(window.UAGENT);
-
     </script>
 
     <style type="text/css">
@@ -115,9 +116,9 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
         </div>
     </div>
 
-    <div class="panel" id="panel3" onscroll="window.Comments.updateScroll(this)">
+    <div class="panel" id="panel3">
         <div id="commentContainer">
-            <div id="bubbleContainer">
+            <div id="bubbleContainer" class="scrollable vertical">
                 <!-- comments populate here dynamically -->
             </div>
         </div>

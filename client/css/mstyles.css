@@ -1,0 +1,13 @@
+.TOP_TOOLBAR,
+.BOTTOM_TOOLBAR {
+    height: 50px; width: 100%; position: absolute;
+}
+.TOP_TOOLBAR {
+    top: 0;
+}
+.BOTTOM_TOOLBAR {
+    bottom: 0;
+}
+.SCROLLER_FRAME {
+    width: 100%; position: absolute; top: 50px; bottom: 50px;
+}

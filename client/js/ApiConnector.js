@@ -3,19 +3,19 @@
 
 // logger for reporting problems to the server
 function ClientLogger(){
-    ClientLogger.prototype.debug = function debug(eventString, methodNameString){
+    ClientLogger.prototype.debug = function debug(methodName, message){
         if(window.DEBUG){
-            var str = methodNameString + ' - ' +eventString;
+            var str = message + ' - ' +methodName;
             console.log('%c [DEBUG] ' + str, 'background: #fff; color: blue');
         }
     }
 
-    ClientLogger.prototype.log = function log(eventString, methodNameString){
-        console.log(methodNameString, eventString);
+    ClientLogger.prototype.log = function log(methodName, message){
+        console.log(message, methodName);
     }
 
-    ClientLogger.prototype.info = function info(eventString, methodNameString){
-        var str = methodNameString + ' - ' +eventString;
+    ClientLogger.prototype.info = function info(methodName, message){
+        var str = message + ' - ' +methodName;
         console.log('%c [INFO] ' + str, 'background: #fff; color: green');
     }
 
@@ -25,8 +25,8 @@ function ClientLogger(){
         this.info("******", "******");
     }
 
-    ClientLogger.prototype.error = function error(eventString, methodNameString){
-        var str = methodNameString + ' - ' +eventString;
+    ClientLogger.prototype.error = function error(methodName, message){
+        var str = message + ' - ' +methodName;
         console.log('%c [ERROR] ' + str, 'background: #fff; color: red');
     }
 
@@ -54,9 +54,11 @@ function ApiConnector(){
 
     // determine where the page is loaded from and form the url base accordingly
     ApiConnector.prototype.checkOrigin = function(){
-    	window.LOGGER.debug(arguments.callee.name, "[checkOrigin]");
+    	window.LOGGER.debug(arguments.callee.name, "[METHOD]");
     	var origin = document.URL;
-    	if (origin.search("localhost") > 0){
+    	if (origin.search("localhost") > 0 || window.IP.indexOf("192.168.1.") != -1){
+
+            window.LOGGER.log(arguments.callee.name, "USING PROXY");
     		// request is from localhost
     		return window.PROXY + this.API_PATH;
     	} 
@@ -107,7 +109,7 @@ function ApiConnector(){
                         console.log("Error: api response = 400");
                         break;
                     case 422:
-                        window.LOGGER.error(xhr, "Error: api response = 422");
+                        window.LOGGER.error(xhr, "Error: api response = 422", stack);
                         break;
                     case 200:
                         console.log("Pull API data: 200");
@@ -526,10 +528,10 @@ function MapHandle(){
         window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
         // for activating the loading screen while map loads
         google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
-        if(!window.HELPER.isNull(window.LS)){
-            google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
-            google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
-        }
+//        if(!window.HELPER.isNull(window.LS)){
+//            google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
+//            google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
+//        }
         // our comment selector initializers
 
         // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
@@ -980,6 +982,7 @@ function UiHandle(){
             document.getElementById("markerTypeDialog").className = "markerTypePanel3";
             document.getElementById("selectBlueComment").addEventListener('mousedown', function(){
                 window.Comments.commentType = "ADMIN";
+                window.Comments.commentType = "ADMIN";
                 window.UI.hideMarkerTypeSelect();
                 window.UI.showTextInput();
             });
@@ -1001,7 +1004,8 @@ function UiHandle(){
             document.getElementById("markerTypeDialog").className = "markerTypePanel2";
             document.getElementById("selectBlueComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
             document.getElementById("selectYellowComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
-            document.getElementById("selectGreenComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
+            document.getElementById("selectGreenComment" +
+                "").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
         }
 
         document.getElementById("cancel").addEventListener('mousedown', function(){
@@ -1081,7 +1085,7 @@ function UiHandle(){
                 document.getElementById("panel2SlideDownContent").style.display = "none";
                 document.getElementById("panel3SlideDownContent").style.display = "block";
                 window.ApiConnector.pullCommentData();
-                // this.navbarSlideDown();
+//                this.navbarSlideDown();
                 container.className = "panel3Center";
                 break;
             default:
@@ -1656,13 +1660,19 @@ function INPUT_TYPE(){
     this.COMMENT = 1;
 }
 
+
+
+
+
+
+
 /**
  * This is where all the action begins (once content is loaded)
  * @author Josh
  */
 document.addEventListener('DOMContentLoaded',function(){
     window.PINS = {};
-    window.ALLOW_LOADING_SCREEN = false;
+    window.ALLOW_LOADING_SCREEN = true;
 
 
     window.INPUT_TYPE = new INPUT_TYPE();
@@ -1671,13 +1681,15 @@ document.addEventListener('DOMContentLoaded',function(){
     // are we currently logging GPS data?
     window.logging = false;
 
+//    window.SCROLLER = new Scroller(document.getElementById("bubbleContainer"));
+
 
     // what type of user content are we taking in
     window.CURRENT_USER_INPUT_TYPE = -1;
 
     // dealing with touch ui shit
     document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
-    document.addEventListener("touchstart", function(){}, true);
+    document.addEventListener("touchstart", function(e){}, true);
 
     // instansiate the api
     window.ApiConnector = new ApiConnector();
@@ -1686,15 +1698,8 @@ document.addEventListener('DOMContentLoaded',function(){
     // instansiate /initialize the UI controls
     window.UI = new UiHandle();
     window.UI.init();
+    window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
 
-    //	instansiate the loading screen dialog
-    // mobile firefox doesnt like this so check the user agent
-//    alert(window.UAGENT.toLowerCase());
-//    if(window.UAGENT.toLowerCase().indexOf("mozilla") == -1 || window.UAGENT.toLowerCase.indexOf("firefox") == -1){
-//        alert("Loading screen");
-//    }
-       window.LS = new LoadingScreen(document.getElementById("loadingScreen"));
-//    }
     // fire up the GPS logger
     window.GPS = new GpsHandle();
     // build out the google map
