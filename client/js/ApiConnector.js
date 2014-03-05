@@ -331,7 +331,7 @@ function ApiConnector(){
         // zepto code
         $.ajax({
             type:'PUT',
-            url: heatmapURI,
+            url: this.checkOrigin() + heatmapURI,
             dataType:"json",
             data:  JSON.stringify(jsonArray),
             failure: function(errMsg){
