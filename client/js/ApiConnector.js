@@ -1085,7 +1085,7 @@ function UiHandle(){
                 document.getElementById("panel2SlideDownContent").style.display = "none";
                 document.getElementById("panel3SlideDownContent").style.display = "block";
                 window.ApiConnector.pullCommentData();
-                // this.navbarSlideDown();
+//                this.navbarSlideDown();
                 container.className = "panel3Center";
                 break;
             default:
@@ -1681,7 +1681,7 @@ document.addEventListener('DOMContentLoaded',function(){
     // are we currently logging GPS data?
     window.logging = false;
 
-    window.SCROLLER = new Scroller(document.getElementById("bubbleContainer"));
+//    window.SCROLLER = new Scroller(document.getElementById("bubbleContainer"));
 
 
     // what type of user content are we taking in
@@ -1689,7 +1689,8 @@ document.addEventListener('DOMContentLoaded',function(){
 
     // dealing with touch ui shit
     document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
-    document.addEventListener("touchstart", function(){}, true);
+    document.addEventListener("touchstart", function(e){e.preventDefault();}, false);
+
 
     // instansiate the api
     window.ApiConnector = new ApiConnector();

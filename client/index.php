@@ -30,7 +30,7 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
             src="http://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDlth022D4txU5HqXdDs1OZyGX0KdwKXIg&sensor=false"></script>
     <script src="js/markerwithlabel.js"></script>
     <script type="text/javascript" src="js/lawnchair-js.js"></script>
-    <script type="text/javascript" src="js/lib/google_touch_scroll.js"></script>
+    <script type="text/javascript" src="js/lib/scrollability.js"></script>
     <script type="text/javascript" src="js/JSON.js"></script>
     <script type="text/javascript" src="js/ApiConnector.js"></script>
     <script>
@@ -118,7 +118,7 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
 
     <div class="panel" id="panel3" onscroll="window.Comments.updateScroll(this)">
         <div id="commentContainer">
-            <div id="bubbleContainer">
+            <div id="bubbleContainer" class="scrollable vertical">
                 <!-- comments populate here dynamically -->
             </div>
         </div>
