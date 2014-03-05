@@ -48,7 +48,7 @@ function ApiConnector(){
     var commentData = [];
 
 
-    this.API_PATH = "http://dev.xenonapps.com/api";
+    this.API_PATH = "http://greenup.xenonapps.com/api";
 
 
 
