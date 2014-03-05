@@ -528,10 +528,10 @@ function MapHandle(){
         window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
         // for activating the loading screen while map loads
         google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
-        if(!window.HELPER.isNull(window.LS)){
-            google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
-            google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
-        }
+//        if(!window.HELPER.isNull(window.LS)){
+//            google.maps.event.addListener(window.MAP.map, 'center_changed', window.LS.show);
+//            google.maps.event.addListener(window.MAP.map, 'zoom_changed', window.LS.show);
+//        }
         // our comment selector initializers
 
         // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
@@ -1672,7 +1672,7 @@ function INPUT_TYPE(){
  */
 document.addEventListener('DOMContentLoaded',function(){
     window.PINS = {};
-    window.ALLOW_LOADING_SCREEN = false;
+    window.ALLOW_LOADING_SCREEN = true;
 
 
     window.INPUT_TYPE = new INPUT_TYPE();
@@ -1689,8 +1689,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
     // dealing with touch ui shit
     document.addEventListener("touchmove", function(e){e.preventDefault();}, false);
-    document.addEventListener("touchstart", function(e){e.preventDefault();}, false);
-
+    document.addEventListener("touchstart", function(e){}, true);
 
     // instansiate the api
     window.ApiConnector = new ApiConnector();

@@ -34,7 +34,7 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
     <script type="text/javascript" src="js/JSON.js"></script>
     <script type="text/javascript" src="js/ApiConnector.js"></script>
     <script>
-        window.DEBUG = true;
+        window.DEBUG = false;
         window.LOGGER = new ClientLogger();
         console.log("user agent: ");
         console.log(window.UAGENT);
@@ -116,7 +116,7 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
         </div>
     </div>
 
-    <div class="panel" id="panel3" onscroll="window.Comments.updateScroll(this)">
+    <div class="panel" id="panel3">
         <div id="commentContainer">
             <div id="bubbleContainer" class="scrollable vertical">
                 <!-- comments populate here dynamically -->
