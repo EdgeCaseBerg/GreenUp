@@ -580,8 +580,8 @@
     [allPoints addObjectsFromArray:self.gatheredMapPoints];
     
     NSLog(@"Message - Map: Updating Heat Map Overlay");
-    NSLog(@"-- Data - Map: DOWNLOADED POINTS = %d", self.downloadedMapPoints.count);
-    NSLog(@"-- Data - Map: GATHERED POINTS = %d", self.gatheredMapPoints.count);
+    NSLog(@"-- Data - Map: DOWNLOADED POINTS = %lu", (unsigned long)self.downloadedMapPoints.count);
+    NSLog(@"-- Data - Map: GATHERED POINTS = %lu", (unsigned long)self.gatheredMapPoints.count);
     
     //create new heatmap overlay and display it
     if(self.heatMap == nil)

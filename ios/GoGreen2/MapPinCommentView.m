@@ -53,25 +53,28 @@ UIColor *defaultTint = nil;
         [self.messageField.layer setCornerRadius:5];
         [self.messageField setBackgroundColor:[UIColor whiteColor]];
         [self.messageField setFont:[UIFont messageFont]];
+        self.messageField.returnKeyType = UIReturnKeyDone;
+        self.messageField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        self.messageField.autocorrectionType = UITextAutocorrectionTypeNo;
         [self addSubview:self.messageField];
         
         self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.doneButton setImage:[UIImage imageNamed:@"postButton.png"] forState:UIControlStateNormal];
         [self.doneButton setTitle:@"Post" forState:UIControlStateNormal];
-        [self.doneButton setFrame:CGRectMake(320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
+        [self.doneButton setFrame:CGRectMake(10 + 170 + 5 + 60 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
         [self.doneButton addTarget:self action:@selector(doneButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.doneButton];
         
         self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.cancelButton setImage:[UIImage imageNamed:@"cancelButton.png"] forState:UIControlStateNormal];
         [self.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
-        [self.cancelButton setFrame:CGRectMake(10 + 60 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
+        [self.cancelButton setFrame:CGRectMake(10 + 170 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
         [self.cancelButton addTarget:self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.cancelButton];
         
         self.messageType = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Help", @"Hazard", nil]];
         defaultTint = self.messageType.tintColor;
-        [self.messageType setFrame:CGRectMake(10 + 60 + 5 + 60 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 170, 45)];
+        [self.messageType setFrame:CGRectMake(10 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 170, 45)];
         [self.messageType setSelectedSegmentIndex:0];
         [self.messageType addTarget:self action:@selector(typeChanged:) forControlEvents:UIControlEventValueChanged];
         [self addSubview:self.messageType];
@@ -93,10 +96,10 @@ UIColor *defaultTint = nil;
                 [self.messageField setFrame:CGRectMake(10, 140, 300, 70)];
             }
             
-            [self.doneButton setFrame:CGRectMake(10, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
-            [self.cancelButton setFrame:CGRectMake(10 + 60 + 5, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
+            [self.doneButton setFrame:CGRectMake(10 + 170 + 5 + 60 + 5, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
+            [self.cancelButton setFrame:CGRectMake(10 + 170 + 5, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
             
-            [self.messageType setFrame:CGRectMake(10 + 60 + 5 + 60 + 5, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 170, 45)];
+            [self.messageType setFrame:CGRectMake(10, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 170, 45)];
         };
         [UIView animateWithDuration:ANIMATION_DURATION animations:animationBlock];
     }
@@ -127,7 +130,7 @@ UIColor *defaultTint = nil;
     }
     else if(self.messageField.text.length > 140)
     {
-        NSLog(@"Message - MapCommentView: Message > 140 Chars (%d chars)", self.messageField.text.length);
+        NSLog(@"Message - MapCommentView: Message > 140 Chars (%lu chars)", (unsigned long)self.messageField.text.length);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message To Large" message:@"You cannot post a message over 140 charecters" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
@@ -151,7 +154,10 @@ UIColor *defaultTint = nil;
         {
             messageType = MESSAGE_TYPE_HAZARD;
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"postMarker" object:[NSArray arrayWithObjects:self.messageField.text, messageType, nil]];
+        
+        NSString *msg = [[self.messageField.text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]componentsJoinedByString:@" "];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"postMarker" object:[NSArray arrayWithObjects:msg, messageType, nil]];
     }
 }
 
@@ -173,9 +179,9 @@ UIColor *defaultTint = nil;
             [self.messageField setFrame:CGRectMake(10 + 320, 140, 300, 70)];
         }
         
-        [self.doneButton setFrame:CGRectMake(10 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
-        [self.cancelButton setFrame:CGRectMake(10 + 60 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
-        [self.messageType setFrame:CGRectMake(10 + 60 + 5 + 70 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 170, 45)];
+        [self.doneButton setFrame:CGRectMake(10 + 170 + 5 + 60 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
+        [self.cancelButton setFrame:CGRectMake(10 + 170 + 5 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 60, 45)];
+        [self.messageType setFrame:CGRectMake(10 + 320, self.messageField.frame.origin.y + self.messageField.frame.size.height + 5, 170, 45)];
     };
     
     [self.messageField resignFirstResponder];

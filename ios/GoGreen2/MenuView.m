@@ -140,7 +140,7 @@
     int height = 0;
     [previousTimesScrollView setBackgroundColor:[UIColor clearColor]];
     
-    for(int i = self.previousTimeIntervals.count - 1; i >= 0; i--)
+    for(NSInteger i = self.previousTimeIntervals.count - 1; i >= 0; i--)
     {
         NSNumber *intervalNumber = [self.previousTimeIntervals objectAtIndex:i];
         NSTimeInterval interval = intervalNumber.doubleValue;
@@ -162,7 +162,7 @@
             fontColor = [UIColor whiteColor];
         }
         UILabel *sessionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, height, 70, 30)];
-        [sessionLabel setText:[NSString stringWithFormat:@"%d", i + 1]];
+        [sessionLabel setText:[NSString stringWithFormat:@"%ld", i + 1]];
         [sessionLabel setBackgroundColor:[UIColor clearColor]];
         [sessionLabel setTextColor:fontColor];
         [sessionLabel setTextAlignment:NSTextAlignmentCenter];

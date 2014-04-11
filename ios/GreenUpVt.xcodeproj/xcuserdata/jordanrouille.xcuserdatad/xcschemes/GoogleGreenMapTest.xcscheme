@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "39592521177518690035E351"
-            BuildableName = "GoGreen.app"
+            BuildableName = "GreenUpVt.app"
             BlueprintName = "GoogleGreenMapTest"
-            ReferencedContainer = "container:GoGreen.xcodeproj">
+            ReferencedContainer = "container:GreenUpVt.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "39592521177518690035E351"
-            BuildableName = "GoGreen.app"
+            BuildableName = "GreenUpVt.app"
             BlueprintName = "GoogleGreenMapTest"
-            ReferencedContainer = "container:GoGreen.xcodeproj">
+            ReferencedContainer = "container:GreenUpVt.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>

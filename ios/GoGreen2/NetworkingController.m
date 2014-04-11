@@ -25,48 +25,48 @@ NSMutableData *otherData = nil;
 
 NSURLConnection *getMapPinsConnection = nil;
 NSMutableData *getMapPinsData = nil;
-int getMapPinsStatusCode = -1;
+NSInteger getMapPinsStatusCode = -1;
 
 NSURLConnection *getMapPinsForShowConnection = nil;
 NSMutableData *getMapPinsForShowData = nil;
-int getMapPinsForShowStatusCode = -1;
+NSInteger getMapPinsForShowStatusCode = -1;
 
 NSURLConnection *postMarkerConnection = nil;
 NSMutableData *postMarkerData = nil;
-int postMarkerStatusCode = -1;
+NSInteger postMarkerStatusCode = -1;
 
 NSURLConnection *pushHeatMapConnection = nil;
 NSMutableData *pushHeatMapData = nil;
-int pushHeatMapStatusCode = -1;
+NSInteger pushHeatMapStatusCode = -1;
 
 NSURLConnection *getHeatMapConnection = nil;
 NSMutableData *getHeatMapData = nil;
-int getHeatMapStatusCode = -1;
+NSInteger getHeatMapStatusCode = -1;
 
 //Message Requests
 NSURLConnection *getMessagesForFirstPageOfShowConnection = nil;
 NSMutableData *getMessagesForFirstPageOfShowData = nil;
-int getMessagesForFirstPageOfShowStatusCode = -1;
+NSInteger getMessagesForFirstPageOfShowStatusCode = -1;
 
 NSURLConnection *getMessagesConnection = nil;
 NSMutableData *getMessagesData = nil;
-int getMessagesStatusCode = -1;
+NSInteger getMessagesStatusCode = -1;
 
 NSURLConnection *getMessagesForAppendingForScrollingConnection = nil;
 NSMutableData *getMessagesForAppendingForScrollingData = nil;
-int getMessagesForAppendingForScrollingStatusCode = -1;
+NSInteger getMessagesForAppendingForScrollingStatusCode = -1;
 
 NSURLConnection *getMessagesForAppendingForShowConnection = nil;
 NSMutableData *getMessagesForAppendingForShowData = nil;
-int getMessagesForAppendingForShowStatusCode = -1;
+NSInteger getMessagesForAppendingForShowStatusCode = -1;
 
 NSURLConnection *postMessageConnection = nil;
 NSMutableData *postMessageData = nil;
-int postMessageStatusCode = -1;
+NSInteger postMessageStatusCode = -1;
 
 NSURLConnection *addressMessageConnection = nil;
 NSMutableData *addressMessageData = nil;
-int addressMessageStatusCode = -1;
+NSInteger addressMessageStatusCode = -1;
 
 static NetworkingController *sharedNetworkingController;
 
@@ -228,7 +228,7 @@ static NetworkingController *sharedNetworkingController;
         
         if([statusCode integerValue] == 200)
         {
-            NSLog(@"Network - Map: Recieved %d New Map Pins", [[response objectForKey:@"pins"] count]);
+            NSLog(@"Network - Map: Recieved %lu New Map Pins", (unsigned long)[[response objectForKey:@"pins"] count]);
             NSLog(@"--- Data - Map: %@", [response objectForKey:@"pins"]);
             
             [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPins removeAllObjects];
@@ -307,7 +307,7 @@ static NetworkingController *sharedNetworkingController;
             [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPins addObject:newPin];
             
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingPinsForShowPin" object:[NSNumber numberWithInt:statusCode.integerValue]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingPinsForShowPin" object:[NSNumber numberWithInteger:statusCode.integerValue]];
         }
         else
         {
@@ -318,7 +318,7 @@ static NetworkingController *sharedNetworkingController;
             [self showNoNetworkAlert];
             
             [[ContainerViewController sharedContainer] theMapViewController].finishedDownloadingMapPins = TRUE;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingPinsForShowPin" object:[NSNumber numberWithInt:statusCode.integerValue]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingPinsForShowPin" object:[NSNumber numberWithInteger:statusCode.integerValue]];
         }
         
         getMapPinsForShowConnection = nil;
@@ -406,7 +406,7 @@ static NetworkingController *sharedNetworkingController;
         {
             [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPoints removeAllObjects];
             
-            NSLog(@"Network - Map: Recieved %d New Heat Map Points", [[response objectForKey:@"grid"] count]);
+            NSLog(@"Network - Map: Recieved %lu New Heat Map Points", (unsigned long)[[response objectForKey:@"grid"] count]);
             NSLog(@"--- Data - Map: %@", [response objectForKey:@"grid"]);
             
             for(NSDictionary *pointDictionary in [response objectForKey:@"grid"])
@@ -452,7 +452,7 @@ static NetworkingController *sharedNetworkingController;
             //Remove Old Messages Incase Removed
             [[[ContainerViewController sharedContainer] theMessageViewController].messages removeAllObjects];
             
-            NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
+            NSLog(@"Network - Message: Recieved %lu New Messages", (unsigned long)[[response objectForKey:@"comments"] count]);
             NSLog(@"--- Data - Message: Messages,");
             NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
             
@@ -500,7 +500,7 @@ static NetworkingController *sharedNetworkingController;
             }
             
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingMessageForFirstPageOfShowMessage" object:[NSNumber numberWithInt:statusCode.integerValue]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingMessageForFirstPageOfShowMessage" object:[NSNumber numberWithInteger:statusCode.integerValue]];
         }
         else
         {
@@ -525,7 +525,7 @@ static NetworkingController *sharedNetworkingController;
         
         if([statusCode integerValue] == 200)
         {
-            NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
+            NSLog(@"Network - Message: Recieved %lu New Messages", (unsigned long)[[response objectForKey:@"comments"] count]);
             NSLog(@"--- Data - Message: Messages,");
             NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
             
@@ -597,7 +597,7 @@ static NetworkingController *sharedNetworkingController;
         if([statusCode integerValue] == 200)
         {
             
-            NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
+            NSLog(@"Network - Message: Recieved %lu New Messages", (unsigned long)[[response objectForKey:@"comments"] count]);
             NSLog(@"--- Data - Message: Messages,");
             NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
             
@@ -848,8 +848,6 @@ static NetworkingController *sharedNetworkingController;
     
     //Configure Request
     [request setHTTPMethod: @"GET"];
-    NSError *requestError;
-    NSURLResponse *urlResponse = nil;
     
     //Fire Off Request
     getMapPinsConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
@@ -869,9 +867,7 @@ static NetworkingController *sharedNetworkingController;
     
     //Configure Request
     [request setHTTPMethod: @"GET"];
-    NSError *requestError;
-    NSURLResponse *urlResponse = nil;
-    
+
     //Fire Off Request
     getMapPinsForShowConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
@@ -920,7 +916,7 @@ static NetworkingController *sharedNetworkingController;
 {
     NSLog(@"Message - Map: Pushing Heatmap Data To Server");
     NSLog(@"--- Data - Map: QUEUE LIMIT = %d", UPLOAD_QUEUE_LENGTH);
-    NSLog(@"--- Data - Map: Gathered Queue = %d", [[ContainerViewController sharedContainer] theMapViewController].gatheredMapPoints.count);
+    NSLog(@"--- Data - Map: Gathered Queue = %lu", (unsigned long)[[ContainerViewController sharedContainer] theMapViewController].gatheredMapPoints.count);
     NSLog(@"--- Data - Map: Push Overdue = %d", [[ContainerViewController sharedContainer] theMapViewController].pushOverdue);
     
     if([[ContainerViewController sharedContainer] theMapViewController].gatheredMapPointsQueue.count >= UPLOAD_QUEUE_LENGTH || [[ContainerViewController sharedContainer] theMapViewController].pushOverdue)
@@ -965,8 +961,6 @@ static NetworkingController *sharedNetworkingController;
             
             //Configure Request
             [request setHTTPMethod: @"PUT"];
-            
-            NSMutableArray *playersArray = [[NSMutableArray alloc] init];
             
             //Create Data From Request Dictionary
             NSData *requestData = [NSJSONSerialization dataWithJSONObject:dataArray options:0 error:nil];
@@ -1015,7 +1009,7 @@ static NetworkingController *sharedNetworkingController;
     NSLog(@"--- Data - Map: Current Lon Delta = %f", ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue);
 
     //Build Request URL
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f&precision=%d", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL, ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue, precision.integerValue];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f&precision=%ld", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL, ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue, (long)precision.integerValue];
     
     //NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL];
     
@@ -1025,8 +1019,6 @@ static NetworkingController *sharedNetworkingController;
     
     //Configure Request
     [request setHTTPMethod: @"GET"];
-    NSError *requestError = nil;
-    NSURLResponse *urlResponse = nil;
 
     //Fire Off Request
     getHeatMapConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
@@ -1046,9 +1038,7 @@ static NetworkingController *sharedNetworkingController;
     
     //Configure Request
     [request setHTTPMethod: @"GET"];
-    NSError *requestError = nil;
-    NSURLResponse *urlResponse = nil;
-    
+
     //Fire Off Request
     getMessagesForFirstPageOfShowConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
@@ -1063,14 +1053,14 @@ static NetworkingController *sharedNetworkingController;
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id response)
     {
-        NSLog(@"Network - Message: Recieved Status Code: %d", [operation.response statusCode]);
+        NSLog(@"Network - Message: Recieved Status Code: %ld", (long)[operation.response statusCode]);
         
         if([operation.response statusCode] == 200)
         {
             //Remove Old Messages Incase Removed
             [[[ContainerViewController sharedContainer] theMessageViewController].messages removeAllObjects];
             
-            NSLog(@"Network - Message: Recieved %d New Messages", [[response objectForKey:@"comments"] count]);
+            NSLog(@"Network - Message: Recieved %lu New Messages", (unsigned long)[[response objectForKey:@"comments"] count]);
             NSLog(@"--- Data - Message: Messages,");
             NSLog(@"--- Data - Message: %@", [response objectForKey:@"comments"]);
             
@@ -1147,9 +1137,7 @@ static NetworkingController *sharedNetworkingController;
                                                        timeoutInterval:10];
     //Configure Request
     [request setHTTPMethod: @"GET"];
-    NSError *requestError = nil;
-    NSURLResponse *urlResponse = nil;
-    
+
     //Fire Off Request
     getMessagesForAppendingForScrollingConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
@@ -1166,9 +1154,7 @@ static NetworkingController *sharedNetworkingController;
     
     //Configure Request
     [request setHTTPMethod: @"GET"];
-    NSError *requestError = nil;
-    NSURLResponse *urlResponse = nil;
-    
+
     //Fire Off Request
     getMessagesForAppendingForShowConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 }
@@ -1256,13 +1242,13 @@ static NetworkingController *sharedNetworkingController;
 
 #pragma mark - Utility Methods
 
--(void)printResponseFromFailedRequest:(id)error andStatusCode:(int)statusCode
+-(void)printResponseFromFailedRequest:(id)error andStatusCode:(NSInteger)statusCode
 {
     NSLog(@"Network - Map: ***************************************");
     NSLog(@"Network - Map: ***************************************");
     NSLog(@"Network - Map: *************** WANRING ***************");
     NSLog(@"Network - Map: *********** Request Failed ************");
-    NSLog(@"Network - Map: ****** Header Status Code: %d *********", statusCode);
+    NSLog(@"Network - Map: ****** Header Status Code: %ld *********", (long)statusCode);
     NSLog(@"Network - Map: %@", error);
     NSLog(@"Network - Map: ***************************************");
     NSLog(@"Network - Map: ***************************************");

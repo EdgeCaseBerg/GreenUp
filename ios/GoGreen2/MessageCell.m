@@ -42,13 +42,17 @@
         extraTop = 20;
     
     self.messageObject = messageObject;
+
+    NSString *contentText = self.messageObject.messageContent;
     
     if([messageObject.messageType isEqualToString:MESSAGE_TYPE_PICK_UP])
     {
         //Text Content Label
         self.textContentLabel = [[UILabel alloc] init];
-        [self.textContentLabel setText:messageObject.messageContent];
-        [self.textContentLabel setNumberOfLines:0];
+        
+
+        [self.textContentLabel setText:contentText];
+        [self.textContentLabel setNumberOfLines:10];
         [self.textContentLabel setBackgroundColor:[UIColor clearColor]];
         [self.textContentLabel setFont:[UIFont messageFont]];
         
@@ -106,7 +110,7 @@
         
         //Text Content Label
         self.textContentLabel = [[UILabel alloc] init];
-        [self.textContentLabel setText:messageObject.messageContent];
+        [self.textContentLabel setText:contentText];
         [self.textContentLabel setNumberOfLines:0];
         [self.textContentLabel setBackgroundColor:[UIColor clearColor]];
         [self.textContentLabel setFont:[UIFont messageFont]];
@@ -166,7 +170,7 @@
         
         //Text Content Label
         self.textContentLabel = [[UILabel alloc] init];
-        [self.textContentLabel setText:messageObject.messageContent];
+        [self.textContentLabel setText:contentText];
         [self.textContentLabel setNumberOfLines:0];
         [self.textContentLabel setBackgroundColor:[UIColor clearColor]];
         [self.textContentLabel setFont:[UIFont messageFont]];
@@ -249,7 +253,7 @@
     {
         //Text Content Label
         self.textContentLabel = [[UILabel alloc] init];
-        [self.textContentLabel setText:messageObject.messageContent];
+        [self.textContentLabel setText:contentText];
         [self.textContentLabel setNumberOfLines:0];
         [self.textContentLabel setBackgroundColor:[UIColor clearColor]];
         [self.textContentLabel setFont:[UIFont messageFont]];
@@ -300,19 +304,19 @@
     NSString *timeString = nil;
     if(![[elaspedTime objectForKey:@"days"] isEqualToNumber:@0])
     {
-        timeString = [NSString stringWithFormat:@"Posted: %d days ago", ((NSNumber *)[elaspedTime objectForKey:@"days"]).integerValue];
+        timeString = [NSString stringWithFormat:@"Posted: %ld days ago", (long)((NSNumber *)[elaspedTime objectForKey:@"days"]).integerValue];
     }
     else if(![[elaspedTime objectForKey:@"hours"] isEqualToNumber:@0])
     {
-        timeString = [NSString stringWithFormat:@"Posted: %d hours ago", ((NSNumber *)[elaspedTime objectForKey:@"hours"]).integerValue];
+        timeString = [NSString stringWithFormat:@"Posted: %ld hours ago", (long)((NSNumber *)[elaspedTime objectForKey:@"hours"]).integerValue];
     }
     else if(![[elaspedTime objectForKey:@"minutes"] isEqualToNumber:@0])
     {
-        timeString = [NSString stringWithFormat:@"Posted: %d minutes ago", ((NSNumber *)[elaspedTime objectForKey:@"minutes"]).integerValue];
+        timeString = [NSString stringWithFormat:@"Posted: %ld minutes ago", (long)((NSNumber *)[elaspedTime objectForKey:@"minutes"]).integerValue];
     }
     else if(![[elaspedTime objectForKey:@"seconds"] isEqualToNumber:@0])
     {
-        timeString = [NSString stringWithFormat:@"Posted: %d seconds ago", ((NSNumber *)[elaspedTime objectForKey:@"seconds"]).integerValue];
+        timeString = [NSString stringWithFormat:@"Posted: %ld seconds ago", (long)((NSNumber *)[elaspedTime objectForKey:@"seconds"]).integerValue];
     }
     else
     {
