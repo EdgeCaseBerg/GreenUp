@@ -172,7 +172,7 @@ if(isset($_GET['logout'])){
                 <form method="POST" name="login" id="loginForm" action="home.php">
                     <table>
                         <tr>
-                            <td class="inputLabel">email:</td><td><input type="email" name= "username" id="username" class="loginInput"/></td>
+                            <td class="inputLabel">username:</td><td><input type="text" name= "username" id="username" class="loginInput"/></td>
                         </tr>
 
                         <tr>
