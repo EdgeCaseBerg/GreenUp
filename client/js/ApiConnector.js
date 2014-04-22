@@ -47,9 +47,7 @@ function ApiConnector(){
     var markerData = [];
     var commentData = [];
 
-
     this.API_PATH = "http://greenup.xenonapps.com/api";
-
 
 
     // determine where the page is loaded from and form the url base accordingly
