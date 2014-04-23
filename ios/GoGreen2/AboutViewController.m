@@ -40,7 +40,7 @@
             }
             else
             {
-                [self.view setFrame:CGRectMake(0, 20, 320, 480)];
+                [self.view setFrame:CGRectMake(0, 0, 320, 400)];
             }
         }
     }
@@ -53,7 +53,7 @@
 
     [self.navigationController setNavigationBarHidden:FALSE];
     
-    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height - 44)];
     [webView setDelegate:self];
     //[webView setUserInteractionEnabled:FALSE];
     [webView setBackgroundColor:[UIColor blackColor]];
