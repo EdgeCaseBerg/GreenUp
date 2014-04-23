@@ -9,36 +9,9 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>icon-114</string>
-				<string>icon-120</string>
-				<string>icon-76</string>
-				<string>icon-57</string>
-				<string>icon-iPad</string>
-				<string>icon-iPhone</string>
-				<string>icon-iPad2</string>
-			</array>
-		</dict>
-	</dict>
+	<dict/>
 	<key>CFBundleIcons~ipad</key>
-	<dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>icon-152</string>
-				<string>icon-76</string>
-				<string>icon-144</string>
-				<string>icon</string>
-				<string>icon-iPhone</string>
-				<string>icon-iPad2</string>
-			</array>
-		</dict>
-	</dict>
+	<dict/>
 	<key>CFBundleIdentifier</key>
 	<string>com.XenonApps.GreenUpVt</string>
 	<key>CFBundleInfoDictionaryVersion</key>

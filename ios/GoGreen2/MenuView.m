@@ -315,7 +315,7 @@
     [longPressNote setBackgroundColor:[UIColor clearColor]];
     [longPressNote setTextAlignment:NSTextAlignmentCenter];
     [longPressNote setFont:[longPressNote.font fontWithSize:12]];
-    [longPressNote setText:@"You can mark help needed pins as addressed by long pressing the message. Addressed pins will not show up on the map and appear gray in the list. Tapping the pin will bring you to its location on the map."];
+    [longPressNote setText:@"Tapping the pin will bring you to its location on the map. Long pressing a help needed message bubble will allow you to remove the marker. Removed markers will appear gray on the message board."];
     [longPressNote setNumberOfLines:4];
     [self.contentView addSubview:longPressNote];
 }

@@ -23,6 +23,9 @@
 
 @interface NetworkingController : NSObject <NSURLConnectionDataDelegate, NSURLConnectionDataDelegate>
 
+//Home Messages
+-(void)getHomeMessage;
+
 //Map
 -(void)getMapPinsWithDictionary:(NSDictionary *)buffer;
 -(void)getMapPinsForPinShow;

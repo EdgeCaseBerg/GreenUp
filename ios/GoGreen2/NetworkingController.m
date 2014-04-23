@@ -20,6 +20,11 @@
 
 #define UPLOAD_QUEUE_LENGTH 5
 
+//Home Message Requests
+NSURLConnection *getHomeMessageConnection = nil;
+NSMutableData *getHomeMessageData = nil;
+NSInteger getHomeMessageStatusCode = -1;
+
 //Map Requests
 NSMutableData *otherData = nil;
 
@@ -90,7 +95,12 @@ static NetworkingController *sharedNetworkingController;
     // Furthermore, this method is called each time there is a redirect so reinitializing it
     // also serves to clear it
 
-    if([connection isEqual:getMapPinsConnection])
+    if([connection isEqual:getHomeMessageConnection])
+    {
+        getHomeMessageData = [[NSMutableData alloc] init];
+        getHomeMessageStatusCode = [(NSHTTPURLResponse *)response statusCode];
+    }
+    else if([connection isEqual:getMapPinsConnection])
     {
         getMapPinsData = [[NSMutableData alloc] init];
         getMapPinsStatusCode = [(NSHTTPURLResponse *)response statusCode];
@@ -155,7 +165,11 @@ static NetworkingController *sharedNetworkingController;
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     // Append the new data to the instance variable you declared
-    if([connection isEqual:getMapPinsConnection])
+    if([connection isEqual:getHomeMessageConnection])
+    {
+        [getHomeMessageData appendData:data];
+    }
+    else if([connection isEqual:getMapPinsConnection])
     {
         [getMapPinsData appendData:data];
     }
@@ -217,7 +231,32 @@ static NetworkingController *sharedNetworkingController;
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     //Handle Request
-    if([connection isEqual:getMapPinsConnection])
+    if([connection isEqual:getHomeMessageConnection])
+    {
+        NSDictionary *response = nil;
+        if(getHomeMessageData != nil)
+            response = [NSJSONSerialization JSONObjectWithData:getHomeMessageData options:0 error:nil];
+        
+        NSString *statusCode = [response objectForKey:@"status_code"];
+        NSLog(@"Network - Home Message: Recieved Status Code: %@", statusCode);
+        
+        
+        if(getHomeMessageStatusCode == 200)
+        {
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingHomeMessage" object:response];
+        }
+        else
+        {
+            [self printResponseFromFailedRequest:response andStatusCode:getHomeMessageStatusCode];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingHomeMessage" object:@"-1"];
+        }
+        
+        getHomeMessageConnection = nil;
+        getHomeMessageData = nil;
+        getHomeMessageStatusCode = -1;
+    }
+    else if([connection isEqual:getMapPinsConnection])
     {
         NSDictionary *response = nil;
         if(getMapPinsData != nil)
@@ -714,7 +753,17 @@ static NetworkingController *sharedNetworkingController;
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    if([connection isEqual:getMapPinsConnection])
+    if([connection isEqual:getHomeMessageConnection])
+    {
+        NSDictionary *response = nil;
+        if(getHomeMessageData != nil)
+            response = [NSJSONSerialization JSONObjectWithData:getHomeMessageData options:0 error:nil];
+        
+        [self printResponseFromFailedRequest:response andStatusCode:getHomeMessageStatusCode];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingHomeMessage" object:@"-1"];
+    }
+    else if([connection isEqual:getMapPinsConnection])
     {
         NSDictionary *response = nil;
         if(getMapPinsData != nil)
@@ -826,6 +875,24 @@ static NetworkingController *sharedNetworkingController;
     {
         NSLog(@"****WARNING**** NETWORKING CONTROLLER - INVAID REQUEST FAILED");
     }
+}
+
+#pragma mark - Home Messages
+-(void)getHomeMessage
+{
+    //Build Request URL
+    NSString *urlString = [NSString stringWithFormat:@"http://greenup.xenonapps.com/welcome/"];
+    
+    NSLog(@"Network - Home: Getting Home Message Data");
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
+                                                           cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                                                       timeoutInterval:10];
+    
+    //Configure Request
+    [request setHTTPMethod: @"GET"];
+    
+    //Fire Off Request
+    getHomeMessageConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 #pragma mark - Map Request Methods
