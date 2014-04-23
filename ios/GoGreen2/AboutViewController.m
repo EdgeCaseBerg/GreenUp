@@ -53,7 +53,12 @@
 
     [self.navigationController setNavigationBarHidden:FALSE];
     
-    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height - 44)];
+    int adjustment = 0;
+    if([[UIDevice currentDevice] systemVersion].integerValue > 7.0)
+    {
+        adjustment = -44;
+    }
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height - adjustment)];
     [webView setDelegate:self];
     //[webView setUserInteractionEnabled:FALSE];
     [webView setBackgroundColor:[UIColor blackColor]];
