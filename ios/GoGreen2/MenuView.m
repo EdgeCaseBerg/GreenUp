@@ -274,7 +274,7 @@
 
 -(void)showMorePinInfo:(id)sender
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"What are Pins?" message:@"Pick up pins are only posted by the Green Up organizers. They are locations where you can drop off trash bags.\nIf you find hazardous materials you should drop a hazard pin with a description so a Green Up organizer can take care of it.\nNeed help pins can be dropped when you need assistance from the community. Once a location has been cleaned users can mark the pin as addressed and it will be removed from the map." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"What are Pins?" message:@"Pick up pins are only posted by the Green Up organizers. These are locations where you can drop off trash bags.\nIf you find hazardous materials you should drop a hazard pin with a description so a Green Up organizer can take care of it.\nNeed help pins can be dropped when you need assistance from the community. Once a location has been cleaned users can mark the pin as addressed and it will be removed from the map." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert show];
 }
 

@@ -30,7 +30,7 @@
             }
             else
             {
-                [self.view setFrame:CGRectMake(0, 20, 320, 568)];
+                [self.view setFrame:CGRectMake(0, 0, 320, 568)];
             }
         }
         else
@@ -41,7 +41,7 @@
             }
             else
             {
-                [self.view setFrame:CGRectMake(0, 20, 320, 480)];
+                [self.view setFrame:CGRectMake(0, 0, 320, 480)];
             }
         }
     }
@@ -53,6 +53,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    /*
     //Left swipe to show settings
     UISwipeGestureRecognizer *leftReconizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
     [leftReconizer setNumberOfTouchesRequired:1];
@@ -64,6 +65,7 @@
     [rightRecognizer setNumberOfTouchesRequired:1];
     [rightRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
     [self.view addGestureRecognizer:rightRecognizer];
+    */
     
     [self.navigationController setNavigationBarHidden:TRUE];
     
@@ -85,8 +87,20 @@
     [self.tutorialImages addObject:@"messagesWithMenu.png"];
     
     self.tutorialImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self.tutorialImages objectAtIndex:self.currentIndex]]];
-    [self.tutorialImage setFrame:self.view.frame];
+    [self.tutorialImage setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [self.view addSubview:self.tutorialImage];
+    
+    self.leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //[self.leftButton setBackgroundColor:[UIColor blueColor]];
+    [self.leftButton setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [self.leftButton addTarget:self action:@selector(swipeRight:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.leftButton];
+    
+    self.rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //[self.rightButton setBackgroundColor:[UIColor redColor]];
+    [self.rightButton setFrame:CGRectMake(self.view.frame.size.width / 2, 0, self.view.frame.size.width / 2, self.view.frame.size.height)];
+    [self.rightButton addTarget:self action:@selector(swipeLeft:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.rightButton];
 }
 #pragma mark - Swipe CallBacks
 -(IBAction)swipeLeft:(id)sender

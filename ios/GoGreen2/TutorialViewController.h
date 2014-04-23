@@ -15,6 +15,10 @@
 @property (nonatomic, strong) UIImageView *tutorialImage;
 @property int currentIndex;
 
+@property (nonatomic, strong) UIButton *leftButton;
+@property (nonatomic, strong) UIButton *rightButton;
+
+
 - (id)initWithNavRef:(UINavigationController *)nav;
 
 @end

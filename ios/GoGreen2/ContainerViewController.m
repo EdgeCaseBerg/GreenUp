@@ -306,6 +306,7 @@ static ContainerViewController* theContainerView = nil;
 -(void)showTutorial
 {
     NSLog(@"ACTION - Home: Showing Tutorial View Controller");
+
     TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNavRef:self.navigationController];
     [self.navigationController pushViewController:tutorialVC animated:FALSE];
 }
