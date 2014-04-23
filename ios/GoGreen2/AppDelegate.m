@@ -30,6 +30,10 @@
         self.customContainer = [ContainerViewController sharedContainer];
     
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:self.customContainer];
+        if ([nav respondsToSelector:@selector(interactivePopGestureRecognizer)])
+        {
+            nav.interactivePopGestureRecognizer.enabled = NO;
+        }
     
         if(![[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
         {

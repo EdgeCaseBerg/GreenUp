@@ -1396,7 +1396,7 @@
 					"/Users/jordanrouille/Documents/green-apps/ios/TestFlightSDK2.1.3",
 				);
 				PRODUCT_NAME = GreenUpVt;
-				PROVISIONING_PROFILE = "A6613763-E74B-4693-A0AC-A4467F4CA9BE";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1424,7 +1424,7 @@
 					"/Users/jordanrouille/Documents/green-apps/ios/TestFlightSDK2.1.3",
 				);
 				PRODUCT_NAME = GreenUpVt;
-				PROVISIONING_PROFILE = "A6613763-E74B-4693-A0AC-A4467F4CA9BE";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

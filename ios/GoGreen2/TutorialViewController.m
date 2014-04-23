@@ -48,6 +48,16 @@
     return self;
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:FALSE];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:TRUE];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -67,7 +77,7 @@
     [self.view addGestureRecognizer:rightRecognizer];
     */
     
-    [self.navigationController setNavigationBarHidden:TRUE];
+    //[self.navigationController setNavigationBarHidden:FALSE];
     
     //Create Image Array
     self.tutorialImages = [[NSMutableArray alloc] init];
