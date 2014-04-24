@@ -158,6 +158,8 @@ if(!isset($_COOKIE[session_name()])){
         <ul class="nav navbar-nav navbar-right">
             <? if($LOGGEDIN){
                     echo "<li><button type=\"button\"  id=\"viewLogButton\" class=\"navButtons btn btn-default btn-md\">Server Log</button></li>";
+                }else{
+                    echo "<li><button type=\"button\"  onclick=\"location.href = \'donatenow.networkforgood.org/greenupvermont\';\" id=\"donateButton\" class=\"navButtons btn btn-default btn-md\">Donate</button></li>";
                 }
             ?>
             <li><button type="button"  id="loginButton" class="navButtons btn btn-default btn-md">Login</button></li>
