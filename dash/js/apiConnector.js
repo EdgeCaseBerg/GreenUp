@@ -381,73 +381,73 @@ function ApiConnector(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.LOGGER.obj(event, arguments.callee.name, "event to be posted");
         var logURI = this.TRUEBASE+"/debug";
-        if(!window.HELPER.isNull(event)){
-            var jsonEvent = JSON.stringify(event);
-            window.LOGGER.debug(jsonEvent, arguments.callee.name);
-            $.ajax({
-                type:'POST',
-                url: logURI,
-                cache: false,
-                // processData: false,
-                dataType: "json",
-                contentType: "application/json",
-                data: jsonEvent,
-                failure: function(errMsg){
-                    window.LOGGER.error(arguments.callee.name,"[ERROR] Failed to GET server logs: "+errMsg);
-                },
-                success: function(data){
-                    window.LOGGER.obj(data, arguments.callee.name, "result of posting log event");
-                    if(!window.HELPER.isNull(callback)){
-                        if(window.HELPER.isNull(data.contents)){
-                            callback(data);
-                        }else{
-                            callback(data.contents);
-                        }
-                    }
-
-                },
-                error: function(xhr, errorType, error){
-                    // // alert("error: "+xhr.status);
-                    switch(xhr.status){
-                        case 500:
-                            // internal server error
-                            // consider leaving app
-                            window.LOGGER.error("api response = 500", arguments.callee.name);
-                            window.LOGGER.obj(error, arguments.callee.name, "500");
-                            break;
-                        case 503:
-                            window.LOGGER.error(" Unavailable", arguments.callee.name);
-                            window.LOGGER.obj(error, arguments.callee.name, "503");
-                            break;
-
-                        case 404:
-                            // not found, stop trying
-                            // consider leaving app
-                            window.LOGGER.error('api response = 404', arguments.callee.name);
-                            window.LOGGER.obj(error, arguments.callee.name, "404");
-                            break;
-                        case 400:
-                            // bad request
-                            window.LOGGER.error(" api response = 400", arguments.callee.name);
-                            window.LOGGER.obj(error, arguments.callee.name, "400");
-                            break;
-                        case 422:
-                            window.LOGGER.error("api response = 422", arguments.callee.name);
-                            window.LOGGER.obj(error, arguments.callee.name, "422");
-                            break;
-                        case 200:
-                            window.LOGGER.error(" api response = 200", arguments.callee.name);
-                            window.LOGGER.obj(error, arguments.callee.name, "200");
-                            break;
-                        default:
-                            // alert("Error Contacting API: "+xhr.status);
-                            break;
-                    }
-                }
-            });
-        }else{
-            window.LOGGER.error("Error posting log event", arguments.callee.name);
-        }
+//        if(!window.HELPER.isNull(event)){
+//            var jsonEvent = JSON.stringify(event);
+//            window.LOGGER.debug(jsonEvent, arguments.callee.name);
+//            $.ajax({
+//                type:'POST',
+//                url: logURI,
+//                cache: false,
+//                // processData: false,
+//                dataType: "json",
+//                contentType: "application/json",
+//                data: jsonEvent,
+//                failure: function(errMsg){
+//                    window.LOGGER.error(arguments.callee.name,"[ERROR] Failed to GET server logs: "+errMsg);
+//                },
+//                success: function(data){
+//                    window.LOGGER.obj(data, arguments.callee.name, "result of posting log event");
+//                    if(!window.HELPER.isNull(callback)){
+//                        if(window.HELPER.isNull(data.contents)){
+//                            callback(data);
+//                        }else{
+//                            callback(data.contents);
+//                        }
+//                    }
+//
+//                },
+//                error: function(xhr, errorType, error){
+//                    // // alert("error: "+xhr.status);
+//                    switch(xhr.status){
+//                        case 500:
+//                            // internal server error
+//                            // consider leaving app
+//                            window.LOGGER.error("api response = 500", arguments.callee.name);
+//                            window.LOGGER.obj(error, arguments.callee.name, "500");
+//                            break;
+//                        case 503:
+//                            window.LOGGER.error(" Unavailable", arguments.callee.name);
+//                            window.LOGGER.obj(error, arguments.callee.name, "503");
+//                            break;
+//
+//                        case 404:
+//                            // not found, stop trying
+//                            // consider leaving app
+//                            window.LOGGER.error('api response = 404', arguments.callee.name);
+//                            window.LOGGER.obj(error, arguments.callee.name, "404");
+//                            break;
+//                        case 400:
+//                            // bad request
+//                            window.LOGGER.error(" api response = 400", arguments.callee.name);
+//                            window.LOGGER.obj(error, arguments.callee.name, "400");
+//                            break;
+//                        case 422:
+//                            window.LOGGER.error("api response = 422", arguments.callee.name);
+//                            window.LOGGER.obj(error, arguments.callee.name, "422");
+//                            break;
+//                        case 200:
+//                            window.LOGGER.error(" api response = 200", arguments.callee.name);
+//                            window.LOGGER.obj(error, arguments.callee.name, "200");
+//                            break;
+//                        default:
+//                            // alert("Error Contacting API: "+xhr.status);
+//                            break;
+//                    }
+//                }
+//            });
+//        }else{
+//            window.LOGGER.error("Error posting log event", arguments.callee.name);
+//        }
     }
 
 
