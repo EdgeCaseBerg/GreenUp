@@ -158,9 +158,9 @@ if(!isset($_COOKIE[session_name()])){
         <ul class="nav navbar-nav navbar-right">
             <? if($LOGGEDIN){
                     echo "<li><button type=\"button\"  id=\"viewLogButton\" class=\"navButtons btn btn-default btn-md\">Server Log</button></li>";
-                    echo "<li><button type=\"button\"  id=\"logoutButton\" onclick=\"location.href = 'login.php?errorno=2';\" class=\"navButtons btn btn-default btn-md\">Logout</button></li>";
+                    echo "<li><button type=\"button\"  id=\"logoutButton\" onclick=\"location.href = 'http://greenup.xenonapps.com/dash/login.php?errorno=2';\" class=\"navButtons btn btn-default btn-md\">Logout</button></li>";
                 }else{
-                    echo "<li><button type=\"button\"  onclick=\"location.href = 'donatenow.networkforgood.org/greenupvermont';\" id=\"donateButton\" class=\"navButtons btn btn-default btn-md\">Donate</button></li>";
+                    echo "<li><button type=\"button\"  onclick=\"location.href = 'http://donatenow.networkforgood.org/greenupvermont';\" id=\"donateButton\" class=\"navButtons btn btn-default btn-md\">Donate</button></li>";
                     echo "<li><button type=\"button\"  id=\"loginButton\" class=\"navButtons btn btn-default btn-md\">Login</button></li>";
                 }
             ?>
