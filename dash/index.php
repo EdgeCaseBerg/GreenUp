@@ -167,6 +167,7 @@ if(!isset($_COOKIE[session_name()])){
 
 
 <div class="row mapAdminContainer">
+    <? if($LOGGEDIN){ ?>
     <div id="iconContainer">
         <img id="infoIcon" src="images/info-icon-dark.png" height="40" width="40"/>
 
@@ -174,7 +175,6 @@ if(!isset($_COOKIE[session_name()])){
     </div>
     <div id="map-canvas">
     </div>
-    <? if($LOGGEDIN){ ?>
     <div id="markerTypeDialog" class="markerTypeSelectDialog">
 
         <div id="extendedAnalyticsDialog">
