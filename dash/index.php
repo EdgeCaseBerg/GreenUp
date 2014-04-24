@@ -115,6 +115,20 @@ if(!isset($_COOKIE[session_name()])){
 
 
     </script>
+
+    <style type="text/css">
+        #donateButton{
+            font-weight:bold;
+            background: #f3d078;
+            background: -moz-linear-gradient(top,#f7dfa5,#f0c14b);
+            background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#f7dfa5),color-stop(100%,#f0c14b));
+            background: -webkit-linear-gradient(top,#f7dfa5,#f0c14b);
+            background: -o-linear-gradient(top,#f7dfa5,#f0c14b);
+            background: -ms-linear-gradient(top,#f7dfa5,#f0c14b);
+            background: linear-gradient(top,#f7dfa5,#f0c14b);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7dfa5',endColorstr='#f0c14b',GradientType=0);
+        }
+    </style>
 </head>
 
 <body>
