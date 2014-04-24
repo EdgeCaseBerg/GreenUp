@@ -177,8 +177,10 @@ if(!isset($_COOKIE[session_name()])){
 
         <img id="commentsIcon" src="images/comment-icon.png" height="40" width="40"/>
     </div>
+    <?}?>
     <div id="map-canvas">
     </div>
+    <? if($LOGGEDIN){ ?>
     <div id="markerTypeDialog" class="markerTypeSelectDialog">
 
         <div id="extendedAnalyticsDialog">
