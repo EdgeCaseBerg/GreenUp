@@ -543,19 +543,19 @@ function MapHandle(){
         var iconUrl;
         switch(window.MAP.markerType){
             case "general message":
-                pin.type = "general message";
+                pin.type = "COMMENT";
                 iconUrl = "img/icons/orangeCircle.png";
                 break;
-            case "help needed":
+            case "MARKER":
                 pin.type = "help needed";
                 iconUrl = "img/icons/blueCircle.png";
                 break;
-            case "trash pickup":
+            case "ADMIN":
                 pin.type = "trash pickup";
                 iconUrl = "img/icons/greenCircle.png";
                 break;
             default:
-                pin.type = "general message";
+                pin.type = "COMMENT";
                 iconUrl = "icons/blueCircle.png";
                 break;
         }
