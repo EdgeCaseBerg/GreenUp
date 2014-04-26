@@ -79,7 +79,7 @@ function ApiConnector(){
             dataType: DATATYPE,
             success: function(data){
                 console.log("Pull API Data: SUCCESS");
-                data = JSON.parse(data);
+//                data = JSON.parse(data);
                 if(!window.HELPER.isNull(data.contents)){
                     data = data.contents;
 //                    window.LOGGER.error("data.contents")
