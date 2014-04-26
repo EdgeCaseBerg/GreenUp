@@ -194,7 +194,6 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
 
 <div id="markerTypeDialog">
     <div class="tileContainer">
-        <div class="tile tile1" id="selectBlueComment">Admin</div>
         <div class="tile tile2" id="selectYellowComment">Hazard</div>
         <div class="tile tile3" id="selectGreenComment">Comment</div>
         <div class="tile tile4" id="cancel">Cancel</div>

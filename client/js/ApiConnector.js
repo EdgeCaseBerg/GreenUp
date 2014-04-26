@@ -542,21 +542,16 @@ function MapHandle(){
 
         var iconUrl;
         switch(window.MAP.markerType){
-            case "general message":
+            case "COMMENT":
                 pin.type = "COMMENT";
-                iconUrl = "img/icons/orangeCircle.png";
-                break;
-            case "MARKER":
-                pin.type = "help needed";
-                iconUrl = "img/icons/blueCircle.png";
-                break;
-            case "ADMIN":
-                pin.type = "trash pickup";
                 iconUrl = "img/icons/greenCircle.png";
                 break;
+            case "HAZARD":
+                pin.type = "HAZARD";
+                iconUrl = "img/icons/orangeCircle.png";
+                break;
             default:
-                pin.type = "COMMENT";
-                iconUrl = "icons/blueCircle.png";
+                iconUrl = "img/icons/greenCircle.png";
                 break;
         }
 
@@ -997,10 +992,9 @@ function UiHandle(){
             // add marker type selectors
             // alert("marker");
             document.getElementById("markerTypeDialog").className = "markerTypePanel2";
-            document.getElementById("selectBlueComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
-            document.getElementById("selectYellowComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("general message")});
-            document.getElementById("selectGreenComment" +
-                "").addEventListener('mousedown', function(){window.UI.markerTypeSelect("help needed")});
+//            document.getElementById("selectBlueComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("trash pickup")});
+            document.getElementById("selectYellowComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("HAZARD")});
+            document.getElementById("selectGreenComment").addEventListener('mousedown', function(){window.UI.markerTypeSelect("COMMENT")});
         }
 
         document.getElementById("cancel").addEventListener('mousedown', function(){
@@ -1116,17 +1110,14 @@ function UiHandle(){
         // var iconUrl = "img/icons/blueCircle.png";
         var iconUrl = "";
         switch(markerType){
-            case "forum":
+            case "HAZARD":
                 iconUrl = "img/icons/orangeCircle.png";
                 break;
-            case "trash pickup":
-                iconUrl = "img/icons/blueCircle.png";
-                break;
-            case "help needed":
+            case "COMMENT":
                 iconUrl = "img/icons/greenCircle.png";
                 break;
             default:
-                iconUrl = "img/icons/orangeCircle.png";
+                iconUrl = "img/icons/greenCircle.png";
                 break;
         }
 
