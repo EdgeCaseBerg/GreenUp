@@ -125,20 +125,15 @@ function ApiConnector(){
     ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
         window.LOGGER.debug(arguments.callee.name, "[pushNewPin]");
         url = this.checkOrigin();
-
-        console.log("Phelan");
-        console.log(url);
-        console.log(jsonObj);
-        
         var pinsURI = url+"/pins";
         $.ajax({
             type: "POST",
             url: pinsURI,
             data: jsonObj,
             cache: false,
-            // processData: false,
+            processData: false,
             dataType: "json",
-            // contentType: "application/json",
+            contentType: "application/json",
             success: function(data){
                 if(!window.HELPER.isNull(data.contents)){
                     data = data.contents;
