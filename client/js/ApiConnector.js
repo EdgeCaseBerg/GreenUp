@@ -125,10 +125,10 @@ function ApiConnector(){
     ApiConnector.prototype.pushNewPin = function pushNewPin(jsonObj){
         window.LOGGER.debug(arguments.callee.name, "[pushNewPin]");
         url = this.checkOrigin();
-        var pinsURI = url+"/pins";
+        var pinshost = url+"/pins";
         $.ajax({
             type: "POST",
-            url: pinsURI,
+            url: pinshost,
             data: jsonObj,
             cache: false,
             processData: false,
@@ -162,7 +162,7 @@ function ApiConnector(){
                         break;
                     case 400:
                         // bad request
-                        window.LOGGER.log("Error: api response = 400", "ApiConnector: pushNewPin()");
+                        window.LOGGER.log("Error: api response = 400", "ApiConnector: pushNewPin() "+pinshost);
                         break;
                     case 422:
                         window.LOGGER.log("Error: api response = 422", "ApiConnector: pushNewPin()");
