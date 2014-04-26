@@ -629,21 +629,17 @@ function MapHandle(){
 
         var iconUrl;
         switch(markerType){
-            case "GENERAL MESSAGE":
-                pin.type = "GENERAL MESSAGE";
+            case "HAZARD":
+                pin.type = "HAZARD";
                 iconUrl = "img/icons/orangeCircle.png";
                 break;
-            case "HELP NEEDED":
-                pin.type = "HELP NEEDED";
-                iconUrl = "img/icons/blueCircle.png";
-                break;
-            case "TRASH PICKUP":
-                pin.type = "TRASH PICKUP";
+            case "COMMENT":
+                pin.type = "COMMENT";
                 iconUrl = "img/icons/greenCircle.png";
                 break;
             default:
-                pin.type = "GENERAL MESSAGE";
-                iconUrl = "img/icons/orangeCircle.png";
+                pin.type = "COMMENT";
+                iconUrl = "img/icons/greenCircle.png";
                 break;
         }
 
