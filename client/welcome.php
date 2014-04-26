@@ -98,7 +98,7 @@
         ?>
 
         $(document).ready(function(){
-            $('#iframe').attr("src", "http://greenup.xenonapps.com/client/");
+            $('#iframe').attr("src", "http://greenup.xenonapps.com/client/index.php?frame=true");
         });
 
 
