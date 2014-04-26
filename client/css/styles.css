@@ -392,10 +392,10 @@ ul{
 }
 
 .tile{
-    float:left;
+    /*float:left;*/
     width:70.5%;
     /*height:46.5%;*/
-    padding-top:120px;
+    padding-top:60px;
     /*padding:20% 20% 20% 20%;*/
     margin:1%;
     /*border:solid 1px red;*/
