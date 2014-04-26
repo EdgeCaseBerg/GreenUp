@@ -574,6 +574,8 @@ function MapHandle(){
         window.MAP.pickupMarkers.push(marker);
 
         var serializedPin = JSON.stringify(pin);
+        console.log("serialized pin:");
+        console.log(serializedPin);
         window.ApiConnector.pushNewPin(serializedPin);
     }
 
