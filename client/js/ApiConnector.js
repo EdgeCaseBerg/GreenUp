@@ -637,6 +637,10 @@ function MapHandle(){
                 pin.type = "COMMENT";
                 iconUrl = "img/icons/greenCircle.png";
                 break;
+            case "ADMIN":
+                pin.type = "ADMIN";
+                iconUrl = "img/icons/new_trash1_sm_test.png";
+                break;
             default:
                 pin.type = "COMMENT";
                 iconUrl = "img/icons/greenCircle.png";
