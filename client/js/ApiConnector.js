@@ -638,6 +638,7 @@ function MapHandle(){
                 iconUrl = "img/icons/greenCircle.png";
                 break;
             case "ADMIN":
+                alert("admin");
                 pin.type = "ADMIN";
                 iconUrl = "img/icons/blueCircle.png";
                 break;
