@@ -133,9 +133,10 @@
             all participants with a comprehensive overview of the areas that have already been cleaned and
             the areas that require more attention. Furthermore, the app allows participants to comment on the
             needs of specific locations with geo-coded messages aggregated in our comments section.
-
         </p>
     </div>
+
+    <div class="attribution">Powered by <a href="http://www.xenonapps.com">Xenon Apps</a></div>
 </div>
 <div id="phoneContainer">
     <div id="phoneFrame">
