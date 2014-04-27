@@ -151,15 +151,11 @@ function MapHandle(){
                 break;
             case "ADMIN":
                 pin.type = "ADMIN";
-                iconUrl = "images/icons/blueCircle.png";
-                break;
-            case "MARKER":
-                pin.type = "MARKER";
                 iconUrl = "images/icons/new_trash1_sm_test.png";
                 break;
             default:
                 pin.type = "COMMENT";
-                iconUrl = "images/icons/orangeCircle.png";
+                iconUrl = "images/icons/greenCircle.png";
                 break;
         }
 
