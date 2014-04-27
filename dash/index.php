@@ -79,7 +79,7 @@ if(!isset($_COOKIE[session_name()])){
                 echo "window.ActiveUserIP = '".$_SERVER['REMOTE_ADDR']."';";
             ?>
 
-            window.DEBUG = true;
+            window.DEBUG = false;
 
             window.LOGGER = new ClientLogger();
             window.HELPER = new Helper();
