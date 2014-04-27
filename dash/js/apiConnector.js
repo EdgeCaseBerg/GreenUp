@@ -5,7 +5,7 @@ function ApiConnector(){
 
     this.LOCALHOST = "http://localhost/green-web"
     this.PROXYBASE = "/proxy.php?url=";
-    this.HOST = "https://greenup.xenonapps.com";
+    this.HOST = "http://greenup.xenonapps.com";
     this.PORT = ""
     this.PATH = "/api";
 
