@@ -1273,7 +1273,7 @@ function UiHandle(){
                 var timeDiv = document.createElement("div");
                 var messageContent = document.createElement("span");
                 var currentDate = new Date();
-                var timezoneOffsetMillis = currentDate.getTimezoneOffset()*60*1000;
+                var timezoneOffsetMillis = currentDate.getTime() * 60 * 1000;
                 var messageDate = new Date(comments[ii]['timestamp']);
                 var diffMins = Math.round((((timezoneOffsetMillis + currentDate.getTime()) - messageDate.getTime())/1000)/60);
                 if(diffMins > 59){
