@@ -185,16 +185,17 @@ if(!isset($_COOKIE[session_name()])){
 
 
 <div class="row mapAdminContainer">
-    <? if($LOGGEDIN){ ?>
+
     <div id="iconContainer">
         <img id="infoIcon" src="images/info-icon-dark.png" height="40" width="40"/>
-
+        <? if($LOGGEDIN){ ?>
         <img id="commentsIcon" src="images/comment-icon.png" height="40" width="40"/>
+        <?}?>
     </div>
-    <?}?>
+
     <div id="map-canvas">
     </div>
-    <? if($LOGGEDIN){ ?>
+
     <div id="markerTypeDialog" class="markerTypeSelectDialog">
 
         <div id="extendedAnalyticsDialog">
@@ -251,7 +252,7 @@ if(!isset($_COOKIE[session_name()])){
         </div> <!-- end extendedAnalyticsDialog -->
 
     </div>
-    <? } ?>
+
 </div>
 
 <? if($LOGGEDIN){ ?>
