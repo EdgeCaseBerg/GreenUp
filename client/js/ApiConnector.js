@@ -631,7 +631,7 @@ function MapHandle(){
         switch(markerType){
             case "HAZARD":
                 pin.type = "HAZARD";
-                iconUrl = "img/icons/new_trash1.png";
+                iconUrl = "img/icons/new_trash1_sm_test.png";
                 break;
             case "COMMENT":
                 pin.type = "COMMENT";
