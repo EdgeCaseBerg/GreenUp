@@ -295,7 +295,6 @@ if(!isset($_COOKIE[session_name()])){
                             <option data-var="ADMIN" class="default">Trash Pickup Point</option>
                             <option data-var="HAZARD">Hazard</option>
                             <option data-var="COMMENT">General</option>
-                            <option data-var="ADMIN">Administrative</option>
                         </select>
                     </li>
                     <li style="padding-top: 10px"></li>
