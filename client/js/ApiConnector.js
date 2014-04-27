@@ -639,7 +639,7 @@ function MapHandle(){
                 break;
             case "ADMIN":
                 pin.type = "ADMIN";
-                iconUrl = "img/icons/new_trash1_sm_test.png";
+                iconUrl = "img/icons/blueCircle.png";
                 break;
             default:
                 pin.type = "COMMENT";
