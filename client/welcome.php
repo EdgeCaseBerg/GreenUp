@@ -90,7 +90,7 @@
         }
 
         .attribution{
-            
+
         }
     </style>
 
@@ -140,7 +140,7 @@
         </p>
     </div>
 
-    <div class="attribution">Powered by <a href="http://www.xenonapps.com"><img src="http://zenonapps.com/images/xenonweb.png" height="50"/></a></div>
+    <div class="attribution"><a href="http://www.xenonapps.com"><img src="http://zenonapps.com/images/xenonweb.png" height="30"/></a></div>
 </div>
 <div id="phoneContainer">
     <div id="phoneFrame">
