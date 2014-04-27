@@ -88,6 +88,10 @@
         h3{
             font-family: 'Source Code Pro', sans-serif;
         }
+
+        .attribution{
+            
+        }
     </style>
 
     <script src="../dash/js/lib/jquery/jquery.js"></script>
@@ -136,7 +140,7 @@
         </p>
     </div>
 
-    <div class="attribution">Powered by <a href="http://www.xenonapps.com">Xenon Apps</a></div>
+    <div class="attribution">Powered by <a href="http://www.xenonapps.com"><img src="http://zenonapps.com/images/xenonweb.png" height="50"/></a></div>
 </div>
 <div id="phoneContainer">
     <div id="phoneFrame">
