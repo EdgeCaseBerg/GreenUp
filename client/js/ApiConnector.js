@@ -684,6 +684,7 @@ function MapHandle(){
         window.MAP.map.panTo(newcenter);
         window.MAP.map.setZoom(z);
         window.MAP.getCurrentMapBounds();
+        window.ApiConnector.pullHeatmapData();
     }
 
     MapHandle.prototype.toggleIcons = function toggleIcons(){
