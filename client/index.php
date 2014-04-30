@@ -35,7 +35,7 @@ if(stripos($_SERVER['HTTP_USER_AGENT'], "phone") === false && stripos($_SERVER['
     <script type="text/javascript" src="js/JSON.js"></script>
     <script type="text/javascript" src="js/ApiConnector.js"></script>
     <script>
-        window.DEBUG = false;
+        window.DEBUG = true;
         window.LOGGER = new ClientLogger();
         console.log("user agent: ");
         console.log(window.UAGENT);
