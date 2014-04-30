@@ -161,7 +161,7 @@ function ApiConnector(){
 
 
     // ********** specific data pullers *************
-    ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(latDegrees, latOffset, lonDegrees, lonOffset){
+    ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(url, latDegrees, latOffset, lonDegrees, lonOffset){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         /*
          To be extra safe we could do if(typeof(param) === "undefined" || param == null),
@@ -185,7 +185,14 @@ function ApiConnector(){
             params = "?";
             params += "lonOffset" + lonOffset + "&";
         }
-        var URL = heatmapURI+params;
+        if(window.HELPER.isNull(url)){
+            var URL = heatmapURI+params;
+        }else{
+            var params = url.split(heatmapURI);
+            var URL = heatmapURI+params[1];
+            console.log("pulling heatmap from not null: "+URL);
+        }
+
         this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
 
     }

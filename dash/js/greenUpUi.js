@@ -446,6 +446,10 @@ function UiHandle(){
     // ******* DOM updaters (callbacks for the ApiConnector pull methods) ***********
     UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
+            console.log("data.page.next not null: "+data.page.next);
+            window.ApiConnector.pullHeatmapData(data.page.next);
+        }
         window.MAP.applyHeatMap(data);
     }
 
