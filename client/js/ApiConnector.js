@@ -1058,6 +1058,7 @@ function UiHandle(){
         }
 
         window.MAP.getCurrentMapBounds();
+        window.ApiConnector.pullHeatmapData();
     }
 
     // centers the appropriate panels (main display panels)
