@@ -473,7 +473,7 @@ function UiHandle(){
         $('#totalSecondsWorked').html(timeWorked['seconds']);
         $('#totalDaysWorked').html(timeWorked['days']);
 
-        if(!window.HELPER.isNull(data.page.next) ){
+        if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
             window.ApiConnector.pullRawHeatmapData(data.page.next);
         }
