@@ -493,7 +493,7 @@ function UiHandle(){
     // todo: refactor this
     UiHandle.prototype.updateForum = function updateForum(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        if(window.HELPER.isNull(document.getElementById("bubbleContainer").innerHTML)){
+        if(window.HELPER.isNull(document.getElementById("bubbleContainer"))){
             return false;
         }
         document.getElementById("bubbleContainer").innerHTML = "";
