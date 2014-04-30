@@ -193,7 +193,7 @@ function ApiConnector(){
         if(latDegrees != null){
             params = "&";
             params += "latDegrees=" + latDegrees + "&";
-        }else if(window.MAP_BOUNDS.LAT != 0){
+        }else if(window.CURRENT_BOUNDS.LAT != 0){
             params = "&";
             params += "latDegrees=" + window.MAP_BOUNDS.LAT + "&";
         }
@@ -201,7 +201,7 @@ function ApiConnector(){
         if(latOffset != null){
             params = "&";
             params += "latOffset=" + latOffset + "&";
-        }else if(window.MAP_BOUNDS.LAT_OFFSET != 0){
+        }else if(window.CURRENT_BOUNDS.LAT_OFFSET != 0){
             params = "&";
             params += "latOffset=" + window.MAP_BOUNDS.LAT_OFFSET + "&";
         }
@@ -209,7 +209,7 @@ function ApiConnector(){
         if(lonDegrees != null){
             params = "&";
             params += "lonDegrees" + lonDegrees + "&";
-        }else if(window.MAP_BOUNDS.LON != 0){
+        }else if(window.CURRENT_BOUNDS.LON != 0){
             params = "&";
             params += "lonDegrees" + window.MAP_BOUNDS.LON + "&";
         }
@@ -217,7 +217,7 @@ function ApiConnector(){
         if(lonOffset != null){
             params = "&";
             params += "lonOffset" + lonOffset + "&";
-        }else if(window.MAP_BOUNDS.LAT_OFFSET != 0){
+        }else if(window.CURRENT_BOUNDS.LAT_OFFSET != 0){
             params = "&";
             params += "lonOffset" + window.MAP_BOUNDS.LAT_OFFSET + "&";
         }
@@ -683,7 +683,7 @@ function MapHandle(){
         var newcenter = new google.maps.LatLng(lat, lon);
         window.MAP.map.panTo(newcenter);
         window.MAP.map.setZoom(z);
-        window.MAP_BOUNDS = window.MAP.getCurrentMapBounds();
+        window.MAP.getCurrentMapBounds();
     }
 
     MapHandle.prototype.toggleIcons = function toggleIcons(){
@@ -719,12 +719,10 @@ function MapHandle(){
         var lat1 = window.MAP.map.getBounds().getSouthWest().lat();
         var lng1 = window.MAP.map.getBounds().getSouthWest().lng();
 
-        var bounds = new MAP_BOUNDS();
-        bounds.LAT = lat1;
-        bounds.LAT_OFFSET = lat1 - lat0;
-        bounds.LON = lng1;
-        bounds.LON_OFFSET = lng1 - lng0;
-        return bounds;
+        window.CURRENT_BOUNDS.LAT = lat1;
+        window.CURRENT_BOUNDS.LAT_OFFSET = lat1 - lat0;
+        window.CURRENT_BOUNDS.LON = lng1;
+        window.CURRENT_BOUNDS.LON_OFFSET = lng1 - lng0;
     }
 
     MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){
@@ -1058,7 +1056,7 @@ function UiHandle(){
             window.LS.hide();
         }
 
-        window.MAP_BOUNDS = window.MAP.getCurrentMapBounds();
+        window.MAP.getCurrentMapBounds();
     }
 
     // centers the appropriate panels (main display panels)
