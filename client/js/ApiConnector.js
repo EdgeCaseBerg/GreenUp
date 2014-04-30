@@ -193,21 +193,36 @@ function ApiConnector(){
         if(latDegrees != null){
             params = "&";
             params += "latDegrees=" + latDegrees + "&";
+        }else if(window.MAP_BOUNDS.LAT != 0){
+            params = "&";
+            params += "latDegrees=" + window.MAP_BOUNDS.LAT + "&";
         }
+
         if(latOffset != null){
             params = "&";
             params += "latOffset=" + latOffset + "&";
+        }else if(window.MAP_BOUNDS.LAT_OFFSET != 0){
+            params = "&";
+            params += "latOffset=" + window.MAP_BOUNDS.LAT_OFFSET + "&";
         }
+
         if(lonDegrees != null){
             params = "&";
             params += "lonDegrees" + lonDegrees + "&";
+        }else if(window.MAP_BOUNDS.LON != 0){
+            params = "&";
+            params += "lonDegrees" + window.MAP_BOUNDS.LON + "&";
         }
+
         if(lonOffset != null){
             params = "&";
             params += "lonOffset" + lonOffset + "&";
+        }else if(window.MAP_BOUNDS.LAT_OFFSET != 0){
+            params = "&";
+            params += "lonOffset" + window.MAP_BOUNDS.LAT_OFFSET + "&";
         }
-        console.log("Preparing to pull heatmap data");
         var URL = heatmapURI+params;
+        console.log("Preparing to pull heatmap data: "+URL);
         this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
     }
 
@@ -519,6 +534,8 @@ function MapHandle(){
         // this.toggleHeatmap();
 
         window.MAP.map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+
+
         // for activating the loading screen while map loads
         google.maps.event.addListener(window.MAP.map, 'idle', window.UI.setMapLoaded);
 //        if(!window.HELPER.isNull(window.LS)){
@@ -530,6 +547,7 @@ function MapHandle(){
         // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
         google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.mapTouchDown);
         google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.mapTouchUp);
+        window.MAP_BOUNDS = window.MAP.getCurrentMapBounds();
     }
 
     MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message, lat, lon){
@@ -665,6 +683,7 @@ function MapHandle(){
         var newcenter = new google.maps.LatLng(lat, lon);
         window.MAP.map.panTo(newcenter);
         window.MAP.map.setZoom(z);
+        window.MAP_BOUNDS = window.MAP.getCurrentMapBounds();
     }
 
     MapHandle.prototype.toggleIcons = function toggleIcons(){
@@ -691,6 +710,21 @@ function MapHandle(){
             window.MAP.heatmap.setMap(window.MAP.map);
             window.MAP.isHeatmapVisible = true ;
         }
+    }
+
+    MapHandle.prototype.getCurrentMapBounds = function getCurrentMapBounds(){
+        var lat0 = window.MAP.map.getBounds().getNorthEast().lat();
+        var lng0 = window.MAP.map.getBounds().getNorthEast().lng();
+
+        var lat1 = window.MAP.map.getBounds().getSouthWest().lat();
+        var lng1 = window.MAP.map.getBounds().getSouthWest().lng();
+
+        var bounds = new MAP_BOUNDS();
+        bounds.LAT = lat1;
+        bounds.LAT_OFFSET = lat1 - lat0;
+        bounds.LON = lng1;
+        bounds.LON_OFFSET = lng1 - lng0;
+        return bounds;
     }
 
     MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){
@@ -1649,10 +1683,12 @@ function INPUT_TYPE(){
     this.COMMENT = 1;
 }
 
-
-
-
-
+function MAP_BOUNDS(){
+    this.LAT = 0;
+    this.LAT_OFFSET = 0;
+    this.LON = 0;
+    this.LON_OFFSET = 0;
+}
 
 
 /**
@@ -1660,6 +1696,8 @@ function INPUT_TYPE(){
  * @author Josh
  */
 document.addEventListener('DOMContentLoaded',function(){
+    window.CURRENT_BOUNDS = new MAP_BOUNDS();
+
     window.PINS = {};
     window.ALLOW_LOADING_SCREEN = true;
 
