@@ -191,15 +191,19 @@ function ApiConnector(){
     }
 
     // ********** specific data pullers *************
-    ApiConnector.prototype.pullRawHeatmapData = function pullRawHeatmapData(){
+    ApiConnector.prototype.pullRawHeatmapData = function pullRawHeatmapData(url){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         /*
          To be extra safe we could do if(typeof(param) === "undefined" || param == null),
          but there is an implicit cast against undefined defined for double equals in javascript
          */
-        var heatmapURI = "/heatmap";
-        var params = "?raw=true";
-        var URL = heatmapURI+params;
+        if(window.HELPER.isNull(url)){
+            var heatmapURI = "/heatmap";
+            var params = "?raw=true";
+            var URL = heatmapURI+params;
+        }else{
+            var URL = url;
+        }
         this.pullApiData(URL, "JSON", "GET", window.UI.updateRawHeatmapData, null);
     }
 

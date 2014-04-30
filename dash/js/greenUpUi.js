@@ -472,6 +472,10 @@ function UiHandle(){
         $('#totalMinutesWorked').html(timeWorked['minutes']);
         $('#totalSecondsWorked').html(timeWorked['seconds']);
         $('#totalDaysWorked').html(timeWorked['days']);
+
+        if(!window.HELPER.isNull(data.page.next)){
+            window.ApiConnector.pullRawHeatmapData(data.page.next);
+        }
     }
 
     // markers coming from the apiconnector comes here to be added to the UI
