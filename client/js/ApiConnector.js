@@ -713,7 +713,7 @@ function MapHandle(){
     }
 
     MapHandle.prototype.getCurrentMapBounds = function getCurrentMapBounds(){
-        var lat0 = window.MAP.map.getBounds().getNorthEast().lat();
+        var lat0 = window.MAP.map.getBounds();
         var lng0 = window.MAP.map.getBounds().getNorthEast().lng();
 
         var lat1 = window.MAP.map.getBounds().getSouthWest().lat();
