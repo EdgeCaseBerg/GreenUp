@@ -197,13 +197,15 @@ function ApiConnector(){
          To be extra safe we could do if(typeof(param) === "undefined" || param == null),
          but there is an implicit cast against undefined defined for double equals in javascript
          */
+        var heatmapURI = "/heatmap";
         if(window.HELPER.isNull(url)){
-            var heatmapURI = "/heatmap";
+
             var params = "?raw=true";
             var URL = heatmapURI+params;
         }else{
             console.log("pulling heatmap from not null: "+url);
-            var URL = url;
+            var params = url.split(heatmapURI);
+            var URL = heatmapURI+params[1];
         }
         this.pullApiData(URL, "JSON", "GET", window.UI.updateRawHeatmapData, null);
     }
