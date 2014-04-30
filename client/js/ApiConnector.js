@@ -547,7 +547,7 @@ function MapHandle(){
         // google.maps.event.addListener(window.MAP.map, 'mousedown', this.setMarkerEvent);
         google.maps.event.addListener(window.MAP.map, 'mousedown', window.UI.mapTouchDown);
         google.maps.event.addListener(window.MAP.map, 'mouseup', window.UI.mapTouchUp);
-        window.MAP_BOUNDS = window.MAP.getCurrentMapBounds();
+
     }
 
     MapHandle.prototype.addMarkerFromUi = function addMarkerFromUi(message, lat, lon){
@@ -713,7 +713,7 @@ function MapHandle(){
     }
 
     MapHandle.prototype.getCurrentMapBounds = function getCurrentMapBounds(){
-        var lat0 = window.MAP.map.getBounds();
+        var lat0 = window.MAP.map.getBounds().getNorthEast().lat();
         var lng0 = window.MAP.map.getBounds().getNorthEast().lng();
 
         var lat1 = window.MAP.map.getBounds().getSouthWest().lat();
@@ -1057,6 +1057,8 @@ function UiHandle(){
         if(!window.HELPER.isNull(window.LS)){
             window.LS.hide();
         }
+
+        window.MAP_BOUNDS = window.MAP.getCurrentMapBounds();
     }
 
     // centers the appropriate panels (main display panels)
