@@ -493,6 +493,9 @@ function UiHandle(){
     // todo: refactor this
     UiHandle.prototype.updateForum = function updateForum(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        if(window.HELPER.isNull(document.getElementById("bubbleContainer").innerHTML)){
+            return false;
+        }
         document.getElementById("bubbleContainer").innerHTML = "";
         window.COMMENTS = data;
         dataObj = data;
