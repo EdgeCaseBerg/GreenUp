@@ -2,22 +2,24 @@
 
 function Helper(){
 
-	// in JS there's a lot of ways that soemthign could be null
-	Helper.prototype.isNull = function isNull(testVar){
-		if(testVar == "undefined"){
-			return true;
-		}else if (testVar == undefined){
-			return true;
-		}else if(testVar == null){
-			return true;
-		}else if(testVar == ""){
-			return true;
-		}else if(testVar === null){
-			return true;
-		}else{
-			return false;
-		}
-	}
+    // in JS there's a lot of ways that soemthign could be null
+    Helper.prototype.isNull = function isNull(testVar){
+        if(testVar == "undefined"){
+            return true;
+        }else if (testVar == undefined){
+            return true;
+        }else if(testVar == null){
+            return true;
+        }else if(testVar == "null"){
+            return true;
+        }else if(testVar == ""){
+            return true;
+        }else if(testVar === null){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 	Helper.prototype.isString = function isString(o) {
     	return typeof o == "string" || (typeof o == "object" && o.constructor === String);

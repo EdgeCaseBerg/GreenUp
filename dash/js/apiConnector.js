@@ -203,9 +203,10 @@ function ApiConnector(){
             var params = "?raw=true";
             var URL = heatmapURI+params;
         }else{
-            console.log("pulling heatmap from not null: "+url);
+
             var params = url.split(heatmapURI);
             var URL = heatmapURI+params[1];
+            console.log("pulling heatmap from not null: "+URL);
         }
         this.pullApiData(URL, "JSON", "GET", window.UI.updateRawHeatmapData, null);
     }
