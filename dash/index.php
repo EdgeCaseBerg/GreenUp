@@ -89,7 +89,9 @@ if(!isset($_COOKIE[session_name()])){
 //            window.ApiConnector.authenticateToken(window.userID, window.TOKEN);
 
             // instansiate the forum
+            <? if($LOGGEDIN){?>
             window.Comments = new CommentsHandle();
+            <?}?>
 
             // instansiate /initialize the UI controls
             window.UI = new UiHandle();
@@ -105,8 +107,9 @@ if(!isset($_COOKIE[session_name()])){
             window.ApiConnector.pullMarkerData();
             window.ApiConnector.pullHeatmapData();
             window.ApiConnector.pullRawHeatmapData();
+            <? if($LOGGEDIN){?>
             window.ApiConnector.pullServerLog(window.UI.updateLogContent);
-
+            <?}?>
 
             $('#loginButton').click(function(){
                 window.location = "login.php"
