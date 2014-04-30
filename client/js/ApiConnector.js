@@ -1408,6 +1408,8 @@ function Helper(){
             return true;
         }else if(testVar == null){
             return true;
+        }else if(testVar == "null"){
+            return true;
         }else if(testVar == ""){
             return true;
         }else if(testVar === null){
