@@ -106,7 +106,7 @@ if(!isset($_COOKIE[session_name()])){
             window.ApiConnector.pullCommentData();
             window.ApiConnector.pullMarkerData();
             window.ApiConnector.pullHeatmapData();
-            window.ApiConnector.pullRawHeatmapData();
+            window.ApiConnector.pullRawHeatmapData(null);
             <? if($LOGGEDIN){?>
             window.ApiConnector.pullServerLog(window.UI.updateLogContent);
             <?}?>

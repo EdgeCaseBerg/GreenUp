@@ -474,6 +474,7 @@ function UiHandle(){
         $('#totalDaysWorked').html(timeWorked['days']);
 
         if(!window.HELPER.isNull(data.page.next)){
+            console.log("data.page.next not null");
             window.ApiConnector.pullRawHeatmapData(data.page.next);
         }
     }
