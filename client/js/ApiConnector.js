@@ -1003,12 +1003,6 @@ function UiHandle(){
             // add marker type selectors
             // alert("comment");
             document.getElementById("markerTypeDialog").className = "markerTypePanel3";
-            document.getElementById("selectBlueComment").addEventListener('mousedown', function(){
-                window.Comments.commentType = "ADMIN";
-                window.Comments.commentType = "ADMIN";
-                window.UI.hideMarkerTypeSelect();
-                window.UI.showTextInput();
-            });
             document.getElementById("selectYellowComment").addEventListener('mousedown', function(){
                 window.Comments.commentType = "HAZARD";
                 window.UI.hideMarkerTypeSelect();
