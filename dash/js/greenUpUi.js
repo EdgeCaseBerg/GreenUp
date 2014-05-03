@@ -483,11 +483,18 @@ function UiHandle(){
         var acresWorked = HELPER.metersToAcres(sqMeters);
         // alert(acresWorked.toFixed(3));
         var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
-        $('#acresWorked').html(window.acresWorkedValue + acresWorked.toFixed(4));
-        $('#totalHoursWorked').html(window.totalHoursWorkedValue + timeWorked['hours']);
-        $('#totalMinutesWorked').html(window.totalMinutesWorkedValue + timeWorked['minutes']);
-        $('#totalSecondsWorked').html(window.totalSecondsWorked + timeWorked['seconds']);
-        $('#totalDaysWorked').html(window.totalDaysWorkedValue + timeWorked['days']);
+
+        window.acresWorkedValue = window.acresWorkedValue + acresWorked.toFixed(4)
+        window.totalHoursWorkedValue = window.totalHoursWorkedValue + timeWorked['hours']
+        window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + timeWorked['minutes']
+        window.totalSecondsWorked = window.totalSecondsWorked + timeWorked['seconds']
+        window.totalDaysWorkedValue = window.totalDaysWorkedValue + timeWorked['days']
+
+        $('#acresWorked').html(window.acresWorkedValue);
+        $('#totalHoursWorked').html(window.totalHoursWorkedValue);
+        $('#totalMinutesWorked').html(window.totalMinutesWorkedValue);
+        $('#totalSecondsWorked').html(window.totalSecondsWorked);
+        $('#totalDaysWorked').html(window.totalDaysWorkedValue);
 
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
