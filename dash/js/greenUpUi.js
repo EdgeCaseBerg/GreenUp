@@ -444,9 +444,9 @@ function UiHandle(){
 
 
     // ******* DOM updaters (callbacks for the ApiConnector pull methods) ***********
+    var totalHeatmapData = [];
     UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        var totalHeatmapData = [];
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
             totalHeatmapData.push(data);
@@ -455,13 +455,9 @@ function UiHandle(){
         else {
           //if it is null, we should be at the last page 
           console.log("we are at the last page, page: "+data.page.index);
+          console.log("the full array is length: "+totalHeatmapData);
         }
         window.MAP.applyHeatMap(data);
-        //test code (phelan)
-        console.log("Page of the data "+data.page.index);
-        console.log("The data itself: "+data); //is the last page of data really what is being applied?
-        console.log("The full array: "+totalHeatmapData); //how does the array full of the pages behave?
-        //end test code
     }
 
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
