@@ -132,8 +132,8 @@ function MapHandle(){
             var POINT_ARR = new google.maps.MVCArray(window.heatmapData);
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: POINT_ARR,
-                dissipating: true,
-                radius: 5
+                dissipating: false,
+                radius: 10
             });
 
             if(window.IS_HM_LOADED){
