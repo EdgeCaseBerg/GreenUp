@@ -485,15 +485,16 @@ function UiHandle(){
         var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
 
         window.totalHoursWorkedValue = window.totalHoursWorkedValue + Math.floor(timeWorked['hours']);
-        window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + Math.floor(timeWorked['minutes']);
-        window.totalSecondsWorked = window.totalSecondsWorked + Math.floor(timeWorked['seconds']);
-        window.totalDaysWorkedValue = window.totalDaysWorkedValue + Math.floor(timeWorked['days']);
+        // window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + Math.floor(timeWorked['minutes']);
+        // window.totalSecondsWorked = window.totalSecondsWorked + Math.floor(timeWorked['seconds']);
+        // window.totalDaysWorkedValue = window.totalDaysWorkedValue + Math.floor(timeWorked['days']);
+        console.log(totalHoursWorkedValue);
 
         $('#acresWorked').html(acresWorked);
-        $('#totalHoursWorked').html(window.totalHoursWorkedValue);
-        $('#totalMinutesWorked').html(window.totalMinutesWorkedValue);
-        $('#totalSecondsWorked').html(window.totalSecondsWorked);
-        $('#totalDaysWorked').html(window.totalDaysWorkedValue);
+        $('#totalHoursWorked').html(timeWorked['hours']);
+        $('#totalMinutesWorked').html(timeWorked['minutes']);
+        $('#totalSecondsWorked').html(timeWorked['seconds']);
+        $('#totalDaysWorked').html(timeWorked['days']);
 
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
