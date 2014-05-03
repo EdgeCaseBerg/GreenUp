@@ -136,6 +136,8 @@ if(!isset($_COOKIE[session_name()])){
         }
 
         #hmLoaderContainer{
+            padding: 4px 2px 4px 2px;
+            bachground-color: white;
             position: absolute;
             z-index: 1000;
             top: 85px;
@@ -209,7 +211,7 @@ if(!isset($_COOKIE[session_name()])){
 
     </div>
 
-    <div style="font-size: 0.9em; font-weight: bold" id="hmLoaderContainer">
+    <div style="font-size: 0.9em; font-weight: bold; padding: 4px 2px 4px 2px; background: white; border:solid 2px #333333" id="hmLoaderContainer">
             <img id="hmLoading" src="images/pacman.gif" height="20"/>
             Heatmap Loading...
         </div>

@@ -1,9 +1,9 @@
 // class for managing all Map work
 function MapHandle(){
     // BTV coords
-    this.currentLat = 44.476621500000000;
-    this.currentLon = -73.209998100000000;
-    this.currentZoom = 10;
+    this.currentLat = 44.056621500000000;
+    this.currentLon = -72.501998100000000;
+    this.currentZoom = 8;
     this.markerEvent;
     this.markerType;
     this.map;
