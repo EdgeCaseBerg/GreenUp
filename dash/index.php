@@ -1,6 +1,6 @@
 <?php
 
-require "../dashauth/conf.php";
+require "../dash-auth/conf.php";
 
 
 // check if we used HTTPS, if not, redirect to https
