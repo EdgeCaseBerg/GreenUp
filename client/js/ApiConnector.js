@@ -993,9 +993,6 @@ function UiHandle(){
 
     // shows the marker/comment type menu, and adds listeners to the buttons depending on their purpose
     UiHandle.prototype.showMarkerTypeSelect = function showMarkerTypeSelect(type){
-        if(window.DEBUG){
-            $('#dialogSliderTextarea').text(new Date().toISOString());
-        }
 
         window.LOGGER.debug(arguments.callee.name, "[showMarkerTypeSelect]");
         if(type == "comment"){
