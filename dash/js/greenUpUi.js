@@ -471,7 +471,7 @@ function UiHandle(){
             console.log(data);
         }
 
-        var metersPerSecond = 0.25; // this is a guess
+        var metersPerSecond = 0.27; // this is a guess
         window.sqMeters += (window.totalSecondsWorked * metersPerSecond);
         var acresWorked = HELPER.metersToAcres(window.sqMeters);
         // alert(acresWorked.toFixed(3));
