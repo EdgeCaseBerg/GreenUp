@@ -451,6 +451,7 @@ function UiHandle(){
             window.ApiConnector.pullHeatmapData(data.page.next);
         }
         window.MAP.applyHeatMap(data);
+        console.log("this is a test.");
     }
 
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
