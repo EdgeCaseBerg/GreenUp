@@ -99,6 +99,7 @@ if(!isset($_COOKIE[session_name()])){
             // instansiate /initialize the UI controls
             window.UI = new UiHandle();
             window.UI.init();
+            window.UI.toggleInfo();
 
             // build out the google map
             window.MAP = new MapHandle();
@@ -139,7 +140,7 @@ if(!isset($_COOKIE[session_name()])){
             padding: 4px 2px 4px 2px;
             bachground-color: white;
             position: absolute;
-            z-index: 1000;
+            z-index: 10000;
             top: 85px;
             left: 40px;
         }

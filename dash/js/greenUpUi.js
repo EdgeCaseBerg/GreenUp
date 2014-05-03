@@ -34,6 +34,22 @@ function UiHandle(){
     this.commentsType = ""
     this.commentsNextPageUrl = "";
     this.commentsPrevPageUrl = "";
+    UiHandle.prototype.toggleInfo = function showInfo(){
+        if(window.UI.isOptionsVisible){
+            window.UI.toggleMapOptions(function(){
+                $('#addMarkerDialog').hide();
+                $('#analyticsDialog').show();
+                window.UI.toggleMapOptions();
+            });
+        }else{
+            if(window.UI.isCommentsSliderVisible){
+                window.UI.toggleCommentsSlider();
+            }
+            $('#addMarkerDialog').hide();
+            $('#analyticsDialog').show();
+            window.UI.toggleMapOptions();
+        }
+    }
 
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
@@ -62,20 +78,7 @@ function UiHandle(){
         });
 
         $('#infoIcon').click(function(){
-            if(window.UI.isOptionsVisible){
-                window.UI.toggleMapOptions(function(){
-                    $('#addMarkerDialog').hide();
-                    $('#analyticsDialog').show();
-                    window.UI.toggleMapOptions();
-                });
-            }else{
-                if(window.UI.isCommentsSliderVisible){
-                    window.UI.toggleCommentsSlider();
-                }
-                $('#addMarkerDialog').hide();
-                $('#analyticsDialog').show();
-                window.UI.toggleMapOptions();
-            }
+            window.UI.toggleInfo();
         });
 
         $('#commentsIcon').click(function(){
