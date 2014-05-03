@@ -212,6 +212,10 @@ function MapHandle(){
 
     MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        if(window.HELPER.isNull(window.MAP.heatmap)){
+            return false;
+        }
+
         if(window.MAP.isHeatmapVisible){
             window.MAP.heatmap.setMap(null);
             window.MAP.isHeatmapVisible = false;

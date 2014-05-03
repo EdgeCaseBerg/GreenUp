@@ -706,10 +706,6 @@ function MapHandle(){
         window.LOGGER.debug(arguments.callee.name, "[toggleHeatmap]");
         document.getElementById('toggleHeatLabel').classList.toggle('buttonShadow');
 
-        if(window.HELPER.isNull(window.MAP.heatmap)){
-            return false;
-        }
-
         if(window.MAP.isHeatmapVisible){
             window.MAP.heatmap.setMap(null);
             window.MAP.isHeatmapVisible = false;
