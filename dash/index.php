@@ -2,7 +2,6 @@
 
 require "../dash-auth/conf.php";
 
-
 // check if we used HTTPS, if not, redirect to https
 if(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'){}else{
     //        header("Location: https://".HOST."/green-web/dash/index.php");
