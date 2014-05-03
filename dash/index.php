@@ -194,9 +194,12 @@ if(!isset($_COOKIE[session_name()])){
 
     <div id="iconContainer">
         <img id="infoIcon" src="images/info-icon-dark.png" height="40" width="40"/>
+
         <? if($LOGGEDIN){ ?>
         <img id="commentsIcon" src="images/comment-icon.png" height="40" width="40"/>
         <?}?>
+        <img id="hmLoading" src="images/pacman.gif" height="40"/>
+        <span style="font-size: 0.8em">Heatmap Loading...</span>
     </div>
 
     <div id="map-canvas">
