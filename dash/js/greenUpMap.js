@@ -209,6 +209,8 @@ function MapHandle(){
 
     MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.USE_HEATMAP = true;
+        window.ApiConnector.pullHeatmapData();
         if(window.MAP.isHeatmapVisible){
             window.MAP.heatmap.setMap(null);
             window.MAP.isHeatmapVisible = false;
@@ -216,6 +218,7 @@ function MapHandle(){
             window.MAP.heatmap.setMap(window.MAP.map);
             window.MAP.isHeatmapVisible = true ;
         }
+
     }
 
     MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){
