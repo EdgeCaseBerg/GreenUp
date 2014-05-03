@@ -38,7 +38,12 @@ function UiHandle(){
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
     	window.totalSecondsWorked = new BigNumber(0);
-
+        // for updates to the DOM Timecomponent
+        window.acresWorkedValue = 0;
+        window.totalHoursWorkedValue = 0;
+        window.totalMinutesWorkedValue = 0;
+        window.totalSecondsWorkedValue = 0;
+        window.totalDaysWorkedValue = 0;
         $('#viewLogButton').click(function(){
             window.UI.toggleLogSlider();
         });
@@ -475,6 +480,8 @@ function UiHandle(){
 
         var metersPerSecond = 0.25; // this is a guess
         window.sqMeters += (window.totalSecondsWorked * metersPerSecond);
+        console.log(window.sqMeters);
+        
         var acresWorked = HELPER.metersToAcres(window.sqMeters);
         // alert(acresWorked.toFixed(3));
         var timeWorked = HELPER.secondsToHoursMinutesSeconds(window.totalSecondsWorked);
