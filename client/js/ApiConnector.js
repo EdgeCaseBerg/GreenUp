@@ -219,7 +219,7 @@ function ApiConnector(){
             params += "lonOffset=" + lonOffset;
         }else if(window.CURRENT_BOUNDS.LAT_OFFSET != 0){
             params += "&";
-            params += "lonOffset=" + window.CURRENT_BOUNDS.LAT_OFFSET;
+            params += "lonOffset=" + window.CURRENT_BOUNDS.LON_OFFSET;
         }
         var URL = heatmapURI+params;
         console.log("Preparing to pull heatmap data: "+URL);
