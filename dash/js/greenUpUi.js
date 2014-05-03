@@ -455,10 +455,11 @@ function UiHandle(){
         }else{
             window.IS_HM_LOADED = true;
             for (var i = 0; i < aggregateHeatMapPoints.length; i++) {
-                window.MAP.applyHeatMap(aggregateHeatMapPoints[i]);
+                // window.MAP.applyHeatMap(aggregateHeatMapPoints[i]);
+                console.log(aggregateHeatMapPoints[i]);
             };
         }
-        // window.MAP.applyHeatMap(data);
+        window.MAP.applyHeatMap(data);
     }
 
 
