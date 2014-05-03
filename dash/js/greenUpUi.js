@@ -468,7 +468,6 @@ function UiHandle(){
         var HELPER = new Helper();
         
         if(!window.HELPER.isNull(data.grid)){
-                totalSecondsWorkedTest = totalSecondsWorkedTest + data.grid[ii].secondsWorked;
                 window.totalSecondsWorked = window.totalSecondsWorked.add(data.grid[ii].secondsWorked);
         }else{
             console.log("Data grid not found --> ");
