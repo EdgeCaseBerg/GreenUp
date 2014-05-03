@@ -29,7 +29,7 @@ function ApiConnector(){
         };
         $.ajax({
             type: "POST",
-            url: "../dash-auth/api/auth",
+            url: "../dashauth/api/auth",
             dataType: "JSON",
             data: JSON.stringify(jsonObj),
             cache: false,

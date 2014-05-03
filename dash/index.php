@@ -2,7 +2,6 @@
 
 require "../dash-auth/conf.php";
 
-
 // check if we used HTTPS, if not, redirect to https
 if(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'){}else{
     //        header("Location: https://".HOST."/green-web/dash/index.php");
@@ -17,7 +16,7 @@ if(isset($_POST['username']) && isset($_POST['password'])){
     $arr['us'] = $_POST['password'];
     $str = json_encode($arr);
 
-    curl_setopt($ch, CURLOPT_URL,            "http://".HOST."/green-web/dash-auth/api/auth.php" );
+    curl_setopt($ch, CURLOPT_URL,            "http://".HOST."/dashauth/api/auth.php" );
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
     curl_setopt($ch, CURLOPT_POST,           1 );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $str);

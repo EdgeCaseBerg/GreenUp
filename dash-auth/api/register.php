@@ -10,7 +10,7 @@
  * request was invalid and they will not be signed up for service.
 */
 
-$ALLOW_REGISTER = false;
+$ALLOW_REGISTER = true;
 $response = new stdClass();
 $response->code = 400; 
 
