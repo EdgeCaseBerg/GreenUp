@@ -474,6 +474,7 @@ function UiHandle(){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
                 totalSecondsWorkedTest = totalSecondsWorkedTest + data.grid[ii].secondsWorked;
                 window.totalSecondsWorked = window.totalSecondsWorked.add(data.grid[ii].secondsWorked);
+            }
         }else{
             console.log("Data grid not found --> ");
             console.log(data);
