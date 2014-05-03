@@ -455,7 +455,7 @@ function UiHandle(){
         else {
           //if it is null, we should be at the last page 
           console.log("we are at the last page, page: "+data.page.index);
-          console.log("the full array is length: "+totalHeatmapData);
+          console.log("the full array is length: "+totalHeatmapData.length);
         }
         window.MAP.applyHeatMap(data);
     }
