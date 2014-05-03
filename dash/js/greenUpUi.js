@@ -472,8 +472,6 @@ function UiHandle(){
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
-                totalSecondsWorkedTest = totalSecondsWorkedTest + data.grid[ii].secondsWorked;
-                window.totalSecondsWorked = window.totalSecondsWorked.add(data.grid[ii].secondsWorked);
             }
         }else{
             console.log("Data grid not found --> ");
@@ -484,6 +482,17 @@ function UiHandle(){
         window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + timeWorked['minutes'];
         console.log(window.totalMinutesWorkedValue);
 
+        var metersPerSecond = 0.25; // this is a guess
+        var sqMeters = (window.totalSecondsWorked * metersPerSecond);
+        var acresWorked = HELPER.metersToAcres(sqMeters);
+        // alert(acresWorked.toFixed(3));
+        var timeWorked = HELPER.secondsToHoursMinutesSeconds(window.totalSecondsWorked);
+        $('#acresWorked').html(acresWorked);
+        $('#totalHoursWorked').html(timeWorked['hours']);
+        $('#totalMinutesWorked').html(timeWorked['minutes']);
+        $('#totalSecondsWorked').html(timeWorked['seconds']);
+        $('#totalDaysWorked').html(timeWorked['days']);
+
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
 
@@ -491,22 +500,6 @@ function UiHandle(){
             setTimeout(function() {
                 window.ApiConnector.pullRawHeatmapData(data.page.next);
             }, millisecondsToWait);
-        }
-        else {
-            // data loaded, now populate
-            var metersPerSecond = 0.25; // this is a guess
-            var sqMeters = (window.totalSecondsWorked * metersPerSecond);
-            var acresWorked = HELPER.metersToAcres(sqMeters);
-            // alert(acresWorked.toFixed(3));
-            var timeWorked = HELPER.secondsToHoursMinutesSeconds(window.totalSecondsWorked);
-            $('#acresWorked').html(acresWorked);
-            $('#totalHoursWorked').html(timeWorked['hours']);
-            $('#totalMinutesWorked').html(timeWorked['minutes']);
-            $('#totalSecondsWorked').html(timeWorked['seconds']);
-            $('#totalDaysWorked').html(timeWorked['days']);
-
-            console.log(totalSecondsWorked);
-            console.log(totalSecondsWorkedTest);
         }
     }
 
