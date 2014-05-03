@@ -504,7 +504,7 @@ function MapHandle(){
     this.markerType;
     this.map;
     this.pickupMarkers = [];
-    this.isHeatmapVisible = true;
+    this.isHeatmapVisible = false;
 
     // fire up our google map
     MapHandle.prototype.initMap = function initMap(){
