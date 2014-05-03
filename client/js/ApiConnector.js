@@ -499,7 +499,7 @@ function MapHandle(){
     // BTV coords
     this.currentLat = 44.476621500000000;
     this.currentLon = -73.209998100000000;
-    this.currentZoom = 15;
+    this.currentZoom = 10;
     this.markerEvent;
     this.markerType;
     this.map;
@@ -561,14 +561,14 @@ function MapHandle(){
         switch(window.MAP.markerType){
             case "COMMENT":
                 pin.type = "MARKER";
-                iconUrl = "img/icons/greenCircle.png";
+                iconUrl = "img/icons/marker.png";
                 break;
             case "HAZARD":
                 pin.type = "HAZARD";
-                iconUrl = "img/icons/orangeCircle.png";
+                iconUrl = "img/icons/hazardMarker.png";
                 break;
             default:
-                iconUrl = "img/icons/greenCircle.png";
+                iconUrl = "img/icons/trashMarker.png";
                 break;
         }
 
