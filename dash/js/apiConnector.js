@@ -170,8 +170,8 @@ function ApiConnector(){
         var heatmapURI = "/heatmap";
         var params = "";
         if(latDegrees != null){
-            params = "?";
-            params += "latDegrees=" + latDegrees + "&";
+            params = "?raw=true";
+            params += "&latDegrees=" + latDegrees + "&";
         }
         if(latOffset != null){
             params = "?";
