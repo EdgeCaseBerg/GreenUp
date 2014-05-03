@@ -320,8 +320,7 @@ function ApiConnector(){
         window.LOGGER.debug(arguments.callee.name, "[pushHeatmapData]");
         if (document.URL.search("localhost") > 0){
         	var heatmapURI = "http://localhost/proxy.php?url=http://199.195.248.180:31337/api/heatmap";
-        }
-        else{
+        }else{
 	        var heatmapURI = "/heatmap";
         }
         if(window.logging){
@@ -714,11 +713,13 @@ function MapHandle(){
     }
 
     MapHandle.prototype.getCurrentMapBounds = function getCurrentMapBounds(){
+        window.ClientLogger.debug(arguments.callee.name, "get lat long bounds");
         var lat0 = window.MAP.map.getBounds().getNorthEast().lat();
         var lng0 = window.MAP.map.getBounds().getNorthEast().lng();
 
         var lat1 = window.MAP.map.getBounds().getSouthWest().lat();
         var lng1 = window.MAP.map.getBounds().getSouthWest().lng();
+        window.ClientLogger.debug(arguments.callee.name, "get lat long bounds: "+lat0);
 
         window.CURRENT_BOUNDS.LAT = lat1;
         window.CURRENT_BOUNDS.LAT_OFFSET = lat1 - lat0;
