@@ -713,13 +713,13 @@ function MapHandle(){
     }
 
     MapHandle.prototype.getCurrentMapBounds = function getCurrentMapBounds(){
-        window.ClientLogger.debug(arguments.callee.name, "get lat long bounds");
+        console.log("get lat long bounds");
         var lat0 = window.MAP.map.getBounds().getNorthEast().lat();
         var lng0 = window.MAP.map.getBounds().getNorthEast().lng();
 
         var lat1 = window.MAP.map.getBounds().getSouthWest().lat();
         var lng1 = window.MAP.map.getBounds().getSouthWest().lng();
-        window.ClientLogger.debug(arguments.callee.name, "get lat long bounds: "+lat0);
+        console.log("get lat long bounds: "+lat0);
 
         window.CURRENT_BOUNDS.LAT = lat1;
         window.CURRENT_BOUNDS.LAT_OFFSET = lat1 - lat0;
