@@ -123,22 +123,15 @@ function MapHandle(){
             window.heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
         }
 
+
+        if(window.heatmapData.length > 0){
+
             var POINT_ARR = new google.maps.MVCArray(window.heatmapData);
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: POINT_ARR,
                 dissipating: true,
                 radius: 5
             });
-
-
-        if(window.heatmapData.length > 0 && window.IS_HM_LOADED){
-
-            window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: POINT_ARR,
-                dissipating: true,
-                radius: 5
-            });
-
             window.MAP.heatmap.setMap(window.MAP.map);
         }
     }
