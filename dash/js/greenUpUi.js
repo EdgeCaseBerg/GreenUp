@@ -464,11 +464,11 @@ function UiHandle(){
         window.MAP.applyHeatMap(data);
     }
 
-
+    var totalSecondsWorked = new BigNumber(0);
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
-        var totalSecondsWorked = new BigNumber(0);
+        
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
@@ -487,6 +487,7 @@ function UiHandle(){
             }, millisecondsToWait);
         }
         else {
+            // data loaded, now populate
             var metersPerSecond = 0.25; // this is a guess
             var sqMeters = (totalSecondsWorked * metersPerSecond);
             var acresWorked = HELPER.metersToAcres(sqMeters);
