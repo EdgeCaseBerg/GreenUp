@@ -160,44 +160,44 @@ function ApiConnector(){
 
 
 
-    // ********** specific data pullers *************
-    ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(url, latDegrees, latOffset, lonDegrees, lonOffset){
-        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        /*
-         To be extra safe we could do if(typeof(param) === "undefined" || param == null),
-         but there is an implicit cast against undefined defined for double equals in javascript
-         */
-        var heatmapURI = "/heatmap";
-        var params = "";
-        if(latDegrees != null){
-            params = "?raw=true";
-            params += "&latDegrees=" + latDegrees + "&";
-        }
-        if(latOffset != null){
-            params = "?";
-            params += "latOffset=" + latOffset + "&";
-        }
-        if(lonDegrees != null){
-            params = "?";
-            params += "lonDegrees" + lonDegrees + "&";
-        }
-        if(lonOffset != null){
-            params = "?";
-            params += "lonOffset" + lonOffset + "&";
-        }
-        if(window.HELPER.isNull(url)){
-            var URL = heatmapURI+params;
-        }else{
-            var params = url.split(heatmapURI);
-            var URL = heatmapURI+params[1];
-            console.log("pulling heatmap from not null: "+URL);
-        }
+//    // ********** specific data pullers *************
+//    ApiConnector.prototype.pullHeatmapData = function pullHeatmapData(url, latDegrees, latOffset, lonDegrees, lonOffset){
+//        window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+//        /*
+//         To be extra safe we could do if(typeof(param) === "undefined" || param == null),
+//         but there is an implicit cast against undefined defined for double equals in javascript
+//         */
+//        var heatmapURI = "/heatmap";
+//        var params = "";
+//        if(latDegrees != null){
+//            params = "?raw=true";
+//            params += "&latDegrees=" + latDegrees + "&";
+//        }
+//        if(latOffset != null){
+//            params = "?";
+//            params += "latOffset=" + latOffset + "&";
+//        }
+//        if(lonDegrees != null){
+//            params = "?";
+//            params += "lonDegrees" + lonDegrees + "&";
+//        }
+//        if(lonOffset != null){
+//            params = "?";
+//            params += "lonOffset" + lonOffset + "&";
+//        }
+//        if(window.HELPER.isNull(url)){
+//            var URL = heatmapURI+params;
+//        }else{
+//            var params = url.split(heatmapURI);
+//            var URL = heatmapURI+params[1];
+//            console.log("pulling heatmap from not null: "+URL);
+//        }
+//
+//        this.pullApiData(URL, "JSON", "GET", window.UI.updateHeatmap);
+//
+//    }
 
-        this.pullApiData(URL, "JSON", "GET", window.UI.updateRawHeatmapData);
-
-    }
-
-    // ********** specific data pullers *************
+//    // ********** specific data pullers *************
     ApiConnector.prototype.pullRawHeatmapData = function pullRawHeatmapData(url){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         /*
@@ -309,7 +309,7 @@ function ApiConnector(){
         this.pullApiData(this.PATH, "JSON", "GET", window.UI.updateTest);
         this.pullCommentData("needs", null);
         this.pullCommentData("messages", null);
-        this.pullHeatmapData();
+        this.pullRawHeatmapData();
         this.pullMarkerData();
     }
 

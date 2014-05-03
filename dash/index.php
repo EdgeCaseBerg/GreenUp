@@ -84,7 +84,7 @@ if(!isset($_COOKIE[session_name()])){
             window.sqMeters = 0.00;
             window.heatmapData = [];
 
-            window.POINT_ARR = null;
+            window.POINT_
 
             window.LOGGER = new ClientLogger();
             window.HELPER = new Helper();
@@ -110,7 +110,7 @@ if(!isset($_COOKIE[session_name()])){
             // grab our comments, map markers, and heatmap data
             window.ApiConnector.pullCommentData();
             window.ApiConnector.pullMarkerData();
-            window.ApiConnector.pullHeatmapData();
+//            window.ApiConnector.pullHeatmapData();
             window.ApiConnector.pullRawHeatmapData(null);
             <? if($LOGGEDIN){?>
             window.ApiConnector.pullServerLog(window.UI.updateLogContent);
