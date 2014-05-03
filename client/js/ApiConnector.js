@@ -641,6 +641,8 @@ function MapHandle(){
         pin.latDegrees = lat;
         pin.lonDegrees = lon;
 
+
+        window.PINZ.push(pin);
         window.PINS[id] = pin;
 
 
@@ -1352,9 +1354,9 @@ function UiHandle(){
                     document.getElementById("bubble"+ii).addEventListener("click", function(){
                         var pid = parseInt($(this).find(".pinId").val());
                         console.log("pid: "+pid);
-                        for(var ii=0; ii<window.PINS.length; ii++){
-                            if(window.PINS[ii].id == pid){
-                                var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees);
+                        for(var ii=0; ii<window.PINZ.length; ii++){
+                            if(window.PINZ[ii].id == pid){
+                                var centerPoint = new google.maps.LatLng(window.PINZ[ii].latDegrees, window.PINZ[ii].lonDegrees);
                                 window.MAP.map.setCenter(centerPoint);
                                 window.MAP.map.setZoom(18);
                             }
@@ -1709,6 +1711,7 @@ document.addEventListener('DOMContentLoaded',function(){
     window.CURRENT_BOUNDS = new MAP_BOUNDS();
 
     window.PINS = {};
+    window.PINZ = [];
     window.ALLOW_LOADING_SCREEN = true;
 
 
