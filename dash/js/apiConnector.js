@@ -207,7 +207,7 @@ function ApiConnector(){
         var heatmapURI = "/heatmap";
         if(window.HELPER.isNull(url)){
 
-            var params = "?raw=true";
+            var params = "";
             var URL = heatmapURI+params;
         }else{
 
