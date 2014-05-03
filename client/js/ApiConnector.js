@@ -1349,7 +1349,8 @@ function UiHandle(){
                     window.LOGGER.debug("pin "+comments[ii].pin+" is addressed", "[DEBUG]");
 
                     document.getElementById("bubble"+ii).addEventListener("click", function(){
-                        var pid = $(this).find(".pinId").val();
+                        var pid = $(this).parent().find(".pinId").val();
+                        console.log("pid: "+pid);
                         for(var ii=0; ii<window.PINS.length; ii++){
                             if(window.PINS[ii].id == pid){
                                 var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees);
