@@ -465,6 +465,7 @@ function UiHandle(){
     }
 
     var totalSecondsWorked = new BigNumber(0);
+    var totalSecondsWorkedTest = 0;
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
@@ -472,11 +473,16 @@ function UiHandle(){
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
+                totalSecondsWorkedTest = totalSecondsWorkedTest + data.grid[ii].secondsWorked;
             }
         }else{
             console.log("Data grid not found --> ");
             console.log(data);
         }
+
+        var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
+        window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + timeWorked['minutes'];
+        console.log(window.totalMinutesWorkedValue);
 
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
@@ -498,6 +504,9 @@ function UiHandle(){
             $('#totalMinutesWorked').html(timeWorked['minutes']);
             $('#totalSecondsWorked').html(timeWorked['seconds']);
             $('#totalDaysWorked').html(timeWorked['days']);
+
+            console.log(totalSecondsWorked);
+            console.log(totalSecondsWorkedTest);
         }
     }
 
