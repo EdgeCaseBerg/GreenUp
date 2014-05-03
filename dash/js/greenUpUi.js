@@ -35,11 +35,11 @@ function UiHandle(){
     this.commentsPrevPageUrl = "";
 
     // for updates to the Dom
-    window.acresWorkedValue = 0;
-    window.totalHoursWorkedValue = 0;
-    window.totalMinutesWorkedValue = 0;
-    window.totalSecondsWorked = 0;
-    window.totalDaysWorkedValue = 0;
+    this.acresWorkedValue = 0;
+    this.totalHoursWorkedValue = 0;
+    this.totalMinutesWorkedValue = 0;
+    this.totalSecondsWorked = 0;
+    this.totalDaysWorkedValue = 0;
 
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
