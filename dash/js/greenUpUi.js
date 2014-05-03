@@ -477,11 +477,6 @@ function UiHandle(){
             console.log("Data grid not found --> ");
             console.log(data);
         }
-
-        var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
-        window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + timeWorked['minutes'];
-        console.log(window.totalMinutesWorkedValue);
-
         var metersPerSecond = 0.25; // this is a guess
         var sqMeters = (window.totalSecondsWorked * metersPerSecond);
         var acresWorked = HELPER.metersToAcres(sqMeters);
@@ -492,6 +487,9 @@ function UiHandle(){
         $('#totalMinutesWorked').html(timeWorked['minutes']);
         $('#totalSecondsWorked').html(timeWorked['seconds']);
         $('#totalDaysWorked').html(timeWorked['days']);
+
+        window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + timeWorked['minutes'];
+        console.log(window.totalMinutesWorkedValue);
 
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
