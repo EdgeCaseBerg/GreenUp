@@ -6,6 +6,7 @@ function UiHandle(){
     this.MOUSEUP_TIME;
     this.isMarkerVisible = true;
     this.isMapLoaded = false;
+    window.IS_HM_LOADED = false;
 
     this.isAddMarkerDialogVisible = false
 
@@ -451,6 +452,7 @@ function UiHandle(){
 
     // ******* DOM updaters (callbacks for the ApiConnector pull methods) ***********
     UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
+        window.IS_HM_LOADED = false;
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
@@ -459,13 +461,16 @@ function UiHandle(){
                 window.ApiConnector.pullHeatmapData(data.page.next);
             }, millisecondsToWait);
 
-        } 
+        } else {
+            window.IS_HM_LOADED = true;
+        }
         window.MAP.applyHeatMap(data);
     }
 
 
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.IS_HM_LOADED = false;
         var HELPER = new Helper();
         var totalSecondsWorked = new BigNumber(0);
         if(!window.HELPER.isNull(data.grid)){
@@ -477,8 +482,8 @@ function UiHandle(){
             console.log(data);
         }
         var metersPerSecond = 0.25; // this is a guess
-        var sqMeters = (window.totalSecondsWorked * metersPerSecond);
-        var acresWorked = HELPER.metersToAcres(sqMeters);
+        window.sqMeters += (window.totalSecondsWorked * metersPerSecond);
+        var acresWorked = HELPER.metersToAcres(window.sqMeters);
         // alert(acresWorked.toFixed(3));
         var timeWorked = HELPER.secondsToHoursMinutesSeconds(window.totalSecondsWorked);
         $('#acresWorked').html(acresWorked);
@@ -489,11 +494,9 @@ function UiHandle(){
             
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
-
-            var millisecondsToWait = 500;
-            setTimeout(function() {
-                window.ApiConnector.pullRawHeatmapData(data.page.next);
-            }, millisecondsToWait);
+            window.ApiConnector.pullRawHeatmapData(data.page.next);
+        } else {
+            window.IS_HM_LOADED = true;
         }
     }
 
