@@ -502,7 +502,9 @@ function UiHandle(){
             setTimeout(function() {
                 window.ApiConnector.pullRawHeatmapData(data.page.next);
             }, millisecondsToWait);
-
+        }
+        else {
+            console.log(totalSecondsWorked);
         }
     }
 
