@@ -455,7 +455,11 @@ function UiHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
-            window.ApiConnector.pullHeatmapData(data.page.next);
+            var millisecondsToWait = 500;
+            setTimeout(function() {
+                window.ApiConnector.pullHeatmapData(data.page.next);
+            }, millisecondsToWait);
+
         } 
         window.MAP.applyHeatMap(data);
     }
@@ -487,7 +491,12 @@ function UiHandle(){
 
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
-            window.ApiConnector.pullRawHeatmapData(data.page.next);
+
+            var millisecondsToWait = 500;
+            setTimeout(function() {
+                window.ApiConnector.pullRawHeatmapData(data.page.next);
+            }, millisecondsToWait);
+
         }
         console.log(acresWorkedValue);
     }
