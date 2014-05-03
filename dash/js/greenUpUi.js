@@ -488,6 +488,8 @@ function UiHandle(){
         }else{
             window.IS_HM_LOADED = true;
         }
+
+        window.MAP.applyHeatMap(data);
     }
 
     // markers coming from the apiconnector comes here to be added to the UI

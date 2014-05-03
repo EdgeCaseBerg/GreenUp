@@ -132,7 +132,9 @@ function MapHandle(){
                 dissipating: true,
                 radius: 5
             });
-            window.MAP.heatmap.setMap(window.MAP.map);
+            if(window.IS_HM_LOADED){
+                window.MAP.heatmap.setMap(window.MAP.map);
+            }
         }
     }
 
