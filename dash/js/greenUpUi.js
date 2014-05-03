@@ -40,7 +40,7 @@ function UiHandle(){
         // for updates to the Dom
         window.acresWorkedValue = 0;
         window.totalHoursWorkedValue = 0;
-        window.timeWorkedValue = 0;
+        window.totalMinutesWorkedValue = 0;
         window.totalSecondsWorked = 0;
         window.totalDaysWorkedValue = 0;
 
@@ -483,11 +483,11 @@ function UiHandle(){
         var acresWorked = HELPER.metersToAcres(sqMeters);
         // alert(acresWorked.toFixed(3));
         var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
-        $('#acresWorked').html(acresWorked.toFixed(4));
-        $('#totalHoursWorked').html(timeWorked['hours']);
-        $('#totalMinutesWorked').html(timeWorked['minutes']);
-        $('#totalSecondsWorked').html(timeWorked['seconds']);
-        $('#totalDaysWorked').html(timeWorked['days']);
+        $('#acresWorked').html(window.acresWorkedValue + acresWorked.toFixed(4));
+        $('#totalHoursWorked').html(window.totalHoursWorkedValue + timeWorked['hours']);
+        $('#totalMinutesWorked').html(window.totalMinutesWorkedValue + timeWorked['minutes']);
+        $('#totalSecondsWorked').html(window.totalSecondsWorked + timeWorked['seconds']);
+        $('#totalDaysWorked').html(window.totalDaysWorkedValue + timeWorked['days']);
 
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
@@ -498,7 +498,6 @@ function UiHandle(){
             }, millisecondsToWait);
 
         }
-        console.log(window.acresWorkedValue);
     }
 
     // markers coming from the apiconnector comes here to be added to the UI
