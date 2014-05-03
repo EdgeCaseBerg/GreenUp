@@ -122,7 +122,7 @@ function MapHandle(){
         for(var ii=0; ii<dataObj.grid.length; ii++){
             window.heatmapData.push({
                 location: new google.maps.LatLng( dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees),
-                weight: dataObj.grid[ii].secondsWorked
+                weight: (dataObj.grid[ii].secondsWorked * 1.5)
             });
         }
 
