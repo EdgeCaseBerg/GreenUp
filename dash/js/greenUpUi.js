@@ -484,13 +484,12 @@ function UiHandle(){
         // alert(acresWorked.toFixed(3));
         var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
 
-        window.acresWorkedValue = window.acresWorkedValue + acresWorked.toFixed(4)
-        window.totalHoursWorkedValue = window.totalHoursWorkedValue + timeWorked['hours']
-        window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + timeWorked['minutes']
-        window.totalSecondsWorked = window.totalSecondsWorked + timeWorked['seconds']
-        window.totalDaysWorkedValue = window.totalDaysWorkedValue + timeWorked['days']
+        window.totalHoursWorkedValue = window.totalHoursWorkedValue + Math.floor(timeWorked['hours']);
+        window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + Math.floor(timeWorked['minutes']);
+        window.totalSecondsWorked = window.totalSecondsWorked + Math.floor(timeWorked['seconds']);
+        window.totalDaysWorkedValue = window.totalDaysWorkedValue + Math.floor(timeWorked['days']);
 
-        $('#acresWorked').html(window.acresWorkedValue);
+        $('#acresWorked').html(acresWorked);
         $('#totalHoursWorked').html(window.totalHoursWorkedValue);
         $('#totalMinutesWorked').html(window.totalMinutesWorkedValue);
         $('#totalSecondsWorked').html(window.totalSecondsWorked);
