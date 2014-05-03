@@ -84,8 +84,6 @@ if(!isset($_COOKIE[session_name()])){
             window.sqMeters = 0.00;
             window.heatmapData = [];
 
-            window.POINT_
-
             window.LOGGER = new ClientLogger();
             window.HELPER = new Helper();
 
