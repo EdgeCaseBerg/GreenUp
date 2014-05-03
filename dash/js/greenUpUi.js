@@ -464,24 +464,13 @@ function UiHandle(){
         window.MAP.applyHeatMap(data);
     }
 
-<<<<<<< HEAD
-    var totalSecondsWorked = new BigNumber(0);
-    var totalSecondsWorkedTest = 0;
-=======
-
->>>>>>> e9bbd77c0a1335201e7f6c8dfd553bad37a2c95b
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
         
         if(!window.HELPER.isNull(data.grid)){
-            for(var ii=0; ii<data.grid.length; ii++){
-<<<<<<< HEAD
-                totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
                 totalSecondsWorkedTest = totalSecondsWorkedTest + data.grid[ii].secondsWorked;
-=======
                 window.totalSecondsWorked = window.totalSecondsWorked.add(data.grid[ii].secondsWorked);
->>>>>>> e9bbd77c0a1335201e7f6c8dfd553bad37a2c95b
             }
         }else{
             console.log("Data grid not found --> ");
