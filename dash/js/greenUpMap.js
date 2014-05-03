@@ -132,6 +132,7 @@ function MapHandle(){
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: POINT_ARR,
                 dissipating: true,
+                opacity: 0.99,
                 radius: 5
             });
 
