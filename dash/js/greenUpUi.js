@@ -454,10 +454,11 @@ function UiHandle(){
     }
 
     var testSeconds = new BigNumber(0); 
+    var totalSecondsWorked = new BigNumber(0);
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
-        var totalSecondsWorked = new BigNumber(0);
+        
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
