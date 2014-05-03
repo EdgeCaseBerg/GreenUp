@@ -8,6 +8,7 @@ function MapHandle(){
     this.markerType;
     this.map;
     this.pickupMarkers = [];
+    window.heatmapData = [];
     this.isHeatmapVisible = true;
     window.USE_HEATMAP = false;
 
@@ -121,7 +122,7 @@ function MapHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         if(window.USE_HEATMAP){
             var dataObj = data;
-            var heatmapData = [];
+
             for(var ii=0; ii<dataObj.grid.length; ii++){
                 heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
             }
