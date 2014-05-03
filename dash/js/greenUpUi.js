@@ -41,8 +41,6 @@ function UiHandle(){
     window.totalSecondsWorked = new BigNumber(0);
         window.totalDaysWorkedValue = 0;
 
-    new BigNumber(0);
-
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
 
@@ -473,7 +471,7 @@ function UiHandle(){
         
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
-                window.totalSecondsWorked.add(data.grid[ii].secondsWorked);
+                window.totalSecondsWorked = window.totalSecondsWorked.add(data.grid[ii].secondsWorked);
             }
         }else{
             console.log("Data grid not found --> ");
