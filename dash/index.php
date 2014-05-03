@@ -80,7 +80,7 @@ if(!isset($_COOKIE[session_name()])){
             ?>
 
             window.DEBUG = false;
-            var totalSecondsWorked = new BigNumber(0);
+            window.totalSecondsWorked = new BigNumber(0);
             window.sqMeters = 0.00;
 
             window.LOGGER = new ClientLogger();
