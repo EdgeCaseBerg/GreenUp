@@ -123,21 +123,18 @@ function MapHandle(){
             window.heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
         }
 
-        if(window.POINT_ARR == null){
-            window.POINT_ARR = new google.maps.MVCArray(window.heatmapData);
+            var POINT_ARR = new google.maps.MVCArray(window.heatmapData);
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: window.POINT_ARR,
+                data: POINT_ARR,
                 dissipating: true,
                 radius: 5
             });
-        }else{
-            window.POINT_ARR.push(new google.maps.MVCArray(window.heatmapData));
-        }
+
 
         if(window.heatmapData.length > 0 && window.IS_HM_LOADED){
 
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: window.POINT_ARR,
+                data: POINT_ARR,
                 dissipating: true,
                 radius: 5
             });
