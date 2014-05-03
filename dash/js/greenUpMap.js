@@ -120,18 +120,22 @@ function MapHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var dataObj = data;
         for(var ii=0; ii<dataObj.grid.length; ii++){
-            window.heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
+            window.heatmapData.push({
+                location: new google.maps.LatLng( dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees),
+                weight: dataObj.grid[ii].secondsWorked
+            });
         }
 
 
         if(window.heatmapData.length > 0){
-
+            console.log("num heatmap points: "+window.heatmapData.length);
             var POINT_ARR = new google.maps.MVCArray(window.heatmapData);
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: POINT_ARR,
                 dissipating: true,
                 radius: 5
             });
+
             if(window.IS_HM_LOADED){
                 console.log("hm loaded - applying");
                 window.MAP.heatmap.setMap(window.MAP.map);
