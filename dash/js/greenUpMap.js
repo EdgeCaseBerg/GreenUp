@@ -119,14 +119,13 @@ function MapHandle(){
     MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var dataObj = data;
-        var heatmapData = [];
         for(var ii=0; ii<dataObj.grid.length; ii++){
             window.heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
         }
         if(window.heatmapData.length > 0 && window.IS_HM_LOADED){
             var pointArray = new google.maps.MVCArray(window.heatmapData);
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: pointArray,
+                data: window.POINT_ARR,
                 dissipating: true,
                 radius: 5
             });
