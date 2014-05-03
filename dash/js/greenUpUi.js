@@ -444,20 +444,23 @@ function UiHandle(){
 
 
     // ******* DOM updaters (callbacks for the ApiConnector pull methods) ***********
-    var totalHeatmapData = [];
+    var heatmapDataArray = [];
     UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
-            totalHeatmapData.push(data);
+            heatmapDataArray.push(data);
             window.ApiConnector.pullHeatmapData(data.page.next);
         } 
         else {
           //if it is null, we should be at the last page 
           console.log("we are at the last page, page: "+data.page.index);
-          console.log("the full array is length: "+totalHeatmapData.length);
+          console.log("the full array is length: "+heatmapDataArray.length);
+          for (var i = 0; i < heatmapDataArray.length; i++) {
+              window.MAP.applyHeatMap(heatmapDataArray[i]);
+          };
         }
-        window.MAP.applyHeatMap(data);
+        // window.MAP.applyHeatMap(data);
     }
 
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
