@@ -128,11 +128,11 @@ function MapHandle(){
         }else{
             window.POINT_ARR.push(new google.maps.MVCArray(window.heatmapData));
         }
-        
+
         if(window.heatmapData.length > 0 && window.IS_HM_LOADED){
 
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: pointArray,
+                data: window.POINT_ARR,
                 dissipating: true,
                 radius: 5
             });
