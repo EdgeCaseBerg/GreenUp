@@ -480,9 +480,8 @@ function UiHandle(){
 
         var metersPerSecond = 0.25; // this is a guess
         window.sqMeters += (window.totalSecondsWorked * metersPerSecond);
-        console.log(window.sqMeters);
-        
         var acresWorked = HELPER.metersToAcres(window.sqMeters);
+        console.log(acresWorked);
         // alert(acresWorked.toFixed(3));
         var timeWorked = HELPER.secondsToHoursMinutesSeconds(window.totalSecondsWorked);
         window.totalHoursWorkedValue += timeWorked['hours'];
