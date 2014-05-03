@@ -461,10 +461,10 @@ function UiHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         window.IS_HM_LOADED = false;
         var HELPER = new Helper();
-        var totalSecondsWorked = new BigNumber(0);
+
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
-                totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
+                window.totalSecondsWorked = window.totalSecondsWorked.add(data.grid[ii].secondsWorked);
             }
         }else{
             console.log("Data grid not found --> ");
@@ -472,10 +472,10 @@ function UiHandle(){
         }
 
         var metersPerSecond = 0.25; // this is a guess
-        var sqMeters = (totalSecondsWorked * metersPerSecond);
-        var acresWorked = HELPER.metersToAcres(sqMeters);
+        window.sqMeters += (window.totalSecondsWorked * metersPerSecond);
+        var acresWorked = HELPER.metersToAcres(window.sqMeters);
         // alert(acresWorked.toFixed(3));
-        var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
+        var timeWorked = HELPER.secondsToHoursMinutesSeconds(window.totalSecondsWorked);
         $('#acresWorked').html(acresWorked.toFixed(4));
         $('#totalHoursWorked').html(timeWorked['hours']);
         $('#totalMinutesWorked').html(timeWorked['minutes']);
