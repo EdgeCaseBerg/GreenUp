@@ -460,7 +460,7 @@ function UiHandle(){
               window.MAP.applyHeatMap(heatmapPageDataArray[i]);
           };
         }
-        window.MAP.applyHeatMap(data);
+        // window.MAP.applyHeatMap(data);
     }
 
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
