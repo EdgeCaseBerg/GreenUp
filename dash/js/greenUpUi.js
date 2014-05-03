@@ -34,15 +34,15 @@ function UiHandle(){
     this.commentsNextPageUrl = "";
     this.commentsPrevPageUrl = "";
 
+    // for updates to the Dom
+    window.acresWorkedValue = 0;
+    window.totalHoursWorkedValue = 0;
+    window.totalMinutesWorkedValue = 0;
+    window.totalSecondsWorked = 0;
+    window.totalDaysWorkedValue = 0;
+
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-
-        // for updates to the Dom
-        window.acresWorkedValue = 0;
-        window.totalHoursWorkedValue = 0;
-        window.totalMinutesWorkedValue = 0;
-        window.totalSecondsWorked = 0;
-        window.totalDaysWorkedValue = 0;
 
         $('#viewLogButton').click(function(){
             window.UI.toggleLogSlider();
