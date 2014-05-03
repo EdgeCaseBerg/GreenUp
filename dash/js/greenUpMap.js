@@ -159,8 +159,9 @@ function MapHandle(){
             if(window.IS_HM_LOADED){
                 console.log("hm loaded - applying");
                 window.MAP.heatmap.setMap(window.MAP.map);
-                window.UI.toggleInfo();
-                $('#hmLoaderContainer').fadeOut();
+                window.UI.toggleInfo(function(){
+                    $('#hmLoaderContainer').fadeOut()
+                });
             }else{
                 console.log("hm not loaded - unable to apply");
             }

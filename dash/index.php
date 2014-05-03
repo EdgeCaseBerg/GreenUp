@@ -231,7 +231,7 @@ if(!isset($_COOKIE[session_name()])){
                     </div>
                     <div class="analyticsData">
                         <div class="timeComponentNest">
-                            <div class="timeComponent" id="totalDaysWorked"></div>
+                            <div class="timeComponent" id="totalDaysWorked">00</div>
                             <div class="timeComponentLabel">DAYS</div>
                         </div>
 
