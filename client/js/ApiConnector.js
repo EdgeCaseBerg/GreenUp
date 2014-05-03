@@ -499,7 +499,7 @@ function MapHandle(){
     // BTV coords
     this.currentLat = 44.476621500000000;
     this.currentLon = -73.209998100000000;
-    this.currentZoom = 10;
+    this.currentZoom = 15;
     this.markerEvent;
     this.markerType;
     this.map;
