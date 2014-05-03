@@ -191,34 +191,34 @@ function ApiConnector(){
         var heatmapURI = "/heatmap";
         var params = "";
         if(latDegrees != null){
-            params = "&";
+            params += "&";
             params += "latDegrees=" + latDegrees + "&";
         }else if(window.CURRENT_BOUNDS.LAT != 0){
-            params = "&";
+            params += "&";
             params += "latDegrees=" + window.CURRENT_BOUNDS.LAT + "&";
         }
 
         if(latOffset != null){
-            params = "&";
+            params += "&";
             params += "latOffset=" + latOffset + "&";
         }else if(window.CURRENT_BOUNDS.LAT_OFFSET != 0){
-            params = "&";
+            params += "&";
             params += "latOffset=" + window.CURRENT_BOUNDS.LAT_OFFSET + "&";
         }
 
         if(lonDegrees != null){
-            params = "&";
+            params += "&";
             params += "lonDegrees" + lonDegrees + "&";
         }else if(window.CURRENT_BOUNDS.LON != 0){
-            params = "&";
+            params += "&";
             params += "lonDegrees" + window.CURRENT_BOUNDS.LON + "&";
         }
 
         if(lonOffset != null){
-            params = "&";
+            params += "&";
             params += "lonOffset" + lonOffset + "&";
         }else if(window.CURRENT_BOUNDS.LAT_OFFSET != 0){
-            params = "&";
+            params += "&";
             params += "lonOffset" + window.CURRENT_BOUNDS.LAT_OFFSET + "&";
         }
         var URL = heatmapURI+params;
