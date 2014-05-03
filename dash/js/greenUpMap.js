@@ -151,7 +151,7 @@ function MapHandle(){
                 data: POINT_ARR,
                 dissipating: true,
                 opacity: 0.99,
-                radius: 5
+                radius: 7
             });
 
             window.MAP.heatmap.set('gradient', gradient);
