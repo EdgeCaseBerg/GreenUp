@@ -38,12 +38,11 @@ function UiHandle(){
     window.acresWorkedValue = 0;
     window.totalHoursWorkedValue = 0;
     window.totalMinutesWorkedValue = 0;
-    window.totalSecondsWorked = new BigNumber(0);
         window.totalDaysWorkedValue = 0;
 
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-
+	window.totalSecondsWorked = new BigNumber(0);
         $('#viewLogButton').click(function(){
             window.UI.toggleLogSlider();
         });
