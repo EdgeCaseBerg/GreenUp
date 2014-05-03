@@ -384,7 +384,7 @@ function UiHandle(){
         MOUSEUP_TIME = MOUSEUP_TIME / 1000;
         // if it was a short touch
         console.log((MOUSEUP_TIME - this.MOUSEDOWN_TIME));
-        if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.5){
+        if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.4){
             // check if the marker select menu is showing and toggle appropriately
             this.MOUSEDOWN_TIME = 0;
             this.MOUSEDOWN_TIME = 0;
