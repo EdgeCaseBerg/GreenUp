@@ -486,6 +486,7 @@ function UiHandle(){
             console.log("data.page.next not null: "+data.page.next);
             window.ApiConnector.pullRawHeatmapData(data.page.next);
         }else{
+            console.log("next page null - applying");
             window.IS_HM_LOADED = true;
         }
 
