@@ -6,6 +6,7 @@ function UiHandle(){
     this.MOUSEUP_TIME;
     this.isMarkerVisible = true;
     this.isMapLoaded = false;
+    window.IS_HM_LOADED = false;
 
     this.isAddMarkerDialogVisible = false
 
@@ -451,49 +452,48 @@ function UiHandle(){
 
     // ******* DOM updaters (callbacks for the ApiConnector pull methods) ***********
     UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
+        window.IS_HM_LOADED = false;
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
-            var millisecondsToWait = 500;
-            setTimeout(function() {
-                window.ApiConnector.pullHeatmapData(data.page.next);
-            }, millisecondsToWait);
-
-        } 
+            window.ApiConnector.pullHeatmapData(data.page.next);
+        }else{
+            window.IS_HM_LOADED = true;
+        }
         window.MAP.applyHeatMap(data);
     }
 
 
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        window.IS_HM_LOADED = false;
         var HELPER = new Helper();
-        var totalSecondsWorked = new BigNumber(0);
+
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
-                totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
+                window.totalSecondsWorked = window.totalSecondsWorked.add(data.grid[ii].secondsWorked);
             }
         }else{
             console.log("Data grid not found --> ");
             console.log(data);
         }
+
         var metersPerSecond = 0.25; // this is a guess
-        var sqMeters = (window.totalSecondsWorked * metersPerSecond);
-        var acresWorked = HELPER.metersToAcres(sqMeters);
+        window.sqMeters += (window.totalSecondsWorked * metersPerSecond);
+        var acresWorked = HELPER.metersToAcres(window.sqMeters);
         // alert(acresWorked.toFixed(3));
         var timeWorked = HELPER.secondsToHoursMinutesSeconds(window.totalSecondsWorked);
-        $('#acresWorked').html(acresWorked);
+        $('#acresWorked').html(acresWorked.toFixed(4));
         $('#totalHoursWorked').html(timeWorked['hours']);
         $('#totalMinutesWorked').html(timeWorked['minutes']);
         $('#totalSecondsWorked').html(timeWorked['seconds']);
         $('#totalDaysWorked').html(timeWorked['days']);
-            
+
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
-
-            var millisecondsToWait = 500;
-            setTimeout(function() {
-                window.ApiConnector.pullRawHeatmapData(data.page.next);
-            }, millisecondsToWait);
+            window.ApiConnector.pullRawHeatmapData(data.page.next);
+        }else{
+            window.IS_HM_LOADED = true;
         }
     }
 

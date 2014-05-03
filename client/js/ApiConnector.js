@@ -596,20 +596,20 @@ function MapHandle(){
         console.log("Heatmap data to be applied to map: ");
         console.log(data);
         var dataObj = data;
-        var heatmapData = [];
+//        var heatmapData = [];
         // console.log(dataObj[ii].latDegrees);
 //        if(!window.HELPER.isNull(dataObj.grid)){
             for(var ii=0; ii<dataObj.grid.length; ii++){
-                heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
+                window.heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
 
             }
 //        }
 
         console.log("Processed heatmap data:");
-        console.log(heatmapData);
+        console.log(window.heatmapData);
 
-        if(heatmapData.length > 0){
-            var pointArray = new google.maps.MVCArray(heatmapData);
+        if(window.heatmapData.length > 0 && window.IS_HM_LOADED){
+            var pointArray = new google.maps.MVCArray(window.heatmapData);
 
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: pointArray,
