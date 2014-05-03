@@ -1337,7 +1337,7 @@ function UiHandle(){
                         break;
                 }
 
-                div.id = ii;
+                div.id = "bubble"+ii;
                 div.appendChild(timeDiv);
                 div.appendChild(pinIdInput);
                 div.appendChild(messageContent);
@@ -1347,7 +1347,7 @@ function UiHandle(){
                 if(comments[ii].pin != 0){
                     var pinId = comments[ii].pin;
                     window.LOGGER.debug("pin "+comments[ii].pin+" is addressed", "[DEBUG]");
-                    document.getElementById(ii).addEventListener("click", function(){window.MAP.centerOnPin(comments[ii].pin);}, false);
+                    document.getElementById("bubble"+ii).addEventListener("click", function(){window.MAP.centerOnPin(comments[ii].pin);}, false);
                 }
 
                 // for some reason, this seems to be replacing and not appending to the bubblecontainer
