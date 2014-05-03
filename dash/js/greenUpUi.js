@@ -465,18 +465,14 @@ function UiHandle(){
 
     var totalSecondsWorked = new BigNumber(0);
     var totalSecondsWorkedTest = 0;
-    
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
         
         if(!window.HELPER.isNull(data.grid)){
-<<<<<<< HEAD
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
                 totalSecondsWorkedTest = totalSecondsWorkedTest + data.grid[ii].secondsWorked;
-=======
->>>>>>> 5cade8be91d9b07fe6687b2e45d59773e3df0bf1
                 window.totalSecondsWorked = window.totalSecondsWorked.add(data.grid[ii].secondsWorked);
         }else{
             console.log("Data grid not found --> ");
