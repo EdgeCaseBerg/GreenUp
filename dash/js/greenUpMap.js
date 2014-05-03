@@ -131,9 +131,9 @@ function MapHandle(){
             var POINT_ARR = new google.maps.MVCArray(window.heatmapData);
 
             var gradient = [
-                'rgba(0, 255, 255, 0)',
-                'rgba(0, 255, 255, 1)',
-                'rgba(0, 191, 255, 1)',
+                'rgba(255, 0, 250, 0)',
+                'rgba(254, 1, 1, 1)',
+                'rgba(230, 55, 55, 1)',
                 'rgba(0, 127, 255, 1)',
                 'rgba(0, 63, 255, 1)',
                 'rgba(0, 0, 255, 1)',
