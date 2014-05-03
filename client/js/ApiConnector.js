@@ -608,8 +608,8 @@ function MapHandle(){
         console.log("Processed heatmap data:");
         console.log(window.heatmapData);
 
-        if(heatmapData.length > 0){
-            var pointArray = new google.maps.MVCArray(heatmapData);
+        if(window.heatmapData.length > 0 && window.IS_HM_LOADED){
+            var pointArray = new google.maps.MVCArray(window.heatmapData);
 
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: pointArray,
