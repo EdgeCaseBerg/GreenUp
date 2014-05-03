@@ -9,6 +9,7 @@ function MapHandle(){
     this.map;
     this.pickupMarkers = [];
     this.isHeatmapVisible = true;
+    window.USE_HEATMAP = false;
 
     // fire up our google map
     MapHandle.prototype.initMap = function initMap(){
@@ -118,20 +119,22 @@ function MapHandle(){
 
     MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        var dataObj = data;
-        var heatmapData = [];
-        for(var ii=0; ii<dataObj.grid.length; ii++){
-            heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
-        }
-        if(heatmapData.length > 0){
-            var pointArray = new google.maps.MVCArray(heatmapData);
-            window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: pointArray,
-                dissipating: true,
-                radius: 5
-            });
+        if(window.USE_HEATMAP){
+            var dataObj = data;
+            var heatmapData = [];
+            for(var ii=0; ii<dataObj.grid.length; ii++){
+                heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
+            }
+            if(heatmapData.length > 0){
+                var pointArray = new google.maps.MVCArray(heatmapData);
+                window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: pointArray,
+                    dissipating: true,
+                    radius: 5
+                });
 
-            window.MAP.heatmap.setMap(window.MAP.map);
+                window.MAP.heatmap.setMap(window.MAP.map);
+            }
         }
     }
 
