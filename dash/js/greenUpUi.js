@@ -443,22 +443,15 @@ function UiHandle(){
         }
     }
 
-    var aggregateHeatMapPoints = [];
     // ******* DOM updaters (callbacks for the ApiConnector pull methods) ***********
     UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
         window.IS_HM_LOADED = false;
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
-            aggregateHeatMapPoints.push(data);
             window.ApiConnector.pullHeatmapData(data.page.next);
         }else{
             window.IS_HM_LOADED = true;
-            for (var i = 0; i < aggregateHeatMapPoints.length; i++) {
-                // window.MAP.applyHeatMap(aggregateHeatMapPoints[i]);
-                // console.log(aggregateHeatMapPoints[i]);
-                console.log("arrived here");
-            };
         }
         window.MAP.applyHeatMap(data);
     }
