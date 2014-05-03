@@ -478,24 +478,6 @@ function UiHandle(){
             console.log(data);
         }
 
-        var metersPerSecond = 0.25; // this is a guess
-        var sqMeters = (totalSecondsWorked * metersPerSecond);
-        var acresWorked = HELPER.metersToAcres(sqMeters);
-        // alert(acresWorked.toFixed(3));
-        var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
-
-        window.totalHoursWorkedValue = window.totalHoursWorkedValue + Math.floor(timeWorked['hours']);
-        // window.totalMinutesWorkedValue = window.totalMinutesWorkedValue + Math.floor(timeWorked['minutes']);
-        // window.totalSecondsWorked = window.totalSecondsWorked + Math.floor(timeWorked['seconds']);
-        // window.totalDaysWorkedValue = window.totalDaysWorkedValue + Math.floor(timeWorked['days']);
-        console.log(totalHoursWorkedValue);
-
-        $('#acresWorked').html(acresWorked);
-        $('#totalHoursWorked').html(timeWorked['hours']);
-        $('#totalMinutesWorked').html(timeWorked['minutes']);
-        $('#totalSecondsWorked').html(timeWorked['seconds']);
-        $('#totalDaysWorked').html(timeWorked['days']);
-
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
 
@@ -505,7 +487,16 @@ function UiHandle(){
             }, millisecondsToWait);
         }
         else {
-            console.log(totalSecondsWorked);
+            var metersPerSecond = 0.25; // this is a guess
+            var sqMeters = (totalSecondsWorked * metersPerSecond);
+            var acresWorked = HELPER.metersToAcres(sqMeters);
+            // alert(acresWorked.toFixed(3));
+            var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
+            $('#acresWorked').html(acresWorked);
+            $('#totalHoursWorked').html(timeWorked['hours']);
+            $('#totalMinutesWorked').html(timeWorked['minutes']);
+            $('#totalSecondsWorked').html(timeWorked['seconds']);
+            $('#totalDaysWorked').html(timeWorked['days']);
         }
     }
 
