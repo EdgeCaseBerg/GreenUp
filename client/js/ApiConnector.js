@@ -194,7 +194,7 @@ function ApiConnector(){
             params += "?";
             params += "latDegrees=" + latDegrees;
         }else if(window.CURRENT_BOUNDS.LAT != 0){
-            params += "&";
+            params += "?";
             params += "latDegrees=" + window.CURRENT_BOUNDS.LAT;
         }
 
