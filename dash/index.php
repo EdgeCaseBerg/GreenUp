@@ -134,6 +134,13 @@ if(!isset($_COOKIE[session_name()])){
             background: linear-gradient(top,#f7dfa5,#f0c14b);
             filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7dfa5',endColorstr='#f0c14b',GradientType=0);
         }
+
+        #hmLoaderContainer{
+            position: absolute;
+            z-index: 1000;
+            top: 85px;
+            left: 40px;
+        }
     </style>
 </head>
 
@@ -198,9 +205,14 @@ if(!isset($_COOKIE[session_name()])){
         <? if($LOGGEDIN){ ?>
         <img id="commentsIcon" src="images/comment-icon.png" height="40" width="40"/>
         <?}?>
-        <img id="hmLoading" src="images/pacman.gif" height="40"/>
-        <span style="font-size: 0.8em">Heatmap Loading...</span>
+
+
     </div>
+
+    <div style="font-size: 0.9em; font-weight: bold" id="hmLoaderContainer">
+            <img id="hmLoading" src="images/pacman.gif" height="20"/>
+            Heatmap Loading...
+        </div>
 
     <div id="map-canvas">
     </div>
