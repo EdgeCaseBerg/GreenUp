@@ -169,7 +169,7 @@ if(isset($_GET['logout'])){
                 <div class="errorMessage">
                     <? echo $errorMsg; ?>
                 </div>
-                <form method="POST" name="login" id="loginForm" action="/dash/index.php">
+                <form method="POST" name="login" id="loginForm" action="index.php">
                     <table>
                         <tr>
                             <td class="inputLabel">username:</td><td><input type="text" name= "username" id="username" class="loginInput"/></td>
