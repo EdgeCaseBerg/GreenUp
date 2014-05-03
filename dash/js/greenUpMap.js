@@ -120,10 +120,9 @@ function MapHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var dataObj = data;
         for(var ii=0; ii<dataObj.grid.length; ii++){
-            window.heatmapData.push({
-                location: new google.maps.LatLng( dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees)
-//                weight: dataObj.grid[ii].secondsWorked
-            });
+            window.heatmapData.push(
+                new google.maps.LatLng( dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees)
+            )
         }
 
 
@@ -136,12 +135,12 @@ function MapHandle(){
                 radius: 5
             });
 
-//            if(window.IS_HM_LOADED){
+            if(window.IS_HM_LOADED){
                 console.log("hm loaded - applying");
                 window.MAP.heatmap.setMap(window.MAP.map);
-//            }else{
-//                console.log("hm not loaded - unable to apply");
-//            }
+            }else{
+                console.log("hm not loaded - unable to apply");
+            }
         }
     }
 
