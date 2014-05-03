@@ -195,7 +195,7 @@ function ApiConnector(){
             params += "latDegrees=" + latDegrees + "&";
         }else if(window.CURRENT_BOUNDS.LAT != 0){
             params = "&";
-            params += "latDegrees=" + window.MAP_BOUNDS.LAT + "&";
+            params += "latDegrees=" + window.CURRENT_BOUNDS.LAT + "&";
         }
 
         if(latOffset != null){
@@ -203,7 +203,7 @@ function ApiConnector(){
             params += "latOffset=" + latOffset + "&";
         }else if(window.CURRENT_BOUNDS.LAT_OFFSET != 0){
             params = "&";
-            params += "latOffset=" + window.MAP_BOUNDS.LAT_OFFSET + "&";
+            params += "latOffset=" + window.CURRENT_BOUNDS.LAT_OFFSET + "&";
         }
 
         if(lonDegrees != null){
@@ -211,7 +211,7 @@ function ApiConnector(){
             params += "lonDegrees" + lonDegrees + "&";
         }else if(window.CURRENT_BOUNDS.LON != 0){
             params = "&";
-            params += "lonDegrees" + window.MAP_BOUNDS.LON + "&";
+            params += "lonDegrees" + window.CURRENT_BOUNDS.LON + "&";
         }
 
         if(lonOffset != null){
@@ -219,7 +219,7 @@ function ApiConnector(){
             params += "lonOffset" + lonOffset + "&";
         }else if(window.CURRENT_BOUNDS.LAT_OFFSET != 0){
             params = "&";
-            params += "lonOffset" + window.MAP_BOUNDS.LAT_OFFSET + "&";
+            params += "lonOffset" + window.CURRENT_BOUNDS.LAT_OFFSET + "&";
         }
         var URL = heatmapURI+params;
         console.log("Preparing to pull heatmap data: "+URL);
@@ -725,9 +725,9 @@ function MapHandle(){
         console.log("lng1: "+lng1);
 
         window.CURRENT_BOUNDS.LAT = lat1;
-        window.CURRENT_BOUNDS.LAT_OFFSET = lat1 - lat0;
+        window.CURRENT_BOUNDS.LAT_OFFSET = Math.abs(lat1 - lat0);
         window.CURRENT_BOUNDS.LON = lng1;
-        window.CURRENT_BOUNDS.LON_OFFSET = lng1 - lng0;
+        window.CURRENT_BOUNDS.LON_OFFSET = Math.abs(lng1 - lng0);
     }
 
     MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){
