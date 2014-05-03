@@ -464,11 +464,10 @@ function UiHandle(){
         window.MAP.applyHeatMap(data);
     }
 
-    var totalSecondsWorked = new BigNumber(0);
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
-        
+        var totalSecondsWorked = new BigNumber(0);
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
@@ -478,6 +477,17 @@ function UiHandle(){
             console.log(data);
         }
 
+        var metersPerSecond = 0.25; // this is a guess
+        var sqMeters = (totalSecondsWorked * metersPerSecond);
+        var acresWorked = HELPER.metersToAcres(sqMeters);
+        // alert(acresWorked.toFixed(3));
+        var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
+        $('#acresWorked').html(acresWorked);
+        $('#totalHoursWorked').html(timeWorked['hours']);
+        $('#totalMinutesWorked').html(timeWorked['minutes']);
+        $('#totalSecondsWorked').html(timeWorked['seconds']);
+        $('#totalDaysWorked').html(timeWorked['days']);
+            
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
 
@@ -485,19 +495,6 @@ function UiHandle(){
             setTimeout(function() {
                 window.ApiConnector.pullRawHeatmapData(data.page.next);
             }, millisecondsToWait);
-        }
-        else {
-            // data loaded, now populate
-            var metersPerSecond = 0.25; // this is a guess
-            var sqMeters = (totalSecondsWorked * metersPerSecond);
-            var acresWorked = HELPER.metersToAcres(sqMeters);
-            // alert(acresWorked.toFixed(3));
-            var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
-            $('#acresWorked').html(acresWorked);
-            $('#totalHoursWorked').html(timeWorked['hours']);
-            $('#totalMinutesWorked').html(timeWorked['minutes']);
-            $('#totalSecondsWorked').html(timeWorked['seconds']);
-            $('#totalDaysWorked').html(timeWorked['days']);
         }
     }
 
