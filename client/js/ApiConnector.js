@@ -1347,7 +1347,20 @@ function UiHandle(){
                 if(comments[ii].pin != 0){
                     var pinId = comments[ii].pin;
                     window.LOGGER.debug("pin "+comments[ii].pin+" is addressed", "[DEBUG]");
-                    document.getElementById("bubble"+ii).addEventListener("click", function(){window.MAP.centerOnPin(pinId);}, false);
+
+                    $()
+
+                    document.getElementById("bubble"+ii).addEventListener("click", function(){
+                        var pid = $(this).find(".pinId").val();
+                        for(var ii=0; ii<window.PINS.length; ii++){
+                            if(window.PINS[ii].id == pid){
+                                var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees);
+                                window.MAP.map.setCenter(centerPoint);
+                                window.MAP.map.setZoom(18);
+                            }
+                        }
+
+                    }, false);
                 }
 
                 // for some reason, this seems to be replacing and not appending to the bubblecontainer
