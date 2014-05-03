@@ -133,15 +133,15 @@ function MapHandle(){
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: POINT_ARR,
                 dissipating: true,
-                radius: 3
+                radius: 5
             });
 
-            if(window.IS_HM_LOADED){
+//            if(window.IS_HM_LOADED){
                 console.log("hm loaded - applying");
                 window.MAP.heatmap.setMap(window.MAP.map);
-            }else{
-                console.log("hm not loaded - unable to apply");
-            }
+//            }else{
+//                console.log("hm not loaded - unable to apply");
+//            }
         }
     }
 
