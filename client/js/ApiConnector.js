@@ -1360,7 +1360,7 @@ function UiHandle(){
 //                                window.MAP.map.setCenter(centerPoint);
 //                                window.MAP.map.setZoom(18);
                                 window.UI.setActiveDisplay(1);
-                                window.MAP.updateMap(window.PINZ[ii].latDegrees, window.PINZ[ii].lonDegrees, 20);
+                                window.MAP.updateMap(window.PINZ[ii].latDegrees, window.PINZ[ii].lonDegrees, 15);
                             }
                         }
 
