@@ -560,7 +560,7 @@ function MapHandle(){
         var iconUrl;
         switch(window.MAP.markerType){
             case "COMMENT":
-                pin.type = "HELP NEEDED";
+                pin.type = "MARKER";
                 iconUrl = "img/icons/greenCircle.png";
                 break;
             case "HAZARD":
