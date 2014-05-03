@@ -208,18 +208,18 @@ function ApiConnector(){
 
         if(lonDegrees != null){
             params += "&";
-            params += "lonDegrees" + lonDegrees;
+            params += "lonDegrees=" + lonDegrees;
         }else if(window.CURRENT_BOUNDS.LON != 0){
             params += "&";
-            params += "lonDegrees" + window.CURRENT_BOUNDS.LON;
+            params += "lonDegrees=" + window.CURRENT_BOUNDS.LON;
         }
 
         if(lonOffset != null){
             params += "&";
-            params += "lonOffset" + lonOffset;
+            params += "lonOffset=" + lonOffset;
         }else if(window.CURRENT_BOUNDS.LAT_OFFSET != 0){
             params += "&";
-            params += "lonOffset" + window.CURRENT_BOUNDS.LAT_OFFSET;
+            params += "lonOffset=" + window.CURRENT_BOUNDS.LAT_OFFSET;
         }
         var URL = heatmapURI+params;
         console.log("Preparing to pull heatmap data: "+URL);
