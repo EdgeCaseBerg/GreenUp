@@ -635,6 +635,7 @@ function MapHandle(){
     MapHandle.prototype.addMarkerFromApi = function addMarkerFromApi(markerType, message, lat, lon, id){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var pin = new Pin();
+        pin.id = id;
         pin.message = message;
         pin.type = markerType;
         pin.latDegrees = lat;
@@ -1423,6 +1424,7 @@ function UiHandle(){
 
 // prototype objects for posting to API
 function Pin(){
+    this.id = -1;
     this.latDegrees;
     this.lonDegrees;
     this.type = "COMMENT";
