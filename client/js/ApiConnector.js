@@ -629,7 +629,6 @@ function MapHandle(){
         }else{
             window.UI.setActiveDisplay(1);
             window.MAP.updateMap(pin.latDegrees, pin.lonDegrees, 20);
-
         }
     }
 
@@ -1348,7 +1347,7 @@ function UiHandle(){
                 if(comments[ii].pin != 0){
                     var pinId = comments[ii].pin;
                     window.LOGGER.debug("pin "+comments[ii].pin+" is addressed", "[DEBUG]");
-                    document.getElementById(ii).addEventListener("click", function(){window.MAP.centerOnPin(pinId);}, false);
+                    document.getElementById(ii).addEventListener("click", function(){window.MAP.centerOnPin(comments[ii].pin);}, false);
                 }
 
                 // for some reason, this seems to be replacing and not appending to the bubblecontainer
