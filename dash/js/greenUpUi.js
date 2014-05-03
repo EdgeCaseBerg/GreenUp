@@ -444,25 +444,16 @@ function UiHandle(){
 
 
     // ******* DOM updaters (callbacks for the ApiConnector pull methods) ***********
-    var heatmapPageDataArray = [];
     UiHandle.prototype.updateHeatmap = function updateHeatmap(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
-            heatmapPageDataArray.push(data);
             window.ApiConnector.pullHeatmapData(data.page.next);
         } 
-        else {
-          //if it is null, we should be at the last page 
-          console.log("we are at the last page, page: "+data.page.index);
-          console.log("the full array is length: "+heatmapPageDataArray.length);
-          for (var i = 0; i < heatmapPageDataArray.length; i++) {
-              window.MAP.applyHeatMap(heatmapPageDataArray[i]);
-          };
-        }
-        // window.MAP.applyHeatMap(data);
+        window.MAP.applyHeatMap(data);
     }
 
+    var testSeconds = new BigNumber(0); 
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
@@ -470,6 +461,7 @@ function UiHandle(){
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
+                testSeconds = testSeconds.add(data.grid[ii].secondsWorked);
             }
         }else{
             console.log("Data grid not found --> ");
@@ -490,6 +482,10 @@ function UiHandle(){
         if(!window.HELPER.isNull(data.page.next) && data.page.next != "null" ){
             console.log("data.page.next not null: "+data.page.next);
             window.ApiConnector.pullRawHeatmapData(data.page.next);
+        }
+        else{
+            console.log("total test seconds worked: "+testSeconds);
+            console.log("total real seconds worked: "+totalSecondsWorked);
         }
     }
 
