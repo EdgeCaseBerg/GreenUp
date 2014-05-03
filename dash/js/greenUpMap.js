@@ -8,9 +8,7 @@ function MapHandle(){
     this.markerType;
     this.map;
     this.pickupMarkers = [];
-    window.heatmapData = [];
     this.isHeatmapVisible = true;
-    window.USE_HEATMAP = false;
 
     // fire up our google map
     MapHandle.prototype.initMap = function initMap(){
@@ -120,22 +118,19 @@ function MapHandle(){
 
     MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        if(window.USE_HEATMAP){
-            var dataObj = data;
+        var dataObj = data;
+        for(var ii=0; ii<dataObj.grid.length; ii++){
+            window.heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
+        }
+        if(window.heatmapData.length > 0 && window.IS_HM_LOADED){
+            var pointArray = new google.maps.MVCArray(window.heatmapData);
+            window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
+                data: pointArray,
+                dissipating: true,
+                radius: 5
+            });
 
-            for(var ii=0; ii<dataObj.grid.length; ii++){
-                heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
-            }
-            if(heatmapData.length > 0){
-                var pointArray = new google.maps.MVCArray(heatmapData);
-                window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
-                    data: pointArray,
-                    dissipating: true,
-                    radius: 5
-                });
-
-                window.MAP.heatmap.setMap(window.MAP.map);
-            }
+            window.MAP.heatmap.setMap(window.MAP.map);
         }
     }
 
@@ -210,8 +205,6 @@ function MapHandle(){
 
     MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-        window.USE_HEATMAP = true;
-        window.ApiConnector.pullHeatmapData();
         if(window.MAP.isHeatmapVisible){
             window.MAP.heatmap.setMap(null);
             window.MAP.isHeatmapVisible = false;
@@ -219,7 +212,6 @@ function MapHandle(){
             window.MAP.heatmap.setMap(window.MAP.map);
             window.MAP.isHeatmapVisible = true ;
         }
-
     }
 
     MapHandle.prototype.setCurrentLat = function setCurrentLat(CurrentLat){

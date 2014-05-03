@@ -82,6 +82,7 @@ if(!isset($_COOKIE[session_name()])){
             window.DEBUG = false;
             window.totalSecondsWorked = new BigNumber(0);
             window.sqMeters = 0.00;
+            window.heatmapData = [];
 
             window.LOGGER = new ClientLogger();
             window.HELPER = new Helper();
