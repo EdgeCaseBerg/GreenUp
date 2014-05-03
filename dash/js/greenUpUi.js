@@ -456,7 +456,8 @@ function UiHandle(){
             window.IS_HM_LOADED = true;
             for (var i = 0; i < aggregateHeatMapPoints.length; i++) {
                 // window.MAP.applyHeatMap(aggregateHeatMapPoints[i]);
-                console.log(aggregateHeatMapPoints[i]);
+                // console.log(aggregateHeatMapPoints[i]);
+                console.log("arrived here");
             };
         }
         window.MAP.applyHeatMap(data);
