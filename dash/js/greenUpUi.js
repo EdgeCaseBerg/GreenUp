@@ -498,7 +498,7 @@ function UiHandle(){
             }, millisecondsToWait);
 
         }
-        console.log(acresWorkedValue);
+        console.log(this.acresWorkedValue);
     }
 
     // markers coming from the apiconnector comes here to be added to the UI
