@@ -133,7 +133,7 @@ function MapHandle(){
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: POINT_ARR,
                 dissipating: false,
-                radius: 10
+                radius: 7
             });
 
             if(window.IS_HM_LOADED){
