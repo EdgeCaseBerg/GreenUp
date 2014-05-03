@@ -454,7 +454,7 @@ function UiHandle(){
         } 
         else {
           //if it is null, we should be at the last page 
-          console.log("we are at the last page, page: "+data.page.index;
+          console.log("we are at the last page, page: "+data.page.index);
         }
         window.MAP.applyHeatMap(data);
         //test code (phelan)
