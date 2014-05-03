@@ -1349,7 +1349,7 @@ function UiHandle(){
                     window.LOGGER.debug("pin "+comments[ii].pin+" is addressed", "[DEBUG]");
 
                     document.getElementById("bubble"+ii).addEventListener("click", function(){
-                        var pid = $(this).find(".pinId").val();
+                        var pid = parseInt($(this).find(".pinId").val());
                         console.log("pid: "+pid);
                         for(var ii=0; ii<window.PINS.length; ii++){
                             if(window.PINS[ii].id == pid){
