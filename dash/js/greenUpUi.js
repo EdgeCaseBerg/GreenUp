@@ -456,8 +456,11 @@ function UiHandle(){
           //if it is null, we should be at the last page 
           console.log("we are at the last page, page: "+data.page.index);
           console.log("the full array is length: "+heatmapPageDataArray.length);
+          for (var i = 0; i < heatmapPageDataArray.length; i++) {
+              window.MAP.appyHeatMapData(heatmapPageDataArray[i]);
+          };
         }
-        window.MAP.applyHeatMap(data);
+        // window.MAP.applyHeatMap(data);
     }
 
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
