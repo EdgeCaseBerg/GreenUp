@@ -126,7 +126,7 @@ function MapHandle(){
         }
 
 
-        if(window.heatmapData.length > 0){
+        if(window.heatmapData.length > 0 && window.IS_HM_LOADED){
             console.log("num heatmap points: "+window.heatmapData.length);
             var POINT_ARR = new google.maps.MVCArray(window.heatmapData);
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
