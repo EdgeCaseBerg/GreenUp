@@ -719,7 +719,10 @@ function MapHandle(){
 
         var lat1 = window.MAP.map.getBounds().getSouthWest().lat();
         var lng1 = window.MAP.map.getBounds().getSouthWest().lng();
-        console.log("get lat long bounds: "+lat0);
+        console.log("lat0: "+lat0);
+        console.log("lng0: "+lng0);
+        console.log("lat1: "+lat1);
+        console.log("lng1: "+lng1);
 
         window.CURRENT_BOUNDS.LAT = lat1;
         window.CURRENT_BOUNDS.LAT_OFFSET = lat1 - lat0;
