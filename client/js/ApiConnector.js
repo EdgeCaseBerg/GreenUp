@@ -1347,7 +1347,7 @@ function UiHandle(){
                 if(comments[ii].pin != 0){
                     var pinId = comments[ii].pin;
                     window.LOGGER.debug("pin "+comments[ii].pin+" is addressed", "[DEBUG]");
-                    document.getElementById("bubble"+ii).addEventListener("click", function(){window.MAP.centerOnPin(comments[ii].pin);}, false);
+                    document.getElementById("bubble"+ii).addEventListener("click", function(){window.MAP.centerOnPin(pinId);}, false);
                 }
 
                 // for some reason, this seems to be replacing and not appending to the bubblecontainer
