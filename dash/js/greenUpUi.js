@@ -34,6 +34,13 @@ function UiHandle(){
     this.commentsNextPageUrl = "";
     this.commentsPrevPageUrl = "";
 
+    // for updates to the Dom
+    this.acresWorkedValue = 0;
+    this.totalHoursWorkedValue = 0;
+    this.timeWorkedValue = 0;
+    this.totalSecondsWorked = 0;
+    this.totalDaysWorkedValue = 0;
+
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
 
@@ -453,7 +460,7 @@ function UiHandle(){
         window.MAP.applyHeatMap(data);
     }
 
-    var testSeconds = new BigNumber(0); 
+
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
@@ -461,7 +468,6 @@ function UiHandle(){
         if(!window.HELPER.isNull(data.grid)){
             for(var ii=0; ii<data.grid.length; ii++){
                 totalSecondsWorked = totalSecondsWorked.add(data.grid[ii].secondsWorked);
-                testSeconds = testSeconds.add(data.grid[ii].secondsWorked);
             }
         }else{
             console.log("Data grid not found --> ");
@@ -483,10 +489,7 @@ function UiHandle(){
             console.log("data.page.next not null: "+data.page.next);
             window.ApiConnector.pullRawHeatmapData(data.page.next);
         }
-        else{
-            console.log("total test seconds worked: "+testSeconds);
-            console.log("total real seconds worked: "+totalSecondsWorked);
-        }
+        console.log(acresWorkedValue);
     }
 
     // markers coming from the apiconnector comes here to be added to the UI
