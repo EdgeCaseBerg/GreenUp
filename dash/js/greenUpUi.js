@@ -38,12 +38,11 @@ function UiHandle(){
     window.acresWorkedValue = 0;
     window.totalHoursWorkedValue = 0;
     window.totalMinutesWorkedValue = 0;
-    window.totalSecondsWorked = 0;
-    window.totalDaysWorkedValue = 0;
+        window.totalDaysWorkedValue = 0;
 
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
-
+	window.totalSecondsWorked = new BigNumber(0);
         $('#viewLogButton').click(function(){
             window.UI.toggleLogSlider();
         });
@@ -464,6 +463,7 @@ function UiHandle(){
         window.MAP.applyHeatMap(data);
     }
 
+
     UiHandle.prototype.updateRawHeatmapData = function updateRawHeatmapData(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var HELPER = new Helper();
@@ -476,12 +476,11 @@ function UiHandle(){
             console.log("Data grid not found --> ");
             console.log(data);
         }
-
         var metersPerSecond = 0.25; // this is a guess
-        var sqMeters = (totalSecondsWorked * metersPerSecond);
+        var sqMeters = (window.totalSecondsWorked * metersPerSecond);
         var acresWorked = HELPER.metersToAcres(sqMeters);
         // alert(acresWorked.toFixed(3));
-        var timeWorked = HELPER.secondsToHoursMinutesSeconds(totalSecondsWorked);
+        var timeWorked = HELPER.secondsToHoursMinutesSeconds(window.totalSecondsWorked);
         $('#acresWorked').html(acresWorked);
         $('#totalHoursWorked').html(timeWorked['hours']);
         $('#totalMinutesWorked').html(timeWorked['minutes']);
