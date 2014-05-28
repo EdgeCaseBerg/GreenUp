@@ -34,6 +34,22 @@ function UiHandle(){
     this.commentsType = ""
     this.commentsNextPageUrl = "";
     this.commentsPrevPageUrl = "";
+    UiHandle.prototype.toggleInfo = function showInfo(){
+        if(window.UI.isOptionsVisible){
+            window.UI.toggleMapOptions(function(){
+                $('#addMarkerDialog').hide();
+                $('#analyticsDialog').show();
+                window.UI.toggleMapOptions();
+            });
+        }else{
+            if(window.UI.isCommentsSliderVisible){
+                window.UI.toggleCommentsSlider();
+            }
+            $('#addMarkerDialog').hide();
+            $('#analyticsDialog').show();
+            window.UI.toggleMapOptions();
+        }
+    }
 
     UiHandle.prototype.init = function init(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
@@ -63,20 +79,7 @@ function UiHandle(){
         });
 
         $('#infoIcon').click(function(){
-            if(window.UI.isOptionsVisible){
-                window.UI.toggleMapOptions(function(){
-                    $('#addMarkerDialog').hide();
-                    $('#analyticsDialog').show();
-                    window.UI.toggleMapOptions();
-                });
-            }else{
-                if(window.UI.isCommentsSliderVisible){
-                    window.UI.toggleCommentsSlider();
-                }
-                $('#addMarkerDialog').hide();
-                $('#analyticsDialog').show();
-                window.UI.toggleMapOptions();
-            }
+            window.UI.toggleInfo();
         });
 
         $('#commentsIcon').click(function(){
@@ -385,7 +388,7 @@ function UiHandle(){
         MOUSEUP_TIME = MOUSEUP_TIME / 1000;
         // if it was a short touch
         console.log((MOUSEUP_TIME - this.MOUSEDOWN_TIME));
-        if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.5){
+        if((MOUSEUP_TIME - this.MOUSEDOWN_TIME) < 0.2){
             // check if the marker select menu is showing and toggle appropriately
             this.MOUSEDOWN_TIME = 0;
             this.MOUSEDOWN_TIME = 0;
@@ -471,7 +474,7 @@ function UiHandle(){
             console.log(data);
         }
 
-        var metersPerSecond = 0.25; // this is a guess
+        var metersPerSecond = 0.27; // this is a guess
         window.sqMeters += (window.totalSecondsWorked * metersPerSecond);
         var acresWorked = HELPER.metersToAcres(window.sqMeters);
         // alert(acresWorked.toFixed(3));
@@ -486,8 +489,11 @@ function UiHandle(){
             console.log("data.page.next not null: "+data.page.next);
             window.ApiConnector.pullRawHeatmapData(data.page.next);
         }else{
+            console.log("next page null - applying");
             window.IS_HM_LOADED = true;
         }
+
+        window.MAP.applyHeatMap(data);
     }
 
     // markers coming from the apiconnector comes here to be added to the UI

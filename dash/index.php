@@ -83,8 +83,6 @@ if(!isset($_COOKIE[session_name()])){
             window.sqMeters = 0.00;
             window.heatmapData = [];
 
-            window.POINT_ARR = null;
-
             window.LOGGER = new ClientLogger();
             window.HELPER = new Helper();
 
@@ -100,6 +98,7 @@ if(!isset($_COOKIE[session_name()])){
             // instansiate /initialize the UI controls
             window.UI = new UiHandle();
             window.UI.init();
+            window.UI.toggleInfo();
 
             // build out the google map
             window.MAP = new MapHandle();
@@ -109,7 +108,7 @@ if(!isset($_COOKIE[session_name()])){
             // grab our comments, map markers, and heatmap data
             window.ApiConnector.pullCommentData();
             window.ApiConnector.pullMarkerData();
-            window.ApiConnector.pullHeatmapData();
+//            window.ApiConnector.pullHeatmapData();
             window.ApiConnector.pullRawHeatmapData(null);
             <? if($LOGGEDIN){?>
             window.ApiConnector.pullServerLog(window.UI.updateLogContent);
@@ -134,6 +133,15 @@ if(!isset($_COOKIE[session_name()])){
             background: -ms-linear-gradient(top,#f7dfa5,#f0c14b);
             background: linear-gradient(top,#f7dfa5,#f0c14b);
             filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7dfa5',endColorstr='#f0c14b',GradientType=0);
+        }
+
+        #hmLoaderContainer{
+            padding: 4px 2px 4px 2px;
+            bachground-color: white;
+            position: absolute;
+            z-index: 10000;
+            top: 85px;
+            left: 40px;
         }
     </style>
 </head>
@@ -195,10 +203,18 @@ if(!isset($_COOKIE[session_name()])){
 
     <div id="iconContainer">
         <img id="infoIcon" src="images/info-icon-dark.png" height="40" width="40"/>
+
         <? if($LOGGEDIN){ ?>
         <img id="commentsIcon" src="images/comment-icon.png" height="40" width="40"/>
         <?}?>
+
+
     </div>
+
+    <div style="font-size: 0.9em; font-weight: bold; padding: 4px 2px 4px 2px; background: white; border:solid 2px #333333" id="hmLoaderContainer">
+            <img id="hmLoading" src="images/pacman.gif" height="20"/>
+            Heatmap Loading...
+        </div>
 
     <div id="map-canvas">
     </div>
@@ -214,7 +230,7 @@ if(!isset($_COOKIE[session_name()])){
                     </div>
                     <div class="analyticsData">
                         <div class="timeComponentNest">
-                            <div class="timeComponent" id="totalDaysWorked"></div>
+                            <div class="timeComponent" id="totalDaysWorked">00</div>
                             <div class="timeComponentLabel">DAYS</div>
                         </div>
 
