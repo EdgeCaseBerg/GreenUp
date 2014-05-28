@@ -1,9 +1,9 @@
 // class for managing all Map work
 function MapHandle(){
     // BTV coords
-    this.currentLat = 44.476621500000000;
-    this.currentLon = -73.209998100000000;
-    this.currentZoom = 10;
+    this.currentLat = 44.056621500000000;
+    this.currentLon = -72.501998100000000;
+    this.currentZoom = 8;
     this.markerEvent;
     this.markerType;
     this.map;
@@ -120,17 +120,54 @@ function MapHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var dataObj = data;
         for(var ii=0; ii<dataObj.grid.length; ii++){
-            window.heatmapData.push({location: new google.maps.LatLng(dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees), weight: dataObj.grid[ii].secondsWorked});
+            window.heatmapData.push(
+                new google.maps.LatLng( dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees)
+            )
         }
+
+
         if(window.heatmapData.length > 0 && window.IS_HM_LOADED){
-            var pointArray = new google.maps.MVCArray(window.heatmapData);
+            console.log("num heatmap points: "+window.heatmapData.length);
+            var POINT_ARR = new google.maps.MVCArray(window.heatmapData);
+
+            var gradient = [
+                'rgba(255, 0, 250, 0)',
+                'rgba(254, 1, 1, 1)',
+                'rgba(230, 55, 55, 1)',
+                'rgba(0, 127, 255, 1)',
+                'rgba(0, 63, 255, 1)',
+                'rgba(0, 0, 255, 1)',
+                'rgba(0, 0, 223, 1)',
+                'rgba(0, 0, 191, 1)',
+                'rgba(0, 0, 159, 1)',
+                'rgba(0, 0, 127, 1)',
+                'rgba(63, 0, 91, 1)',
+                'rgba(127, 0, 63, 1)',
+                'rgba(191, 0, 31, 1)',
+                'rgba(255, 0, 0, 1)'
+            ]
+
             window.MAP.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: window.POINT_ARR,
+                data: POINT_ARR,
                 dissipating: true,
-                radius: 5
+                opacity: 0.99,
+                radius: 7
             });
 
-            window.MAP.heatmap.setMap(window.MAP.map);
+            window.MAP.heatmap.set('gradient', gradient);
+
+            if(window.IS_HM_LOADED){
+                console.log("hm loaded - applying");
+                window.MAP.heatmap.setMap(window.MAP.map);
+                window.UI.toggleInfo()
+                var millisecondsToWait = 500;
+                setTimeout(function() {
+                    $('#hmLoaderContainer').fadeOut()
+                }, millisecondsToWait);
+
+            }else{
+                console.log("hm not loaded - unable to apply");
+            }
         }
     }
 
@@ -205,6 +242,10 @@ function MapHandle(){
 
     MapHandle.prototype.toggleHeatmap = function toggleHeatmap(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
+        if(window.HELPER.isNull(window.MAP.heatmap)){
+            return false;
+        }
+
         if(window.MAP.isHeatmapVisible){
             window.MAP.heatmap.setMap(null);
             window.MAP.isHeatmapVisible = false;

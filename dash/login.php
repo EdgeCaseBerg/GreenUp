@@ -11,8 +11,10 @@ if(!isset($_SESSION["userid"]) || !isset($_SESSION["hashword"])){
 if(isset($_GET['errorno'])){
     if($_GET['errorno'] == 1){
         $errorMsg = "Username and/or password incorrect.";
+
     }else if($_GET['errorno'] == 2){
         $errorMsg = "Username and/or password incorrect.";
+        header("location: http://greenup.xenonapps.com/dash/");
     }
 }
 
