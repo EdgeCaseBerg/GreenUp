@@ -1,0 +1,120 @@
+body {
+	font-family: 'Brawler', serif;
+	border: 1px solid white;
+	background-color: black;
+	color: white;
+	padding: 1em;
+	border-radius: 1em;
+}
+h1 {
+	font-size: 1em;
+	font-weight: bold;
+	color: #63cd52;
+}
+p {
+	font-size: 1em;
+}
+#content {
+	position: relative;
+	top:4em;
+	margin-left:1em;
+
+}
+#logo {
+    position: relative;
+    float: right;
+    margin-right: 1em;
+    margin-left: 1em;
+    margin-bottom: 1em;
+}
+#aboutUs {
+	position: relative;
+}
+.smaller {
+	font-size: .9em;
+}
+a:link {color:white;}      
+a:visited {color:white;}  
+a:hover {color:white;}  
+a:active {color:white;}  
+#box1 {
+	margin: 0px auto;
+
+	top:35%;
+	left:0;
+	bottom:0;
+	right:0;
+	width:15em;
+	height: 10em;
+}
+#box2 {
+	margin: 0px auto;
+
+	top:25%;
+	left:0;
+	bottom:0;
+	right:0;
+	width:10em;
+	height: 12em;
+}
+#box3 {
+	margin: 0px auto;
+
+	top:45%;
+	left:2em;
+	bottom:0;
+	right:0;
+	width:10em;
+	height: 12em;
+}
+#box4 {
+	margin: 0px auto;
+
+	top:55%;
+	left:2em;
+	bottom:0;
+	right:3em;
+	width:12em;
+	height: 12em;
+}
+#box5 {
+	margin: 0px auto;
+
+	top:65%;
+	left:0;
+	bottom:0;
+	right:2em;
+	width:7em;
+	height: 7em;
+}
+#box6 {
+	margin: 0px auto;
+
+	top:83%;
+	left:0;
+	bottom:0;
+	right:2em;
+	width:2em;
+	height: 2em;
+}
+.styleBox {
+	background-color: green;
+	opacity: 0.1;
+    filter: alpha(opacity=10); 
+    -moz-opacity:0.1;
+    z-index: -10; 
+	position: absolute;
+}
+@media screen and (min-width: 321px){
+	#content {
+	position: relative;
+	top:0em;
+	margin-left:1em;
+	}
+	p {
+		line-height: 95%;
+	}
+	#box3, #box4, #box5  {
+		top:10%;
+	}
+}

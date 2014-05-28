@@ -1,0 +1,253 @@
+{
+    "assets": [
+        {
+            "asset": "GoGreen2Tests/en.lproj/InfoPlist.strings", 
+            "target": "en.lproj/InfoPlist.strings"
+        }
+    ], 
+    "config": {
+        "TEMPLATE_VALUES": {}
+    }, 
+    "defines": {
+        "NS_BLOCK_ASSERTIONS": 1, 
+        "__IPHONE_OS_VERSION_MIN_REQUIRED": 60100
+    }, 
+    "deps": [
+        "UIKit", 
+        "CoreGraphics", 
+        "MobileCoreServices", 
+        "Security", 
+        "SystemConfiguration", 
+        "UIKit", 
+        "CFNetwork", 
+        "MapKit", 
+        "SystemConfiguration", 
+        "QuartzCore", 
+        "OpenGLES", 
+        "ImageIO", 
+        "GLKit", 
+        "CoreText", 
+        "CoreLocation", 
+        "CoreData", 
+        "AVFoundation", 
+        "UIKit", 
+        "Foundation", 
+        "CoreGraphics", 
+        "SenTestingKit", 
+        "UIKit", 
+        "Foundation"
+    ], 
+    "flags": [
+        "-DNS_BLOCK_ASSERTIONS=1", 
+        "-fobjc-arc", 
+        "-fasm-blocks", 
+        {
+            "flag": "-std=gnu99", 
+            "not_type": "c++"
+        }, 
+        {
+            "flag": "-fgnu-keywords", 
+            "not_type": "c++"
+        }, 
+        "-fno-asm", 
+        "-fpascal-strings", 
+        "-Wempty-body", 
+        "-Wno-deprecated-declarations", 
+        "-Wreturn-type", 
+        "-Wswitch", 
+        "-Wparentheses", 
+        "-Wformat", 
+        "-Wuninitialized", 
+        "-Wunused-value", 
+        "-Wunused-variable", 
+        {
+            "flag": "-Winvalid-offsetof", 
+            "type": "c++"
+        }, 
+        {
+            "flag": "-Wprotocol", 
+            "type": "objc"
+        }
+    ], 
+    "header_paths": [
+        {
+            "header_path": "GoogleGreenMapTestTests-generated-files.hmap", 
+            "hmap": {}, 
+            "type": "iquote"
+        }, 
+        {
+            "header_path": "GoogleGreenMapTestTests-own-target-headers.hmap", 
+            "hmap": {}, 
+            "type": "I"
+        }, 
+        {
+            "header_path": "GoogleGreenMapTestTests-all-target-headers.hmap", 
+            "hmap": {}, 
+            "type": "I"
+        }, 
+        {
+            "header_path": "GoogleGreenMapTestTests-project-headers.hmap", 
+            "hmap": {
+                "AppDelegate.h": {
+                    "key": "AppDelegate.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "AppDelegate.h"
+                }, 
+                "BDHost.h": {
+                    "key": "BDHost.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "BDHost.h"
+                }, 
+                "ContainerView.h": {
+                    "key": "ContainerView.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "ContainerView.h"
+                }, 
+                "ContainerViewController.h": {
+                    "key": "ContainerViewController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "ContainerViewController.h"
+                }, 
+                "GoGreen-Prefix.pch": {
+                    "key": "GoGreen-Prefix.pch", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "GoGreen-Prefix.pch"
+                }, 
+                "GoGreen2Tests.h": {
+                    "key": "GoGreen2Tests.h", 
+                    "prefix": "GoGreen2Tests/", 
+                    "suffix": "GoGreen2Tests.h"
+                }, 
+                "GoGreenTabBar.h": {
+                    "key": "GoGreenTabBar.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "GoGreenTabBar.h"
+                }, 
+                "HeatMap.h": {
+                    "key": "HeatMap.h", 
+                    "prefix": "HeatMap/", 
+                    "suffix": "HeatMap.h"
+                }, 
+                "HeatMapPin.h": {
+                    "key": "HeatMapPin.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "HeatMapPin.h"
+                }, 
+                "HeatMapPoint.h": {
+                    "key": "HeatMapPoint.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "HeatMapPoint.h"
+                }, 
+                "HeatMapView.h": {
+                    "key": "HeatMapView.h", 
+                    "prefix": "HeatMap/", 
+                    "suffix": "HeatMapView.h"
+                }, 
+                "HomeViewController.h": {
+                    "key": "HomeViewController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "HomeViewController.h"
+                }, 
+                "MapPinCommentView.h": {
+                    "key": "MapPinCommentView.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MapPinCommentView.h"
+                }, 
+                "MapPinSelectorView.h": {
+                    "key": "MapPinSelectorView.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MapPinSelectorView.h"
+                }, 
+                "MapViewController.h": {
+                    "key": "MapViewController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MapViewController.h"
+                }, 
+                "MarkerTypes.h": {
+                    "key": "MarkerTypes.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MarkerTypes.h"
+                }, 
+                "MenuView.h": {
+                    "key": "MenuView.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MenuView.h"
+                }, 
+                "MessageCell.h": {
+                    "key": "MessageCell.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MessageCell.h"
+                }, 
+                "MessageTypes.h": {
+                    "key": "MessageTypes.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MessageTypes.h"
+                }, 
+                "MessageViewController.h": {
+                    "key": "MessageViewController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MessageViewController.h"
+                }, 
+                "NSArray+Primitive.h": {
+                    "key": "NSArray+Primitive.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "NSArray+Primitive.h"
+                }, 
+                "NetworkMessage.h": {
+                    "key": "NetworkMessage.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "NetworkMessage.h"
+                }, 
+                "NetworkingController.h": {
+                    "key": "NetworkingController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "NetworkingController.h"
+                }, 
+                "Reachability.h": {
+                    "key": "Reachability.h", 
+                    "prefix": "Reachability/", 
+                    "suffix": "Reachability.h"
+                }, 
+                "UIColor+methods.h": {
+                    "key": "UIColor+methods.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "UIColor+methods.h"
+                }, 
+                "UIFont+methods.h": {
+                    "key": "UIFont+methods.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "UIFont+methods.h"
+                }
+            }, 
+            "type": "iquote"
+        }
+    ], 
+    "infoplists": [
+        "./GoGreen2Tests/GoogleGreenMapTestTests-Info.plist"
+    ], 
+    "libs": [
+        "TestFlight", 
+        "z", 
+        "z", 
+        "icucore", 
+        "c++", 
+        "Pods", 
+        "icucore"
+    ], 
+    "modules": [], 
+    "pchs": [
+        "./GoGreen2/GoGreen2-Prefix.pch"
+    ], 
+    "sources": [
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2Tests/GoGreen2Tests.m"
+        }
+    ], 
+    "type": "com.apple.product-type.bundle", 
+    "version": "1", 
+    "xcode_project": "GoGreen.xcodeproj"
+}

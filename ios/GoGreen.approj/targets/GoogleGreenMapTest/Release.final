@@ -1,0 +1,891 @@
+{
+    "assets": [
+        {
+            "asset": "../../../../../Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/ResourceRules.plist", 
+            "target": "ResourceRules.plist"
+        }, 
+        {
+            "asset": "GoGreen2/en.lproj/InfoPlist.strings", 
+            "target": "en.lproj/InfoPlist.strings"
+        }, 
+        {
+            "asset": "GoGreen2/Default.png", 
+            "target": "Default.png"
+        }, 
+        {
+            "asset": "Images/Default.png", 
+            "target": "Default.png"
+        }, 
+        {
+            "asset": "GoGreen2/Default@2x.png", 
+            "target": "Default@2x.png"
+        }, 
+        {
+            "asset": "Images/Default@2x.png", 
+            "target": "Default@2x.png"
+        }, 
+        {
+            "asset": "GoGreen2/Default-568h@2x.png", 
+            "target": "Default-568h@2x.png"
+        }, 
+        {
+            "asset": "Images/Default-568h@2x.png", 
+            "target": "Default-568h@2x.png"
+        }, 
+        {
+            "asset": "GoGreen2/HomeView_IPhone.xib", 
+            "target": null
+        }, 
+        {
+            "asset": "GoGreen2/HomeView_IPhone5.xib", 
+            "target": null
+        }, 
+        {
+            "asset": "GoGreen2/MapView_IPhone.xib", 
+            "target": null
+        }, 
+        {
+            "asset": "GoGreen2/MapView_IPhone5.xib", 
+            "target": null
+        }, 
+        {
+            "asset": "Images/icon-120.png", 
+            "target": "icon-120.png"
+        }, 
+        {
+            "asset": "Images/hazardMarker.png", 
+            "target": "hazardMarker.png"
+        }, 
+        {
+            "asset": "GoGreen2/MessageView_IPhone.xib", 
+            "target": null
+        }, 
+        {
+            "asset": "GoGreen2/MessageView_IPhone5.xib", 
+            "target": null
+        }, 
+        {
+            "asset": "Images/bottom_menu.png", 
+            "target": "bottom_menu.png"
+        }, 
+        {
+            "asset": "Images/bottom_menu@2x.png", 
+            "target": "bottom_menu@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_green_bottom_reverse.png", 
+            "target": "bubble_green_bottom_reverse.png"
+        }, 
+        {
+            "asset": "Images/bubble_green_bottom_reverse@2x.png", 
+            "target": "bubble_green_bottom_reverse@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_green_bottom.png", 
+            "target": "bubble_green_bottom.png"
+        }, 
+        {
+            "asset": "Images/bubble_green_bottom@2x.png", 
+            "target": "bubble_green_bottom@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_green_center.png", 
+            "target": "bubble_green_center.png"
+        }, 
+        {
+            "asset": "Images/bubble_green_center@2x.png", 
+            "target": "bubble_green_center@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_green_top.png", 
+            "target": "bubble_green_top.png"
+        }, 
+        {
+            "asset": "Images/bubble_green_top@2x.png", 
+            "target": "bubble_green_top@2x.png"
+        }, 
+        {
+            "asset": "Images/marker@2x.png", 
+            "target": "marker@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_orange_bottom_reverse.png", 
+            "target": "bubble_orange_bottom_reverse.png"
+        }, 
+        {
+            "asset": "Images/bubble_orange_bottom_reverse@2x.png", 
+            "target": "bubble_orange_bottom_reverse@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_orange_bottom.png", 
+            "target": "bubble_orange_bottom.png"
+        }, 
+        {
+            "asset": "Images/icon-72.png", 
+            "target": "icon-72.png"
+        }, 
+        {
+            "asset": "Images/bubble_orange_bottom@2x.png", 
+            "target": "bubble_orange_bottom@2x.png"
+        }, 
+        {
+            "asset": "Images/icon-57.png", 
+            "target": "icon-57.png"
+        }, 
+        {
+            "asset": "Images/bubble_orange_center.png", 
+            "target": "bubble_orange_center.png"
+        }, 
+        {
+            "asset": "sampleRoute4.gpx", 
+            "target": "sampleRoute4.gpx"
+        }, 
+        {
+            "asset": "Images/bubble_blue_bottom.png", 
+            "target": "bubble_blue_bottom.png"
+        }, 
+        {
+            "asset": "Images/icon-144.png", 
+            "target": "icon-144.png"
+        }, 
+        {
+            "asset": "Images/bubble_orange_center@2x.png", 
+            "target": "bubble_orange_center@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_orange_top.png", 
+            "target": "bubble_orange_top.png"
+        }, 
+        {
+            "asset": "Images/bubble_orange_top@2x.png", 
+            "target": "bubble_orange_top@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_red_bottom_reverse.png", 
+            "target": "bubble_red_bottom_reverse.png"
+        }, 
+        {
+            "asset": "Images/marker.png", 
+            "target": "marker.png"
+        }, 
+        {
+            "asset": "Images/bubble_red_bottom_reverse@2x.png", 
+            "target": "bubble_red_bottom_reverse@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_red_bottom.png", 
+            "target": "bubble_red_bottom.png"
+        }, 
+        {
+            "asset": "Images/bubble_red_bottom@2x.png", 
+            "target": "bubble_red_bottom@2x.png"
+        }, 
+        {
+            "asset": "Images/icon-76.png", 
+            "target": "icon-76.png"
+        }, 
+        {
+            "asset": "Images/bubble_red_center.png", 
+            "target": "bubble_red_center.png"
+        }, 
+        {
+            "asset": "Images/bubble_blue_bottom@2x.png", 
+            "target": "bubble_blue_bottom@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_red_center@2x.png", 
+            "target": "bubble_red_center@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_red_top.png", 
+            "target": "bubble_red_top.png"
+        }, 
+        {
+            "asset": "Images/bubble_red_top@2x.png", 
+            "target": "bubble_red_top@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_yellow_bottom_reverse.png", 
+            "target": "bubble_yellow_bottom_reverse.png"
+        }, 
+        {
+            "asset": "Images/bubble_yellow_bottom_reverse@2x.png", 
+            "target": "bubble_yellow_bottom_reverse@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_yellow_bottom.png", 
+            "target": "bubble_yellow_bottom.png"
+        }, 
+        {
+            "asset": "Images/bubble_blue_bottom_reverse@2x.png", 
+            "target": "bubble_blue_bottom_reverse@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_yellow_bottom@2x.png", 
+            "target": "bubble_yellow_bottom@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_yellow_center.png", 
+            "target": "bubble_yellow_center.png"
+        }, 
+        {
+            "asset": "Images/bubble_yellow_center@2x.png", 
+            "target": "bubble_yellow_center@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_yellow_top.png", 
+            "target": "bubble_yellow_top.png"
+        }, 
+        {
+            "asset": "Images/bubble_yellow_top@2x.png", 
+            "target": "bubble_yellow_top@2x.png"
+        }, 
+        {
+            "asset": "Images/comments_active.png", 
+            "target": "comments_active.png"
+        }, 
+        {
+            "asset": "Images/comments_active@2x.png", 
+            "target": "comments_active@2x.png"
+        }, 
+        {
+            "asset": "Images/comments.png", 
+            "target": "comments.png"
+        }, 
+        {
+            "asset": "Images/comments@2x.png", 
+            "target": "comments@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_blue_center@2x.png", 
+            "target": "bubble_blue_center@2x.png"
+        }, 
+        {
+            "asset": "Images/hamburger_icon.png", 
+            "target": "hamburger_icon.png"
+        }, 
+        {
+            "asset": "Images/hamburger_icon@2x.png", 
+            "target": "hamburger_icon@2x.png"
+        }, 
+        {
+            "asset": "Images/home_active.png", 
+            "target": "home_active.png"
+        }, 
+        {
+            "asset": "Images/home_active@2x.png", 
+            "target": "home_active@2x.png"
+        }, 
+        {
+            "asset": "Images/home.png", 
+            "target": "home.png"
+        }, 
+        {
+            "asset": "Images/home@2x.png", 
+            "target": "home@2x.png"
+        }, 
+        {
+            "asset": "Images/map_active.png", 
+            "target": "map_active.png"
+        }, 
+        {
+            "asset": "Images/map_active@2x.png", 
+            "target": "map_active@2x.png"
+        }, 
+        {
+            "asset": "Images/map.png", 
+            "target": "map.png"
+        }, 
+        {
+            "asset": "Images/map@2x.png", 
+            "target": "map@2x.png"
+        }, 
+        {
+            "asset": "Images/Start.png", 
+            "target": "Start.png"
+        }, 
+        {
+            "asset": "Images/bubble_blue_bottom_reverse.png", 
+            "target": "bubble_blue_bottom_reverse.png"
+        }, 
+        {
+            "asset": "Images/hazardMarker@2x.png", 
+            "target": "hazardMarker@2x.png"
+        }, 
+        {
+            "asset": "Images/Start@2x.png", 
+            "target": "Start@2x.png"
+        }, 
+        {
+            "asset": "Images/Stop.png", 
+            "target": "Stop.png"
+        }, 
+        {
+            "asset": "Images/Stop@2x.png", 
+            "target": "Stop@2x.png"
+        }, 
+        {
+            "asset": "Images/pinwheel.png", 
+            "target": "pinwheel.png"
+        }, 
+        {
+            "asset": "Images/pinwheel@2x.png", 
+            "target": "pinwheel@2x.png"
+        }, 
+        {
+            "asset": "Images/logo.png", 
+            "target": "logo.png"
+        }, 
+        {
+            "asset": "Images/logo@2x.png", 
+            "target": "logo@2x.png"
+        }, 
+        {
+            "asset": "Images/check.png", 
+            "target": "check.png"
+        }, 
+        {
+            "asset": "Images/check@2x.png", 
+            "target": "check@2x.png"
+        }, 
+        {
+            "asset": "Images/notCheck.png", 
+            "target": "notCheck.png"
+        }, 
+        {
+            "asset": "Images/notCheck@2x.png", 
+            "target": "notCheck@2x.png"
+        }, 
+        {
+            "asset": "Images/currentLocation.png", 
+            "target": "currentLocation.png"
+        }, 
+        {
+            "asset": "Images/currentLocation@2x.png", 
+            "target": "currentLocation@2x.png"
+        }, 
+        {
+            "asset": "Images/icon-1024.png", 
+            "target": "icon-1024.png"
+        }, 
+        {
+            "asset": "Images/bubble_blue_top.png", 
+            "target": "bubble_blue_top.png"
+        }, 
+        {
+            "asset": "Images/currentLocationButtonBackground.png", 
+            "target": "currentLocationButtonBackground.png"
+        }, 
+        {
+            "asset": "Images/currentLocationButtonBackground@2x.png", 
+            "target": "currentLocationButtonBackground@2x.png"
+        }, 
+        {
+            "asset": "Images/icon-152.png", 
+            "target": "icon-152.png"
+        }, 
+        {
+            "asset": "Images/blueLeaf.png", 
+            "target": "blueLeaf.png"
+        }, 
+        {
+            "asset": "Images/blueLeaf@2x.png", 
+            "target": "blueLeaf@2x.png"
+        }, 
+        {
+            "asset": "Images/icon-114.png", 
+            "target": "icon-114.png"
+        }, 
+        {
+            "asset": "Images/greenLeaf.png", 
+            "target": "greenLeaf.png"
+        }, 
+        {
+            "asset": "Images/greenLeaf@2x.png", 
+            "target": "greenLeaf@2x.png"
+        }, 
+        {
+            "asset": "Images/orangeLeaf.png", 
+            "target": "orangeLeaf.png"
+        }, 
+        {
+            "asset": "Images/orangeLeaf@2x.png", 
+            "target": "orangeLeaf@2x.png"
+        }, 
+        {
+            "asset": "Images/redLeaf.png", 
+            "target": "redLeaf.png"
+        }, 
+        {
+            "asset": "Images/redLeaf@2x.png", 
+            "target": "redLeaf@2x.png"
+        }, 
+        {
+            "asset": "Images/topBar.png", 
+            "target": "topBar.png"
+        }, 
+        {
+            "asset": "Images/topBar@2x.png", 
+            "target": "topBar@2x.png"
+        }, 
+        {
+            "asset": "Images/bubble_blue_center.png", 
+            "target": "bubble_blue_center.png"
+        }, 
+        {
+            "asset": "Images/trashMarker.png", 
+            "target": "trashMarker.png"
+        }, 
+        {
+            "asset": "Images/trashMarker@2x.png", 
+            "target": "trashMarker@2x.png"
+        }, 
+        {
+            "asset": "sampleRoute1.gpx", 
+            "target": "sampleRoute1.gpx"
+        }, 
+        {
+            "asset": "sampleRoute2.gpx", 
+            "target": "sampleRoute2.gpx"
+        }, 
+        {
+            "asset": "Images/bubble_blue_top@2x.png", 
+            "target": "bubble_blue_top@2x.png"
+        }, 
+        {
+            "asset": "sampleRoute3.gpx", 
+            "target": "sampleRoute3.gpx"
+        }
+    ], 
+    "config": {
+        "APPLICATION_FULL_NAME": "GoGreen", 
+        "APPLICATION_IDENTIFIER": "com.xenonApps.GoGreen", 
+        "APPLICATION_NAME": "GoGreen", 
+        "FEATURES": [
+            "portrait"
+        ], 
+        "ICU_CONFIG": "normal", 
+        "LONG_VERSION": "1.0", 
+        "SHORT_VERSION": "1.0", 
+        "TEMPLATE_VALUES": {
+            "EXECUTABLE_NAME": "GoGreen", 
+            "PRODUCT_NAME": "GoGreen"
+        }
+    }, 
+    "defines": {
+        "COCOAPODS": 1, 
+        "NS_BLOCK_ASSERTIONS": 1, 
+        "__IPHONE_OS_VERSION_MIN_REQUIRED": 60100
+    }, 
+    "deps": [
+        "UIKit", 
+        "CoreGraphics", 
+        "MobileCoreServices", 
+        "Security", 
+        "SystemConfiguration", 
+        "UIKit", 
+        "CFNetwork", 
+        "MapKit", 
+        "SystemConfiguration", 
+        "QuartzCore", 
+        "OpenGLES", 
+        "ImageIO", 
+        "GLKit", 
+        "CoreText", 
+        "CoreLocation", 
+        "CoreData", 
+        "AVFoundation", 
+        "UIKit", 
+        "Foundation", 
+        "CoreGraphics"
+    ], 
+    "flags": [
+        "-DNS_BLOCK_ASSERTIONS=1", 
+        "-fobjc-arc", 
+        "-fasm-blocks", 
+        {
+            "flag": "-std=gnu99", 
+            "not_type": "c++"
+        }, 
+        {
+            "flag": "-fgnu-keywords", 
+            "not_type": "c++"
+        }, 
+        "-fno-asm", 
+        "-fpascal-strings", 
+        "-Wempty-body", 
+        "-Wno-deprecated-declarations", 
+        "-Wreturn-type", 
+        "-Wswitch", 
+        "-Wparentheses", 
+        "-Wformat", 
+        "-Wuninitialized", 
+        "-Wunused-value", 
+        "-Wunused-variable", 
+        {
+            "flag": "-Winvalid-offsetof", 
+            "type": "c++"
+        }, 
+        {
+            "flag": "-Wprotocol", 
+            "type": "objc"
+        }
+    ], 
+    "header_paths": [
+        {
+            "header_path": "GoGreen-generated-files.hmap", 
+            "hmap": {}, 
+            "type": "iquote"
+        }, 
+        {
+            "header_path": "GoGreen-own-target-headers.hmap", 
+            "hmap": {}, 
+            "type": "I"
+        }, 
+        {
+            "header_path": "GoGreen-all-target-headers.hmap", 
+            "hmap": {}, 
+            "type": "I"
+        }, 
+        {
+            "header_path": "GoGreen-project-headers.hmap", 
+            "hmap": {
+                "AppDelegate.h": {
+                    "key": "AppDelegate.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "AppDelegate.h"
+                }, 
+                "BDHost.h": {
+                    "key": "BDHost.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "BDHost.h"
+                }, 
+                "ContainerView.h": {
+                    "key": "ContainerView.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "ContainerView.h"
+                }, 
+                "ContainerViewController.h": {
+                    "key": "ContainerViewController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "ContainerViewController.h"
+                }, 
+                "GoGreen-Prefix.pch": {
+                    "key": "GoGreen-Prefix.pch", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "GoGreen-Prefix.pch"
+                }, 
+                "GoGreen2Tests.h": {
+                    "key": "GoGreen2Tests.h", 
+                    "prefix": "GoGreen2Tests/", 
+                    "suffix": "GoGreen2Tests.h"
+                }, 
+                "GoGreenTabBar.h": {
+                    "key": "GoGreenTabBar.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "GoGreenTabBar.h"
+                }, 
+                "HeatMap.h": {
+                    "key": "HeatMap.h", 
+                    "prefix": "HeatMap/", 
+                    "suffix": "HeatMap.h"
+                }, 
+                "HeatMapPin.h": {
+                    "key": "HeatMapPin.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "HeatMapPin.h"
+                }, 
+                "HeatMapPoint.h": {
+                    "key": "HeatMapPoint.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "HeatMapPoint.h"
+                }, 
+                "HeatMapView.h": {
+                    "key": "HeatMapView.h", 
+                    "prefix": "HeatMap/", 
+                    "suffix": "HeatMapView.h"
+                }, 
+                "HomeViewController.h": {
+                    "key": "HomeViewController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "HomeViewController.h"
+                }, 
+                "MapPinCommentView.h": {
+                    "key": "MapPinCommentView.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MapPinCommentView.h"
+                }, 
+                "MapPinSelectorView.h": {
+                    "key": "MapPinSelectorView.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MapPinSelectorView.h"
+                }, 
+                "MapViewController.h": {
+                    "key": "MapViewController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MapViewController.h"
+                }, 
+                "MarkerTypes.h": {
+                    "key": "MarkerTypes.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MarkerTypes.h"
+                }, 
+                "MenuView.h": {
+                    "key": "MenuView.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MenuView.h"
+                }, 
+                "MessageCell.h": {
+                    "key": "MessageCell.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MessageCell.h"
+                }, 
+                "MessageTypes.h": {
+                    "key": "MessageTypes.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MessageTypes.h"
+                }, 
+                "MessageViewController.h": {
+                    "key": "MessageViewController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "MessageViewController.h"
+                }, 
+                "NSArray+Primitive.h": {
+                    "key": "NSArray+Primitive.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "NSArray+Primitive.h"
+                }, 
+                "NetworkMessage.h": {
+                    "key": "NetworkMessage.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "NetworkMessage.h"
+                }, 
+                "NetworkingController.h": {
+                    "key": "NetworkingController.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "NetworkingController.h"
+                }, 
+                "Reachability.h": {
+                    "key": "Reachability.h", 
+                    "prefix": "Reachability/", 
+                    "suffix": "Reachability.h"
+                }, 
+                "UIColor+methods.h": {
+                    "key": "UIColor+methods.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "UIColor+methods.h"
+                }, 
+                "UIFont+methods.h": {
+                    "key": "UIFont+methods.h", 
+                    "prefix": "GoGreen2/", 
+                    "suffix": "UIFont+methods.h"
+                }
+            }, 
+            "type": "iquote"
+        }, 
+        {
+            "header_path": "Pods/Headers", 
+            "type": "I"
+        }, 
+        {
+            "header_path": "Pods/Headers/AFNetworking", 
+            "type": "I"
+        }, 
+        {
+            "header_path": "Pods/Headers/MBProgressHUD", 
+            "type": "I"
+        }, 
+        {
+            "header_path": "Pods/Headers/TestFlightSDK", 
+            "type": "I"
+        }
+    ], 
+    "infoplists": [
+        "./GoGreen2/GoGreen-Info.plist"
+    ], 
+    "java_libs": [], 
+    "java_res_dirs": [], 
+    "java_sourcepaths": [], 
+    "java_sources": [], 
+    "libs": [
+        "TestFlight", 
+        "z", 
+        "z", 
+        "icucore", 
+        "c++", 
+        "Pods"
+    ], 
+    "link_flags": [], 
+    "modules": [], 
+    "pchs": [
+        "./GoGreen2/GoGreen-Prefix.pch"
+    ], 
+    "sources": [
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/AppDelegate.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/BDHost.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/ContainerView.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/ContainerViewController.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/GoGreenTabBar.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/HeatMapPin.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/HeatMapPoint.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/HomeViewController.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/MapPinCommentView.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/MapPinSelectorView.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/MapViewController.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/MenuView.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/MessageCell.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/MessageViewController.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/NSArray+Primitive.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/NetworkMessage.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/NetworkingController.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/UIColor+methods.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/UIFont+methods.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "GoGreen2/main.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "HeatMap/HeatMap.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "HeatMap/HeatMapView.m"
+        }, 
+        {
+            "defines": {}, 
+            "flags": [
+                "-fno-objc-arc"
+            ], 
+            "header_paths": [], 
+            "language": "objc", 
+            "source": "Reachability/Reachability.m"
+        }
+    ], 
+    "type": "app", 
+    "version": "1", 
+    "xcode_project": "GoGreen.xcodeproj"
+}

@@ -7,26 +7,39 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
+
+#define API_PORT 80
+
+//#define BASE_HOST @"http://199.195.248.180"
+#define BASE_HOST @"http://greenup.xenonapps.com"
+#define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
+#define COMMENTS_RELATIVE_URL @"/api/comments"
+#define PINS_RELATIVE_URL @"/api/pins"
+#define MESSAGES_RELATIVE_URL @"/api/comments"
+
+@class MKMapView, HeatMapPin, HeatMapPoint, NetworkMessage, CLLocation;
 
 @interface NetworkingController : NSObject <NSURLConnectionDataDelegate, NSURLConnectionDataDelegate>
 
-@property (nonatomic, strong) NSMutableData *responseData;
-@property (nonatomic, strong) NSString *currentRequest;
-@property NSInteger statusCode;
+//Home Messages
+-(void)getHomeMessage;
 
-//Map Pins
--(void)getMapPinsWithParameters:(NSDictionary *)parameters;
--(void)getMapPinForPinShowWithPinID:(int)pinID;
+//Map
+-(void)getMapPinsWithDictionary:(NSDictionary *)buffer;
+-(void)getMapPinsForPinShow;
+-(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message andType:(NSString *)type;
+-(void)pushHeatMapPoints;
+-(void)getHeatDataPointsWithDictionary:(NSDictionary *)buffer;
 
--(void)postNewPinWithParameters:(NSDictionary *)parameters;
-
-//Message Board
+//Messages
+-(void)getMessageForFirstPageOfShowMessage;
 -(void)getMessages;
--(void)getMessageForFirstPage;
--(void)getMessageByAppendingPageForScrolling;
--(void)getMessageByAppendingPageForShowMessage;
-
--(void)postNewMessage;
+-(void)getMessageForAppendingPageForScrollingWithPageURL:(NSString *)pageURL;
+-(void)getMessageByAppendingPageForShowMessageWithPageURL:(NSString *)pageURL;
+-(void)postMessageWithMessageType:(NSString *)type andMessage:(NSString *)message;
+-(void)markMessageAsAddressed:(NetworkMessage *)message;
 
 + (NetworkingController *)shared;
 

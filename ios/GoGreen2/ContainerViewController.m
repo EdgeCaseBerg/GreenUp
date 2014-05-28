@@ -7,17 +7,10 @@
 //
 
 #import "ContainerViewController.h"
-//#import "FSNConnection.h"
-#import "greenhttp.h"
 #import "NetworkMessage.h"
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #import "UIColor+methods.h"
-
-#define Message_Type_ADMIN @"ADMIN"
-#define Message_Type_MARKER @"MARKER"
-#define Message_Type_COMMENT @"COMMENT"
+#import "AboutViewController.h"
+#import "TutorialViewController.h"
 
 @interface ContainerViewController ()
 
@@ -40,20 +33,27 @@ static ContainerViewController* theContainerView = nil;
         if (theContainerView == nil)
         {
             theContainerView = [[self alloc] init];
+            
         }
         return theContainerView;
     }
     return nil;
 }
 
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
-}
-
-
 -(void)viewDidLoad
 {
+    [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAboutView) name:@"showAboutView" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showTutorial) name:@"showTutorial" object:nil];
+    
     //Initilize the view
+    self.heightFix = 11;
+    if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
+    {
+        self.heightFix = 31;
+    }
+    
     
     if([UIScreen mainScreen].bounds.size.height == 568)
     {
@@ -70,27 +70,44 @@ static ContainerViewController* theContainerView = nil;
     self.theHomeViewController = [[HomeViewController alloc] init];
     self.theMapViewController = [[MapViewController alloc] init];
     self.theMessageViewController = [[MessageViewController alloc] init];
-    [self.theHomeViewController.view setFrame:CGRectMake(0, 0, 320, self.theHomeViewController.view.frame.size.height)];
-    [self.theMapViewController.view setFrame:CGRectMake(320, 0, 320, self.theMapViewController.view.frame.size.height)];
-    [self.theMessageViewController.view setFrame:CGRectMake(640, 0, 320,self.theMessageViewController.view.frame.size.height)];
+    
+
+    [self.theHomeViewController.view setFrame:CGRectMake(0, self.heightFix, 320, self.theHomeViewController.view.frame.size.height - self.heightFix)];
+    [self.theMapViewController.view setFrame:CGRectMake(320, self.heightFix, 320, self.theMapViewController.view.frame.size.height - self.heightFix)];
+    [self.theMessageViewController.view setFrame:CGRectMake(640, self.heightFix, 320,self.theMessageViewController.view.frame.size.height - self.heightFix)];
     self.views = [NSArray arrayWithObjects:self.theHomeViewController, self.theMapViewController, self.theMessageViewController, nil];
     for(UIViewController *vc in self.views)
     {
         [self.view addSubview:vc.view];
     }
     
-    self.loadingView = [[UIView alloc] initWithFrame:self.theHomeViewController.view.frame];
+    self.loadingView = [[UIView alloc] initWithFrame:CGRectMake(self.theHomeViewController.view.frame.origin.x, 0, self.theHomeViewController.view.frame.size.width, self.theHomeViewController.view.frame.size.height + self.heightFix)];
+                        
     [self.loadingView setBackgroundColor:[UIColor blackColor]];
     [self.loadingView setAlpha:0];
     
     //TabBar
     if([UIScreen mainScreen].bounds.size.height == 568)
     {
-        self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 499, 320, 49)];
+        if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
+        {
+            self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 568 - 49, 320, 49)];
+        }
+        else
+        {
+            self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 568 - 49 - 20, 320, 49)];
+        }
     }
     else
     {
-        self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 411, 320, 49)];
+        if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
+        {
+            self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 480 - 49, 320, 49)];
+        }
+        else
+        {
+            self.theTabBar = [[UITabBar alloc] initWithFrame:CGRectMake(0, 480 - 49 - 20, 320, 49)];
+        }
     }
     [self.theTabBar setBackgroundImage:[UIImage imageNamed:@"bottom_menu.png"]];
     
@@ -147,12 +164,19 @@ static ContainerViewController* theContainerView = nil;
     //Notification Center
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleMenu:) name:@"toggleMenu" object:nil];
     
-    if([UIScreen mainScreen].bounds.size.height == 568)
+    if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
     {
         self.statusBarFix = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
         [self.statusBarFix setBackgroundColor:[UIColor greenUpGreenColor]];
         [self.view addSubview:self.statusBarFix];
     }
+    
+    [self hideAllButtHomeView:nil];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:TRUE];
 }
 
 #pragma mark - Tab Bar Delegate
@@ -180,6 +204,8 @@ static ContainerViewController* theContainerView = nil;
 
 -(void)switchHomeView
 {
+    NSLog(@"Action - Container: Switching To Home View");
+    
     [self.item1 setImage:[UIImage imageNamed:@"home_active.png"]];
     [self.item2 setImage:[UIImage imageNamed:@"map.png"]];
     [self.item3 setImage:[UIImage imageNamed:@"comments.png"]];
@@ -190,9 +216,9 @@ static ContainerViewController* theContainerView = nil;
     //Animate Block
     VoidBlock animate = ^
     {
-        [self.theHomeViewController.view setFrame:CGRectMake(0, 0, 320, self.theHomeViewController.view.frame.size.height)];
-        [self.theMapViewController.view setFrame:CGRectMake(320, 0, 320, self.theMapViewController.view.frame.size.height)];
-        [self.theMessageViewController.view setFrame:CGRectMake(640, 0, 320, self.theMessageViewController.view.frame.size.height)];
+        [self.theHomeViewController.view setFrame:CGRectMake(0, self.theHomeViewController.view.frame.origin.y, 320, self.theHomeViewController.view.frame.size.height)];
+        [self.theMapViewController.view setFrame:CGRectMake(320, self.theMapViewController.view.frame.origin.y, 320, self.theMapViewController.view.frame.size.height)];
+        [self.theMessageViewController.view setFrame:CGRectMake(640, self.theMessageViewController.view.frame.origin.y, 320, self.theMessageViewController.view.frame.size.height)];
     };
 
     //Perform Animations
@@ -202,6 +228,8 @@ static ContainerViewController* theContainerView = nil;
 }
 -(void)switchMapViewAndDownloadData:(BOOL)downloadData
 {
+    NSLog(@"Action - Container: Switching To Map View Downloading Data %d", downloadData);
+    
     //Update HeatMap
     [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMap" object:[NSNumber numberWithBool:downloadData]];
     
@@ -214,9 +242,9 @@ static ContainerViewController* theContainerView = nil;
     //Animate Block
     VoidBlock animate = ^
     {
-        [self.theHomeViewController.view setFrame:CGRectMake(-320, 0, 320, self.theHomeViewController.view.frame.size.height)];
-        [self.theMapViewController.view setFrame:CGRectMake(0, 0, 320, self.theMapViewController.view.frame.size.height)];
-        [self.theMessageViewController.view setFrame:CGRectMake(320, 0, 320, self.theMessageViewController.view.frame.size.height)];
+        [self.theHomeViewController.view setFrame:CGRectMake(-320, self.theHomeViewController.view.frame.origin.y, 320, self.theHomeViewController.view.frame.size.height)];
+        [self.theMapViewController.view setFrame:CGRectMake(0, self.theMapViewController.view.frame.origin.y, 320, self.theMapViewController.view.frame.size.height)];
+        [self.theMessageViewController.view setFrame:CGRectMake(320, self.theMessageViewController.view.frame.origin.y, 320, self.theMessageViewController.view.frame.size.height)];
     };
     //Perform Animations
     [UIView animateWithDuration:.3 animations:animate];
@@ -225,6 +253,8 @@ static ContainerViewController* theContainerView = nil;
 }
 -(void)switchMessageView
 {
+    NSLog(@"Action - Container: Switching To MEssage View");
+    
     //Update Messages
     [[NSNotificationCenter defaultCenter] postNotificationName:@"switchedToMessages" object:nil];
     
@@ -238,9 +268,9 @@ static ContainerViewController* theContainerView = nil;
     //Animate Block
     VoidBlock animate = ^
     {
-        [self.theHomeViewController.view setFrame:CGRectMake(-640, 0, 320, self.theHomeViewController.view.frame.size.height)];
-        [self.theMapViewController.view setFrame:CGRectMake(-320, 0, 320, self.theMapViewController.view.frame.size.height)];
-        [self.theMessageViewController.view setFrame:CGRectMake(0, 0, 320, self.theMessageViewController.view.frame.size.height)];
+        [self.theHomeViewController.view setFrame:CGRectMake(-640, self.theHomeViewController.view.frame.origin.y, 320, self.theHomeViewController.view.frame.size.height)];
+        [self.theMapViewController.view setFrame:CGRectMake(-320, self.theMapViewController.view.frame.origin.y, 320, self.theMapViewController.view.frame.size.height)];
+        [self.theMessageViewController.view setFrame:CGRectMake(0, self.theMessageViewController.view.frame.origin.y, 320, self.theMessageViewController.view.frame.size.height)];
     };
     //Perform Animations
     [UIView animateWithDuration:.3 animations:animate];
@@ -248,19 +278,19 @@ static ContainerViewController* theContainerView = nil;
     [self performSelector:@selector(hideAllButtMessageView:) withObject:nil afterDelay:.3];
 }
 
--(IBAction)hideAllButtHomeView:(id)sender;
+-(IBAction)hideAllButtHomeView:(id)sender
 {
     [self.theMapViewController.view setHidden:TRUE];
     [self.theMessageViewController.view setHidden:TRUE];
 }
 
--(IBAction)hideAllButtMapView:(id)sender;
+-(IBAction)hideAllButtMapView:(id)sender
 {
     [self.theHomeViewController.view setHidden:TRUE];
     [self.theMessageViewController.view setHidden:TRUE];
 }
 
--(IBAction)hideAllButtMessageView:(id)sender;
+-(IBAction)hideAllButtMessageView:(id)sender
 {
     [self.theHomeViewController.view setHidden:TRUE];
     [self.theMapViewController.view setHidden:TRUE];
@@ -270,6 +300,22 @@ static ContainerViewController* theContainerView = nil;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Tutorial & About Screen
+-(void)showTutorial
+{
+    NSLog(@"ACTION - Home: Showing Tutorial View Controller");
+
+    TutorialViewController *tutorialVC = [[TutorialViewController alloc] initWithNavRef:self.navigationController];
+    [self.navigationController pushViewController:tutorialVC animated:FALSE];
+}
+
+-(void)showAboutView
+{
+    NSLog(@"ACTION - Home: Showing About View Controller");
+    AboutViewController *aboutVC = [[AboutViewController alloc] initWithNavRef:self.navigationController];
+    [self.navigationController pushViewController:aboutVC animated:FALSE];
 }
 
 #pragma mark - Menu
@@ -289,9 +335,10 @@ static ContainerViewController* theContainerView = nil;
 
 -(IBAction)hideMenu:(id)sender
 {
+    NSLog(@"Action - Container: Hiding Menu");
     
     VoidBlock animate2 = ^{
-        if([UIScreen mainScreen].bounds.size.height == 568)
+        if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
         {
             [self.theMenuView setFrame:CGRectMake(0, -120, self.theMenuView.frame.size.width, self.theMenuView.frame.size.height)];
         }
@@ -304,8 +351,10 @@ static ContainerViewController* theContainerView = nil;
 
 -(IBAction)showMenu:(id)sender
 {
+    NSLog(@"Action - Container: Showing Menu");
+    
     VoidBlock animate2 = ^{
-        if([UIScreen mainScreen].bounds.size.height == 568)
+        if([[UIDevice currentDevice] systemVersion].integerValue >= 7.0)
         {
             [self.theMenuView setFrame:CGRectMake(0, 20, self.theMenuView.frame.size.width, self.theMenuView.frame.size.height)];
         }
@@ -411,7 +460,6 @@ static ContainerViewController* theContainerView = nil;
 -(BOOL)networkingReachability
 {
     return TRUE;
-    
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     if (networkStatus == NotReachable)
