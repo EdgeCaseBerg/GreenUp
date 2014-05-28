@@ -4,3 +4,6 @@ config.php
 html/
 *.pyc
 *.DS_Store
+*.xml
+*.iml
+.idea/
