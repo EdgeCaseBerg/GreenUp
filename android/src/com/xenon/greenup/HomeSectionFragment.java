@@ -1,11 +1,8 @@
 package com.xenon.greenup;
 
-import com.xenon.greenup.util.Storage;
-import com.xenon.greenup.util.Storage.ChronoTime;
-
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
+
+import com.xenon.greenup.util.Storage;
+import com.xenon.greenup.util.Storage.ChronoTime;
 
 public class HomeSectionFragment extends Fragment {
 	private boolean active = false;
@@ -43,7 +43,7 @@ public class HomeSectionFragment extends Fragment {
     	 * have one specific format for all timers. Which we do. So here's the default:
     	 */
 
-		ChronoTime ct = database.getSecondsWorked();		
+		ChronoTime ct = database.getSecondsWorked();
 		
 		/* Set Chronometer from database stuff */
 		chrono.setActivated(ct.state);
