@@ -10,6 +10,7 @@
 #import "ContainerViewController.h"
 #import "MenuView.h"
 #import "NetworkingController.h"
+#import "SkinConstants.h"
 
 @interface HomeViewController ()
 
@@ -41,7 +42,7 @@
         [self.mainLabel  setTextColor:[UIColor blackColor]];
         [self.mainLabel  setFont:[self.mainLabel .font fontWithSize:14]];
         [self.mainLabel  setTextAlignment:NSTextAlignmentCenter];
-        [self.mainLabel  setText:@"Track your clean up progress\nSee what areas need the most help\nFind an area to drop off what you pick up"];
+        [self.mainLabel  setText:HOME_VIEW_MAIN_LABEL_TEXT];
         [self.view addSubview:self.mainLabel ];
         
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 250, 260, 60)];
@@ -55,7 +56,7 @@
         self.cleanUpToggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.cleanUpToggleButton setFrame:CGRectMake(30, 320, 260, 45)];
         [self.cleanUpToggleButton setBackgroundImage:[UIImage imageNamed:@"Start.png"] forState:UIControlStateNormal];
-        [self.cleanUpToggleButton setTitle:@"Start Cleaning" forState:UIControlStateNormal];
+        [self.cleanUpToggleButton setTitle:HOME_VIEW_CLEAN_UP_TOGGLE_TITLE forState:UIControlStateNormal];
         [self.cleanUpToggleButton addTarget:self action:@selector(toggleCleanUp:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.cleanUpToggleButton];
         
@@ -115,7 +116,7 @@
         }
         else
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Start Cleaning" message:@"You dont appear to have a network connection, please connect and try and start cleaning" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:HOME_VIEW_NO_CXN_ALERT_TITLE message:HOME_VIEW_NO_CXN_ALERT_MESSAGE delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
             [alert show];
         }
     }

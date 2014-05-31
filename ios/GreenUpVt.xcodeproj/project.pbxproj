@@ -282,6 +282,7 @@
 		39D06AFC1783A6A300DD94B7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39E46BE2179C7000008590A6 /* GoGreenTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoGreenTabBar.h; sourceTree = "<group>"; };
 		39E46BE3179C7000008590A6 /* GoGreenTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoGreenTabBar.m; sourceTree = "<group>"; };
+		932ABCC3193A4E69000E548E /* SkinConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SkinConstants.h; sourceTree = "<group>"; };
 		C922B1A36E114DDCB8D3029B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF040180188E9C6F005A9EAF /* hazardMarker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = hazardMarker.png; path = Images/hazardMarker.png; sourceTree = SOURCE_ROOT; };
 		DF040181188E9C6F005A9EAF /* hazardMarker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hazardMarker@2x.png"; path = "Images/hazardMarker@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -989,6 +990,7 @@
 			isa = PBXGroup;
 			children = (
 				DF6EAD7B193A3594008CF6D3 /* ThemeHeader.h */,
+				932ABCC3193A4E69000E548E /* SkinConstants.h */,
 				DF6EAD95193A3DB5008CF6D3 /* NetworkingConstants.h */,
 				DF6EAD92193A3C99008CF6D3 /* PinConstants.h */,
 				DF6EAD94193A3D6D008CF6D3 /* MessageConstants.h */,

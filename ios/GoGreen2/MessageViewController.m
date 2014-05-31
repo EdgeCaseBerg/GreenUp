@@ -17,15 +17,10 @@
 #import "NetworkingController.h"
 #import "ThemeHeader.h"
 #import "NetworkingController.h"
+#import "SkinConstants.h"
 
 #define ALERT_VIEW_TOGGLE_ON 0
 #define ALERT_VIEW_TOGGLE_OFF 1
-#define MESSAGE_VIEW_ALERT_CONFIRMATION_YES @"Yes, I'm Sure"
-#define MESSAGE_VIEW_ALERT_CONFIRMATION_NO @"No"
-#define MESSAGE_VIEW_ALERT_CONFIRMATION_TITLE @"Are You Sure?"
-#define MESSAGE_VIEW_ALERT_CONFIRMATION_MESSAGE_ADDRESSED @"Are you sure you have cleaned up this location?"
-#define MESSAGE_VIEW_ALERT_CONFIRMATION_MESSAGE_UNADDRESSED @"Are you sure this location has not been cleaned up?"
-
 
 @interface MessageViewController () <UITextViewDelegate>
 
