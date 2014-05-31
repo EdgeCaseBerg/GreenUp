@@ -8,7 +8,7 @@
 
 #import "ContainerViewController.h"
 #import "NetworkMessage.h"
-#import "UIColor+methods.h"
+#import "ThemeHeader.h"
 #import "AboutViewController.h"
 #import "TutorialViewController.h"
 #import "Reachability.h"

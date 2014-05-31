@@ -7,7 +7,7 @@
 //
 
 #import "MessageCell.h"
-#import "UIFont+methods.h"
+#import "ThemeHeader.h"
 #import "ContainerViewController.h"
 #import "MessageTypes.h"
 #import "MarkerTypes.h"

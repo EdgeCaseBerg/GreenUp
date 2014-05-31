@@ -7,7 +7,7 @@
 //
 
 #import "AboutViewController.h"
-#import "UIColor+methods.h"
+#import "ThemeHeader.h"
 
 @interface AboutViewController ()
 

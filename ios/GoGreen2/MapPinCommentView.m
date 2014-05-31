@@ -8,8 +8,7 @@
 
 #import "MapPinCommentView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UIFont+methods.h"
-#import "UIColor+methods.h"
+#import "ThemeHeader.h"
 #import "MessageTypes.h"
 
 #define ANIMATION_DURATION .5

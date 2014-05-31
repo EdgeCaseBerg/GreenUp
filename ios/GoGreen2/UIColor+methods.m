@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Aidan Melen. All rights reserved.
 //
 
-#import "UIColor+methods.h"
+#import "ThemeHeader.h"
 
 @implementation UIColor (methods)
 
