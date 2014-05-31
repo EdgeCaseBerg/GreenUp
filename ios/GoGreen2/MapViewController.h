@@ -14,8 +14,6 @@
 #import "HeatMap.h"
 #import "HeatMapView.h"
 #import "BDHost.h"
-#import "Reachability.h"
-
 
 
 @class MapPinSelectorView, HeatMapPin;

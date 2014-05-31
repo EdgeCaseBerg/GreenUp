@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>57A1965A-B35C-4097-ADF4-2036591F1329</string>
+	<key>IDESourceControlProjectName</key>
+	<string>GreenUpVt</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>C9D99C7A-AFFE-44C1-8050-D900660B8EF8</key>
+		<string>https://github.com/EJEHardenberg/GreenUp.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ios/GreenUpVt.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>C9D99C7A-AFFE-44C1-8050-D900660B8EF8</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/EJEHardenberg/GreenUp.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>C9D99C7A-AFFE-44C1-8050-D900660B8EF8</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C9D99C7A-AFFE-44C1-8050-D900660B8EF8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>GreenUp</string>
+		</dict>
+	</array>
+</dict>
+</plist>
