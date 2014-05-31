@@ -1,5 +1,8 @@
 <?php
 $conf = json_decode(file_get_contents("/etc/conf/local.conf"), 1);
+/* Fix for conf['host'] being an IP Address within a VirtualHost by Name setup
+*/
+$conf['host'] = $_SERVER['SERVER_NAME'];
 define("DB_USER", $conf["mysql-user"]);
 define("DB_HOST", $conf["host"]);
 define("HOST", $conf["host"]);

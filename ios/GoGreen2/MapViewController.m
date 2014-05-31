@@ -565,7 +565,7 @@
 -(void)showDrivingAlert
 {
     self.drivingAlertShown = TRUE;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are you Driving?" message:@"Either you're the worlds fastest cleaner or you're driving around. We wan't accurate results so once you it slow down we'll automatically enable tracking for you." delegate:nil cancelButtonTitle:@"I'm Driving" otherButtonTitles:nil, nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are you Driving?" message:@"Either you're the world's fastest cleaner or you're driving around. We wan't accurate results so once you it slow down we'll automatically enable tracking for you." delegate:nil cancelButtonTitle:@"I'm Driving" otherButtonTitles:nil, nil];
     [alert show];
 }
 
@@ -591,7 +591,7 @@
     }
     else
     {
-        NSLog(@"Message - Map: Updaing Heat Overlay");
+        NSLog(@"Message - Map: Updating Heat Overlay");
         [self.heatMap setData:[self convertPointsToHeatMapFormat:allPoints]];
     }
     [self.mapView addOverlay:self.heatMap];
@@ -603,7 +603,7 @@
 
 -(IBAction)markerWasCanceled:(id)sender
 {
-    NSLog(@"Action - Map: Cancled Placing Marker");
+    NSLog(@"Action - Map: Canceled Placing Marker");
     //Remove Pin Because WE Canceled
     //[self.mapView removeAnnotation:self.tempPinRef];
     

@@ -38,7 +38,7 @@ UIColor *defaultTint = nil;
         [self.labelField setTextAlignment:NSTextAlignmentCenter];
         [self.labelField setFont:[UIFont messageFont]];
         [self.labelField setBackgroundColor:[UIColor clearColor]];
-        [self.labelField setText:@"Post messages to the community\nHelp Needed:\tAsking for help with large items.\nHazards:\tAlerting the GreenUp organizers of dangerous materials.\nMessage must be less than 140 characters."];
+        [self.labelField setText:@"Post messages to the community\nHelp Needed:\t\"Asking for help with large items.\"\nHazards:\t\"Alerting the GreenUp organizers of dangerous materials.\"\nMessage must be less than 140 characters."];
         [self addSubview:self.labelField];
         
         if([UIScreen mainScreen].bounds.size.height == 568.0)
