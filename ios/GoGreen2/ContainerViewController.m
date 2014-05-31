@@ -11,6 +11,7 @@
 #import "UIColor+methods.h"
 #import "AboutViewController.h"
 #import "TutorialViewController.h"
+#import "Reachability.h"
 
 @interface ContainerViewController ()
 
