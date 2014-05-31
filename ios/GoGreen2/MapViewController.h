@@ -16,7 +16,7 @@
 #import "BDHost.h"
 
 
-@class MapPinSelectorView, HeatMapPin;
+@class MapPinSelectorView, Marker;
 
 @interface MapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>
 
@@ -38,7 +38,7 @@
 
 @property (strong, nonatomic) NSDate *longPressTimer;
 @property (strong, nonatomic) MapPinSelectorView *mapSpinner;
-@property (strong, nonatomic) HeatMapPin *tempPinRef;
+@property (strong, nonatomic) Marker *tempPinRef;
 @property CLLocationCoordinate2D tempPinLocation;
 @property (strong, nonatomic) NSNumber *pinIDToShow;
 @property (strong, nonatomic) UIView *fadeView;

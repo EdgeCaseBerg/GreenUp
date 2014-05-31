@@ -9,12 +9,10 @@
 #import "MessageCell.h"
 #import "ThemeHeader.h"
 #import "ContainerViewController.h"
-#import "MessageTypes.h"
-#import "MarkerTypes.h"
 
 @implementation MessageCell
 
--(id)initWithMessage:(NetworkMessage *)messageObject isBackwards:(BOOL)backwards isFirst:(BOOL)first andResueIdentifier:(NSString *)reuseIdentifier
+-(id)initWithMessage:(Message *)messageObject isBackwards:(BOOL)backwards isFirst:(BOOL)first andResueIdentifier:(NSString *)reuseIdentifier
 {
     if(self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier])
     {
@@ -29,12 +27,12 @@
 -(IBAction)bringMeToMapPin:(UIButton *)sender
 {
     [[ContainerViewController sharedContainer] showLoadingView];
-    [[[ContainerViewController sharedContainer] theMapViewController] setPinIDToShow:self.messageObject.pinID];
+    [[[ContainerViewController sharedContainer] theMapViewController] setPinIDToShow:self.messageObject.marker.markerID];
     [[ContainerViewController sharedContainer] switchMapViewAndDownloadData:FALSE];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"goToMapPin" object:nil];
 }
 
--(void)updateCellWithMessage:(NetworkMessage *)messageObject isBackwards:(BOOL)backwards isFirst:(BOOL)first andResueIdentifier:(NSString *)reuseIdentifier
+-(void)updateCellWithMessage:(Message *)messageObject isBackwards:(BOOL)backwards isFirst:(BOOL)first andResueIdentifier:(NSString *)reuseIdentifier
 {
     //Add Extra Top-Padding If First Cell
     int extraTop = 0;
@@ -43,13 +41,12 @@
     
     self.messageObject = messageObject;
 
-    NSString *contentText = self.messageObject.messageContent;
+    NSString *contentText = self.messageObject.message;
     
-    if([messageObject.messageType isEqualToString:MESSAGE_TYPE_PICK_UP])
+    if([messageObject.messageType isEqualToString:MESSAGE_TYPE_3_NETWORK_NAME])
     {
         //Text Content Label
         self.textContentLabel = [[UILabel alloc] init];
-        
 
         [self.textContentLabel setText:contentText];
         [self.textContentLabel setNumberOfLines:10];
@@ -57,7 +54,7 @@
         [self.textContentLabel setFont:[UIFont messageFont]];
         
         //Get Height of Text With Font And Set Frame
-        CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
+        CGSize contentSize = [messageObject.message sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
         
         [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 260, contentSize.height)];
         
@@ -101,7 +98,7 @@
         [self.contentView addSubview:self.timeStampLabel];
         [self.contentView addSubview:self.showPinOnMap];
     }
-    else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_HAZARD])
+    else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_2_NETWORK_NAME])
     {
         //Gesture Recognizer For Marking As Addressed
         UILongPressGestureRecognizer *addressedGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(toggleAddressed:)];
@@ -116,7 +113,7 @@
         [self.textContentLabel setFont:[UIFont messageFont]];
         
         //Get Height of Text With Font And Set Frame
-        CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
+        CGSize contentSize = [messageObject.message sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
         
         [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 260, contentSize.height)];
         
@@ -161,7 +158,7 @@
         [self.contentView addSubview:self.timeStampLabel];
         [self.contentView addSubview:self.showPinOnMap];
     }
-    else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_USER_MARKER])
+    else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_1_NETWORK_NAME])
     {
         //Gesture Recognizer For Marking As Addressed
         UILongPressGestureRecognizer *addressedGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(toggleAddressed:)];
@@ -176,7 +173,7 @@
         [self.textContentLabel setFont:[UIFont messageFont]];
         
         //Get Height of Text With Font And Set Frame
-        CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
+        CGSize contentSize = [messageObject.message sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
         
         [self.textContentLabel setFrame:CGRectMake(45, 6 + extraTop, 260, contentSize.height)];
         
@@ -249,7 +246,7 @@
         [self.contentView addSubview:self.timeStampLabel];
         [self.contentView addSubview:self.showPinOnMap];
     }
-    else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_MESSAGE])
+    else if([messageObject.messageType isEqualToString:MESSAGE_TYPE_4_NETWORK_TYPE])
     {
         //Text Content Label
         self.textContentLabel = [[UILabel alloc] init];
@@ -259,7 +256,7 @@
         [self.textContentLabel setFont:[UIFont messageFont]];
         
         //Get Height of Text With Font And Set Frame
-        CGSize contentSize = [messageObject.messageContent sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(290, CGFLOAT_MAX)];
+        CGSize contentSize = [messageObject.message sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(290, CGFLOAT_MAX)];
         
         [self.textContentLabel setFrame:CGRectMake(15, 6 + extraTop, 290, contentSize.height)];
         
@@ -300,7 +297,9 @@
 
 -(NSString *)buildTimeSinceString
 {
-    NSDictionary *elaspedTime = [self timeBetween:self.messageObject.messageTimeStamp and:[NSDate date]];
+#warning !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    NSDictionary *elaspedTime = nil;
+    //NSDictionary *elaspedTime = [self timeBetween:self.messageObject.messageTimeStamp and:[NSDate date]];
     NSString *timeString = nil;
     if(![[elaspedTime objectForKey:@"days"] isEqualToNumber:@0])
     {
@@ -357,7 +356,7 @@
 
 -(IBAction)toggleAddressed:(UILongPressGestureRecognizer *)sender
 {
-    if(sender.state == UIGestureRecognizerStateBegan && [self.messageObject.messageType isEqualToString:MESSAGE_TYPE_USER_MARKER])
+    if(sender.state == UIGestureRecognizerStateBegan && [self.messageObject.messageType isEqualToString:MESSAGE_TYPE_1_NETWORK_NAME])
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"toggleMessageAddressed" object:self.messageObject];
     }

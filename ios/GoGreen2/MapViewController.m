@@ -10,7 +10,7 @@
 #import "HeatMapPoint.h"
 #import "NSArray+Primitive.h"
 #import "MapPinSelectorView.h"
-#import "HeatMapPin.h"
+#import "CoreDataHeaders.h"
 #import "MapPinCommentView.h"
 #import <netdb.h>
 #include <arpa/inet.h>
@@ -311,9 +311,9 @@
     {
         return nil;
     }
-    else if([annotation isKindOfClass:[HeatMapPin class]])
+    else if([annotation isKindOfClass:[Marker class]])
     {
-        if([((HeatMapPin *)annotation).type isEqualToString:MARKER_TYPE_PICK_UP])
+        if([((Marker *)annotation).markerType isEqualToString:MARKER_TYPE_PICK_UP])
         {
             static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
             
@@ -331,7 +331,7 @@
             
             return annotationView;
         }
-        else if([((HeatMapPin *)annotation).type isEqualToString:MARKER_TYPE_MARKER])
+        else if([((Marker *)annotation).markerType isEqualToString:MARKER_TYPE_MARKER])
         {
             static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
             
@@ -350,7 +350,7 @@
             
             return annotationView;
         }
-        else if([((HeatMapPin *)annotation).type isEqualToString:MARKER_TYPE_HAZARD])
+        else if([((Marker *)annotation).markerType isEqualToString:MARKER_TYPE_HAZARD])
         {
             static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
             
@@ -381,11 +381,11 @@
 
 -(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
-    HeatMapPin *selectedMapPin = view.annotation;
+    Marker *selectedMapPin = view.annotation;
     if([selectedMapPin respondsToSelector:@selector(pinID)])
     {
-        NSNumber *pinID = selectedMapPin.pinID;
-        if(![selectedMapPin.pinID isEqualToNumber:@420])
+        NSNumber *pinID = selectedMapPin.markerID;
+        if(![selectedMapPin.markerID isEqualToNumber:@420])
         {
             
             [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:pinID];
@@ -447,9 +447,9 @@
 {
     //this method converts the array of points to the weird heatmap library format
     NSMutableDictionary *heatMapDictionary = [[NSMutableDictionary alloc] init];
-    for(HeatMapPoint *mapPoint in heatMapArray)
+    for(HeatmapPoint *mapPoint in heatMapArray)
     {
-        MKMapPoint point = MKMapPointForCoordinate(CLLocationCoordinate2DMake(mapPoint.lat, mapPoint.lon));
+        MKMapPoint point = MKMapPointForCoordinate(CLLocationCoordinate2DMake(mapPoint.latDegrees.integerValue, mapPoint.lonDegrees.integerValue));
         NSValue *pointValue = [NSValue value:&point withObjCType:@encode(MKMapPoint)];
         [heatMapDictionary setObject:[NSNumber numberWithInt:1] forKey:pointValue];
     }
@@ -469,10 +469,10 @@
         [self centerMapWithCurrentLocation:location];
         
         //ADD POINTS
-        HeatMapPoint *mapPoint = [[HeatMapPoint alloc] init];
-        mapPoint.lat = location.coordinate.latitude;
-        mapPoint.lon = location.coordinate.longitude;
-        mapPoint.secWorked = 1 + arc4random() % 99;
+        HeatmapPoint *mapPoint = [theCoreDataController insertNewEntityWithName:CORE_DATA_HEATMAPPOINT];
+        mapPoint.latDegrees = [NSNumber numberWithInt:location.coordinate.latitude];
+        mapPoint.lonDegrees = [NSNumber numberWithInt:location.coordinate.longitude];
+        mapPoint.secondsWorked = @1;
         
         if(self.loggingForMarker)
         {
@@ -619,19 +619,19 @@
     NSNumber *statusCode = sender.object;
     if([statusCode integerValue] == 200)
     {
-        HeatMapPin *pinToShow = nil;
-        for(HeatMapPin *pin in self.downloadedMapPins)
+        Marker *pinToShow = nil;
+        for(Marker *pin in self.downloadedMapPins)
         {
-            if([pin.pinID isEqualToNumber:self.pinIDToShow])
+            if([pin.markerID isEqualToNumber:self.pinIDToShow])
             {
                 pinToShow = pin;
                 
                 NSLog(@"Message - Map: Found Pin To Show In Downloaded Pins");
             }
         }
-        for(HeatMapPin *pin in self.gatheredMapPins)
+        for(Marker *pin in self.gatheredMapPins)
         {
-            if([pin.pinID isEqualToNumber:self.pinIDToShow])
+            if([pin.markerID isEqualToNumber:self.pinIDToShow])
             {
                 pinToShow = pin;
                 
@@ -642,11 +642,11 @@
         //Center The Map
         if(self.mapView.region.span.latitudeDelta > 0.025 || self.mapView.region.span.longitudeDelta > 0.025)
         {
-            [self.mapView setRegion:MKCoordinateRegionMake(pinToShow.coordinate, MKCoordinateSpanMake(0.015, 0.025)) animated:FALSE];
+            [self.mapView setRegion:MKCoordinateRegionMake(CLLocationCoordinate2DMake(pinToShow.latDegrees.integerValue, pinToShow.lonDegrees.integerValue), MKCoordinateSpanMake(0.015, 0.025)) animated:FALSE];
         }
         else
         {
-            [self.mapView setRegion:MKCoordinateRegionMake(pinToShow.coordinate, MKCoordinateSpanMake(self.mapView.region.span.latitudeDelta, self.mapView.region.span.longitudeDelta)) animated:FALSE];
+            [self.mapView setRegion:MKCoordinateRegionMake(CLLocationCoordinate2DMake(pinToShow.latDegrees.integerValue, pinToShow.lonDegrees.integerValue), MKCoordinateSpanMake(self.mapView.region.span.latitudeDelta, self.mapView.region.span.longitudeDelta)) animated:FALSE];
         }
 
         //Add Fade View
@@ -658,9 +658,9 @@
         [self.view addSubview:self.fadeView];
         
         //Add Fake Pin Overlay
-        CGPoint pinPointInSuperView = [self.mapView convertCoordinate:pinToShow.coordinate toPointToView:self.view];
+        CGPoint pinPointInSuperView = [self.mapView convertCoordinate:CLLocationCoordinate2DMake(pinToShow.latDegrees.integerValue, pinToShow.lonDegrees.integerValue) toPointToView:self.view];
         UIImageView *fakePin = nil;
-        if([pinToShow.type isEqualToString:MARKER_TYPE_HAZARD])
+        if([pinToShow.markerType isEqualToString:MARKER_TYPE_HAZARD])
         {
             fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hazardMarker.png"]];
         }
@@ -701,11 +701,12 @@
     NSLog(@"Message - Map: Adding Unaddressed Pins To Map");
     
     //Add New
-    for(HeatMapPin *pin in pins)
+    for(Marker *pin in pins)
     {
         if(!pin.addressed)
         {
-            [self.mapView addAnnotation:pin];
+#warning !!!!!!!!!!!!!!!!!!!!!!!
+            //[self.mapView addAnnotation:pin];
         }
     }
 }
@@ -716,7 +717,7 @@
     //Remove Old
     for(MKAnnotationView *annotation in self.mapView.annotations)
     {
-        if([annotation isKindOfClass:[HeatMapPin class]])
+        if([annotation isKindOfClass:[Marker class]])
         {
             [self.mapView removeAnnotation:(id)annotation];
         }
@@ -954,7 +955,8 @@
 {
     NSArray *parameters = sender.object;
 
-    HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:self.tempPinLocation andValiditity:TRUE andTitle:@"Custom Pin" andType:[parameters objectAtIndex:1]];
+#warning !!!!!!!!!!!!!!!!!!!!!!!
+    /*Marker *customPin = [[HeatMapPin alloc] initWithCoordinate:self.tempPinLocation andValiditity:TRUE andTitle:@"Custom Pin" andType:[parameters objectAtIndex:1]];
     self.tempPinRef = customPin;
     
     //Save pin
@@ -964,6 +966,8 @@
     [self.mapView addAnnotation:customPin];
     
     [[NetworkingController shared] postMarkerWithPin:customPin andMessage:[parameters objectAtIndex:0] andType:[parameters objectAtIndex:1]];
+    */
+    
     /*
     NSLog(@"Network - Map: Pushing New Marker With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])

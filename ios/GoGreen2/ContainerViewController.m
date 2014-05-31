@@ -7,7 +7,7 @@
 //
 
 #import "ContainerViewController.h"
-#import "NetworkMessage.h"
+#import "CoreDataHeaders.h"
 #import "ThemeHeader.h"
 #import "AboutViewController.h"
 #import "TutorialViewController.h"

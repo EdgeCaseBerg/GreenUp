@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NetworkMessage.h"
+#import "CoreDataHeaders.h"
 
 @interface MessageViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIScrollViewDelegate, UITextViewDelegate, UIAlertViewDelegate>
 
@@ -18,7 +18,7 @@
 @property (strong, nonatomic) UIButton *messageSendButton;
 @property (strong, nonatomic) NSString *currentMessageType;
 @property (strong, nonatomic) NSString *nextPageURL;
-@property (strong, nonatomic) NetworkMessage *toggledMessageRef;
+@property (strong, nonatomic) Message *toggledMessageRef;
 @property (strong, nonatomic) NSNumber *pinIDToShow;
 @property (nonatomic, strong) UIView *moreMessagesAlertView;
 

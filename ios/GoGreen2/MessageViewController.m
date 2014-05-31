@@ -10,10 +10,9 @@
 #import "ContainerViewController.h"
 #import "MessageCell.h"
 #import "ThemeHeader.h"
-#import "NetworkMessage.h"
+#import "CoreDataHeaders.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
-#import "HeatMapPin.h"
 #import "ContainerViewController.h"
 #import "NetworkingController.h"
 #import "ThemeHeader.h"
@@ -208,7 +207,7 @@
     [self.messages addObjectsFromArray:newMessages];
     
     NSMutableArray *newIndexes = [[NSMutableArray alloc] init];
-    for(NetworkMessage *msg in newMessages)
+    for(Message *msg in newMessages)
     {
         [newIndexes addObject:[NSIndexPath indexPathForRow:[self.messages indexOfObject:msg] inSection:0]];
     }
@@ -221,12 +220,16 @@
     NSLog(@"Message - Message: Finished Getting New Page For Showing New Message");
     NSArray *newMessages = sender.object;
     
-    NetworkMessage *selectedMessage = nil;
-    for(NetworkMessage *msg in newMessages)
+    Message *selectedMessage = nil;
+    for(Message *msg in newMessages)
     {
-        if([msg.pinID isEqualToNumber:self.pinIDToShow])
+        if(msg.marker != nil)
         {
-            selectedMessage = msg;
+            Marker *tempMarker = msg.marker;
+            if([tempMarker.markerID isEqualToNumber:self.pinIDToShow])
+            {
+                selectedMessage = msg;
+            }
         }
     }
     
@@ -298,7 +301,7 @@
     
     UITableViewCell *cell = [self.theTableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
+    Message *msg = [self.messages objectAtIndex:indexPath.row];
     
     if (cell != nil)
     {
@@ -385,18 +388,18 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
+    Message *msg = [self.messages objectAtIndex:indexPath.row];
     
     CGSize size;
     if([msg.messageType isEqualToString:MESSAGE_TYPE_3_NETWORK_NAME] || [msg.messageType isEqualToString:MESSAGE_TYPE_3_NETWORK_NAME] || [msg.messageType isEqualToString:MESSAGE_TYPE_2_NETWORK_NAME])
     {
-        size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
+        size = [[msg message] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
         size.height += + 20 + 6;
         //return size;
     }
     else
     {
-        size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(290, CGFLOAT_MAX)];
+        size = [[msg message] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(290, CGFLOAT_MAX)];
         size.height += + 20 + 6;
         //return size;
     }
@@ -502,20 +505,23 @@
 -(void)showSelectedMessage
 {
     NSLog(@"Message - Message: Showing selected message");
-    NetworkMessage *selectedMessage = nil;
+    Message *selectedMessage = nil;
     NSIndexPath *indexOfSelectedMessage = nil;
     int count = 0;
-    for(NetworkMessage *message in self.messages)
+    for(Message *message in self.messages)
     {
-        if(message.pinID != nil)
+        if(message.marker != nil)
         {
-            if([message.pinID isEqualToNumber:self.pinIDToShow])
+            Marker *tempMarker = message.marker;
+            
+            if([tempMarker.markerID isEqualToNumber:self.pinIDToShow])
             {
                 selectedMessage = message;
                 indexOfSelectedMessage = [NSIndexPath indexPathForRow:count inSection:0];
                 break;
             }
         }
+
         count++;
     }
     
@@ -619,7 +625,7 @@
 -(void)toggleMessageAddressed:(NSNotification *)notification
 {
     NSLog(@"Action - Message: Toggling Message Addressed. Message,");
-    NetworkMessage *msg = notification.object;
+    Message *msg = notification.object;
     self.toggledMessageRef = msg;
     
     NSLog(@"--- Data - Message: %@", self.toggledMessageRef);
@@ -717,7 +723,7 @@
             NSLog(@"Action - Message: Toggled Message To Be NOT ADDRESSED!");
             changesMade = TRUE;
             
-            self.toggledMessageRef.addressed = TRUE;
+            self.toggledMessageRef.addressed = @TRUE;
         }
         else
         {
@@ -731,7 +737,7 @@
             NSLog(@"Action - Message: Toggled Message To Be ADDRESSED!");
             changesMade = TRUE;
             
-            self.toggledMessageRef.addressed = FALSE;
+            self.toggledMessageRef.addressed = @FALSE;
         }
         else
         {

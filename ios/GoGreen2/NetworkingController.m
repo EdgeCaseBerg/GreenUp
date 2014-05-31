@@ -9,12 +9,9 @@
 #import "NetworkingController.h"
 #import <MapKit/MapKit.h>
 #import "ContainerViewController.h"
-#import "HeatMapPin.h"
-#import "HeatMapPoint.h"
+#import "CoreDataHeaders.h"
 #import "NSArray+Primitive.h"
-#import "MessageTypes.h"
-#import "NetworkMessage.h"
-#import "MarkerTypes.h"
+#import "CoreDataHeaders.h"
 #import "ThemeHeader.h"
 
 #import <AFNetworking/AFNetworking.h>
@@ -226,12 +223,13 @@ static NetworkingController *sharedNetworkingController;
     return nil;
 }
 
-
+#pragma mark - Did Finish Loading
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     //Handle Request
     if([connection isEqual:getHomeMessageConnection])
     {
+#pragma mark Get Home Messages
         NSDictionary *response = nil;
         if(getHomeMessageData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getHomeMessageData options:0 error:nil];
@@ -257,6 +255,7 @@ static NetworkingController *sharedNetworkingController;
     }
     else if([connection isEqual:getMapPinsConnection])
     {
+#pragma mark Get Markers
         NSDictionary *response = nil;
         if(getMapPinsData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMapPinsData options:0 error:nil];
@@ -274,21 +273,14 @@ static NetworkingController *sharedNetworkingController;
             for(NSDictionary *networkPin in [response objectForKey:@"pins"])
             {
                 //Add New Pins
-                HeatMapPin *newPin = [[HeatMapPin alloc] init];
+                Marker *newPin = [theCoreDataController insertNewEntityWithName:CORE_DATA_MARKER];
                 NSString *stringPinID = [[networkPin objectForKey:@"id"] stringValue];
                 NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
                 [f setNumberStyle:NSNumberFormatterDecimalStyle];
                 newPin.pinID = [f numberFromString:stringPinID];
                 newPin.message = [networkPin objectForKey:@"message"];
                 newPin.coordinate = CLLocationCoordinate2DMake([[networkPin objectForKey:@"latDegrees"] doubleValue], [[networkPin objectForKey:@"lonDegrees"] doubleValue]);
-                if([newPin.pinID isEqualToNumber:@5650])
-                {
-                    newPin.type = MARKER_TYPE_PICK_UP;
-                }
-                else
-                {
-                    newPin.type = [networkPin objectForKey:@"type"];
-                }
+                newPin.type = [networkPin objectForKey:@"type"];
                 newPin.message = [networkPin objectForKey:@"message"];
                 newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
                 
@@ -313,6 +305,7 @@ static NetworkingController *sharedNetworkingController;
     }
     else if([connection isEqual:getMapPinsForShowConnection])
     {
+#pragma mark Get Markers For Show
         NSDictionary *response = nil;
         if(getMapPinsForShowData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMapPinsForShowData options:0 error:nil];
@@ -365,6 +358,7 @@ static NetworkingController *sharedNetworkingController;
     }
     else if([connection isEqual:postMarkerConnection])
     {
+#pragma mark Post Marker
         NSDictionary *response = nil;
         if(postMarkerData != nil)
             response = [NSJSONSerialization JSONObjectWithData:postMarkerData options:0 error:nil];
@@ -408,6 +402,7 @@ static NetworkingController *sharedNetworkingController;
     }
     else if([connection isEqual:pushHeatMapConnection])
     {
+#pragma mark Post Heat Map Points
         NSDictionary *response = nil;
         if(pushHeatMapData != nil)
             response = [NSJSONSerialization JSONObjectWithData:pushHeatMapData options:0 error:nil];
@@ -478,6 +473,7 @@ static NetworkingController *sharedNetworkingController;
     }
     else if([connection isEqual:getMessagesForFirstPageOfShowConnection])
     {
+#pragma mark Get Messages For First Page Of Show
         NSDictionary *response = nil;
         if(getMessagesForFirstPageOfShowData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMessagesForFirstPageOfShowData options:0 error:nil];
@@ -552,6 +548,7 @@ static NetworkingController *sharedNetworkingController;
     
     else if([connection isEqual:getMessagesForAppendingForScrollingConnection])
     {
+#pragma mark Get Messages For Appending For Scrolling
         NSDictionary *response = nil;
         if(getMessagesForAppendingForScrollingData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMessagesForAppendingForScrollingData options:0 error:nil];
@@ -622,6 +619,7 @@ static NetworkingController *sharedNetworkingController;
     }
     else if([connection isEqual:getMessagesForAppendingForShowConnection])
     {
+#pragma mark Get Messages For Appending For Show
         NSDictionary *response = nil;
         if(getMessagesForAppendingForShowData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getMessagesForAppendingForShowData options:0 error:nil];
@@ -694,6 +692,7 @@ static NetworkingController *sharedNetworkingController;
     }
     else if([connection isEqual:postMessageConnection])
     {
+#pragma mark Post Message
         NSDictionary *response = nil;
         if(postMessageData != nil)
             response = [NSJSONSerialization JSONObjectWithData:postMessageData options:0 error:nil];
@@ -728,6 +727,7 @@ static NetworkingController *sharedNetworkingController;
     }
     else if([connection isEqual:addressMessageConnection])
     {
+#pragma mark Address Message
         NSDictionary *response = nil;
         if(addressMessageData != nil)
             response = [NSJSONSerialization JSONObjectWithData:addressMessageData options:0 error:nil];
@@ -938,7 +938,7 @@ static NetworkingController *sharedNetworkingController;
     getMapPinsForShowConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
--(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message andType:(NSString *)type
+-(void)postMarkerWithPin:(Marker *)pin andMessage:(NSString *)message andType:(NSString *)type
 {
     //Build Request URL
     NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@", THEME_BASE_URL, THEME_API_PORT, THEME_PINS_RELATIVE_URL, [[ContainerViewController sharedContainer] theMapViewController].pinIDToShow.stringValue];
@@ -1256,7 +1256,6 @@ static NetworkingController *sharedNetworkingController;
         [request setHTTPBody:requestData];
         
         request.timeoutInterval = 10;
-        
 
         [request addValue:@"Keep-Alive" forHTTPHeaderField:@"Connection"];
         [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];

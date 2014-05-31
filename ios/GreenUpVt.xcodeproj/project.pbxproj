@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		390415AC1798C359005EC308 /* MenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 390415AB1798C359005EC308 /* MenuView.m */; };
-		3915605F179E086100D6E35D /* NetworkMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3915605E179E086100D6E35D /* NetworkMessage.m */; };
 		392E74761798B79E00C71680 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 392E74751798B79E00C71680 /* AppDelegate.m */; };
 		392E74791798B7D500C71680 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 392E74781798B7D500C71680 /* ContainerViewController.m */; };
 		392E747C1798B82800C71680 /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 392E747B1798B82800C71680 /* ContainerView.m */; };
@@ -104,7 +103,6 @@
 		DF60D5F617F4FD3200105121 /* currentLocationButtonBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF60D5F217F4FD3200105121 /* currentLocationButtonBackground@2x.png */; };
 		DF62E07417C1992700B29D43 /* BDHost.m in Sources */ = {isa = PBXBuildFile; fileRef = DF62E07317C1992700B29D43 /* BDHost.m */; };
 		DF62E07617C1996700B29D43 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF62E07517C1996700B29D43 /* CFNetwork.framework */; };
-		DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */; };
 		DF6EAD87193A3894008CF6D3 /* homeCleaning.png in Resources */ = {isa = PBXBuildFile; fileRef = DF6EAD7C193A3894008CF6D3 /* homeCleaning.png */; };
 		DF6EAD88193A3894008CF6D3 /* homeIntro.png in Resources */ = {isa = PBXBuildFile; fileRef = DF6EAD7D193A3894008CF6D3 /* homeIntro.png */; };
 		DF6EAD89193A3894008CF6D3 /* homeStartAndMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = DF6EAD7E193A3894008CF6D3 /* homeStartAndMenu.png */; };
@@ -117,6 +115,13 @@
 		DF6EAD90193A3894008CF6D3 /* messagesHelpNeeded.png in Resources */ = {isa = PBXBuildFile; fileRef = DF6EAD85193A3894008CF6D3 /* messagesHelpNeeded.png */; };
 		DF6EAD91193A3894008CF6D3 /* messagesWithMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = DF6EAD86193A3894008CF6D3 /* messagesWithMenu.png */; };
 		DF6EAD99193A48FB008CF6D3 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DF6EAD97193A48FB008CF6D3 /* DataModel.xcdatamodeld */; };
+		DF6EADD3193A5001008CF6D3 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6EADD2193A5001008CF6D3 /* Message.m */; };
+		DF6EADD9193A5016008CF6D3 /* Message+methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6EADD8193A5016008CF6D3 /* Message+methods.m */; };
+		DF6EADDC193A5020008CF6D3 /* Marker+methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6EADDB193A5020008CF6D3 /* Marker+methods.m */; };
+		DF6EADDF193A5037008CF6D3 /* HeatmapPoint+methods.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6EADDE193A5037008CF6D3 /* HeatmapPoint+methods.m */; };
+		DF6EADE3193A51FD008CF6D3 /* HeatmapPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6EADE2193A51FD008CF6D3 /* HeatmapPoint.m */; };
+		DF6EADE9193A5325008CF6D3 /* Marker.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6EADE8193A5325008CF6D3 /* Marker.m */; };
+		DF6EADEC193A53DB008CF6D3 /* coreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6EADEB193A53DB008CF6D3 /* coreDataController.m */; };
 		DF81175F18895C6700B2C271 /* NetworkingController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF81175E18895C6700B2C271 /* NetworkingController.m */; };
 		DF9D412918B12C52006CA760 /* menuMessageTypes.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9D412718B12C52006CA760 /* menuMessageTypes.png */; };
 		DF9D412A18B12C52006CA760 /* menuMessageTypes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9D412818B12C52006CA760 /* menuMessageTypes@2x.png */; };
@@ -190,7 +195,6 @@
 		DFA9C38017D9419B00FBE61F /* MapPinSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C37F17D9419B00FBE61F /* MapPinSelectorView.m */; };
 		DFA9C38517D94ABE00FBE61F /* pinwheel.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C38317D94ABE00FBE61F /* pinwheel.png */; };
 		DFA9C38617D94ABE00FBE61F /* pinwheel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C38417D94ABE00FBE61F /* pinwheel@2x.png */; };
-		DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */; };
 		DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */; };
 		DFA9C39317E22FA000FBE61F /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39117E22F9900FBE61F /* logo.png */; };
 		DFA9C39417E22FA000FBE61F /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DFA9C39217E22F9D00FBE61F /* logo@2x.png */; };
@@ -224,8 +228,6 @@
 /* Begin PBXFileReference section */
 		390415AA1798C359005EC308 /* MenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuView.h; sourceTree = "<group>"; };
 		390415AB1798C359005EC308 /* MenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuView.m; sourceTree = "<group>"; };
-		3915605D179E086100D6E35D /* NetworkMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkMessage.h; sourceTree = "<group>"; };
-		3915605E179E086100D6E35D /* NetworkMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkMessage.m; sourceTree = "<group>"; };
 		392E74741798B79E00C71680 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		392E74751798B79E00C71680 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		392E74771798B7D500C71680 /* ContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
@@ -339,8 +341,6 @@
 		DF62E07217C1992700B29D43 /* BDHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDHost.h; sourceTree = "<group>"; };
 		DF62E07317C1992700B29D43 /* BDHost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDHost.m; sourceTree = "<group>"; };
 		DF62E07517C1996700B29D43 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
-		DF6C594817AB411C005FA0E8 /* HeatMapPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeatMapPoint.h; sourceTree = "<group>"; };
-		DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPoint.m; sourceTree = "<group>"; };
 		DF6EAD7B193A3594008CF6D3 /* ThemeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeHeader.h; sourceTree = "<group>"; };
 		DF6EAD7C193A3894008CF6D3 /* homeCleaning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = homeCleaning.png; path = Tutorial/homeCleaning.png; sourceTree = SOURCE_ROOT; };
 		DF6EAD7D193A3894008CF6D3 /* homeIntro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = homeIntro.png; path = Tutorial/homeIntro.png; sourceTree = SOURCE_ROOT; };
@@ -357,6 +357,21 @@
 		DF6EAD94193A3D6D008CF6D3 /* MessageConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageConstants.h; sourceTree = "<group>"; };
 		DF6EAD95193A3DB5008CF6D3 /* NetworkingConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkingConstants.h; sourceTree = "<group>"; };
 		DF6EAD98193A48FB008CF6D3 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		DF6EADD1193A5001008CF6D3 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		DF6EADD2193A5001008CF6D3 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		DF6EADD7193A5016008CF6D3 /* Message+methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Message+methods.h"; sourceTree = "<group>"; };
+		DF6EADD8193A5016008CF6D3 /* Message+methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Message+methods.m"; sourceTree = "<group>"; };
+		DF6EADDA193A5020008CF6D3 /* Marker+methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Marker+methods.h"; sourceTree = "<group>"; };
+		DF6EADDB193A5020008CF6D3 /* Marker+methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Marker+methods.m"; sourceTree = "<group>"; };
+		DF6EADDD193A5037008CF6D3 /* HeatmapPoint+methods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HeatmapPoint+methods.h"; sourceTree = "<group>"; };
+		DF6EADDE193A5037008CF6D3 /* HeatmapPoint+methods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "HeatmapPoint+methods.m"; sourceTree = "<group>"; };
+		DF6EADE0193A5053008CF6D3 /* CoreDataHeaders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreDataHeaders.h; sourceTree = "<group>"; };
+		DF6EADE1193A51FD008CF6D3 /* HeatmapPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeatmapPoint.h; sourceTree = "<group>"; };
+		DF6EADE2193A51FD008CF6D3 /* HeatmapPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatmapPoint.m; sourceTree = "<group>"; };
+		DF6EADE7193A5325008CF6D3 /* Marker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Marker.h; sourceTree = "<group>"; };
+		DF6EADE8193A5325008CF6D3 /* Marker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Marker.m; sourceTree = "<group>"; };
+		DF6EADEA193A53DB008CF6D3 /* coreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coreDataController.h; sourceTree = "<group>"; };
+		DF6EADEB193A53DB008CF6D3 /* coreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = coreDataController.m; sourceTree = "<group>"; };
 		DF81175D18895C6700B2C271 /* NetworkingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingController.h; sourceTree = "<group>"; };
 		DF81175E18895C6700B2C271 /* NetworkingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkingController.m; sourceTree = "<group>"; };
 		DF9D412718B12C52006CA760 /* menuMessageTypes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menuMessageTypes.png; path = Images/menuMessageTypes.png; sourceTree = SOURCE_ROOT; };
@@ -436,8 +451,6 @@
 		DFA9C37F17D9419B00FBE61F /* MapPinSelectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPinSelectorView.m; sourceTree = "<group>"; };
 		DFA9C38317D94ABE00FBE61F /* pinwheel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pinwheel.png; path = Images/pinwheel.png; sourceTree = SOURCE_ROOT; };
 		DFA9C38417D94ABE00FBE61F /* pinwheel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pinwheel@2x.png"; path = "Images/pinwheel@2x.png"; sourceTree = SOURCE_ROOT; };
-		DFA9C38717D95E1D00FBE61F /* HeatMapPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeatMapPin.h; sourceTree = "<group>"; };
-		DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPin.m; sourceTree = "<group>"; };
 		DFA9C38E17DFB1F800FBE61F /* MapPinCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapPinCommentView.h; sourceTree = "<group>"; };
 		DFA9C38F17DFB1FE00FBE61F /* MapPinCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPinCommentView.m; sourceTree = "<group>"; };
 		DFA9C39117E22F9900FBE61F /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Images/logo.png; sourceTree = SOURCE_ROOT; };
@@ -668,7 +681,6 @@
 		392B9DE41790C9F500C40B64 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				DFA9ABFA17D653BF006F58A5 /* Data Model Objects */,
 				392E74851798B83E00C71680 /* MapViewController.h */,
 				392E74861798B83E00C71680 /* MapViewController.m */,
 				392E74841798B83E00C71680 /* MapView_IPhone.xib */,
@@ -703,7 +715,6 @@
 		392B9DE71790CA3900C40B64 /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				DFA9ABFB17D653E4006F58A5 /* Data Model Objects */,
 				DFA9ABF717D653AF006F58A5 /* MessageCell.h */,
 				DFA9ABF817D653AF006F58A5 /* MessageCell.m */,
 				392E74891798B84800C71680 /* MessageViewController.h */,
@@ -913,6 +924,8 @@
 		DF6EAD96193A48E9008CF6D3 /* CoreData Controller */ = {
 			isa = PBXGroup;
 			children = (
+				DF6EADEA193A53DB008CF6D3 /* coreDataController.h */,
+				DF6EADEB193A53DB008CF6D3 /* coreDataController.m */,
 				DF6EAD9A193A490A008CF6D3 /* Entities + Categories */,
 				DF6EAD97193A48FB008CF6D3 /* DataModel.xcdatamodeld */,
 			);
@@ -922,8 +935,45 @@
 		DF6EAD9A193A490A008CF6D3 /* Entities + Categories */ = {
 			isa = PBXGroup;
 			children = (
+				DF6EADE0193A5053008CF6D3 /* CoreDataHeaders.h */,
+				DF6EAD9D193A4D3F008CF6D3 /* Message */,
+				DF6EAD9C193A4D37008CF6D3 /* Marker */,
+				DF6EAD9B193A4D2F008CF6D3 /* HeatMapPoint */,
 			);
 			name = "Entities + Categories";
+			sourceTree = "<group>";
+		};
+		DF6EAD9B193A4D2F008CF6D3 /* HeatMapPoint */ = {
+			isa = PBXGroup;
+			children = (
+				DF6EADE1193A51FD008CF6D3 /* HeatmapPoint.h */,
+				DF6EADE2193A51FD008CF6D3 /* HeatmapPoint.m */,
+				DF6EADDD193A5037008CF6D3 /* HeatmapPoint+methods.h */,
+				DF6EADDE193A5037008CF6D3 /* HeatmapPoint+methods.m */,
+			);
+			name = HeatMapPoint;
+			sourceTree = "<group>";
+		};
+		DF6EAD9C193A4D37008CF6D3 /* Marker */ = {
+			isa = PBXGroup;
+			children = (
+				DF6EADE7193A5325008CF6D3 /* Marker.h */,
+				DF6EADE8193A5325008CF6D3 /* Marker.m */,
+				DF6EADDA193A5020008CF6D3 /* Marker+methods.h */,
+				DF6EADDB193A5020008CF6D3 /* Marker+methods.m */,
+			);
+			name = Marker;
+			sourceTree = "<group>";
+		};
+		DF6EAD9D193A4D3F008CF6D3 /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				DF6EADD1193A5001008CF6D3 /* Message.h */,
+				DF6EADD2193A5001008CF6D3 /* Message.m */,
+				DF6EADD7193A5016008CF6D3 /* Message+methods.h */,
+				DF6EADD8193A5016008CF6D3 /* Message+methods.m */,
+			);
+			name = Message;
 			sourceTree = "<group>";
 		};
 		DFA9AA7917D26654006F58A5 /* NSArray+Primitives */ = {
@@ -933,26 +983,6 @@
 				DFA9AA7B17D2666B006F58A5 /* NSArray+Primitive.m */,
 			);
 			name = "NSArray+Primitives";
-			sourceTree = "<group>";
-		};
-		DFA9ABFA17D653BF006F58A5 /* Data Model Objects */ = {
-			isa = PBXGroup;
-			children = (
-				DF6C594817AB411C005FA0E8 /* HeatMapPoint.h */,
-				DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */,
-				DFA9C38717D95E1D00FBE61F /* HeatMapPin.h */,
-				DFA9C38817D95E1D00FBE61F /* HeatMapPin.m */,
-			);
-			name = "Data Model Objects";
-			sourceTree = "<group>";
-		};
-		DFA9ABFB17D653E4006F58A5 /* Data Model Objects */ = {
-			isa = PBXGroup;
-			children = (
-				3915605D179E086100D6E35D /* NetworkMessage.h */,
-				3915605E179E086100D6E35D /* NetworkMessage.m */,
-			);
-			name = "Data Model Objects";
 			sourceTree = "<group>";
 		};
 		DFA9ABFC17D664E9006F58A5 /* Theme */ = {
@@ -1267,27 +1297,31 @@
 			files = (
 				39592532177518690035E351 /* main.m in Sources */,
 				392E74761798B79E00C71680 /* AppDelegate.m in Sources */,
+				DF6EADD9193A5016008CF6D3 /* Message+methods.m in Sources */,
 				392E74791798B7D500C71680 /* ContainerViewController.m in Sources */,
 				392E747C1798B82800C71680 /* ContainerView.m in Sources */,
 				392E74831798B83300C71680 /* HomeViewController.m in Sources */,
 				392E74881798B83E00C71680 /* MapViewController.m in Sources */,
+				DF6EADE9193A5325008CF6D3 /* Marker.m in Sources */,
 				392E748B1798B84800C71680 /* MessageViewController.m in Sources */,
+				DF6EADE3193A51FD008CF6D3 /* HeatmapPoint.m in Sources */,
+				DF6EADEC193A53DB008CF6D3 /* coreDataController.m in Sources */,
 				393743E51798B98A005597FF /* HeatMap.m in Sources */,
 				393743E61798B98A005597FF /* HeatMapView.m in Sources */,
 				390415AC1798C359005EC308 /* MenuView.m in Sources */,
 				39E46BE4179C7000008590A6 /* GoGreenTabBar.m in Sources */,
 				DF3A954F18B699EB0090F881 /* AboutViewController.m in Sources */,
-				3915605F179E086100D6E35D /* NetworkMessage.m in Sources */,
-				DF6C594A17AB411C005FA0E8 /* HeatMapPoint.m in Sources */,
 				DF62E07417C1992700B29D43 /* BDHost.m in Sources */,
 				DF3A954C18B699D80090F881 /* TutorialViewController.m in Sources */,
+				DF6EADD3193A5001008CF6D3 /* Message.m in Sources */,
 				DFA9AA7C17D2666B006F58A5 /* NSArray+Primitive.m in Sources */,
 				DFA9ABF917D653B0006F58A5 /* MessageCell.m in Sources */,
 				DFA9ABFF17D66518006F58A5 /* UIFont+methods.m in Sources */,
 				DFA9AC0217D66543006F58A5 /* UIColor+methods.m in Sources */,
 				DFA9C38017D9419B00FBE61F /* MapPinSelectorView.m in Sources */,
-				DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */,
+				DF6EADDF193A5037008CF6D3 /* HeatmapPoint+methods.m in Sources */,
 				DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */,
+				DF6EADDC193A5020008CF6D3 /* Marker+methods.m in Sources */,
 				DF6EAD99193A48FB008CF6D3 /* DataModel.xcdatamodeld in Sources */,
 				DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */,
 				DF81175F18895C6700B2C271 /* NetworkingController.m in Sources */,

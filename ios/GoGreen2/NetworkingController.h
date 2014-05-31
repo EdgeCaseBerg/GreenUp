@@ -11,7 +11,7 @@
 #import <MapKit/MapKit.h>
 
 
-@class MKMapView, HeatMapPin, HeatMapPoint, NetworkMessage, CLLocation;
+@class MKMapView, HeatmapPoint, Marker, Message, CLLocation;
 
 @interface NetworkingController : NSObject <NSURLConnectionDataDelegate, NSURLConnectionDataDelegate>
 
@@ -21,7 +21,7 @@
 //Map
 -(void)getMapPinsWithDictionary:(NSDictionary *)buffer;
 -(void)getMapPinsForPinShow;
--(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message andType:(NSString *)type;
+-(void)postMarkerWithPin:(Marker *)pin andMessage:(NSString *)message andType:(NSString *)type;
 -(void)pushHeatMapPoints;
 -(void)getHeatDataPointsWithDictionary:(NSDictionary *)buffer;
 
@@ -31,7 +31,7 @@
 -(void)getMessageForAppendingPageForScrollingWithPageURL:(NSString *)pageURL;
 -(void)getMessageByAppendingPageForShowMessageWithPageURL:(NSString *)pageURL;
 -(void)postMessageWithMessageType:(NSString *)type andMessage:(NSString *)message;
--(void)markMessageAsAddressed:(NetworkMessage *)message;
+-(void)markMessageAsAddressed:(Message *)message;
 
 + (NetworkingController *)shared;
 
