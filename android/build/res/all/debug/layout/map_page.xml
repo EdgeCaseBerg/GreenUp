@@ -1,0 +1,64 @@
+<RelativeLayout
+    android:id="@+id/map_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+   	android:layout_width="match_parent"
+   	android:layout_height="match_parent" >
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </com.google.android.gms.maps.MapView>
+
+    <Button
+        android:id="@+id/push_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:text="@string/push_points" />
+
+   <RelativeLayout
+        android:id="@+id/add_pins_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <Spinner
+            android:id="@+id/pin_type_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white" />
+
+      	<EditText
+            android:id="@+id/edit_message_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/white"
+            android:ems="10" />
+        
+        <LinearLayout
+            android:id="@+id/button_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" >
+
+            <Button
+                android:id="@+id/pin_submit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit Pin" />
+
+            <Button
+                android:id="@+id/pin_clear_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clear Pin" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
+
+<!-- From: file:/Users/josh/git/GreenUp/android/res/layout/map_page.xml -->

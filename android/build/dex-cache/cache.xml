@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/Users/josh/git/GreenUp/android/build/pre-dexed/debug/classes-576646302f454de07eac200c16613217f8c441de.jar"
+        jar="/Users/josh/git/GreenUp/android/build/exploded-aar/com.google.android.gms/play-services/4.1.32/classes.jar"
+        jumboMode="false"
+        revision="19.0.0"
+        sha1="826507592fec9d8e26db18364e709df133c749ce"/>
+    <item
+        dex="/Users/josh/git/GreenUp/android/build/pre-dexed/debug/support-v4-19.0.1-fa76b8737af819046c06e6bae90bb53b26c0c28c.jar"
+        jar="/Applications/adt-bundle-mac-x86_64-20131030/sdk/extras/android/m2repository/com/android/support/support-v4/19.0.1/support-v4-19.0.1.jar"
+        jumboMode="false"
+        revision="19.0.0"
+        sha1="587da9a481ffd341d2fa091704489b89845ddacd"/>
+    <item
+        dex="/Users/josh/git/GreenUp/android/build/pre-dexed/debug/android-support-v4-048e6748df289ceb8a9e368eecca228cb8bea51f.jar"
+        jar="/Users/josh/git/GreenUp/android/libs/android-support-v4.jar"
+        jumboMode="false"
+        revision="19.0.0"
+        sha1="4a6be13368bb64c5a0b0460632d228a1a915f58f"/>
+
+</pre-dex-items>
