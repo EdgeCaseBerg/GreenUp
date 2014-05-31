@@ -8,10 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "NetworkMessage.h"
-
-#define Message_Type_ADMIN @"ADMIN"
-#define Message_Type_MARKER @"MARKER"
-#define Message_Type_COMMENT @"COMMENT"
+#import "MessageTypes.h"
 
 @interface MessageCell : UITableViewCell <UIGestureRecognizerDelegate>
 
@@ -24,5 +21,6 @@
 @property (nonatomic, strong) UILabel *timeStampLabel;
 
 -(id)initWithMessage:(NetworkMessage *)messageObject isBackwards:(BOOL)backwards isFirst:(BOOL)first andResueIdentifier:(NSString *)reuseIdentifier;
+-(void)updateCellWithMessage:(NetworkMessage *)messageObject isBackwards:(BOOL)backwards isFirst:(BOOL)first andResueIdentifier:(NSString *)reuseIdentifier;
 
 @end

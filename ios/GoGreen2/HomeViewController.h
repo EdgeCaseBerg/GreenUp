@@ -10,10 +10,12 @@
 
 @interface HomeViewController : UIViewController <UIGestureRecognizerDelegate>
 
+@property (strong, nonatomic) UILabel *mainLabel;
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UIButton *cleanUpToggleButton;
 @property (strong, nonatomic) NSDate *startDate;
 @property (strong, nonatomic) NSMutableArray *previousLoggingTimes;
+
 -(IBAction)toggleCleanUp:(id)sender;
 
 @end

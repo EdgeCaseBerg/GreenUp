@@ -7,20 +7,24 @@
 
 #import "MapViewController.h"
 #import "ContainerViewController.h"
-#import "greenhttp.h"
 #import "HeatMapPoint.h"
-#import "CSocketController.h"
 #import "NSArray+Primitive.h"
 #import "MapPinSelectorView.h"
 #import "HeatMapPin.h"
 #import "MapPinCommentView.h"
 #import <netdb.h>
 #include <arpa/inet.h>
+#import "NetworkingController.h"
+#import "MessageTypes.h"
+#import "MarkerTypes.h"
 
 //#include "FTLocationSimulator.h"
 
 #define UPLOAD_QUEUE_LENGTH 5
 #define longPressDuration .5
+#define BUFFER_SCALER 2
+#define MIN_DISTANCE_FOR_UPDATES 10
+#define MAX_METERS_PER_SECOND 5 // ~12 mph
 
 @interface MapViewController ()
 
@@ -32,15 +36,13 @@
 {
     if([UIScreen mainScreen].bounds.size.height == 568)
     {
-        self.mapView = [[GreenUpMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 499)];
+        self = [super initWithNibName:@"MapView_IPhone5" bundle:nil];
     }
     else
     {
-       self.mapView = [[GreenUpMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 411)]; 
+        self = [super initWithNibName:@"MapView_IPhone" bundle:nil];
     }
-    [self.view addSubview:self.mapView];
-    
-    self = [super initWithNibName:@"MapView_IPhone" bundle:nil];
+
     self.title = @"Map";
     
     self.downloadedMapPoints = [[NSMutableArray alloc] init];
@@ -69,47 +71,34 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingPinsForShowPin:) name:@"finishedGettingPinsForShowPin" object:nil];
     
-    [self.mapView setShowsUserLocation:TRUE];
-    
     return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    //THIS BUTTON IS JUST FOR QUICK TESTING. SAME BUTTON AS THE HOME SCREEN!
-    /*
-    //Toggle Logging Button
-    self.toggleGeoLogging = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.toggleGeoLogging setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.toggleGeoLogging setFrame:CGRectMake(0, 65, 150, 30)];
-    if(self.logging)
+    
+    if([UIScreen mainScreen].bounds.size.height == 568)
     {
-        [self.toggleGeoLogging setTitle:@"Stop Logging" forState:UIControlStateNormal];
-        [self.toggleGeoLogging setBackgroundColor:[UIColor redColor]];
+        self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 499)];
     }
     else
     {
-        [self.toggleGeoLogging setTitle:@"Start Logging" forState:UIControlStateNormal];
-        [self.toggleGeoLogging setBackgroundColor:[UIColor greenColor]];
+        self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 320, 411)];
     }
-    [self.toggleGeoLogging addTarget:self action:@selector(toggleLogging:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.toggleGeoLogging];
-    */
+    
+    [self.view addSubview:self.mapView];
+    
+    
+    [self.mapView setShowsUserLocation:TRUE];
+    
+    self.centerOnCurrentLocation = FALSE;
     
     //Gesture Recognizer For Custom Location Map Pin
     UILongPressGestureRecognizer *customLocationMapPinGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(dropCustomMapPin:)];
     [customLocationMapPinGesture setMinimumPressDuration:.2];
     [self.mapView addGestureRecognizer:customLocationMapPinGesture];
-    
-    //Clear Points Button
-    self.clearPoints = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.clearPoints setFrame:CGRectMake(250, 65, 70, 30)];
-    [self.clearPoints setTitle:@"Clear" forState:UIControlStateNormal];
-    [self.clearPoints addTarget:self action:@selector(clearAllPoints:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.clearPoints];
-    
+
     //Map
     MKCoordinateRegion region;
     MKCoordinateSpan span;
@@ -118,9 +107,10 @@
     span.longitudeDelta=100000;
     region.span = span;
     region.center = location;
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(location, 5*METERS_PER_MILE, 5*METERS_PER_MILE);
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(location, 10*METERS_PER_MILE, 10*METERS_PER_MILE);
     [self.mapView setDelegate:self];
     [_mapView setRegion:viewRegion animated:YES];
+    [self saveLastViewedLocation:self.mapView];
     
     //Heat Map
     self.heatMap = [[HeatMap alloc] initWithData:nil];
@@ -128,7 +118,53 @@
     
     //Networking
     self.pushOverdue = FALSE;
+    
+    [self saveLastViewedLocation:self.mapView];
+
+    UIView *controlsView = [[UIView alloc] initWithFrame:CGRectMake(0, self.mapView.frame.size.height - 48, 320, 48)];
+    UIView *tintView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 48)];
+    [tintView setBackgroundColor:[UIColor blackColor]];
+    [tintView setAlpha:0.7];
+    
+    UISegmentedControl *centerOnLocation = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Free", @"Center", nil]];
+    if(self.centerOnCurrentLocation)
+    {
+        [centerOnLocation setSelectedSegmentIndex:1];
+    }
+    else
+    {
+        [centerOnLocation setSelectedSegmentIndex:0];
+    }
+    [centerOnLocation setTintColor:[UIColor whiteColor]];
+    [centerOnLocation setFrame:CGRectMake(5, 5, 130, 27)];
+    [centerOnLocation addTarget:self action:@selector(toggleCenterOnLocation:) forControlEvents:UIControlEventValueChanged];
+    
+    UIButton *dropPinButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [dropPinButton setBackgroundImage:[UIImage imageNamed:@"locationMarker.png"] forState:UIControlStateNormal];
+    [dropPinButton setFrame:CGRectMake(140, 5, 40, 27)];
+    [dropPinButton addTarget:self action:@selector(dropMarkerAtCurrentLocation) forControlEvents:UIControlEventTouchUpInside];
+     
+    UISegmentedControl *mapTypeControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Map", @"Sat", nil]];
+    [mapTypeControl setTintColor:[UIColor whiteColor]];
+    [mapTypeControl addTarget:self action:@selector(toggleSateliteView:) forControlEvents:UIControlEventValueChanged];
+    [mapTypeControl setFrame:CGRectMake(controlsView.frame.size.width - 135, 5, 130, 27)];
+    if([[[[ContainerViewController sharedContainer] theMapViewController] mapView] mapType] == MKMapTypeStandard)
+    {
+        [mapTypeControl setSelectedSegmentIndex:0];
+    }
+    else
+    {
+        [mapTypeControl setSelectedSegmentIndex:1];
+    }
+    
+    [self.view addSubview:controlsView];
+    [controlsView addSubview:tintView];
+    
+    [controlsView addSubview:dropPinButton];
+    [controlsView addSubview:mapTypeControl];
+    [controlsView addSubview:centerOnLocation];
 }
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -137,13 +173,21 @@
 
 -(IBAction)prepareMapToAppear:(NSNotification *)sender
 {
+    NSLog(@"Action - Map: Preparing Map View, Grabbing New Heatmap / Pin Data");
+    self.finishedDownloadingHeatMap = FALSE;
+    self.finishedDownloadingMapPins = FALSE;
+    
     //Get Updates From Server
-    [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
+    [self getHeatDataFromServer];
     [self getMapPins];
 }
 
 -(void)updatesFromNetwork:(NSNotification *)sender
 {
+    NSLog(@"Message - Map: Updates From Network");
+    NSLog(@"--- Data - Map: Finished Download Heat Map Data = %d", self.finishedDownloadingHeatMap);
+    NSLog(@"--- Data - Map: Finished Download Map Pins = %d", self.finishedDownloadingMapPins);
+    
     if(self.finishedDownloadingHeatMap && self.finishedDownloadingMapPins)
     {
         [self updateHeatMapOverlay];
@@ -151,16 +195,107 @@
     }
 }
 
+#pragma mark - Button Callbacks
+
+-(void)toggleSateliteView:(UISegmentedControl *)sender
+{
+    if(sender.selectedSegmentIndex == 0)
+    {
+        [self.mapView setMapType:MKMapTypeStandard];
+    }
+    else
+    {
+        [self.mapView setMapType:MKMapTypeHybrid];
+    }
+}
+
+-(void)toggleCenterOnLocation:(UISegmentedControl *)sender
+{
+    if(sender.selectedSegmentIndex == 0)
+    {
+        self.centerOnCurrentLocation = FALSE;
+    }
+    else
+    {
+        self.centerOnCurrentLocation = TRUE;
+    }
+}
 
 #pragma mark - MKMapViewDelegate
+
+-(void)saveLastViewedLocation:(MKMapView *)mapView
+{
+    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithDouble:mapView.region.center.latitude], [NSNumber numberWithDouble:mapView.region.center.longitude], [NSNumber numberWithDouble:mapView.region.span.latitudeDelta * BUFFER_SCALER], [NSNumber numberWithDouble:mapView.region.span.longitudeDelta * BUFFER_SCALER], nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"lat", @"lon", @"deltaLat", @"deltaLon", nil];
+    
+    self.lastViewedLocation = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+}
+
+-(BOOL)checkIfOutsideBufferZone:(MKMapView *)mapView
+{
+    NSLog(@"Message - Map: Checking Buffer Zone With Scaler %d", BUFFER_SCALER);
+    NSNumber *lat = [self.lastViewedLocation objectForKey:@"lat"];
+    NSNumber *lon = [self.lastViewedLocation objectForKey:@"lon"];
+    NSNumber *latDelta = [self.lastViewedLocation objectForKey:@"deltaLat"];
+    NSNumber *lonDelta = [self.lastViewedLocation objectForKey:@"deltaLon"];
+    float latDeltaWithoutBuff = latDelta.floatValue / BUFFER_SCALER;
+    float lonDeltaWithoutBuff = lonDelta.floatValue / BUFFER_SCALER;
+    
+    float newLonUpper = mapView.region.center.longitude + mapView.region.span.longitudeDelta;
+    float newLonLower = mapView.region.center.longitude - mapView.region.span.longitudeDelta;
+    float newLatUpper = mapView.region.center.latitude + mapView.region.span.latitudeDelta;
+    float newLatLower = mapView.region.center.latitude - mapView.region.span.latitudeDelta;
+    
+    float oldLonUpper = lon.floatValue + lonDelta.floatValue;
+    float oldLonLower = lon.floatValue - lonDelta.floatValue;
+    float oldLatUpper = lat.floatValue + latDelta.floatValue;
+    float oldLatLower = lat.floatValue - latDelta.floatValue;
+    
+    float newLonDelta = mapView.region.span.longitudeDelta;
+    float newLatDelta = mapView.region.span.latitudeDelta;
+    
+    NSLog(@"--- Data - Map: New Upper Lon Limit = %f", newLonUpper);
+    NSLog(@"--- Data - Map: New Lower Lon Limit = %f", newLonLower);
+    NSLog(@"--- Data - Map: New Upper Lat Limit = %f", newLatUpper);
+    NSLog(@"--- Data - Map: New Lower Lat Limit = %f", newLatLower);
+    
+    NSLog(@"--- Data - Map: Old Upper Lon Limit = %f", oldLonUpper);
+    NSLog(@"--- Data - Map: Old Lower Lon Limit = %f", oldLonLower);
+    NSLog(@"--- Data - Map: Old Upper Lat Limit = %f", oldLatUpper);
+    NSLog(@"--- Data - Map: Old Lower Lat Limit = %f", oldLatLower);
+    
+    if(newLatUpper >= oldLatUpper ||
+       newLatLower <= oldLatLower ||
+       newLonUpper >= oldLonUpper ||
+       newLonLower <= oldLonLower ||
+       newLatDelta * 1.1 < latDeltaWithoutBuff ||
+       newLonDelta * 1.1 < lonDeltaWithoutBuff)
+    {
+        NSLog(@"Message - Map: Outside Buffer Zone");
+        return TRUE;
+    }
+    else
+    {
+        NSLog(@"Message - Map: Inside Buffer Zone");
+        return FALSE;
+    }
+}
+
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
+    NSLog(@"Action - Map: Region Changed");
     if([[[ContainerViewController sharedContainer] theMapViewController] view].frame.origin.x == 0 && [[[ContainerViewController sharedContainer] theMapViewController] view].frame.size.width != 0)
     {
-        //Get heatmap data and pins from server
-        [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-        [self updateHeatMapOverlay];
-        [self getMapPins];
+        if([self checkIfOutsideBufferZone:mapView])
+        {
+            [self saveLastViewedLocation:mapView];
+            
+            //Get heatmap data and pins from server
+            self.finishedDownloadingHeatMap = FALSE;
+            self.finishedDownloadingMapPins = FALSE;
+            [self getHeatDataFromServer];
+            [self getMapPins];
+        }
     }
 }
 
@@ -178,27 +313,7 @@
     }
     else if([annotation isKindOfClass:[HeatMapPin class]])
     {
-        if([((HeatMapPin *)annotation).type isEqualToString:Message_Type_ADMIN])
-        {
-            static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
-            
-            MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
-            
-            if (annotationView == nil)
-            {
-                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
-            }
-            
-            annotationView.image = [UIImage imageNamed:@"trashbag.png"];
-            CGRect test = annotationView.frame;
-            NSLog(@"%f - %f - %f - %f", test.origin.x, test.origin.y, test.size.width, test.size.height);
-            [annotationView setFrame:CGRectMake(annotationView.frame.origin.x, annotationView.frame.origin.y - annotationView.frame.size.height, annotationView.frame.size.height, annotationView.frame.size.width)];
-            
-            annotationView.annotation = annotation;
-            
-            return annotationView;
-        }
-        else if([((HeatMapPin *)annotation).type isEqualToString:Message_Type_MARKER])
+        if([((HeatMapPin *)annotation).type isEqualToString:MARKER_TYPE_PICK_UP])
         {
             static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
             
@@ -210,8 +325,45 @@
             }
             
             annotationView.image = [UIImage imageNamed:@"trashMarker.png"];
-            
             annotationView.centerOffset = CGPointMake(0, -17);
+            
+            annotationView.annotation = annotation;
+            
+            return annotationView;
+        }
+        else if([((HeatMapPin *)annotation).type isEqualToString:MARKER_TYPE_MARKER])
+        {
+            static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
+            
+            MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
+            
+            if (annotationView == nil)
+            {
+                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
+            }
+            
+            annotationView.image = [UIImage imageNamed:@"marker.png"];
+            
+            annotationView.centerOffset = CGPointMake(0, -15);
+            
+            annotationView.annotation = annotation;
+            
+            return annotationView;
+        }
+        else if([((HeatMapPin *)annotation).type isEqualToString:MARKER_TYPE_HAZARD])
+        {
+            static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
+            
+            MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
+            
+            if (annotationView == nil)
+            {
+                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
+            }
+            
+            annotationView.image = [UIImage imageNamed:@"hazardMarker.png"];
+            
+            annotationView.centerOffset = CGPointMake(0, -15);
             
             annotationView.annotation = annotation;
             
@@ -222,30 +374,23 @@
     }
     else
     {
-        NSLog(@"ELSE: %@", [annotation class]);
+        return nil;
     }
 }
 
 
 -(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
-    if([view isKindOfClass: [MKUserLocation class]])
+    HeatMapPin *selectedMapPin = view.annotation;
+    if([selectedMapPin respondsToSelector:@selector(pinID)])
     {
-        nil;
-    }
-    else
-    {
-        HeatMapPin *selectedMapPin = view.annotation;
-        id pinID = selectedMapPin.pinID;
+        NSNumber *pinID = selectedMapPin.pinID;
         if(![selectedMapPin.pinID isEqualToNumber:@420])
         {
+            
             [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:pinID];
             [[ContainerViewController sharedContainer] switchMessageView];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"getMessagesForShowingSelectedMessage" object:nil];
-        }
-        else
-        {
-            NSLog(@"jhk jhg hjgk hjg kjh jh hjk khkggjhgjkgj gjhkg jhjkg kjh gj  jhg kj hg jhg jh");
         }
     }
 }
@@ -292,9 +437,7 @@
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 
         // Set a movement threshold for new events.
-        self.locationManager.distanceFilter = 500;
-
-
+        self.locationManager.distanceFilter = MIN_DISTANCE_FOR_UPDATES;
     }
         
     [self.locationManager startUpdatingLocation];
@@ -322,41 +465,24 @@
     NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
     if(abs(howRecent) < 1.0)
     {
+        NSLog(@"Message - Map: Found GPS Location");
+        [self centerMapWithCurrentLocation:location];
+        
         //ADD POINTS
         HeatMapPoint *mapPoint = [[HeatMapPoint alloc] init];
         mapPoint.lat = location.coordinate.latitude;
         mapPoint.lon = location.coordinate.longitude;
-        mapPoint.secWorked = 1;
+        mapPoint.secWorked = 1 + arc4random() % 99;
         
         if(self.loggingForMarker)
         {
             //-------------- We Are Not Logging But Want To Drop Marker At Our Current Location ---------
             self.loggingForMarker = FALSE;
             
-            /*
-            //Get Current Location
-            MKCoordinateRegion region;
-            MKCoordinateSpan span;
-            span.latitudeDelta=0.1;
-            span.longitudeDelta=0.1;
-            region.span = span;
-            region.center = location.coordinate;
-            [self.mapView setRegion:region animated:TRUE];
-            [self.mapView regionThatFits:region];
-            */
-            
             //Stop Getting Updates
             [self.locationManager stopUpdatingLocation];
             
-            //Create Pin For Current Location
-            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:Message_Type_MARKER];
-            self.tempPinRef = currentLocationPin;
-            
-            //Save pin
-            [self.gatheredMapPins addObject:currentLocationPin];
-
-            //Add Pin To Map
-            [self.mapView addAnnotation:currentLocationPin];
+            self.tempPinLocation = location.coordinate;
             
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
@@ -365,37 +491,29 @@
         else if(self.loggingForMarker && self.logging)
         {
             //-------------- We Are Logging AND ALSO Want To Drop A Marker --------------
-            self.loggingForMarker = FALSE;
+            if(location.speed < MAX_METERS_PER_SECOND)
+            {
+                self.drivingAlertShown = FALSE;
+                
+                self.loggingForMarker = FALSE;
+                
+                [self.gatheredMapPoints addObject:mapPoint];
+                [self.gatheredMapPointsQueue addObject:mapPoint];
+                
+                //Update With Server
+                [self getHeatDataFromServer];
+                [self pushHeatMapDataToServer];
+                [self updateHeatMapOverlay];
+            }
+            else
+            {
+                if(!self.drivingAlertShown)
+                {
+                    [self showDrivingAlert];
+                }
+            }
             
-            [self.gatheredMapPoints addObject:mapPoint];
-            [self.gatheredMapPointsQueue addObject:mapPoint];
-            
-            //Update With Server
-            [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-            [self pushHeatMapDataToServer];
-            [self updateHeatMapOverlay];
-            
-            /*
-            //Update Map Location
-            MKCoordinateRegion region;
-            MKCoordinateSpan span;
-            span.latitudeDelta=0.1;
-            span.longitudeDelta=0.1;
-            region.span = span;
-            region.center = location.coordinate;
-            [self.mapView setRegion:region animated:TRUE];
-            [self.mapView regionThatFits:region];
-            */
-            
-            //Create Pin For Current Location
-            HeatMapPin *currentLocationPin = [[HeatMapPin alloc] initWithCoordinate:location.coordinate andValiditity:TRUE andTitle:@"Location Pin" andType:Message_Type_MARKER];
-            self.tempPinRef = currentLocationPin;
-            
-            //Save pin
-            [self.gatheredMapPins addObject:currentLocationPin];
-            
-            //Add Pin To Map
-            [self.mapView addAnnotation:currentLocationPin];
+            self.tempPinLocation = location.coordinate;
             
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
@@ -404,27 +522,51 @@
         else
         {
             //-------------- We Are Logging AND Don't Want To Drop A Marker --------------
-            [self.gatheredMapPoints addObject:mapPoint];
-            [self.gatheredMapPointsQueue addObject:mapPoint];
             
-            //Update With Server
-            [self getHeatDataFromServer:self.mapView.region.span andLocation:self.mapView.region];
-            [self pushHeatMapDataToServer];
-            [self updateHeatMapOverlay];
-            
-            /*
-            //Update Map Location
-            MKCoordinateRegion region;
-            MKCoordinateSpan span;
-            span.latitudeDelta=0.1;
-            span.longitudeDelta=0.1;
-            region.span = span;
-            region.center = location.coordinate;
-            [self.mapView setRegion:region animated:TRUE];
-            [self.mapView regionThatFits:region];
-             */
+            if(location.speed < MAX_METERS_PER_SECOND)
+            {
+                self.drivingAlertShown = FALSE;
+                
+                [self.gatheredMapPoints addObject:mapPoint];
+                [self.gatheredMapPointsQueue addObject:mapPoint];
+                
+                //Update With Server
+                [self getHeatDataFromServer];
+                [self pushHeatMapDataToServer];
+                [self updateHeatMapOverlay];
+            }
+            else
+            {
+                if(!self.drivingAlertShown)
+                {
+                    [self showDrivingAlert];
+                }
+            }
         }
     }
+}
+
+-(void)centerMapWithCurrentLocation:(CLLocation *)location
+{
+    if(self.centerOnCurrentLocation)
+    {
+        //Update Map Location
+        MKCoordinateRegion region;
+        //MKCoordinateSpan span;
+        //span.latitudeDelta = 0.005;
+        //span.longitudeDelta = 0.005;
+        region.span = self.mapView.region.span;
+        region.center = location.coordinate;
+        [self.mapView setRegion:region animated:TRUE];
+        [self.mapView regionThatFits:region];
+    }
+}
+
+-(void)showDrivingAlert
+{
+    self.drivingAlertShown = TRUE;
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are you Driving?" message:@"Either you're the worlds fastest cleaner or you're driving around. We wan't accurate results so once you it slow down we'll automatically enable tracking for you." delegate:nil cancelButtonTitle:@"I'm Driving" otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 #pragma mark - Heat Map Point Methods
@@ -437,11 +579,21 @@
     NSMutableArray *allPoints = [[NSMutableArray alloc] initWithArray:self.downloadedMapPoints];
     [allPoints addObjectsFromArray:self.gatheredMapPoints];
     
-    NSLog(@"DOWNLOADED POINTS: %d", self.downloadedMapPoints.count);
-    NSLog(@"GATHERED POINTS: %d", self.gatheredMapPoints.count);
+    NSLog(@"Message - Map: Updating Heat Map Overlay");
+    NSLog(@"-- Data - Map: DOWNLOADED POINTS = %lu", (unsigned long)self.downloadedMapPoints.count);
+    NSLog(@"-- Data - Map: GATHERED POINTS = %lu", (unsigned long)self.gatheredMapPoints.count);
     
     //create new heatmap overlay and display it
-    self.heatMap = [[HeatMap alloc] initWithData:[self convertPointsToHeatMapFormat:allPoints]];
+    if(self.heatMap == nil)
+    {
+        NSLog(@"Message - Map: Nil Heat Overlay, initilizing");
+        self.heatMap = [[HeatMap alloc] initWithData:[self convertPointsToHeatMapFormat:allPoints]];
+    }
+    else
+    {
+        NSLog(@"Message - Map: Updaing Heat Overlay");
+        [self.heatMap setData:[self convertPointsToHeatMapFormat:allPoints]];
+    }
     [self.mapView addOverlay:self.heatMap];
     //[self.mapView setVisibleMapRect:[self.heatMap boundingMapRect] animated:YES];
 }
@@ -451,8 +603,9 @@
 
 -(IBAction)markerWasCanceled:(id)sender
 {
+    NSLog(@"Action - Map: Cancled Placing Marker");
     //Remove Pin Because WE Canceled
-    [self.mapView removeAnnotation:self.tempPinRef];
+    //[self.mapView removeAnnotation:self.tempPinRef];
     
     //Clear Temp
     //self.tempPinRef = nil;
@@ -472,6 +625,8 @@
             if([pin.pinID isEqualToNumber:self.pinIDToShow])
             {
                 pinToShow = pin;
+                
+                NSLog(@"Message - Map: Found Pin To Show In Downloaded Pins");
             }
         }
         for(HeatMapPin *pin in self.gatheredMapPins)
@@ -479,6 +634,8 @@
             if([pin.pinID isEqualToNumber:self.pinIDToShow])
             {
                 pinToShow = pin;
+                
+                NSLog(@"Message - Map: Found Pin To Show In Gathered Pins");
             }
         }
         
@@ -493,17 +650,29 @@
         }
 
         //Add Fade View
-        self.fadeView = [[UIView alloc] initWithFrame:self.mapView.frame];
+        if(self.fadeView == nil)
+            self.fadeView = [[UIView alloc] initWithFrame:self.mapView.frame];
+        
         [self.fadeView setBackgroundColor:[UIColor blackColor]];
         [self.fadeView setAlpha:.8];
         [self.view addSubview:self.fadeView];
         
         //Add Fake Pin Overlay
         CGPoint pinPointInSuperView = [self.mapView convertCoordinate:pinToShow.coordinate toPointToView:self.view];
-        UIImageView *fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashMarker.png"]];
-        [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 16, pinPointInSuperView.y - 34, 30, 34)];
+        UIImageView *fakePin = nil;
+        if([pinToShow.type isEqualToString:MARKER_TYPE_HAZARD])
+        {
+            fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hazardMarker.png"]];
+        }
+        else
+        {
+            fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"marker.png"]];
+        }
+        [fakePin setFrame:CGRectMake(pinPointInSuperView.x - 9.5, pinPointInSuperView.y - 29, 19, 29)];
         
         [self.fadeView addSubview:fakePin];
+        
+        NSLog(@"Message - Map: Showing Fade View");
         
         //Remove View
         [self performSelector:@selector(fadeOutFadeView:) withObject:nil afterDelay:1];
@@ -523,30 +692,14 @@
 -(IBAction)removeFadeView:(id)sender
 {
     [self.fadeView removeFromSuperview];
-}
-
-
--(void)addNewDownloadedPins:(NSArray *)pins
-{
-    for(HeatMapPin *currentPin in pins)
-    {
-        BOOL found = FALSE;
-        for(HeatMapPin *downloadedPin in self.downloadedMapPins)
-        {
-            if(downloadedPin.pinID == currentPin.pinID)
-            {
-                found = TRUE;
-                break;
-            }
-        }
-        
-        if(!found)
-            [self.downloadedMapPins addObject:currentPin];
-    }
+    
+    NSLog(@"Message - Map: Removing Fade View");
 }
 
 -(void)updateMapWithPins:(NSMutableArray *)pins
 {
+    NSLog(@"Message - Map: Adding Unaddressed Pins To Map");
+    
     //Add New
     for(HeatMapPin *pin in pins)
     {
@@ -559,12 +712,13 @@
 
 -(void)updateHeatMapWithNewPins
 {
+    NSLog(@"Message - Map: Removing Old Pins From Map");
     //Remove Old
     for(MKAnnotationView *annotation in self.mapView.annotations)
     {
         if([annotation isKindOfClass:[HeatMapPin class]])
         {
-            [self.mapView removeAnnotation:annotation];
+            [self.mapView removeAnnotation:(id)annotation];
         }
     }
     //[self.mapView removeAnnotations:self.mapView.annotations];
@@ -572,10 +726,14 @@
     //Add Downloaded Pins
     [self updateMapWithPins:self.downloadedMapPins];
 }
--(IBAction)dropMarkerAtCurrentLocation:(id)sender
+-(void)dropMarkerAtCurrentLocation
 {
+    NSLog(@"Action - Map: Dropping Pin At Current Location");
     //Set Logging For Marker Flag
     self.loggingForMarker = TRUE;
+    
+    //Give us .5 seconds to see if we get a lock before showing a alert
+    [self performSelector:@selector(checkIfGPSWasFoundForMakerDrop) withObject:nil afterDelay:0.5];
     
     //If we arn't collecting GPS data start so we can drop a marker at our current location
     if(!self.logging)
@@ -584,10 +742,24 @@
     }
 }
 
+-(void)checkIfGPSWasFoundForMakerDrop
+{
+    if(self.loggingForMarker == TRUE)
+    {
+        NSLog(@"Message - Map: GPS location could not be attained for dropping marker at current location. Alert has been issued to user");
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"GPS Lock Not Found" message:@"You can try again in a few moments when you attain a GPS lock or perform a long press on the map and drop a custom location pin" delegate:Nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+        [alert show];
+        
+        self.loggingForMarker = FALSE;
+    }
+}
+
 -(IBAction)dropCustomMapPin:(UILongPressGestureRecognizer *)sender
 {
     if(sender.state == UIGestureRecognizerStateBegan)
     {
+        NSLog(@"Action - Map: Dropping Custom Pin (Long Press Started)");
         //Start Timer
         self.longPressTimer = [NSDate date];
         
@@ -597,6 +769,7 @@
     }
     else if(sender.state == UIGestureRecognizerStateEnded)
     {
+        NSLog(@"Action - Map: Dropping Custom Pin (Long Press Ended)");
         NSTimeInterval elapsedTime = -[self.longPressTimer timeIntervalSinceNow];
         if(elapsedTime >= longPressDuration)
         {
@@ -610,14 +783,7 @@
             CGPoint point = [sender locationInView:self.mapView];
             CLLocationCoordinate2D coord = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
             
-            HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:coord andValiditity:TRUE andTitle:@"Custom Pin" andType:Message_Type_MARKER];
-            self.tempPinRef = customPin;
-            
-            //Save pin
-            [self.gatheredMapPins addObject:customPin];
-            
-            //Add Pin To Map
-            [self.mapView addAnnotation:customPin];
+            self.tempPinLocation = coord;
             
             //Show Message Overlay
             MapPinCommentView *commentView = [[MapPinCommentView alloc] initWithFrame:self.view.window.frame];
@@ -631,12 +797,13 @@
     }
 }
 
-#pragma mark - Networking Methods
 
+#pragma mark - Networking Methods
 -(void)getMapPins
 {
-    self.finishedDownloadingMapPins = FALSE;
-    
+    [[NetworkingController shared] getMapPinsWithDictionary:self.lastViewedLocation];
+    /*
+    NSLog(@"Network - Map: Getting Pins With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
@@ -646,6 +813,10 @@
             
             NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:self.mapView.region.center.latitude], [NSNumber numberWithFloat:self.mapView.region.center.longitude], [NSNumber numberWithFloat:self.mapView.region.span.latitudeDelta], [NSNumber numberWithFloat:self.mapView.region.span.longitudeDelta], nil];
             
+            NSLog(@"--- Data - Map: Current Lat = %f", self.mapView.region.center.latitude);
+            NSLog(@"--- Data - Map: Current Lon = %f", self.mapView.region.center.longitude);
+            NSLog(@"--- Data - Map: Current Lat Delta = %f", self.mapView.region.span.latitudeDelta);
+            NSLog(@"--- Data - Map: Current Lon Delta = %f", self.mapView.region.span.longitudeDelta);
             
             NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
             
@@ -656,8 +827,14 @@
                 
                 NSString *statusCode = [response objectForKey:@"status_code"];
                 
+                NSLog(@"Network - Map: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] == 200)
                 {
+                    
+                    NSLog(@"Network - Map: Recieved %d New Map Pins", [[response objectForKey:@"pins"] count]);
+                    NSLog(@"--- Data - Map: %@", [response objectForKey:@"pins"]);
+                    
                     [self.downloadedMapPins removeAllObjects];
                     
                     for(NSDictionary *networkPin in [response objectForKey:@"pins"])
@@ -682,6 +859,14 @@
                 }
                 else
                 {
+                    NSLog(@"Network - Map: ***************************************");
+                    NSLog(@"Network - Map: ***************************************");
+                    NSLog(@"Network - Map: *************** WANRING ***************");
+                    NSLog(@"Network - Map: ****** Received Bad Status Code *******");
+                    NSLog(@"Network - Map: %@", response);
+                    NSLog(@"Network - Map: ***************************************");
+                    NSLog(@"Network - Map: ***************************************");
+                    
                     self.finishedDownloadingMapPins = TRUE;
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:statusCode];
                 }
@@ -696,16 +881,20 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
-    
+    */
 }
 
 -(void)getMapPinForPinShow
 {
+    [[NetworkingController shared] getMapPinsForPinShow];
+    /*
+    NSLog(@"Network - Map: Getting Map Pin for Pin Show");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             //Background Process Block
             
+            NSLog(@"--- Data - Map: Pin Id: %@", self.pinIDToShow.stringValue);
             NSDictionary *response = [[CSocketController sharedCSocketController] performGETRequestToHost:BASE_HOST withRelativeURL:[NSString stringWithFormat:@"%@?id=%@",PINS_RELATIVE_URL, self.pinIDToShow.stringValue] withPort:API_PORT withProperties:nil];
             
             dispatch_async(dispatch_get_main_queue(),^{
@@ -713,12 +902,18 @@
                 
                 NSString *statusCode = [response objectForKey:@"status_code"];
                 
+                NSLog(@"Network - Map: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] == 200)
                 {
                     [self.downloadedMapPins removeAllObjects];
-      
+        
                     NSDictionary *networkPin = [response objectForKey:@"pin"];
                     
+                    NSLog(@"Network - Map: Recieved New Map Pin");
+                    NSLog(@"--- Data - Map: %@", [response objectForKey:@"pin"]);
+                    
+        
                     //Add New Pins
                     HeatMapPin *newPin = [[HeatMapPin alloc] init];
                     NSString *stringPinID = [[networkPin objectForKey:@"id"] stringValue];
@@ -752,11 +947,25 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Get Pins" message:@"You dont appear to have a network connection, please connect and retry loading the map." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
     }
-    
+    */
 }
 
 -(IBAction)postMarker:(NSNotification *)sender
 {
+    NSArray *parameters = sender.object;
+
+    HeatMapPin *customPin = [[HeatMapPin alloc] initWithCoordinate:self.tempPinLocation andValiditity:TRUE andTitle:@"Custom Pin" andType:[parameters objectAtIndex:1]];
+    self.tempPinRef = customPin;
+    
+    //Save pin
+    [self.gatheredMapPins addObject:customPin];
+    
+    //Add Pin To Map
+    [self.mapView addAnnotation:customPin];
+    
+    [[NetworkingController shared] postMarkerWithPin:customPin andMessage:[parameters objectAtIndex:0] andType:[parameters objectAtIndex:1]];
+    /*
+    NSLog(@"Network - Map: Pushing New Marker With Data,");
     if([[ContainerViewController sharedContainer] networkingReachability])
     {
         NSString *message = sender.object;
@@ -770,9 +979,13 @@
         [objects addObject:message];
         [objects addBool:FALSE];
         
-        NSArray *pinOnMap = self.mapView.annotations;
-        
         NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", @"addressed", nil]];
+        
+        NSLog(@"--- Data - Map: Lat = %f", self.tempPinRef.coordinate.latitude);
+        NSLog(@"--- Data - Map: Lon = %f", self.tempPinRef.coordinate.longitude);
+        NSLog(@"--- Data - Map: Type = %@", Message_Type_MARKER);
+        NSLog(@"--- Data - Map: Message = %@", message);
+        
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
             //Background Process Block
@@ -780,9 +993,21 @@
             
             dispatch_async(dispatch_get_main_queue(),^{
                 //Completion Block
+                
                 NSString *statusCode = [response objectForKey:@"status_code"];
+                
+                NSLog(@"Network - Map: Recieved Status Code: %@", statusCode);
+                
                 if([statusCode integerValue] != 200)
                 {
+                    NSLog(@"Network - Map: ***************************************");
+                    NSLog(@"Network - Map: ***************************************");
+                    NSLog(@"Network - Map: *************** WANRING ***************");
+                    NSLog(@"Network - Map: ****** Received Bad Status Code *******");
+                    NSLog(@"Network - Map: %@", response);
+                    NSLog(@"Network - Map: ***************************************");
+                    NSLog(@"Network - Map: ***************************************");
+                    
                     //Request Failed Remove Pin From Map
                     [self.mapView removeAnnotation:self.tempPinRef];
                     
@@ -794,6 +1019,7 @@
                     NSString *pinID = [response objectForKey:@"pin_id"];
                     if(pinID == nil)
                     {
+                        NSLog(@"WARNING - Map: Server Did Not Return Pin ID!");
                         //Request Failed Remove Pin From Map
                         [self.mapView removeAnnotation:self.tempPinRef];
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
@@ -814,11 +1040,19 @@
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Post Pin" message:@"You dont appear to have a network connection, please connect and retry posting the pin." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
         [alert show];
-    }
+    }*/
 }
 
 -(void)pushHeatMapDataToServer
 {
+    [[NetworkingController shared] pushHeatMapPoints];
+    /*
+    NSLog(@"Message - Map: Pushing Heatmap Data To Server");
+    NSLog(@"--- Data - Map: QUEUE LIMIT = %d", UPLOAD_QUEUE_LENGTH);
+    NSLog(@"--- Data - Map: Gathered Queue = %d", self.gatheredMapPoints.count);
+    NSLog(@"--- Data - Map: Push Overdue = %d", self.pushOverdue);
+    
+    
     //If the number of gathered points in the queue array is equal to our define or we have the overdue flag set. Update our gathered points with the server!
     if(self.gatheredMapPointsQueue.count >= UPLOAD_QUEUE_LENGTH || self.pushOverdue)
     {
@@ -830,9 +1064,10 @@
         else
         {
             //If We Do Have Service Push That Bitch
-            NSLog(@"********************* PUSHING QUEUE LIMIT REACHED");
+            NSLog(@"Message - Map: Push Queue Limit Reached, Push Data,");
             int sentCount = 0;
             NSMutableArray *dataArray = [[NSMutableArray alloc] init];
+            
             for(int i = 0; i < self.gatheredMapPointsQueue.count; i++)
             {
                 sentCount++;
@@ -845,30 +1080,33 @@
                 [objects addFloat:point.lon];
                 [objects addFloat:point.secWorked];
                 
-                NSLog(@"PUSHING - Lat: %f", point.lat);
-                NSLog(@"PUSHING - Lon: %f", point.lon);
-                NSLog(@"PUSHING - sec: %d", point.secWorked);
-                
-                
                 //Create Dictionary Of Parameters
                 NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
                 [dataArray addObject:parameters];
             }
             
-            NSLog(@"SEND POINTS: %d", sentCount);
-            
+            NSLog(@"--- Data - Map: %@", dataArray);
+        
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
                 //Background Process Block
                 NSDictionary *response = [[CSocketController sharedCSocketController] performPUTRequestToHost:BASE_HOST withRelativeURL:HEAT_MAP_RELATIVE_URL withPort:API_PORT withProperties:dataArray];
-                
-                
+            
                 dispatch_async(dispatch_get_main_queue(),^{
                     //Completion Block
                     NSString *statusCode = [response objectForKey:@"status_code"];
                     
+                    NSLog(@"Network - Map: Recieved Status Code: %@", statusCode);
+                    
                     if([statusCode integerValue] != 200)
                     {
-                        NSLog(@"*************PUSH ERROR OCCURED: %@", [response objectForKey:@"Error_Message"]);
+                        NSLog(@"Network - Map: ***************************************");
+                        NSLog(@"Network - Map: ***************************************");
+                        NSLog(@"Network - Map: *************** WANRING ***************");
+                        NSLog(@"Network - Map: ****** Received Bad Status Code *******");
+                        NSLog(@"Network - Map: %@", response);
+                        NSLog(@"Network - Map: ***************************************");
+                        NSLog(@"Network - Map: ***************************************");
+                        
                         self.pushOverdue = TRUE;
                     }
                     else
@@ -879,15 +1117,46 @@
                 });
             });
         }
-    }
+    }*/
 }
--(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location
+-(void)getHeatDataFromServer
 {
+    [[NetworkingController shared] getHeatDataPointsWithDictionary:self.lastViewedLocation];
+    /*
     self.finishedDownloadingHeatMap = FALSE;
     
     //Generation Properties
-    NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", nil];
-    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:location.center.latitude], [NSNumber numberWithFloat:location.center.longitude], [NSNumber numberWithFloat:span.latitudeDelta], [NSNumber numberWithFloat:span.longitudeDelta], nil];
+    NSNumber *precision = nil;
+    if(location.span.longitudeDelta > 2.0)
+    {
+        precision = @1;
+    }
+    else if(location.span.longitudeDelta > 0.5 && location.span.longitudeDelta < 2.0)
+    {
+        precision = @2;
+    }
+    else if(location.span.longitudeDelta > 0.2 && location.span.longitudeDelta < 0.5)
+    {
+        precision = @3;
+    }
+    else if(location.span.longitudeDelta > 0.05 && location.span.longitudeDelta < 0.2)
+    {
+        precision = @4;
+    }
+    else if(location.span.longitudeDelta < 0.05)
+    {
+        precision = @5;
+    }
+    
+    NSLog(@"Network - Map: Getting Heat Map Data With Data,");
+    NSLog(@"--- Data - Map: Current Precision = %f", precision.floatValue);
+    NSLog(@"--- Data - Map: Current Lat = %f", location.center.latitude);
+    NSLog(@"--- Data - Map: Current Lon = %f", location.center.longitude);
+    NSLog(@"--- Data - Map: Current Lat Delta = %f", location.span.latitudeDelta);
+    NSLog(@"--- Data - Map: Current Lon Delta = %f", location.span.longitudeDelta);
+    
+    NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"latOffset", @"lonOffset", @"precision", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:location.center.latitude], [NSNumber numberWithFloat:location.center.longitude], [NSNumber numberWithFloat:span.latitudeDelta], [NSNumber numberWithFloat:span.longitudeDelta], precision, nil];
     
     NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
  
@@ -899,16 +1168,22 @@
             //Completion Block
             NSString *statusCode = [results objectForKey:@"status_code"];
             
+            NSLog(@"Network - Map: Recieved Status Code: %@", statusCode);
+            
             if([statusCode integerValue] == 200)
             {
                 [self.downloadedMapPoints removeAllObjects];
+                
+                NSLog(@"Network - Map: Recieved %d New Heat Map Points", [[results objectForKey:@"grid"] count]);
+                NSLog(@"--- Data - Map: %@", [results objectForKey:@"grid"]);
+                
                 for(NSDictionary *pointDictionary in [results objectForKey:@"grid"])
                 {
                     HeatMapPoint *newPoint = [[HeatMapPoint alloc] init];
                     double lat = [[pointDictionary objectForKey:@"latDegrees"] doubleValue];
                     double lon = [[pointDictionary objectForKey:@"lonDegrees"] doubleValue];
                     double secWorked = [[pointDictionary objectForKey:@"secondsWorked"] doubleValue];
-                    
+
                     newPoint.lat = lat;
                     newPoint.lon = lon;
                     newPoint.secWorked = secWorked;
@@ -916,24 +1191,35 @@
                     [self.downloadedMapPoints addObject:newPoint];
                 }
                 
+                
                 self.finishedDownloadingHeatMap = TRUE;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingHeatMap" object:statusCode];
             }
             else
             {
+                NSLog(@"Network - Map: ***************************************");
+                NSLog(@"Network - Map: ***************************************");
+                NSLog(@"Network - Map: *************** WANRING ***************");
+                NSLog(@"Network - Map: ****** Received Bad Status Code *******");
+                NSLog(@"Network - Map: %@", results);
+                NSLog(@"Network - Map: ***************************************");
+                NSLog(@"Network - Map: ***************************************");
+                
                 self.finishedDownloadingHeatMap = TRUE;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingHeatMap" object:statusCode];
             }
         });
-    });
+    });*/
 }
 
 #pragma mark - Utility Methods
 -(IBAction)clearAllPoints:(id)sender
 {
+    NSLog(@"Action - Map: Clearing All Gathered and Downloaded Heatmap Points and Pins");
     [self.gatheredMapPoints removeAllObjects];
     [self.gatheredMapPointsQueue removeAllObjects];
     [self.downloadedMapPoints removeAllObjects];
+    [self.downloadedMapPins removeAllObjects];
     
     [self updateHeatMapOverlay];
 }

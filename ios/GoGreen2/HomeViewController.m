@@ -9,6 +9,7 @@
 #import "HomeViewController.h"
 #import "ContainerViewController.h"
 #import "MenuView.h"
+#import "NetworkingController.h"
 
 @interface HomeViewController ()
 
@@ -34,14 +35,14 @@
         [logo setFrame:CGRectMake(0, 0, 320, 207)];
         [self.view addSubview:logo];
         
-        UILabel *mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 180, 260, 70)];
-        [mainLabel setNumberOfLines:4];
-        [mainLabel setBackgroundColor:[UIColor clearColor]];
-        [mainLabel setTextColor:[UIColor blackColor]];
-        [mainLabel setFont:[mainLabel.font fontWithSize:14]];
-        [mainLabel setTextAlignment:NSTextAlignmentCenter];
-        [mainLabel setText:@"Track your clean up progres\nSee what areas need the most help\nFind an area to drop off what you pick up"];
-        [self.view addSubview:mainLabel];
+        self.mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 180, 260, 70)];
+        [self.mainLabel  setNumberOfLines:4];
+        [self.mainLabel  setBackgroundColor:[UIColor clearColor]];
+        [self.mainLabel  setTextColor:[UIColor blackColor]];
+        [self.mainLabel  setFont:[self.mainLabel .font fontWithSize:14]];
+        [self.mainLabel  setTextAlignment:NSTextAlignmentCenter];
+        [self.mainLabel  setText:@"Track your clean up progress\nSee what areas need the most help\nFind an area to drop off what you pick up"];
+        [self.view addSubview:self.mainLabel ];
         
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 250, 260, 60)];
         [self.timeLabel setText:@"00:00:00"];
@@ -58,17 +59,51 @@
         [self.cleanUpToggleButton addTarget:self action:@selector(toggleCleanUp:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.cleanUpToggleButton];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingHomeMessage:) name:@"finishedGettingHomeMessage" object:nil];
+        
+        [[NetworkingController shared] getHomeMessage];
+        
         self.previousLoggingTimes = [[NSMutableArray alloc] init];
     }
 
     return self;
 }
 
+-(void)finishedGettingHomeMessage:(NSNotification *)message
+{
+    if([message.object isKindOfClass:[NSString class]])
+    {
+        //FAILED
+        NSLog(@"FAILED");
+    }
+    else
+    {
+        NSDictionary *messages = message.object;
+        NSLog(@"%@", messages);
+        
+        NSMutableString *updatdHomeMessage = [[NSMutableString alloc] init];
+        [updatdHomeMessage appendFormat:@"%@", [messages objectForKey:@"message"]];
+        [updatdHomeMessage appendFormat:@"\n"];
+        [updatdHomeMessage appendFormat:@"Green Up Day Starts on %@", [messages objectForKey:@"date"]];
+        
+        [self.mainLabel setText:updatdHomeMessage];
+    }
+}
 
 -(IBAction)toggleCleanUp:(id)sender
 {
     if(![[[ContainerViewController sharedContainer] theMapViewController] logging])
     {
+        NSLog(@"Action - Home: Starting Clean Up");
+        NSDate *currentDate = [NSDate date];
+        NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:self.startDate];
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:elaspedTime];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm:ss"];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        NSString *formattedDate = [dateFormatter stringFromDate:date];
+        NSLog(@"Action - Home: Started Clean Up At: %@", formattedDate);
+        
         if([[ContainerViewController sharedContainer] networkingReachability])
         {
             [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
@@ -86,6 +121,16 @@
     }
     else
     {
+        NSDate *currentDate = [NSDate date];
+        NSTimeInterval elaspedTime = [currentDate timeIntervalSinceDate:self.startDate];
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:elaspedTime];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm:ss"];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        NSString *formattedDate = [dateFormatter stringFromDate:date];
+        NSLog(@"Action - Home: Stopping Clean Up At: %@", formattedDate);
+        NSLog(@"Message - Home: Total Clean Up Time: %f", (-1 * [self.startDate timeIntervalSinceNow]));
+        
         [[[ContainerViewController sharedContainer] theMapViewController] toggleLogging:nil];
         
         [self.previousLoggingTimes addObject:[NSNumber numberWithDouble:(-1 * [self.startDate timeIntervalSinceNow])]];

@@ -17,14 +17,6 @@
 #define Map_VIEW 1
 #define MESSAGE_VIEW 2
 
-#define API_PORT 30002
-#define BASE_HOST @"localhost"
-#define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
-#define COMMENTS_RELATIVE_URL @"/api/comments"
-#define PINS_RELATIVE_URL @"/api/pins"
-
-typedef void (^VoidBlock)(void);
-
 @interface ContainerViewController : UIViewController <UITabBarDelegate>
 
 @property (strong, nonatomic) NSArray *views;
@@ -35,6 +27,9 @@ typedef void (^VoidBlock)(void);
 @property (strong, nonatomic) MessageViewController *theMessageViewController;
 @property (strong, nonatomic) MenuView *theMenuView;
 @property (strong, nonatomic) UIView *loadingView;
+@property (nonatomic, strong) UIView *statusBarFix;
+
+@property int heightFix;
 
 +(ContainerViewController *)sharedContainer;
 
@@ -47,10 +42,9 @@ typedef void (^VoidBlock)(void);
 -(void)switchMessageView;
 -(IBAction)shiftRight:(id)sender;
 -(IBAction)shiftLeft:(id)sender;
--(void)hideAllButtHomeView;
--(void)hideAllButtMapView;
--(void)hideAllButtMessageView;
--(char *)getIPFromHost:(NSString *)host;
+-(IBAction)hideAllButtHomeView:(id)sender;
+-(IBAction)hideAllButtMapView:(id)sender;
+-(IBAction)hideAllButtMessageView:(id)sender;
 
 -(BOOL)networkingReachability;
 

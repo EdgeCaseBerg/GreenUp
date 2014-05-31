@@ -125,22 +125,22 @@
     //Update Previous Time Intervals
     self.previousTimeIntervals = [[[ContainerViewController sharedContainer] theHomeViewController] previousLoggingTimes];
     
-    UIView *scrollViewContainerView = [[UIView alloc] initWithFrame:CGRectMake(5, 5, self.frame.size.width - 10, 130)];
+    UIView *scrollViewContainerView = [[UIView alloc] initWithFrame:CGRectMake(5, 5, self.frame.size.width - 10, 90)];
     [scrollViewContainerView setBackgroundColor:[UIColor greenUpGreenColor]];
     [scrollViewContainerView.layer setCornerRadius:5];
     
     UILabel *keyLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, scrollViewContainerView.frame.size.width - 10, 20)];
-    [keyLabel setText:@"Session \t \t \t Time Spent Cleaning"];
+    [keyLabel setText:@"Session \t \t \t Time Cleaning"];
     [keyLabel setBackgroundColor:[UIColor clearColor]];
     [keyLabel setTextColor:[UIColor whiteColor]];
     [keyLabel setTextAlignment:NSTextAlignmentCenter];
     [scrollViewContainerView addSubview:keyLabel];
     
-    UIScrollView *previousTimesScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 30, scrollViewContainerView.frame.size.width - 20, 90)];
+    UIScrollView *previousTimesScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 30, scrollViewContainerView.frame.size.width - 20, 55)];
     int height = 0;
     [previousTimesScrollView setBackgroundColor:[UIColor clearColor]];
     
-    for(int i = self.previousTimeIntervals.count - 1; i >= 0; i--)
+    for(NSInteger i = self.previousTimeIntervals.count - 1; i >= 0; i--)
     {
         NSNumber *intervalNumber = [self.previousTimeIntervals objectAtIndex:i];
         NSTimeInterval interval = intervalNumber.doubleValue;
@@ -162,7 +162,7 @@
             fontColor = [UIColor whiteColor];
         }
         UILabel *sessionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, height, 70, 30)];
-        [sessionLabel setText:[NSString stringWithFormat:@"%d", i + 1]];
+        [sessionLabel setText:[NSString stringWithFormat:@"%ld", i + 1]];
         [sessionLabel setBackgroundColor:[UIColor clearColor]];
         [sessionLabel setTextColor:fontColor];
         [sessionLabel setTextAlignment:NSTextAlignmentCenter];
@@ -192,6 +192,18 @@
     
     [self.contentView addSubview:scrollViewContainerView];
     
+    UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
+    [aboutUs setImage:[UIImage imageNamed:@"aboutUs.png"] forState:UIControlStateNormal];
+    [aboutUs addTarget:self action:@selector(showAboutUs) forControlEvents:UIControlEventTouchUpInside];
+    [aboutUs setFrame:CGRectMake(5, 100, (self.contentView.frame.size.width / 2) - 10, 35)];
+    [self.contentView addSubview:aboutUs];
+    
+    UIButton *showTutorial = [UIButton buttonWithType:UIButtonTypeCustom];
+    [showTutorial setImage:[UIImage imageNamed:@"showTutorial.png"]  forState:UIControlStateNormal];
+    [showTutorial addTarget:self action:@selector(showTutorial) forControlEvents:UIControlEventTouchUpInside];
+    [showTutorial setFrame:CGRectMake((self.contentView.frame.size.width / 2) + 5, 100, (self.contentView.frame.size.width / 2) - 10, 35)];
+    [self.contentView addSubview:showTutorial];
+    
     //Set Background Color
     [self setBackgroundColor:[UIColor clearColor]];
 }
@@ -201,111 +213,122 @@
     //Set Background Color
     [self setBackgroundColor:[UIColor clearColor]];
     
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, self.contentView.frame.size.width - 10, 20)];
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [titleLabel setText:@"Pin Examples"];
+    
+    [self.contentView addSubview:titleLabel];
+    
     //Init the Pin Icons
-    UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"currentLocation.png"]];
-    UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"currentLocation@2x.png"]];
-    UIImageView *currentLocationImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"currentLocation.png"]];
-    UIButton *dropPinButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    //[dropPinButton setBackgroundImage:[UIImage imageNamed:@"currentLocationButtonBackground.png"] forState:UIControlStateNormal];
-    [dropPinButton setFrame:CGRectMake(60, 100, self.frame.size.width - 80, 30)];
-    [dropPinButton setTitle:@"Drop Pickup Marker" forState:UIControlStateNormal];
-    [dropPinButton addTarget:self action:@selector(dropMarker:) forControlEvents:UIControlEventTouchUpInside];
+    UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"marker.png"]];
+    UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"trashMarker.png"]];
+    UIImageView *pin3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hazardMarker.png"]];
     
     //Set Pin Image Frames
-    [pin1Image setFrame:CGRectMake(10, 5, 80, 40)];
-    [pin2Image setFrame:CGRectMake(10, 50, 80, 40)];
-    [currentLocationImage setFrame:CGRectMake(10, 95, 40, 40)];
+    [pin1Image setFrame:CGRectMake(42, 30, 30, 40)];
+    [pin2Image setFrame:CGRectMake(144, 30, 40, 40)];
+    [pin3Image setFrame:CGRectMake(251, 30, 30, 40)];
+    
     
     //Add pin images to view
-    //[self addSubview:pin1Image];
-    //[self addSubview:pin2Image];
-    [self.contentView addSubview:currentLocationImage];
-    
+    [self.contentView addSubview:pin1Image];
+    [self.contentView addSubview:pin2Image];
+    [self.contentView addSubview:pin3Image];
+
     //Init Pin Labels
-    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 40)];
-    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(90, 50, 220, 40)];
+    UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(2, 65, 106, 30)];
+    UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(112, 65, 102, 30)];
+    UILabel *pin3 = [[UILabel alloc] initWithFrame:CGRectMake(214, 65, 106, 30)];
     
     //Set Pins Text
-    [pin1 setText:@"Pickup Point"];
-    [pin2 setText:@"Comment Point"];
+    [pin1 setText:@"Help Needed"];
+    [pin2 setText:@"Pick Up"];
+    [pin3 setText:@"Hazard"];
     
     //Set Text Color
     [pin1 setTextColor:[UIColor blackColor]];
     [pin2 setTextColor:[UIColor blackColor]];
+    [pin3 setTextColor:[UIColor blackColor]];
     
     //Set Text Alignment
     [pin1 setTextAlignment:NSTextAlignmentCenter];
     [pin2 setTextAlignment:NSTextAlignmentCenter];
+    [pin3 setTextAlignment:NSTextAlignmentCenter];
     
     //Set Background Color
     [pin1 setBackgroundColor:[UIColor clearColor]];
     [pin2 setBackgroundColor:[UIColor clearColor]];
+    [pin3 setBackgroundColor:[UIColor clearColor]];
     
     //Add the pins to the view
     [self.contentView addSubview:pin1];
     [self.contentView addSubview:pin2];
-    [self.contentView addSubview:dropPinButton];
+    [self.contentView addSubview:pin3];
+    
+    UIButton *moreInfo = [UIButton buttonWithType:UIButtonTypeCustom];
+    [moreInfo addTarget:self action:@selector(showMorePinInfo:) forControlEvents:UIControlEventTouchUpInside];
+    [moreInfo setFrame:CGRectMake(5, 95, self.contentView.frame.size.width - 10, 40)];
+    [moreInfo setImage:[UIImage imageNamed:@"moreInfo.png"] forState:UIControlStateNormal];
+    [self.contentView addSubview:moreInfo];
+}
+
+-(void)showMorePinInfo:(id)sender
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"What are Pins?" message:@"Pick up pins are only posted by the Green Up organizers. These are locations where you can drop off trash bags.\nIf you find hazardous materials you should drop a hazard pin with a description so a Green Up organizer can take care of it.\nNeed help pins can be dropped when you need assistance from the community. Once a location has been cleaned users can mark the pin as addressed and it will be removed from the map." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 -(void)switchToMessageView
 {
-     //Set Background Color
-     [self setBackgroundColor:[UIColor clearColor]];
-     
-     //Init the Pin Icons
-     UIImageView *pin1Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-     UIImageView *pin2Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-     UIImageView *pin3Image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapPinExample.png"]];
-     
-     //Set Pin Image Frames
-     [pin1Image setFrame:CGRectMake(10, 5, 80, 40)];
-     [pin2Image setFrame:CGRectMake(10, 50, 80, 40)];
-     [pin3Image setFrame:CGRectMake(10, 95, 80, 40)];
-     
-     //Add pin images to view
-     //[self addSubview:pin1Image];
-     //[self addSubview:pin2Image];
-     //[self addSubview:pin3Image];
-     
-     
-     //Init Pin Labels
-     UILabel *pin1 = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 40)];
-     UILabel *pin2 = [[UILabel alloc] initWithFrame:CGRectMake(90, 50, 220, 40)];
-     UILabel *pin3 = [[UILabel alloc] initWithFrame:CGRectMake(90, 95, 220, 40)];
-     
-     //Set Pins Text
-     [pin1 setText:@"Comment Type A"];
-     [pin2 setText:@"Comment Type B"];
-     [pin3 setText:@"Comment Type C"];
-     
-     //Set Text Color
-     [pin1 setTextColor:[UIColor blackColor]];
-     [pin2 setTextColor:[UIColor blackColor]];
-     [pin3 setTextColor:[UIColor blackColor]];
-     
-     //Set Text Alignment
-     [pin1 setTextAlignment:NSTextAlignmentCenter];
-     [pin2 setTextAlignment:NSTextAlignmentCenter];
-     [pin3 setTextAlignment:NSTextAlignmentCenter];
-     
-     
-     //Set Background Color
-     [pin1 setBackgroundColor:[UIColor clearColor]];
-     [pin2 setBackgroundColor:[UIColor clearColor]];
-     [pin3 setBackgroundColor:[UIColor clearColor]];
-     
-     //Add the pins to the view
-     [self.contentView addSubview:pin1];
-     [self.contentView addSubview:pin2];
-     [self.contentView addSubview:pin3];
+    //Set Background Color
+    [self setBackgroundColor:[UIColor clearColor]];
+
+    UIImageView *exampleImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"menuMessageTypes.png"]];
+    [exampleImage setFrame:CGRectMake(10, 5, self.frame.size.width - 20, 68)];
+    [self.contentView addSubview:exampleImage];
+    
+    UILabel *markerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 147, 25)];
+    [markerLabel setText:@"Help Needed"];
+    [markerLabel setTextAlignment:NSTextAlignmentCenter];
+    [markerLabel setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:markerLabel];
+    
+    UILabel *hazardLabel = [[UILabel alloc] initWithFrame:CGRectMake(163, 5, 147, 25)];
+    [hazardLabel setText:@"Hazard Message"];
+    [hazardLabel setTextAlignment:NSTextAlignmentCenter];
+    [hazardLabel setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:hazardLabel];
+    
+    UILabel *pickUpLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 40, 147, 25)];
+    [pickUpLabel setText:@"Pick Up Location"];
+    [pickUpLabel setTextAlignment:NSTextAlignmentCenter];
+    [pickUpLabel setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:pickUpLabel];
+    
+    UILabel *generalLabel = [[UILabel alloc] initWithFrame:CGRectMake(163, 40, 147, 25)];
+    [generalLabel setText:@"General Comment"];
+    [generalLabel setTextAlignment:NSTextAlignmentCenter];
+    [generalLabel setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:generalLabel];
+    
+    UILabel *longPressNote = [[UILabel alloc] initWithFrame:CGRectMake(10, 75, self.frame.size.width - 20, 60)];
+    [longPressNote setBackgroundColor:[UIColor clearColor]];
+    [longPressNote setTextAlignment:NSTextAlignmentCenter];
+    [longPressNote setFont:[longPressNote.font fontWithSize:12]];
+    [longPressNote setText:@"Tapping the pin will bring you to its location on the map. Long pressing a help needed message bubble will allow you to remove the marker. Removed markers will appear gray on the message board."];
+    [longPressNote setNumberOfLines:4];
+    [self.contentView addSubview:longPressNote];
 }
 
--(IBAction)dropMarker:(id)sender
+-(void)showAboutUs
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"dropMarker" object:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"toggleMenu" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"showAboutView" object:nil];
 }
 
+-(void)showTutorial
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"showTutorial" object:nil];
+}
 
 /*
 // Only override drawRect: if you perform custom drawing.

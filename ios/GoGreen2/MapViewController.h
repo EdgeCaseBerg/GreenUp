@@ -14,18 +14,15 @@
 #import "HeatMap.h"
 #import "HeatMapView.h"
 #import "BDHost.h"
-#import "GreenUpMapView.h"
 #import "Reachability.h"
 
-#define Message_Type_ADMIN @"ADMIN"
-#define Message_Type_MARKER @"MARKER"
-#define Message_Type_COMMENT @"COMMENT"
+
 
 @class MapPinSelectorView, HeatMapPin;
 
 @interface MapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate>
 
-@property (strong, nonatomic) IBOutlet GreenUpMapView *mapView;
+@property (strong, nonatomic) MKMapView *mapView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 //@property (strong, nonatomic) UIButton *toggleGeoLogging;
 @property (strong, nonatomic) UIButton *clearPoints;
@@ -44,6 +41,7 @@
 @property (strong, nonatomic) NSDate *longPressTimer;
 @property (strong, nonatomic) MapPinSelectorView *mapSpinner;
 @property (strong, nonatomic) HeatMapPin *tempPinRef;
+@property CLLocationCoordinate2D tempPinLocation;
 @property (strong, nonatomic) NSNumber *pinIDToShow;
 @property (strong, nonatomic) UIView *fadeView;
 
@@ -54,14 +52,16 @@
 @property BOOL pusheMapPins;
 
 @property BOOL pushOverdue;
+@property BOOL centerOnCurrentLocation;
+@property BOOL sateliteView;
+@property BOOL drivingAlertShown;
 
-
+@property (strong, nonatomic) NSDictionary *lastViewedLocation;
 
 
 -(MapViewController *)init;
--(IBAction)dumpAllPoints:(id)sender;
 -(IBAction)toggleLogging:(id)sender;
--(void)getHeatDataFromServer:(MKCoordinateSpan)span andLocation:(MKCoordinateRegion)location;
+-(void)getHeatDataFromServer;
 -(void)pushHeatMapDataToServer;
 -(NSDictionary *)convertPointsToHeatMapFormat:(NSMutableArray *)heatMapArray;
 
