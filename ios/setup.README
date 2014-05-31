@@ -1,0 +1,8 @@
+HOW TO SETUP PROJECT
+
+Step 1) Download Cocoapods && Ruby (included on macs)
+Step 2) Open Terminal
+Step 3) cd to GreenUp/ios/
+Step 4) in termial type "pod install"
+		This will generate a /pods folder, .podLock folder and a .xcworkspace
+Step 5) Open .xcworkspace to run project from now on
