@@ -346,6 +346,7 @@
 		DF62E07517C1996700B29D43 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		DF6C594817AB411C005FA0E8 /* HeatMapPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeatMapPoint.h; sourceTree = "<group>"; };
 		DF6C594917AB411C005FA0E8 /* HeatMapPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeatMapPoint.m; sourceTree = "<group>"; };
+		DF6EAD7B193A3594008CF6D3 /* ThemeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeHeader.h; sourceTree = "<group>"; };
 		DF81175D18895C6700B2C271 /* NetworkingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingController.h; sourceTree = "<group>"; };
 		DF81175E18895C6700B2C271 /* NetworkingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkingController.m; sourceTree = "<group>"; };
 		DF9731E918C006DB00966B01 /* messagesHelpNeeded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messagesHelpNeeded.png; sourceTree = "<group>"; };
@@ -935,6 +936,7 @@
 		DFA9ABFC17D664E9006F58A5 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				DF6EAD7B193A3594008CF6D3 /* ThemeHeader.h */,
 				DFA9ABFD17D66518006F58A5 /* UIFont+methods.h */,
 				DFA9ABFE17D66518006F58A5 /* UIFont+methods.m */,
 				DFA9AC0017D66543006F58A5 /* UIColor+methods.h */,

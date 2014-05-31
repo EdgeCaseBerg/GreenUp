@@ -7,7 +7,7 @@
 //
 
 #import "TutorialViewController.h"
-#import "UIColor+methods.h"
+#import "ThemeHeader.h"
 
 @interface TutorialViewController ()
 

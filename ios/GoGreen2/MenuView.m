@@ -9,7 +9,7 @@
 #import "MenuView.h"
 #import "ContainerViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UIColor+methods.h"
+#import "ThemeHeader.h"
 
 @implementation MenuView
 

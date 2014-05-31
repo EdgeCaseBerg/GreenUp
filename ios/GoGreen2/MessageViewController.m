@@ -9,7 +9,7 @@
 #import "MessageViewController.h"
 #import "ContainerViewController.h"
 #import "MessageCell.h"
-#import "UIFont+methods.h"
+#import "ThemeHeader.h"
 #import "NetworkMessage.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
