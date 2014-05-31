@@ -11,7 +11,7 @@ public class Comment {
 	private String type; //either "forum", "general" or "trash"
 	private String message;
 	private String timestamp;
-	private int pin;
+	private long pin;
 	
 	public Comment(String jsonString) {
 		JSONObject object;
@@ -22,7 +22,7 @@ public class Comment {
 			this.message = object.getString("message");
 			this.timestamp = object.getString("timestamp");
 			String pinString = object.getString("pin");
-			this.pin = pinString.equals("") ? 0 : Integer.parseInt(pinString); //hack
+			this.pin = pinString.equals("") ? 0 : Long.parseLong(pinString); //hack
 		}
 		catch (JSONException e) {
 			e.printStackTrace();
@@ -86,7 +86,7 @@ public class Comment {
 	/**
 	 * @return the pin
 	 */
-	public int getPin() {
+	public long getPin() {
 		return pin;
 	}
 	/**

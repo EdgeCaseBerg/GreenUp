@@ -3,9 +3,6 @@ package com.xenon.greenup;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -63,8 +60,7 @@ public class FeedSectionFragment extends ListFragment implements DrawerListener,
     	    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
     	        boolean handled = false;
     	        if (actionId == EditorInfo.IME_ACTION_SEND) {
-    	            //Log.i("text","i send!");
-    	            APIServerInterface.submitComments("forum", editText.getText().toString(), 0);
+    	            APIServerInterface.submitComment("forum", editText.getText().toString(), 0);
     	            handled = true;
     	        }
     	        return handled;
@@ -89,7 +85,7 @@ public class FeedSectionFragment extends ListFragment implements DrawerListener,
     public void onResume(){
     	super.onResume();
     	//if we have a network connection, load the comments from the server
-    	if (isConnected()) {
+    	if (((MainActivity)getActivity()).isConnected()) { //a lisp programmer lost his way....
     		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     		AsyncCommentLoadTask task = new AsyncCommentLoadTask(this,getActivity());
     		task.execute();
@@ -130,8 +126,6 @@ public class FeedSectionFragment extends ListFragment implements DrawerListener,
 	    	CommentPage cp = APIServerInterface.getComments(null,lastPageLoaded);
 	    	this.page = cp;
 			this.cmts = this.page.getCommentsList(forumFilterToggle,generalFilterToggle,trashFilterToggle);
-			if(this.cmts == null)
-				this.cmts = new ArrayList<Comment>(60);
 			//Java makes no sense. It requires the capital version of Void because there simply
 			//must be something returned and you have to use java's bastard children, the wrapper 
 			//types instead of primitives because it's an async task. But yet, the primitive
@@ -174,16 +168,5 @@ public class FeedSectionFragment extends ListFragment implements DrawerListener,
 
 	@Override
 	public void onDrawerStateChanged(int state) {
-	}
-	
-    //Possibly check more network types and/or connection states
-	private boolean isConnected() {
-		ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		if (cm.getNetworkInfo(0) != null && cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED)
-			return true;
-		else if (cm.getNetworkInfo(1) != null && cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED)
-			return true;
-		else
-			return false;
 	}
 }

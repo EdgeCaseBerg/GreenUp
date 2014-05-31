@@ -26,6 +26,8 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -213,29 +215,17 @@ public class MainActivity extends FragmentActivity {
         }
             
     }//endtabadapter
-
-    /**
-    * A dummy fragment representing a section of the app, but that simply displays dummy text.
-    */
-    public static class DummySectionFragment extends Fragment implements OnClickListener {
-
-        public static final String ARG_SECTION_NUMBER = "section_number";
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_section_dummy, container, false);
-            Bundle args = getArguments();
-            ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                    getString(R.string.dummy_section_text, args.getInt(ARG_SECTION_NUMBER)));
-            Button button = (Button)rootView.findViewById(R.id.testButton);
-            button.setOnClickListener(this);
-            return rootView;
-        }
-        
-        public void onClick(View v) {
-            Log.i("button","I was clicked!");
-        }
-        
-    }
+    
+    /* Some methods and things that will be used by all of the fragments */
+    
+    //Possibly check more network types and/or connection states
+	public boolean isConnected() {
+		ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (cm.getNetworkInfo(0) != null && cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED)
+			return true;
+		else if (cm.getNetworkInfo(1) != null && cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED)
+			return true;
+		else
+			return false;
+	}
 }

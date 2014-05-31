@@ -46,6 +46,10 @@ public class Heatmap {
 		return pointList.get(i);
 	}
 	
+	public void clear() {
+		pointList.clear();
+	}
+	
 	public JSONArray toJSON() {
 		JSONArray list = new JSONArray();
 		for (int i = 0; i < pointList.size(); i++) {

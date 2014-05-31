@@ -19,6 +19,7 @@ public class CommentPage {
 		int i;
 		JSONObject object,pageInfo;
 		JSONArray comments;
+		//Log.i("comment json",jsonString);
 		this.commentsList = new ArrayList<Comment>();
 		try {
 			object = new JSONObject(jsonString);
@@ -57,11 +58,11 @@ public class CommentPage {
 		ArrayList<Comment> filteredList = new ArrayList<Comment>();
 		for (int i = 0; i < commentsList.size(); i++) {
 			commentType = commentsList.get(i).getType();
-			if (commentType.equals("FORUM") && includeForum)
+			if (commentType.equals("COMMENT") && includeForum)
 				filteredList.add(commentsList.get(i));
-			if (commentType.equals("GENERAL MESSAGE") && includeGeneral)
+			if (commentType.equals("ADMIN") && includeGeneral)
 				filteredList.add(commentsList.get(i));
-			if (commentType.equals("TRASH PICKUP") && includeTrash)
+			if (commentType.equals("MARKER") && includeTrash)
 				filteredList.add(commentsList.get(i));
 		}
 		return filteredList;
