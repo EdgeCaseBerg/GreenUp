@@ -15,10 +15,9 @@
 #import "MessageTypes.h"
 #import "NetworkMessage.h"
 #import "MarkerTypes.h"
+#import "ThemeHeader.h"
 
 #import <AFNetworking/AFNetworking.h>
-
-#define UPLOAD_QUEUE_LENGTH 5
 
 //Home Message Requests
 NSURLConnection *getHomeMessageConnection = nil;
@@ -900,7 +899,7 @@ static NetworkingController *sharedNetworkingController;
 -(void)getMapPinsWithDictionary:(NSDictionary *)buffer
 {
     //Build Request URL
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f", BASE_HOST, API_PORT, PINS_RELATIVE_URL, ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f", THEME_BASE_URL, THEME_API_PORT, THEME_PINS_RELATIVE_URL, ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue];
     
     NSLog(@"Network - Map: Getting Pins With Data,");
     NSLog(@"--- Data - Map: Current Lat = %f", ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue);
@@ -923,7 +922,7 @@ static NetworkingController *sharedNetworkingController;
 -(void)getMapPinsForPinShow
 {
     //Build Request URL
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@", BASE_HOST, API_PORT, PINS_RELATIVE_URL, [[ContainerViewController sharedContainer] theMapViewController].pinIDToShow.stringValue];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@", THEME_BASE_URL, THEME_API_PORT, THEME_PINS_RELATIVE_URL, [[ContainerViewController sharedContainer] theMapViewController].pinIDToShow.stringValue];
     
     NSLog(@"Network - Map: Getting Map Pin for Pin Show");
     NSLog(@"--- Data - Map: Pin Id: %@", [[ContainerViewController sharedContainer] theMapViewController].pinIDToShow.stringValue);
@@ -942,7 +941,7 @@ static NetworkingController *sharedNetworkingController;
 -(void)postMarkerWithPin:(HeatMapPin *)pin andMessage:(NSString *)message andType:(NSString *)type
 {
     //Build Request URL
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@", BASE_HOST, API_PORT, PINS_RELATIVE_URL, [[ContainerViewController sharedContainer] theMapViewController].pinIDToShow.stringValue];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@", THEME_BASE_URL, THEME_API_PORT, THEME_PINS_RELATIVE_URL, [[ContainerViewController sharedContainer] theMapViewController].pinIDToShow.stringValue];
     
     pin.message = message;
     
@@ -982,11 +981,11 @@ static NetworkingController *sharedNetworkingController;
 -(void)pushHeatMapPoints
 {
     NSLog(@"Message - Map: Pushing Heatmap Data To Server");
-    NSLog(@"--- Data - Map: QUEUE LIMIT = %d", UPLOAD_QUEUE_LENGTH);
+    NSLog(@"--- Data - Map: QUEUE LIMIT = %d", THEME_UPLOAD_QUEUE_LENGTH);
     NSLog(@"--- Data - Map: Gathered Queue = %lu", (unsigned long)[[ContainerViewController sharedContainer] theMapViewController].gatheredMapPoints.count);
     NSLog(@"--- Data - Map: Push Overdue = %d", [[ContainerViewController sharedContainer] theMapViewController].pushOverdue);
     
-    if([[ContainerViewController sharedContainer] theMapViewController].gatheredMapPointsQueue.count >= UPLOAD_QUEUE_LENGTH || [[ContainerViewController sharedContainer] theMapViewController].pushOverdue)
+    if([[ContainerViewController sharedContainer] theMapViewController].gatheredMapPointsQueue.count >= THEME_UPLOAD_QUEUE_LENGTH || [[ContainerViewController sharedContainer] theMapViewController].pushOverdue)
     {
         if(![[ContainerViewController sharedContainer] networkingReachability])
         {
@@ -1020,7 +1019,7 @@ static NetworkingController *sharedNetworkingController;
             NSLog(@"--- Data - Map: %@", dataArray);
             
             //Build Request URL
-            NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL];
+            NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", THEME_BASE_URL, THEME_API_PORT, THEME_HEAT_MAP_RELATIVE_URL];
             
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                                    cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
@@ -1076,7 +1075,7 @@ static NetworkingController *sharedNetworkingController;
     NSLog(@"--- Data - Map: Current Lon Delta = %f", ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue);
 
     //Build Request URL
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f&precision=%ld", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL, ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue, (long)precision.integerValue];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?latDegrees=%f&lonDegrees=%f&latOffset=%f&lonOffset=%f&precision=%ld", THEME_BASE_URL, THEME_API_PORT, THEME_HEAT_MAP_RELATIVE_URL, ((NSNumber *)[buffer objectForKey:@"lat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"lon"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLat"]).floatValue, ((NSNumber *)[buffer objectForKey:@"deltaLon"]).floatValue, (long)precision.integerValue];
     
     //NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, HEAT_MAP_RELATIVE_URL];
     
@@ -1097,7 +1096,7 @@ static NetworkingController *sharedNetworkingController;
 {
     NSLog(@"Network - Message: Getting First Page Of Show Message");
     
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, MESSAGES_RELATIVE_URL];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", THEME_BASE_URL, THEME_API_PORT, THEME_MESSAGES_RELATIVE_URL];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
@@ -1114,7 +1113,7 @@ static NetworkingController *sharedNetworkingController;
 {
     NSLog(@"Network - Message: Getting Messages");
     
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, MESSAGES_RELATIVE_URL];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", THEME_BASE_URL, THEME_API_PORT, THEME_MESSAGES_RELATIVE_URL];
     
 
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -1198,7 +1197,7 @@ static NetworkingController *sharedNetworkingController;
 -(void)getMessageForAppendingPageForScrollingWithPageURL:(NSString *)pageURL
 {
     NSLog(@"Network - Message: Getting Next Page Of Messages For Scrolling With URL %@", pageURL);
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, pageURL];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", THEME_BASE_URL, THEME_API_PORT, pageURL];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                        timeoutInterval:10];
@@ -1213,7 +1212,7 @@ static NetworkingController *sharedNetworkingController;
 {
     NSLog(@"Network - Message: Getting Next Page Of Messages For Show Message With URL %@", pageURL);
     
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, pageURL];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", THEME_BASE_URL, THEME_API_PORT, pageURL];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
@@ -1239,7 +1238,7 @@ static NetworkingController *sharedNetworkingController;
     else
     {
         //Build Request URL
-        NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", BASE_HOST, API_PORT, COMMENTS_RELATIVE_URL];
+        NSString *urlString = [NSString stringWithFormat:@"%@:%d%@", THEME_BASE_URL, THEME_API_PORT, THEME_COMMENTS_RELATIVE_URL];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                                cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                            timeoutInterval:10];
@@ -1273,7 +1272,7 @@ static NetworkingController *sharedNetworkingController;
     NSLog(@"Network - Message: Updaing Toggled Message with Message ID: %@", message.pinID.stringValue);
     
     //Build Request URL
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@",BASE_HOST, API_PORT, PINS_RELATIVE_URL, message.pinID.stringValue];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@",THEME_BASE_URL, THEME_API_PORT, THEME_PINS_RELATIVE_URL, message.pinID.stringValue];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                        timeoutInterval:10];

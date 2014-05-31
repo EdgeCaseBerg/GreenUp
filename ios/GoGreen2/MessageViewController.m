@@ -175,7 +175,7 @@
 
 -(IBAction)postMessage:(id)sender
 {
-    self.currentMessageType = MESSAGE_TYPE_MESSAGE;
+    self.currentMessageType = MESSAGE_TYPE_4_NETWORK_TYPE;
     
     NSString *msg = [[self.messageTextView.text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]componentsJoinedByString:@" "];
     [[NetworkingController shared] postMessageWithMessageType:self.currentMessageType andMessage:msg];
@@ -382,7 +382,7 @@
     NetworkMessage *msg = [self.messages objectAtIndex:indexPath.row];
     
     CGSize size;
-    if([msg.messageType isEqualToString:MESSAGE_TYPE_PICK_UP] || [msg.messageType isEqualToString:MESSAGE_TYPE_USER_MARKER] || [msg.messageType isEqualToString:MESSAGE_TYPE_HAZARD])
+    if([msg.messageType isEqualToString:MESSAGE_TYPE_3_NETWORK_NAME] || [msg.messageType isEqualToString:MESSAGE_TYPE_3_NETWORK_NAME] || [msg.messageType isEqualToString:MESSAGE_TYPE_2_NETWORK_NAME])
     {
         size = [[msg messageContent] sizeWithFont:[UIFont messageFont] constrainedToSize:CGSizeMake(260, CGFLOAT_MAX)];
         size.height += + 20 + 6;

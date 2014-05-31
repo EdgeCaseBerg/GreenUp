@@ -9,18 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
-#import "NetworkingConstants.h"
 
-#define API_PORT 80
-
-//#define BASE_HOST @"http://199.195.248.180"
-//#define BASE_HOST @"http://greenup.xenonapps.com"
-#define BASE_HOST THEME_BASE_URL
-
-#define HEAT_MAP_RELATIVE_URL @"/api/heatmap"
-#define COMMENTS_RELATIVE_URL @"/api/comments"
-#define PINS_RELATIVE_URL @"/api/pins"
-#define MESSAGES_RELATIVE_URL @"/api/comments"
 
 @class MKMapView, HeatMapPin, HeatMapPoint, NetworkMessage, CLLocation;
 

@@ -116,6 +116,7 @@
 		DF6EAD8F193A3894008CF6D3 /* messagesGeneralMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = DF6EAD84193A3894008CF6D3 /* messagesGeneralMessage.png */; };
 		DF6EAD90193A3894008CF6D3 /* messagesHelpNeeded.png in Resources */ = {isa = PBXBuildFile; fileRef = DF6EAD85193A3894008CF6D3 /* messagesHelpNeeded.png */; };
 		DF6EAD91193A3894008CF6D3 /* messagesWithMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = DF6EAD86193A3894008CF6D3 /* messagesWithMenu.png */; };
+		DF6EAD99193A48FB008CF6D3 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DF6EAD97193A48FB008CF6D3 /* DataModel.xcdatamodeld */; };
 		DF81175F18895C6700B2C271 /* NetworkingController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF81175E18895C6700B2C271 /* NetworkingController.m */; };
 		DF9D412918B12C52006CA760 /* menuMessageTypes.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9D412718B12C52006CA760 /* menuMessageTypes.png */; };
 		DF9D412A18B12C52006CA760 /* menuMessageTypes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF9D412818B12C52006CA760 /* menuMessageTypes@2x.png */; };
@@ -355,6 +356,7 @@
 		DF6EAD92193A3C99008CF6D3 /* PinConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PinConstants.h; sourceTree = "<group>"; };
 		DF6EAD94193A3D6D008CF6D3 /* MessageConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageConstants.h; sourceTree = "<group>"; };
 		DF6EAD95193A3DB5008CF6D3 /* NetworkingConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkingConstants.h; sourceTree = "<group>"; };
+		DF6EAD98193A48FB008CF6D3 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		DF81175D18895C6700B2C271 /* NetworkingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingController.h; sourceTree = "<group>"; };
 		DF81175E18895C6700B2C271 /* NetworkingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkingController.m; sourceTree = "<group>"; };
 		DF9D412718B12C52006CA760 /* menuMessageTypes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menuMessageTypes.png; path = Images/menuMessageTypes.png; sourceTree = SOURCE_ROOT; };
@@ -792,10 +794,11 @@
 		3959252C177518690035E351 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DF6EAD96193A48E9008CF6D3 /* CoreData Controller */,
 				DF0B193E18B96DE400CB3752 /* Tutorial Images */,
 				DF4F48DD1881E59B00C4A9AC /* NetworkingController */,
 				DF3F00FB17E25CBC00530A4D /* Reachability Library */,
-				DFA9ABFC17D664E9006F58A5 /* Categories */,
+				DFA9ABFC17D664E9006F58A5 /* Theme */,
 				390415AD1798DC50005EC308 /* Images */,
 				3959252D177518690035E351 /* GreenUpVt-Info.plist */,
 				3959252E177518690035E351 /* InfoPlist.strings */,
@@ -907,6 +910,22 @@
 			path = aboutUs;
 			sourceTree = "<group>";
 		};
+		DF6EAD96193A48E9008CF6D3 /* CoreData Controller */ = {
+			isa = PBXGroup;
+			children = (
+				DF6EAD9A193A490A008CF6D3 /* Entities + Categories */,
+				DF6EAD97193A48FB008CF6D3 /* DataModel.xcdatamodeld */,
+			);
+			name = "CoreData Controller";
+			sourceTree = "<group>";
+		};
+		DF6EAD9A193A490A008CF6D3 /* Entities + Categories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Entities + Categories";
+			sourceTree = "<group>";
+		};
 		DFA9AA7917D26654006F58A5 /* NSArray+Primitives */ = {
 			isa = PBXGroup;
 			children = (
@@ -936,7 +955,7 @@
 			name = "Data Model Objects";
 			sourceTree = "<group>";
 		};
-		DFA9ABFC17D664E9006F58A5 /* Categories */ = {
+		DFA9ABFC17D664E9006F58A5 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
 				DF6EAD7B193A3594008CF6D3 /* ThemeHeader.h */,
@@ -948,7 +967,7 @@
 				DFA9AC0017D66543006F58A5 /* UIColor+methods.h */,
 				DFA9AC0117D66543006F58A5 /* UIColor+methods.m */,
 			);
-			name = Categories;
+			name = Theme;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1269,6 +1288,7 @@
 				DFA9C38017D9419B00FBE61F /* MapPinSelectorView.m in Sources */,
 				DFA9C38917D95E1D00FBE61F /* HeatMapPin.m in Sources */,
 				DFA9C39017DFB20100FBE61F /* MapPinCommentView.m in Sources */,
+				DF6EAD99193A48FB008CF6D3 /* DataModel.xcdatamodeld in Sources */,
 				DF3F00FE17E25CD000530A4D /* Reachability.m in Sources */,
 				DF81175F18895C6700B2C271 /* NetworkingController.m in Sources */,
 			);
@@ -1505,6 +1525,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DF6EAD97193A48FB008CF6D3 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DF6EAD98193A48FB008CF6D3 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = DF6EAD98193A48FB008CF6D3 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 3959251A177518690035E351 /* Project object */;
 }
