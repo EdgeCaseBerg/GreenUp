@@ -7,3 +7,8 @@ html/
 *.xml
 *.iml
 .idea/
+GreenUp.ipa
+Pods/
+Podfile.lock
+*.xworkspace
+*.app.DSYM.zip
