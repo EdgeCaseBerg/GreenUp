@@ -43,25 +43,25 @@ public class HomeSectionFragment extends Fragment {
     	 * have one specific format for all timers. Which we do. So here's the default:
     	 */
 
-		ChronoTime ct = database.getSecondsWorked();
-		
-		/* Set Chronometer from database stuff */
-		chrono.setActivated(ct.state);
-		active = ct.state;
-		
-		long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;
-		long pausedTime = ct.state ? (SystemClock.elapsedRealtime() - ct.stoppedTime) : 0;
-		chrono.setBase(SystemClock.elapsedRealtime() - pausedTime - stopped);
-
-		if(ct.state){
-			/* If the chronometer is on */
-			startStopButton.setBackgroundResource(R.drawable.stop);
-			chrono.start();
-		}else{
-			startStopButton.setBackgroundResource(R.drawable.start);
-			chrono.stop();
-		}
-		chrono.setText(getChronoString(ct.secondsWorked));
+//		ChronoTime ct = database.getSecondsWorked();
+//
+//		/* Set Chronometer from database stuff */
+//		chrono.setActivated(ct.state);
+//		active = ct.state;
+//
+//		long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;
+//		long pausedTime = ct.state ? (SystemClock.elapsedRealtime() - ct.stoppedTime) : 0;
+//		chrono.setBase(SystemClock.elapsedRealtime() - pausedTime - stopped);
+//
+//		if(ct.state){
+//			/* If the chronometer is on */
+//			startStopButton.setBackgroundResource(R.drawable.stop);
+//			chrono.start();
+//		}else{
+//			startStopButton.setBackgroundResource(R.drawable.start);
+//			chrono.stop();
+//		}
+//		chrono.setText(getChronoString(ct.secondsWorked));
 		
     	startStopButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
