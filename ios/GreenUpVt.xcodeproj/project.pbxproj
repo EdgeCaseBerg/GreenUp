@@ -352,6 +352,9 @@
 		DF6EAD84193A3894008CF6D3 /* messagesGeneralMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = messagesGeneralMessage.png; path = Tutorial/messagesGeneralMessage.png; sourceTree = SOURCE_ROOT; };
 		DF6EAD85193A3894008CF6D3 /* messagesHelpNeeded.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = messagesHelpNeeded.png; path = Tutorial/messagesHelpNeeded.png; sourceTree = SOURCE_ROOT; };
 		DF6EAD86193A3894008CF6D3 /* messagesWithMenu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = messagesWithMenu.png; path = Tutorial/messagesWithMenu.png; sourceTree = SOURCE_ROOT; };
+		DF6EAD92193A3C99008CF6D3 /* PinConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PinConstants.h; sourceTree = "<group>"; };
+		DF6EAD94193A3D6D008CF6D3 /* MessageConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageConstants.h; sourceTree = "<group>"; };
+		DF6EAD95193A3DB5008CF6D3 /* NetworkingConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkingConstants.h; sourceTree = "<group>"; };
 		DF81175D18895C6700B2C271 /* NetworkingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingController.h; sourceTree = "<group>"; };
 		DF81175E18895C6700B2C271 /* NetworkingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkingController.m; sourceTree = "<group>"; };
 		DF9D412718B12C52006CA760 /* menuMessageTypes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menuMessageTypes.png; path = Images/menuMessageTypes.png; sourceTree = SOURCE_ROOT; };
@@ -937,6 +940,9 @@
 			isa = PBXGroup;
 			children = (
 				DF6EAD7B193A3594008CF6D3 /* ThemeHeader.h */,
+				DF6EAD95193A3DB5008CF6D3 /* NetworkingConstants.h */,
+				DF6EAD92193A3C99008CF6D3 /* PinConstants.h */,
+				DF6EAD94193A3D6D008CF6D3 /* MessageConstants.h */,
 				DFA9ABFD17D66518006F58A5 /* UIFont+methods.h */,
 				DFA9ABFE17D66518006F58A5 /* UIFont+methods.m */,
 				DFA9AC0017D66543006F58A5 /* UIColor+methods.h */,

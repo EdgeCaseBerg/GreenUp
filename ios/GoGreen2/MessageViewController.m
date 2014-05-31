@@ -16,8 +16,7 @@
 #import "HeatMapPin.h"
 #import "ContainerViewController.h"
 #import "NetworkingController.h"
-#import "MessageTypes.h"
-#import "MarkerTypes.h"
+#import "ThemeHeader.h"
 #import "NetworkingController.h"
 
 #define ALERT_VIEW_TOGGLE_ON 0

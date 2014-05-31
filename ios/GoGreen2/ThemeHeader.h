@@ -12,5 +12,8 @@
 //Import the correct theme categories here
 #import "UIColor+methods.h"
 #import "UIFont+methods.h"
+#import "PinConstants.h"
+#import "MessageConstants.h"
+#import "NetworkingConstants.h"
 
 #endif

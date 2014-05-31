@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "NetworkMessage.h"
-#import "MessageTypes.h"
+#import "ThemeHeader.h"
 
 @interface MessageCell : UITableViewCell <UIGestureRecognizerDelegate>
 
