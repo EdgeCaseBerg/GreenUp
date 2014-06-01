@@ -1,6 +1,9 @@
 <?php
+require "../php/Heatmap.php";
+require "../php/Markers.php";
+require "../php/Comments.php";
+//require "../../dash-auth/conf.php";
 
-require "../dash-auth/conf.php";
 
 // check if we used HTTPS, if not, redirect to https
 if(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'){}else{
@@ -35,6 +38,10 @@ if(!isset($_COOKIE[session_name()])){
     session_start();
 }
 
+//retrieve all of the data
+$heatmap_data = json_encode(Heatmap::getAll(), true);
+$markers = json_encode(Markers::getAll(), true);
+$comments = json_encode(Comments::getAll(), true);
 ?>
 
 
@@ -74,7 +81,7 @@ if(!isset($_COOKIE[session_name()])){
 
             <?
                 echo "window.HOST = '".HOST."';";
-                echo "window.ActiveUser = '".$_POST['username']."';";
+                echo "window.ActiveUser = '".(isset($_POST['username']) ? $_POST['username'] : '')."';";
                 echo "window.ActiveUserIP = '".$_SERVER['REMOTE_ADDR']."';";
             ?>
 
@@ -88,12 +95,7 @@ if(!isset($_COOKIE[session_name()])){
 
             // instansiate the api connector
             window.ApiConnector = new ApiConnector();
-//            window.ApiConnector.authenticateToken(window.userID, window.TOKEN);
-
-            // instansiate the forum
-            <? if($LOGGEDIN){?>
-            window.Comments = new CommentsHandle();
-            <?}?>
+//          window.ApiConnector.authenticateToken(window.userID, window.TOKEN);
 
             // instansiate /initialize the UI controls
             window.UI = new UiHandle();
@@ -106,12 +108,16 @@ if(!isset($_COOKIE[session_name()])){
 
             window.LOGGER.serverLog("[AUTH] Admin Dash Accessed by "+window.ActiveUser + " from "+window.ActiveUserIP, "dash/home.php MAIN()");
             // grab our comments, map markers, and heatmap data
-            window.ApiConnector.pullCommentData();
-            window.ApiConnector.pullMarkerData();
+            //window.ApiConnector.pullCommentData();
+            //window.ApiConnector.pullMarkerData();
 //            window.ApiConnector.pullHeatmapData();
-            window.ApiConnector.pullRawHeatmapData(null);
+            //window.ApiConnector.pullRawHeatmapData(null);
+            window.MAP.applyHeatMap(<?= $heatmap_data; ?>);
+            window.UI.updateMarker(<?= $markers; ?>);
             <? if($LOGGEDIN){?>
             window.ApiConnector.pullServerLog(window.UI.updateLogContent);
+            window.Comments = new CommentsHandle();
+            window.UI.updateForum(<?= $comments; ?>);
             <?}?>
 
             $('#loginButton').click(function(){

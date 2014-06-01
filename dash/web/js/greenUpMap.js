@@ -119,9 +119,10 @@ function MapHandle(){
     MapHandle.prototype.applyHeatMap = function applyHeatMap(data){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
         var dataObj = data;
-        for(var ii=0; ii<dataObj.grid.length; ii++){
+        window.IS_HM_LOADED = true;
+        for(var ii=0; ii<dataObj.length; ii++){
             window.heatmapData.push(
-                new google.maps.LatLng( dataObj.grid[ii].latDegrees, dataObj.grid[ii].lonDegrees)
+                new google.maps.LatLng( dataObj[ii].latitude, dataObj[ii].longitude )
             )
         }
 

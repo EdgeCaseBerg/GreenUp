@@ -1,9 +1,9 @@
 
 // prototype objects for posting to API
 function Pin(){
-	this.latDegrees; 
+	this.latDegrees;
     this.lonDegrees;
-    this.type; 
+    this.type;
     this.message = "I had to run to feed my cat, had to leave my Trash here sorry! Can someone pick it up?";
     this.addressed = false;
 }
@@ -49,7 +49,7 @@ function ClientLogger(){
 
     ClientLogger.prototype.obj = function obj(object, methodName, details){
         this.info(details, methodName);
-        console.log(object)
+        //console.log(object)
         this.info("******", "******");
     }
 

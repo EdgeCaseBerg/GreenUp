@@ -501,11 +501,11 @@ function UiHandle(){
         window.LOGGER.debug(arguments.callee.name, "[METHOD]");
 
         window.PINS = [];
-        window.PINS = data.pins;
+        window.PINS = data;
         // var dataArr = JSON.parse(data);
         var dataArr = data;
-        for(ii=0; ii<dataArr.pins.length; ii++){
-            window.MAP.addMarkerFromApi(dataArr.pins[ii].type, dataArr.pins[ii].message, dataArr.pins[ii].latDegrees, dataArr.pins[ii].lonDegrees);
+        for(ii=0; ii<dataArr.length; ii++){
+            window.MAP.addMarkerFromApi(dataArr[ii].comment_type, dataArr[ii].message, dataArr[ii].latitude, dataArr[ii].longitude);
         }
 
     }
@@ -524,23 +524,23 @@ function UiHandle(){
 
         window.LOGGER.obj(data, "updateForum", "data from update forum");
 
-        var comments = dataObj.comments;
-        if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.next)){
-            var nextArr = dataObj.page.next.split("/api");
-            window.UI.commentsNextPageUrl = nextArr[1];
-            window.LOGGER.debug("url stored: "+window.UI.commentsNextPageUrl, "", "");
-        }else{
-            window.UI.commentsNextPageUrl = null;
-        }
-        if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.previous)){
-            var prevArr = dataObj.page.previous.split("/api");
-            window.UI.commentsPrevPageUrl = prevArr[1];
-            window.LOGGER.debug("url stored: "+window.UI.commentsPrevPageUrl);
+        var comments = dataObj;
+//         if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.next)){
+//             var nextArr = dataObj.page.next.split("/api");
+//             window.UI.commentsNextPageUrl = nextArr[1];
+//             window.LOGGER.debug("url stored: "+window.UI.commentsNextPageUrl, "", "");
+//         }else{
+//             window.UI.commentsNextPageUrl = null;
+//         }
+//         if(!window.HELPER.isNull(dataObj.page) && !window.HELPER.isNull(dataObj.page.previous)){
+//             var prevArr = dataObj.page.previous.split("/api");
+//             window.UI.commentsPrevPageUrl = prevArr[1];
+//             window.LOGGER.debug("url stored: "+window.UI.commentsPrevPageUrl);
 
-//            window.UI.commentsPrevPageUrl = dataObj.page.previous;
-        }else{
-            window.UI.commentsPrevPageUrl = null;
-        }
+// //            window.UI.commentsPrevPageUrl = dataObj.page.previous;
+//         }else{
+//             window.UI.commentsPrevPageUrl = null;
+//         }
 
 
 
@@ -568,15 +568,15 @@ function UiHandle(){
             var commentIdHolder = document.createElement("input");
             pinIdHolder.type = "hidden";
             pinIdHolder.className = "pinIdHolder";
-            pinIdHolder.value = comments[ii].pin;
+            pinIdHolder.value = comments[ii].pin_id;
             commentIdHolder.type = "hidden";
             commentIdHolder.className = "commentIdHolder";
-            commentIdHolder.value = comments[ii].id;
+            commentIdHolder.value = comments[ii].comment_id;
 
             var messageContent = document.createElement("span");
             var currentDate = new Date();
             var timezoneOffsetMillis = currentDate.getTimezoneOffset()*60*1000;
-            var messageDate = new Date(comments[ii]['timestamp']);
+            var messageDate = new Date(comments[ii]['created_time']);
             var diffMins = Math.round((((timezoneOffsetMillis + currentDate.getTime()) - messageDate.getTime())/1000)/60);
             if(diffMins > 59){
                 var mins = (diffMins % 60);
@@ -585,7 +585,7 @@ function UiHandle(){
                 var timeSinceMessage = diffMins+"mins ago";
             }
 
-            messageContent.innerHTML = comments[ii]['message'];
+            messageContent.innerHTML = comments[ii]['content'];
             timeDiv.innerHTML = timeSinceMessage;
             timeDiv.className = "bubbleTime";
 
@@ -597,7 +597,7 @@ function UiHandle(){
                 div.className = "bubbleLeft bubble";
             }
 
-            switch(comments[ii]['type']){
+            switch(comments[ii]['comment_type']){
                 case 'HAZARD':
                     div.className += " bubbleHazard";
                     break;
@@ -634,7 +634,9 @@ function UiHandle(){
 
         $('.gotoIconWrapper').click(function(){
             var pinId = $(this).parent().parent().find(".pinIdHolder").val();
+            console.log('looking for: '+pinId);
             for(var ii=0; ii<window.PINS.length; ii++){
+                console.log(window.PINS[ii].id);
                 if(window.PINS[ii].id == pinId){
                     var centerPoint = new google.maps.LatLng(window.PINS[ii].latDegrees, window.PINS[ii].lonDegrees);
                     window.MAP.map.setCenter(centerPoint);
