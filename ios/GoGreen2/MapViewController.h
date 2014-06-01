@@ -29,13 +29,6 @@
 @property (strong, nonatomic) HeatMap *heatMap;
 @property (strong, nonatomic) NSDate *startedCleaning;
 
-@property (strong, nonatomic) NSMutableArray *downloadedMapPoints;
-@property (strong, nonatomic) NSMutableArray *gatheredMapPoints;
-@property (strong, nonatomic) NSMutableArray *gatheredMapPointsQueue;
-
-@property (strong, nonatomic) NSMutableArray *downloadedMapPins;
-@property (strong, nonatomic) NSMutableArray *gatheredMapPins;
-
 @property (strong, nonatomic) NSDate *longPressTimer;
 @property (strong, nonatomic) MapPinSelectorView *mapSpinner;
 @property (strong, nonatomic) Marker *tempPinRef;
@@ -61,6 +54,7 @@
 -(IBAction)toggleLogging:(id)sender;
 -(void)getHeatDataFromServer;
 -(void)pushHeatMapDataToServer;
--(NSDictionary *)convertPointsToHeatMapFormat:(NSMutableArray *)heatMapArray;
+-(NSDictionary *)convertPointsToHeatMapFormat:(NSArray *)heatMapArray;
+-(NSString *)getImageForMarkerNetworkType:(NSString *)networkType;
 
 @end

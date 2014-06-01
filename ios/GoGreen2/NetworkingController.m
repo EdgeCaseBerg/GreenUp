@@ -268,7 +268,8 @@ static NetworkingController *sharedNetworkingController;
             NSLog(@"Network - Map: Recieved %lu New Map Pins", (unsigned long)[[response objectForKey:@"pins"] count]);
             NSLog(@"--- Data - Map: %@", [response objectForKey:@"pins"]);
             
-            [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPins removeAllObjects];
+            [theCoreDataController deleteAllObjectsWithEntityName:CORE_DATA_MARKER andPredicate:nil];
+            [theCoreDataController saveContext];
             
             for(NSDictionary *networkPin in [response objectForKey:@"pins"])
             {
@@ -277,16 +278,15 @@ static NetworkingController *sharedNetworkingController;
                 NSString *stringPinID = [[networkPin objectForKey:@"id"] stringValue];
                 NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
                 [f setNumberStyle:NSNumberFormatterDecimalStyle];
-                newPin.pinID = [f numberFromString:stringPinID];
-                newPin.message = [networkPin objectForKey:@"message"];
-                newPin.coordinate = CLLocationCoordinate2DMake([[networkPin objectForKey:@"latDegrees"] doubleValue], [[networkPin objectForKey:@"lonDegrees"] doubleValue]);
-                newPin.type = [networkPin objectForKey:@"type"];
-                newPin.message = [networkPin objectForKey:@"message"];
-                newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
-                
-                
-                [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPins addObject:newPin];
+                newPin.markerID = [f numberFromString:stringPinID];
+                newPin.latDegrees = [networkPin objectForKey:@"latDegrees"];
+                newPin.lonDegrees = [networkPin objectForKey:@"lonDegrees"];
+                newPin.markerType = [networkPin objectForKey:@"type"];
+                newPin.addressed = [networkPin objectForKey:@"addressed"];
+                newPin.needsPush = @FALSE;
             }
+            
+            [theCoreDataController saveContext];
             
             [[ContainerViewController sharedContainer] theMapViewController].finishedDownloadingMapPins = TRUE;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingMapPins" object:statusCode];
@@ -315,7 +315,8 @@ static NetworkingController *sharedNetworkingController;
         
         if([statusCode integerValue] == 200)
         {
-            [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPins removeAllObjects];
+            [theCoreDataController deleteAllObjectsWithEntityName:CORE_DATA_MARKER andPredicate:nil];
+            [theCoreDataController saveContext];
             
             NSDictionary *networkPin = [response objectForKey:@"pin"];
             
@@ -324,19 +325,18 @@ static NetworkingController *sharedNetworkingController;
             
             
             //Add New Pins
-            HeatMapPin *newPin = [[HeatMapPin alloc] init];
+            Marker *newPin = [theCoreDataController insertNewEntityWithName:CORE_DATA_MARKER];
             NSString *stringPinID = [[networkPin objectForKey:@"id"] stringValue];
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
             [f setNumberStyle:NSNumberFormatterDecimalStyle];
-            newPin.pinID = [f numberFromString:stringPinID];
-            newPin.message = [networkPin objectForKey:@"message"];
-            newPin.coordinate = CLLocationCoordinate2DMake([[networkPin objectForKey:@"latDegrees"] doubleValue], [[networkPin objectForKey:@"lonDegrees"] doubleValue]);
-            newPin.type = [networkPin objectForKey:@"type"];
-            newPin.message = [networkPin objectForKey:@"message"];
-            newPin.addressed = [[networkPin objectForKey:@"addressed"] boolValue];
+            newPin.markerID = [f numberFromString:stringPinID];
+            newPin.latDegrees = [networkPin objectForKey:@"latDegrees"];
+            newPin.lonDegrees = [networkPin objectForKey:@"lonDegrees"];
+            newPin.markerID = [networkPin objectForKey:@"type"];
+            newPin.addressed = [networkPin objectForKey:@"addressed"];
+            newPin.needsPush = @FALSE;
             
-            [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPins addObject:newPin];
-            
+            [theCoreDataController saveContext];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedGettingPinsForShowPin" object:[NSNumber numberWithInteger:statusCode.integerValue]];
         }
@@ -383,14 +383,16 @@ static NetworkingController *sharedNetworkingController;
             {
                 NSLog(@"WARNING - Map: Server Did Not Return Pin ID!");
                 //Request Failed Remove Pin From Map
-                [[[ContainerViewController sharedContainer] theMapViewController].mapView removeAnnotation:[[ContainerViewController sharedContainer] theMapViewController].tempPinRef];
+#warning !!!!!!!!!!!!!!!!!!!!!!
+                //[[[ContainerViewController sharedContainer] theMapViewController].mapView removeAnnotation:[[ContainerViewController sharedContainer] theMapViewController].tempPinRef];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Post Pin" message:[NSString stringWithFormat:@"Server says: %@", [response objectForKey:@"Error_Message"]] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
                 [alert show];
             }
             else
             {
                 //Worked
-                [[ContainerViewController sharedContainer] theMapViewController].tempPinRef.pinID = [NSNumber numberWithLongLong:pinID.longLongValue];
+#warning !!!!!!!!!!!!!!!!!!!!!!
+                //[[ContainerViewController sharedContainer] theMapViewController].tempPinRef.pinID = [NSNumber numberWithLongLong:pinID.longLongValue];
             }
         }
         
@@ -419,7 +421,6 @@ static NetworkingController *sharedNetworkingController;
         else
         {
             [[ContainerViewController sharedContainer] theMapViewController].pushOverdue = FALSE;
-            [[[ContainerViewController sharedContainer] theMapViewController].gatheredMapPointsQueue removeAllObjects];
         }
         
         pushHeatMapConnection = nil;
@@ -428,6 +429,7 @@ static NetworkingController *sharedNetworkingController;
     }
     else if([connection isEqual:getHeatMapConnection])
     {
+#pragma mark Get Heat Map Points
         NSDictionary *response = nil;
         if(getHeatMapData != nil)
             response = [NSJSONSerialization JSONObjectWithData:getHeatMapData options:0 error:nil];
@@ -437,24 +439,26 @@ static NetworkingController *sharedNetworkingController;
         
         if([statusCode integerValue] == 200)
         {
-            [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPoints removeAllObjects];
+            [theCoreDataController deleteAllObjectsWithEntityName:CORE_DATA_HEATMAPPOINT andPredicate:nil];
+            [theCoreDataController saveContext];
             
             NSLog(@"Network - Map: Recieved %lu New Heat Map Points", (unsigned long)[[response objectForKey:@"grid"] count]);
             NSLog(@"--- Data - Map: %@", [response objectForKey:@"grid"]);
             
             for(NSDictionary *pointDictionary in [response objectForKey:@"grid"])
             {
-                HeatMapPoint *newPoint = [[HeatMapPoint alloc] init];
+                HeatmapPoint *newPoint = [theCoreDataController insertNewEntityWithName:CORE_DATA_HEATMAPPOINT];
                 double lat = [[pointDictionary objectForKey:@"latDegrees"] doubleValue];
                 double lon = [[pointDictionary objectForKey:@"lonDegrees"] doubleValue];
                 double secWorked = [[pointDictionary objectForKey:@"secondsWorked"] doubleValue];
                 
-                newPoint.lat = lat;
-                newPoint.lon = lon;
-                newPoint.secWorked = secWorked;
-                
-                [[[ContainerViewController sharedContainer] theMapViewController].downloadedMapPoints addObject:newPoint];
+                newPoint.latDegrees = [NSNumber numberWithDouble:lat];
+                newPoint.lonDegrees = [NSNumber numberWithDouble:lon];
+                newPoint.secondsWorked = [NSNumber numberWithDouble:secWorked];
+                newPoint.needsPush = @FALSE;
             }
+            
+            [theCoreDataController saveContext];
             
             [[ContainerViewController sharedContainer] theMapViewController].finishedDownloadingHeatMap = TRUE;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"finishedDownloadingHeatMap" object:statusCode];
@@ -494,29 +498,30 @@ static NetworkingController *sharedNetworkingController;
             //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
             for(NSDictionary *comment in comments)
             {
-                NetworkMessage *newMessage = [[NetworkMessage alloc] init];
-                newMessage.messageContent = [comment objectForKey:@"message"];
+                Message *newMessage = [theCoreDataController insertNewEntityWithName:CORE_DATA_MESSAGE];
+                newMessage.message = [comment objectForKey:@"message"];
                 newMessage.messageID = [comment objectForKey:@"id"];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 [dateFormatter setDateFormat:@"y-M-d H:m:s"];
-                newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
+                newMessage.timeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                 
                 newMessage.messageType = [comment objectForKey:@"type"];
                 id pinID = [comment objectForKey:@"pin"];
                 if([pinID isKindOfClass:[NSNumber class]])
                 {
-                    newMessage.pinID = [comment objectForKey:@"pin"];
+                    newMessage.messageID = [comment objectForKey:@"pin"];
                 }
                 else
                 {
-                    newMessage.pinID = nil;
+                    newMessage.messageID = nil;
                 }
                 
-                newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
-                
-                [[[ContainerViewController sharedContainer] theMessageViewController].messages addObject:newMessage];
+                newMessage.needsPush = @FALSE;
+                newMessage.addressed = [comment objectForKey:@"addressed"];
                 //[newDownloadedMessages addObject:newMessage];
             }
+            
+            [theCoreDataController saveContext];
             
             NSLog(@"--- Data - Message: Pages,");
             NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
@@ -568,15 +573,18 @@ static NetworkingController *sharedNetworkingController;
             //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
             for(NSDictionary *comment in comments)
             {
-                NetworkMessage *newMessage = [[NetworkMessage alloc] init];
-                newMessage.messageContent = [comment objectForKey:@"message"];
+                Message *newMessage = [theCoreDataController insertNewEntityWithName:CORE_DATA_MESSAGE];
+                newMessage.message = [comment objectForKey:@"message"];
                 newMessage.messageID = [comment objectForKey:@"id"];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 [dateFormatter setDateFormat:@"y-M-d H:m:s"];
-                newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
+                newMessage.timeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                 
                 newMessage.messageType = [comment objectForKey:@"type"];
                 id pinID = [comment objectForKey:@"pin"];
+                
+#warning !!!!!!!!!!!!!!!!!!!!!!!
+                /*
                 if([pinID isKindOfClass:[NSNumber class]])
                 {
                     newMessage.pinID = [comment objectForKey:@"pin"];
@@ -584,12 +592,15 @@ static NetworkingController *sharedNetworkingController;
                 else
                 {
                     newMessage.pinID = nil;
-                }
+                }*/
                 
-                newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
+                newMessage.addressed = [comment objectForKey:@"addressed"];
+                newMessage.needsPush = @FALSE;
                 
                 [newMessages addObject:newMessage];
             }
+            
+            [theCoreDataController saveContext];
             
             NSLog(@"--- Data - Message: Pages,");
             NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
@@ -641,14 +652,17 @@ static NetworkingController *sharedNetworkingController;
             //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
             for(NSDictionary *comment in comments)
             {
-                NetworkMessage *newMessage = [[NetworkMessage alloc] init];
-                newMessage.messageContent = [comment objectForKey:@"message"];
+                Message *newMessage = [theCoreDataController insertNewEntityWithName:CORE_DATA_MESSAGE];
+                newMessage.message = [comment objectForKey:@"message"];
                 newMessage.messageID = [comment objectForKey:@"id"];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 [dateFormatter setDateFormat:@"y-M-d H:m:s"];
-                newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
+                newMessage.timeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                 
                 newMessage.messageType = [comment objectForKey:@"type"];
+                
+#warning !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                /*
                 id pinID = [comment objectForKey:@"pin"];
                 if([pinID isKindOfClass:[NSNumber class]])
                 {
@@ -657,12 +671,15 @@ static NetworkingController *sharedNetworkingController;
                 else
                 {
                     newMessage.pinID = nil;
-                }
+                }*/
                 
-                newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
+                newMessage.addressed = [comment objectForKey:@"addressed"];
+                newMessage.needsPush = @FALSE;
                 
                 [newMessages addObject:newMessage];
             }
+            
+            [theCoreDataController saveContext];
             
             NSLog(@"--- Data - Message: Pages,");
             NSLog(@"--- Data - Message: %@", [response objectForKey:@"page"]);
@@ -876,6 +893,77 @@ static NetworkingController *sharedNetworkingController;
     }
 }
 
+#pragma mark - NEW METHODS
+
+#pragma mark Get Message By ID
+-(void)getMessageForMessageID:(int)messageID
+{
+    self.nextPageURL = nil;
+    self.lookingForMessageID = messageID;
+    
+    [self getMessagePage];
+}
+
+-(void)getMessagePage
+{
+    NSString *urlString = nil;
+    if(self.nextPageURL == nil)
+    {
+        urlString = [NSString stringWithFormat:@"%@:%d/%@", THEME_BASE_URL, THEME_API_PORT, THEME_MESSAGES_RELATIVE_URL];
+    }
+    else
+    {
+        urlString = self.nextPageURL;
+    }
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        [self finishedGettingMessagePage:responseObject];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+    {
+        [self failedGettingMessagePage:error];
+    }];
+}
+
+-(void)failedGettingMessagePage:(NSError *)error
+{
+    self.nextPageURL = nil;
+    self.lookingForMessageID = -1;
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATOIN_FINISHED_GETTING_MESSAGE_BY_ID object:@FALSE];
+}
+
+-(void)finishedGettingMessagePage:(NSDictionary *)response
+{
+    BOOL foundCorrectPage = FALSE;
+    for(NSDictionary *tempMessageData in [response objectForKey:@"comments"])
+    {
+        Message *newMessage = [self createMessageFromData:tempMessageData];
+        if(newMessage.messageID.integerValue == self.lookingForMessageID)
+        {
+            foundCorrectPage = TRUE;
+        }
+        
+        NSDictionary *tempPageData = [response objectForKey:@"page"];
+        self.nextPageURL = [tempPageData objectForKey:@"next"];
+    }
+    
+    [theCoreDataController saveContext];
+    
+    if(foundCorrectPage)
+    {
+        self.nextPageURL = nil;
+        self.lookingForMessageID = -1;
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATOIN_FINISHED_GETTING_MESSAGE_BY_ID object:@TRUE];
+    }
+    else
+    {
+        [self getMessagePage];
+    }
+}
+
+#pragma mark - END OF NEW METHODS
+
+
 #pragma mark - Home Messages
 -(void)getHomeMessage
 {
@@ -943,12 +1031,10 @@ static NetworkingController *sharedNetworkingController;
     //Build Request URL
     NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@", THEME_BASE_URL, THEME_API_PORT, THEME_PINS_RELATIVE_URL, [[ContainerViewController sharedContainer] theMapViewController].pinIDToShow.stringValue];
     
-    pin.message = message;
-    
     //Perform Post Code To Update With Server
     NSMutableArray *objects = [[NSMutableArray alloc] init];
-    [objects addFloat:pin.coordinate.latitude];
-    [objects addFloat:pin.coordinate.longitude];
+    [objects addFloat:pin.latDegrees.floatValue];
+    [objects addFloat:pin.lonDegrees.floatValue];
     [objects addObject:type];
     [objects addObject:message];
     [objects addObject:@"false"];
@@ -956,8 +1042,8 @@ static NetworkingController *sharedNetworkingController;
     NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:[NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"type", @"message", @"addressed", nil]];
     
     NSLog(@"Network - Map: Pushing New Marker With Data,");
-    NSLog(@"--- Data - Map: Lat = %f", pin.coordinate.latitude);
-    NSLog(@"--- Data - Map: Lon = %f", pin.coordinate.longitude);
+    NSLog(@"--- Data - Map: Lat = %f", pin.latDegrees.floatValue);
+    NSLog(@"--- Data - Map: Lon = %f", pin.lonDegrees.floatValue);
     NSLog(@"--- Data - Map: Type = %@", type);
     NSLog(@"--- Data - Map: Message = %@", message);
     
@@ -982,10 +1068,10 @@ static NetworkingController *sharedNetworkingController;
 {
     NSLog(@"Message - Map: Pushing Heatmap Data To Server");
     NSLog(@"--- Data - Map: QUEUE LIMIT = %d", THEME_UPLOAD_QUEUE_LENGTH);
-    NSLog(@"--- Data - Map: Gathered Queue = %lu", (unsigned long)[[ContainerViewController sharedContainer] theMapViewController].gatheredMapPoints.count);
+    NSLog(@"--- Data - Map: Gathered Queue = %d", [theCoreDataController fetchAllObjectsWithEntityName:CORE_DATA_HEATMAPPOINT andSortDescriptors:nil].count);
     NSLog(@"--- Data - Map: Push Overdue = %d", [[ContainerViewController sharedContainer] theMapViewController].pushOverdue);
     
-    if([[ContainerViewController sharedContainer] theMapViewController].gatheredMapPointsQueue.count >= THEME_UPLOAD_QUEUE_LENGTH || [[ContainerViewController sharedContainer] theMapViewController].pushOverdue)
+    if([theCoreDataController fetchObjectsWithEntityName:CORE_DATA_HEATMAPPOINT predicate:[NSPredicate predicateWithFormat:@"needsPush == TRUE"] sortDescriptors:nil andBatchNumber:0].count >= THEME_UPLOAD_QUEUE_LENGTH || [[ContainerViewController sharedContainer] theMapViewController].pushOverdue)
     {
         if(![[ContainerViewController sharedContainer] networkingReachability])
         {
@@ -999,17 +1085,16 @@ static NetworkingController *sharedNetworkingController;
             
             int sentCount = 0;
             NSMutableArray *dataArray = [[NSMutableArray alloc] init];
-            for(int i = 0; i < [[ContainerViewController sharedContainer] theMapViewController].gatheredMapPointsQueue.count; i++)
+            for(HeatmapPoint *tempPoint in [theCoreDataController fetchObjectsWithEntityName:CORE_DATA_HEATMAPPOINT predicate:[NSPredicate predicateWithFormat:@"needsPush == TRUE"] sortDescriptors:nil andBatchNumber:0])
             {
-                sentCount++;
-                HeatMapPoint *point = [[[ContainerViewController sharedContainer] theMapViewController].gatheredMapPointsQueue objectAtIndex:i];
-                
                 //Create Parameters For Push
                 NSArray *keys = [NSArray arrayWithObjects:@"latDegrees", @"lonDegrees", @"secondsWorked", nil];
                 NSMutableArray *objects = [[NSMutableArray alloc] init];
-                [objects addFloat:point.lat];
-                [objects addFloat:point.lon];
-                [objects addFloat:point.secWorked];
+                [objects addFloat:tempPoint.latDegrees.floatValue];
+                [objects addFloat:tempPoint.lonDegrees.floatValue];
+                [objects addFloat:tempPoint.secondsWorked.floatValue];
+                
+                tempPoint.needsPush = @FALSE;
                 
                 //Create Dictionary Of Parameters
                 NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
@@ -1134,15 +1219,17 @@ static NetworkingController *sharedNetworkingController;
             //NSMutableArray *newDownloadedMessages = [[NSMutableArray alloc] init];
             for(NSDictionary *comment in comments)
             {
-                NetworkMessage *newMessage = [[NetworkMessage alloc] init];
-                newMessage.messageContent = [comment objectForKey:@"message"];
+                Message *newMessage = [theCoreDataController insertNewEntityWithName:CORE_DATA_MESSAGE];
+                newMessage.message = [comment objectForKey:@"message"];
                 newMessage.messageID = [comment objectForKey:@"id"];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 [dateFormatter setDateFormat:@"y-M-d H:m:s"];
-                newMessage.messageTimeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
+                newMessage.timeStamp = [dateFormatter dateFromString:[comment objectForKey:@"timestamp"]];
                 
                 newMessage.messageType = [comment objectForKey:@"type"];
       
+#warning !!!!!!!!!!!!!!!!!!!!!!!!!!!
+                /*
                 id pinID = [comment objectForKey:@"pin"];
                 if([pinID isKindOfClass:[NSNumber class]])
                 {
@@ -1151,13 +1238,15 @@ static NetworkingController *sharedNetworkingController;
                 else
                 {
                     newMessage.pinID = nil;
-                }
+                }*/
                 
-                newMessage.addressed = [[comment objectForKey:@"addressed"] boolValue];
+                newMessage.addressed = [comment objectForKey:@"addressed"];
                 
                 [[[ContainerViewController sharedContainer] theMessageViewController].messages addObject:newMessage];
                 //[newDownloadedMessages addObject:newMessage];
             }
+            
+            [theCoreDataController saveContext];
             
             NSSortDescriptor* sortByDate = [NSSortDescriptor sortDescriptorWithKey:@"messageTimeStamp" ascending:FALSE];
             [[[ContainerViewController sharedContainer] theMessageViewController].messages sortUsingDescriptors:[NSArray arrayWithObject:sortByDate]];
@@ -1266,12 +1355,12 @@ static NetworkingController *sharedNetworkingController;
     }
 }
 
--(void)markMessageAsAddressed:(NetworkMessage *)message
+-(void)markMessageAsAddressed:(Message *)message
 {
-    NSLog(@"Network - Message: Updaing Toggled Message with Message ID: %@", message.pinID.stringValue);
+    NSLog(@"Network - Message: Updaing Toggled Message with Message ID: %@", message.markerID.stringValue);
     
     //Build Request URL
-    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@",THEME_BASE_URL, THEME_API_PORT, THEME_PINS_RELATIVE_URL, message.pinID.stringValue];
+    NSString *urlString = [NSString stringWithFormat:@"%@:%d%@?id=%@",THEME_BASE_URL, THEME_API_PORT, THEME_PINS_RELATIVE_URL, message.markerID.stringValue];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                                        timeoutInterval:10];
@@ -1287,7 +1376,7 @@ static NetworkingController *sharedNetworkingController;
     }
     
     //DATA
-    NSLog(@"--- Data - Marker ID: %@ and Value: %d", message.pinID.stringValue, message.addressed);
+    NSLog(@"--- Data - Marker ID: %@ and Value: %d", message.markerID.stringValue, message.addressed.boolValue);
     
     NSDictionary *parameters = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:value, nil] forKeys:[NSArray arrayWithObjects:@"addressed", nil]];
     
@@ -1306,6 +1395,31 @@ static NetworkingController *sharedNetworkingController;
 }
 
 #pragma mark - Utility Methods
+
+#pragma mark Dictionary --> Object
+-(Message *)createMessageFromData:(NSDictionary *)data
+{
+    Message *newMessage = [theCoreDataController insertNewEntityWithName:CORE_DATA_MESSAGE];
+    newMessage.messageID = [data objectForKey:@"id"];
+    newMessage.messageType = [data objectForKey:@"type"];
+    newMessage.markerID = [data objectForKey:@"pin"];
+    newMessage.addressed = [data objectForKey:@"addressed"];
+    newMessage.message = [data objectForKey:@"message"];
+    newMessage.timeStamp = [self getDateFromNetworkTimeStamp:[data objectForKey:@"timeStamp"]];
+    newMessage.needsPush = @FALSE;
+    
+    return newMessage;
+}
+
+#pragma mark Other
+-(NSDate *)getDateFromNetworkTimeStamp:(NSString *)timeStamp
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"yyyy/MM/dd HH:mm:ss"];
+    NSDate *date = [formatter dateFromString:timeStamp];
+    
+    return date;
+}
 
 -(void)printResponseFromFailedRequest:(id)error andStatusCode:(NSInteger)statusCode
 {

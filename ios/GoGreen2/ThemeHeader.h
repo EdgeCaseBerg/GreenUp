@@ -12,8 +12,12 @@
 //Import the correct theme categories here
 #import "UIColor+methods.h"
 #import "UIFont+methods.h"
-#import "PinConstants.h"
+#import "MarkerConstants.h"
 #import "MessageConstants.h"
 #import "NetworkingConstants.h"
+#import "AppConstants.h"
+#import "HomeViewControllerConstants.h"
+#import "MapViewControllerContants.h"
+#import "MessageViewControllerConstants.h"
 
 #endif

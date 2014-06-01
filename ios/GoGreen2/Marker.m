@@ -1,22 +1,21 @@
 //
 //  Marker.m
-//  Pods
+//  GreenUpVt
 //
-//  Created by Jordan Rouille on 5/31/14.
-//
+//  Created by Jordan Rouille on 6/1/14.
+//  Copyright (c) 2014 Xenon Apps. All rights reserved.
 //
 
 #import "Marker.h"
-#import "Message.h"
 
 
 @implementation Marker
 
-@dynamic markerID;
+@dynamic addressed;
 @dynamic latDegrees;
 @dynamic lonDegrees;
+@dynamic markerID;
 @dynamic markerType;
-@dynamic addressed;
-@dynamic message;
+@dynamic needsPush;
 
 @end

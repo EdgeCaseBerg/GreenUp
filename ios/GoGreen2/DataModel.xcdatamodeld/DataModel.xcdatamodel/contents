@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="HeatmapPoint" representedClassName="HeatmapPoint" syncable="YES">
-        <attribute name="latDegrees" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="lonDegrees" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="latDegrees" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="lonDegrees" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="needsPush" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="secondsWorked" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="Marker" representedClassName="Marker" syncable="YES">
         <attribute name="addressed" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="latDegrees" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="lonDegrees" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="latDegrees" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="lonDegrees" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
         <attribute name="markerID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="markerType" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Message" inverseName="marker" inverseEntity="Message" syncable="YES"/>
+        <attribute name="needsPush" optional="YES" attributeType="Boolean" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="addressed" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="markerID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="messageID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="messageType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="needsPush" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="marker" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Marker" inverseName="message" inverseEntity="Marker" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Message" positionX="-63" positionY="-18" width="128" height="133"/>
+        <element name="HeatmapPoint" positionX="-45" positionY="54" width="128" height="105"/>
         <element name="Marker" positionX="-54" positionY="-9" width="128" height="133"/>
-        <element name="HeatmapPoint" positionX="-45" positionY="54" width="128" height="88"/>
+        <element name="Message" positionX="-63" positionY="-18" width="128" height="148"/>
     </elements>
 </model>

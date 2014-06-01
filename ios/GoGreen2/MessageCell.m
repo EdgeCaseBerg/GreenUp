@@ -27,7 +27,7 @@
 -(IBAction)bringMeToMapPin:(UIButton *)sender
 {
     [[ContainerViewController sharedContainer] showLoadingView];
-    [[[ContainerViewController sharedContainer] theMapViewController] setPinIDToShow:self.messageObject.marker.markerID];
+    [[[ContainerViewController sharedContainer] theMapViewController] setPinIDToShow:self.messageObject.markerID];
     [[ContainerViewController sharedContainer] switchMapViewAndDownloadData:FALSE];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"goToMapPin" object:nil];
 }

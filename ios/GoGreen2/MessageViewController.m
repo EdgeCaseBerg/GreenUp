@@ -17,7 +17,6 @@
 #import "NetworkingController.h"
 #import "ThemeHeader.h"
 #import "NetworkingController.h"
-#import "SkinConstants.h"
 
 #define ALERT_VIEW_TOGGLE_ON 0
 #define ALERT_VIEW_TOGGLE_OFF 1
@@ -120,6 +119,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedGettingMessageForFirstPageOfShowMessage:) name:@"finishedGettingMessageForFirstPageOfShowMessage" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedUpdatingMessageStatus:) name:@"finishedUpdatingMessageStatus" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:nil selector:@selector(showSelectedMessage:) name:NOTIFICATOIN_FINISHED_GETTING_MESSAGE_BY_ID object:nil];
 
     
     return self;
@@ -216,9 +217,11 @@
     NSArray *newMessages = sender.object;
     
     Message *selectedMessage = nil;
+#warning !!!!!!!!!!!!!!!!!!!!!
+    /*
     for(Message *msg in newMessages)
     {
-        if(msg.marker != nil)
+        if(msg.markerID != nil)
         {
             Marker *tempMarker = msg.marker;
             if([tempMarker.markerID isEqualToNumber:self.pinIDToShow])
@@ -226,7 +229,7 @@
                 selectedMessage = msg;
             }
         }
-    }
+    }*/
     
     //Insert New Messages Into Table
     [self.messages addObjectsFromArray:newMessages];
@@ -497,14 +500,28 @@
     self.currentMessageType = notificationRecieved.object;
 }
 
--(void)showSelectedMessage
+-(void)showSelectedMessage:(NSNotification *)notification
 {
+    NSNumber *didSucceed = notification.object;
+    
+    if(didSucceed.boolValue)
+    {
+        Message *selectedMessage = nil;
+#warning !!!!!!!!!!!!!! FINISHED HERE
+    }
+    else
+    {
+        
+    }
+    
     NSLog(@"Message - Message: Showing selected message");
     Message *selectedMessage = nil;
     NSIndexPath *indexOfSelectedMessage = nil;
     int count = 0;
     for(Message *message in self.messages)
     {
+#warning !!!!!!!!!!!!!!!!!!!!!
+        /*
         if(message.marker != nil)
         {
             Marker *tempMarker = message.marker;
@@ -515,7 +532,7 @@
                 indexOfSelectedMessage = [NSIndexPath indexPathForRow:count inSection:0];
                 break;
             }
-        }
+        }*/
 
         count++;
     }

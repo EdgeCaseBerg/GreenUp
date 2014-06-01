@@ -15,16 +15,8 @@
 #import <netdb.h>
 #include <arpa/inet.h>
 #import "NetworkingController.h"
-#import "MessageTypes.h"
-#import "MarkerTypes.h"
-
-//#include "FTLocationSimulator.h"
-
-#define UPLOAD_QUEUE_LENGTH 5
-#define longPressDuration .5
-#define BUFFER_SCALER 2
-#define MIN_DISTANCE_FOR_UPDATES 10
-#define MAX_METERS_PER_SECOND 5 // ~12 mph
+#import "MarkerAnnotation.h"
+#import "ThemeHeader.h"
 
 @interface MapViewController ()
 
@@ -45,12 +37,6 @@
 
     self.title = @"Map";
     
-    self.downloadedMapPoints = [[NSMutableArray alloc] init];
-    self.gatheredMapPoints = [[NSMutableArray alloc] init];
-    self.gatheredMapPointsQueue = [[NSMutableArray alloc] init];
-    
-    self.downloadedMapPins = [[NSMutableArray alloc] init];
-    self.gatheredMapPins = [[NSMutableArray alloc] init];
     
     //Drop Marker
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dropMarkerAtCurrentLocation:) name:@"dropMarker" object:nil];
@@ -311,66 +297,25 @@
     {
         return nil;
     }
-    else if([annotation isKindOfClass:[Marker class]])
+    else if([annotation isKindOfClass:[MarkerAnnotation class]])
     {
-        if([((Marker *)annotation).markerType isEqualToString:MARKER_TYPE_PICK_UP])
+        NSString *imageName = [self getImageForMarkerNetworkType:((MarkerAnnotation *)annotation).marker.markerType];
+        static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
+        
+        MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
+        
+        if (annotationView == nil)
         {
-            static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
-            
-            MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
-            
-            if (annotationView == nil)
-            {
-                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
-            }
-            
-            annotationView.image = [UIImage imageNamed:@"trashMarker.png"];
-            annotationView.centerOffset = CGPointMake(0, -17);
-            
-            annotationView.annotation = annotation;
-            
-            return annotationView;
+            annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
         }
-        else if([((Marker *)annotation).markerType isEqualToString:MARKER_TYPE_MARKER])
-        {
-            static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
-            
-            MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
-            
-            if (annotationView == nil)
-            {
-                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
-            }
-            
-            annotationView.image = [UIImage imageNamed:@"marker.png"];
-            
-            annotationView.centerOffset = CGPointMake(0, -15);
-            
-            annotationView.annotation = annotation;
-            
-            return annotationView;
-        }
-        else if([((Marker *)annotation).markerType isEqualToString:MARKER_TYPE_HAZARD])
-        {
-            static NSString *annotationViewReuseIdentifier = @"annotationViewReuseIdentifier";
-            
-            MKAnnotationView *annotationView = (MKAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationViewReuseIdentifier];
-            
-            if (annotationView == nil)
-            {
-                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationViewReuseIdentifier];
-            }
-            
-            annotationView.image = [UIImage imageNamed:@"hazardMarker.png"];
-            
-            annotationView.centerOffset = CGPointMake(0, -15);
-            
-            annotationView.annotation = annotation;
-            
-            return annotationView;
-        }
-        else
-            return nil;
+        
+        annotationView.image = [UIImage imageNamed:imageName];
+        
+        annotationView.centerOffset = CGPointMake(0, -15);
+        
+        annotationView.annotation = annotation;
+        
+        return annotationView;
     }
     else
     {
@@ -381,17 +326,14 @@
 
 -(void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
-    Marker *selectedMapPin = view.annotation;
-    if([selectedMapPin respondsToSelector:@selector(pinID)])
+    MarkerAnnotation *selectedAnnotation = view.annotation;
+    Marker *selectedMarker = selectedAnnotation.marker;
+    if([selectedMarker respondsToSelector:@selector(pinID)])
     {
-        NSNumber *pinID = selectedMapPin.markerID;
-        if(![selectedMapPin.markerID isEqualToNumber:@420])
-        {
-            
-            [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:pinID];
-            [[ContainerViewController sharedContainer] switchMessageView];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"getMessagesForShowingSelectedMessage" object:nil];
-        }
+        NSNumber *markerID = selectedMarker.markerID;
+        [[[ContainerViewController sharedContainer] theMessageViewController] setPinIDToShow:markerID];
+        [[ContainerViewController sharedContainer] switchMessageView];
+        [[NetworkingController shared] getMessageForMessageID:markerID.integerValue];
     }
 }
 
@@ -443,13 +385,13 @@
     [self.locationManager startUpdatingLocation];
 }
 
--(NSDictionary *)convertPointsToHeatMapFormat:(NSMutableArray *)heatMapArray
+-(NSDictionary *)convertPointsToHeatMapFormat:(NSArray *)heatMapArray
 {
     //this method converts the array of points to the weird heatmap library format
     NSMutableDictionary *heatMapDictionary = [[NSMutableDictionary alloc] init];
     for(HeatmapPoint *mapPoint in heatMapArray)
     {
-        MKMapPoint point = MKMapPointForCoordinate(CLLocationCoordinate2DMake(mapPoint.latDegrees.integerValue, mapPoint.lonDegrees.integerValue));
+        MKMapPoint point = MKMapPointForCoordinate(CLLocationCoordinate2DMake(mapPoint.latDegrees.doubleValue, mapPoint.lonDegrees.doubleValue));
         NSValue *pointValue = [NSValue value:&point withObjCType:@encode(MKMapPoint)];
         [heatMapDictionary setObject:[NSNumber numberWithInt:1] forKey:pointValue];
     }
@@ -468,12 +410,6 @@
         NSLog(@"Message - Map: Found GPS Location");
         [self centerMapWithCurrentLocation:location];
         
-        //ADD POINTS
-        HeatmapPoint *mapPoint = [theCoreDataController insertNewEntityWithName:CORE_DATA_HEATMAPPOINT];
-        mapPoint.latDegrees = [NSNumber numberWithInt:location.coordinate.latitude];
-        mapPoint.lonDegrees = [NSNumber numberWithInt:location.coordinate.longitude];
-        mapPoint.secondsWorked = @1;
-        
         if(self.loggingForMarker)
         {
             //-------------- We Are Not Logging But Want To Drop Marker At Our Current Location ---------
@@ -491,14 +427,19 @@
         else if(self.loggingForMarker && self.logging)
         {
             //-------------- We Are Logging AND ALSO Want To Drop A Marker --------------
+            //ADD POINTS
+            HeatmapPoint *mapPoint = [theCoreDataController insertNewEntityWithName:CORE_DATA_HEATMAPPOINT];
+            mapPoint.latDegrees = [NSNumber numberWithInt:location.coordinate.latitude];
+            mapPoint.lonDegrees = [NSNumber numberWithInt:location.coordinate.longitude];
+            mapPoint.secondsWorked = @1;
+            mapPoint.needsPush = @TRUE;
+            [theCoreDataController saveContext];
+            
             if(location.speed < MAX_METERS_PER_SECOND)
             {
                 self.drivingAlertShown = FALSE;
                 
                 self.loggingForMarker = FALSE;
-                
-                [self.gatheredMapPoints addObject:mapPoint];
-                [self.gatheredMapPointsQueue addObject:mapPoint];
                 
                 //Update With Server
                 [self getHeatDataFromServer];
@@ -522,13 +463,17 @@
         else
         {
             //-------------- We Are Logging AND Don't Want To Drop A Marker --------------
+            //ADD POINTS
+            HeatmapPoint *mapPoint = [theCoreDataController insertNewEntityWithName:CORE_DATA_HEATMAPPOINT];
+            mapPoint.latDegrees = [NSNumber numberWithInt:location.coordinate.latitude];
+            mapPoint.lonDegrees = [NSNumber numberWithInt:location.coordinate.longitude];
+            mapPoint.secondsWorked = @1;
+            mapPoint.needsPush = @TRUE;
+            [theCoreDataController saveContext];
             
             if(location.speed < MAX_METERS_PER_SECOND)
             {
                 self.drivingAlertShown = FALSE;
-                
-                [self.gatheredMapPoints addObject:mapPoint];
-                [self.gatheredMapPointsQueue addObject:mapPoint];
                 
                 //Update With Server
                 [self getHeatDataFromServer];
@@ -565,7 +510,7 @@
 -(void)showDrivingAlert
 {
     self.drivingAlertShown = TRUE;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are you Driving?" message:@"Either you're the world's fastest cleaner or you're driving around. We wan't accurate results so once you it slow down we'll automatically enable tracking for you." delegate:nil cancelButtonTitle:@"I'm Driving" otherButtonTitles:nil, nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are you Driving?" message:@"Either you're the world's fastest %@ or you're driving around. We wan't accurate results so once you slow it down you can start " delegate:nil cancelButtonTitle:@"I'm Driving" otherButtonTitles:nil, nil];
     [alert show];
 }
 
@@ -576,12 +521,9 @@
     [self.mapView removeOverlay:self.heatMap];
     
     //create array of all points gathered and downloaded!
-    NSMutableArray *allPoints = [[NSMutableArray alloc] initWithArray:self.downloadedMapPoints];
-    [allPoints addObjectsFromArray:self.gatheredMapPoints];
+    NSArray *allPoints = [theCoreDataController fetchAllObjectsWithEntityName:CORE_DATA_HEATMAPPOINT andSortDescriptors:nil];
     
     NSLog(@"Message - Map: Updating Heat Map Overlay");
-    NSLog(@"-- Data - Map: DOWNLOADED POINTS = %lu", (unsigned long)self.downloadedMapPoints.count);
-    NSLog(@"-- Data - Map: GATHERED POINTS = %lu", (unsigned long)self.gatheredMapPoints.count);
     
     //create new heatmap overlay and display it
     if(self.heatMap == nil)
@@ -620,33 +562,23 @@
     if([statusCode integerValue] == 200)
     {
         Marker *pinToShow = nil;
-        for(Marker *pin in self.downloadedMapPins)
+        for(Marker *marker in [theCoreDataController fetchAllObjectsWithEntityName:CORE_DATA_MARKER andSortDescriptors:nil])
         {
-            if([pin.markerID isEqualToNumber:self.pinIDToShow])
+            if([marker.markerID isEqualToNumber:self.pinIDToShow])
             {
-                pinToShow = pin;
-                
                 NSLog(@"Message - Map: Found Pin To Show In Downloaded Pins");
-            }
-        }
-        for(Marker *pin in self.gatheredMapPins)
-        {
-            if([pin.markerID isEqualToNumber:self.pinIDToShow])
-            {
-                pinToShow = pin;
-                
-                NSLog(@"Message - Map: Found Pin To Show In Gathered Pins");
+                pinToShow = marker;
             }
         }
         
         //Center The Map
         if(self.mapView.region.span.latitudeDelta > 0.025 || self.mapView.region.span.longitudeDelta > 0.025)
         {
-            [self.mapView setRegion:MKCoordinateRegionMake(CLLocationCoordinate2DMake(pinToShow.latDegrees.integerValue, pinToShow.lonDegrees.integerValue), MKCoordinateSpanMake(0.015, 0.025)) animated:FALSE];
+            [self.mapView setRegion:MKCoordinateRegionMake(CLLocationCoordinate2DMake(pinToShow.latDegrees.doubleValue, pinToShow.lonDegrees.doubleValue), MKCoordinateSpanMake(0.015, 0.025)) animated:FALSE];
         }
         else
         {
-            [self.mapView setRegion:MKCoordinateRegionMake(CLLocationCoordinate2DMake(pinToShow.latDegrees.integerValue, pinToShow.lonDegrees.integerValue), MKCoordinateSpanMake(self.mapView.region.span.latitudeDelta, self.mapView.region.span.longitudeDelta)) animated:FALSE];
+            [self.mapView setRegion:MKCoordinateRegionMake(CLLocationCoordinate2DMake(pinToShow.latDegrees.doubleValue, pinToShow.lonDegrees.doubleValue), MKCoordinateSpanMake(self.mapView.region.span.latitudeDelta, self.mapView.region.span.longitudeDelta)) animated:FALSE];
         }
 
         //Add Fade View
@@ -658,9 +590,9 @@
         [self.view addSubview:self.fadeView];
         
         //Add Fake Pin Overlay
-        CGPoint pinPointInSuperView = [self.mapView convertCoordinate:CLLocationCoordinate2DMake(pinToShow.latDegrees.integerValue, pinToShow.lonDegrees.integerValue) toPointToView:self.view];
+        CGPoint pinPointInSuperView = [self.mapView convertCoordinate:CLLocationCoordinate2DMake(pinToShow.latDegrees.doubleValue, pinToShow.lonDegrees.doubleValue) toPointToView:self.view];
         UIImageView *fakePin = nil;
-        if([pinToShow.markerType isEqualToString:MARKER_TYPE_HAZARD])
+        if([pinToShow.markerType isEqualToString:MARKER_TYPE_3_NETWORK_TYPE])
         {
             fakePin = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hazardMarker.png"]];
         }
@@ -696,17 +628,17 @@
     NSLog(@"Message - Map: Removing Fade View");
 }
 
--(void)updateMapWithPins:(NSMutableArray *)pins
+-(void)updateMapAnnotations
 {
     NSLog(@"Message - Map: Adding Unaddressed Pins To Map");
     
     //Add New
-    for(Marker *pin in pins)
+    for(Marker *marker in [theCoreDataController fetchAllObjectsWithEntityName:CORE_DATA_MARKER andSortDescriptors:nil])
     {
-        if(!pin.addressed)
+        if(!marker.addressed.boolValue)
         {
-#warning !!!!!!!!!!!!!!!!!!!!!!!
-            //[self.mapView addAnnotation:pin];
+            MarkerAnnotation *tempAnnotation = [[MarkerAnnotation alloc] initWithMarker:marker];
+            [self.mapView addAnnotation:tempAnnotation];
         }
     }
 }
@@ -717,15 +649,14 @@
     //Remove Old
     for(MKAnnotationView *annotation in self.mapView.annotations)
     {
-        if([annotation isKindOfClass:[Marker class]])
+        if([annotation isKindOfClass:[MarkerAnnotation class]])
         {
             [self.mapView removeAnnotation:(id)annotation];
         }
     }
-    //[self.mapView removeAnnotations:self.mapView.annotations];
-    
+
     //Add Downloaded Pins
-    [self updateMapWithPins:self.downloadedMapPins];
+    [self updateMapAnnotations];
 }
 -(void)dropMarkerAtCurrentLocation
 {
@@ -1217,13 +1148,31 @@
 }
 
 #pragma mark - Utility Methods
+-(NSString *)getImageForMarkerNetworkType:(NSString *)networkType
+{
+    if([networkType isEqualToString:MARKER_TYPE_1_NETWORK_TYPE])
+    {
+        return MARKER_TYPE_1_IMAGE_NAME;
+    }
+    else if([networkType isEqualToString:MARKER_TYPE_2_NETWORK_TYPE])
+    {
+        return MARKER_TYPE_2_IMAGE_NAME;
+    }
+    else if([networkType isEqualToString:MARKER_TYPE_3_NETWORK_TYPE])
+    {
+        return MARKER_TYPE_3_IMAGE_NAME;
+    }
+    else
+    {
+        NSAssert(TRUE, @"INVALID MARKER TYPE");
+        return @"";
+    }
+}
 -(IBAction)clearAllPoints:(id)sender
 {
     NSLog(@"Action - Map: Clearing All Gathered and Downloaded Heatmap Points and Pins");
-    [self.gatheredMapPoints removeAllObjects];
-    [self.gatheredMapPointsQueue removeAllObjects];
-    [self.downloadedMapPoints removeAllObjects];
-    [self.downloadedMapPins removeAllObjects];
+    [theCoreDataController deleteAllObjectsWithEntityName:CORE_DATA_MARKER andPredicate:nil];
+    [theCoreDataController saveContext];
     
     [self updateHeatMapOverlay];
 }

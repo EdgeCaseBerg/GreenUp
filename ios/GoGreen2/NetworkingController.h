@@ -9,11 +9,14 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
-
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @class MKMapView, HeatmapPoint, Marker, Message, CLLocation;
 
 @interface NetworkingController : NSObject <NSURLConnectionDataDelegate, NSURLConnectionDataDelegate>
+
+@property (nonatomic, strong) NSString *nextPageURL;
+@property int lookingForMessageID;
 
 //Home Messages
 -(void)getHomeMessage;
@@ -32,6 +35,11 @@
 -(void)getMessageByAppendingPageForShowMessageWithPageURL:(NSString *)pageURL;
 -(void)postMessageWithMessageType:(NSString *)type andMessage:(NSString *)message;
 -(void)markMessageAsAddressed:(Message *)message;
+
+//NEW METOHDS
+-(void)getMessageForMessageID:(int)messageID;
+-(void)getMessagePage;-(void)failedGettingMessagePage:(NSError *)error;
+-(void)finishedGettingMessagePage:(NSDictionary *)response;
 
 + (NetworkingController *)shared;
 
