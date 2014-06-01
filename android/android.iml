@@ -69,6 +69,7 @@
     <orderEntry type="jdk" jdkName="Android API 17 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
+    <orderEntry type="library" exported="" name="apiconnector-0.0.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-4.1.32" level="project" />
   </component>
 </module>

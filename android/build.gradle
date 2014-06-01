@@ -1,9 +1,8 @@
+apply plugin: 'maven'
+
 buildscript {
     repositories {
-//        mavenCentral()
-        maven {
-            url "http://vincent.xenonapps.com:8081/nexus/content/repositories/central/"
-        }
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.10.+'
@@ -11,11 +10,26 @@ buildscript {
 }
 apply plugin: 'android'
 
+repositories{
+    maven {
+//        name "nexus"
+        url "http://vincent.xenonapps.com:8081/nexus/content/groups/public/"
+//            credentials {
+//                username 'admin'
+//                password '5h0wd0wn3d'
+//            }
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile('com.google.android.gms:play-services:4.1.32'){
         exclude(module: 'support-v4')
     }
+
+    compile('com.xenonapps.greenup:apiconnector:0.0.1')
+//    compile('com.google.code.gson:gson:2.2.4')
+//    compile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'
 }
 
 android {
