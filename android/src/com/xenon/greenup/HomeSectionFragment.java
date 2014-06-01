@@ -11,23 +11,22 @@ import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
-import com.xenon.greenup.util.Storage;
-import com.xenon.greenup.util.Storage.ChronoTime;
+import com.xenon.greenup.util.CommentDAO;
 
 public class HomeSectionFragment extends Fragment {
 	private boolean active = false;
-	private  Storage database;
+	private CommentDAO database;
 	
 	@Override
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-    	database = new Storage( this.getActivity() );
+    	database = new CommentDAO( this.getActivity() );
 	}
 	
 	@Override
 	public void onPause(){
 		super.onPause();
-    	database = new Storage( this.getActivity() ); 
+    	database = new CommentDAO( this.getActivity() );
     	//database.setSecondsWorked( , chronoState);
 	}
 	

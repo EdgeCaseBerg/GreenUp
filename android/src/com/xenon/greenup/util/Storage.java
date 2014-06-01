@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.xenon.greenup.ChronoTime;
+
 public class Storage extends SQLiteOpenHelper{
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "GREENUP";
@@ -18,18 +20,6 @@ public class Storage extends SQLiteOpenHelper{
 	private static final String KEY_STOP_TIME = "stopTime";
 	private static final String SECONDS_WORKED_TABLE_NAME = "secondsWorked";
 	
-	public class ChronoTime{
-		public long secondsWorked = 0;
-		public boolean state = false;
-		public long stoppedTime = 0;
-		
-		public ChronoTime(long sw, boolean s, long st){
-			this.secondsWorked = sw;
-			this.state = s;
-			this.stoppedTime = st;
-		}
-	}
-	
 	public Storage(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -38,7 +28,7 @@ public class Storage extends SQLiteOpenHelper{
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		context.deleteDatabase(DATABASE_NAME);
 	}
-	
+	@Override
 	public void onCreate(SQLiteDatabase db){
 		/*What do we need?
 		 *- whether or not the timer should be on. Bool.
@@ -62,13 +52,13 @@ public class Storage extends SQLiteOpenHelper{
 		values.put(KEY_STOP_TIME, String.valueOf(SystemClock.elapsedRealtime()));
 		
 		db.insert(SECONDS_WORKED_TABLE_NAME, null,values);
-		db.close();
+//		db.close();
 	}
-	
+	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
 		db.execSQL("DROP TABLE IF EXISTS " + SECONDS_WORKED_TABLE_NAME);
 		onCreate(db);
-		db.close();
+//		db.close();
 	}
 	
 	
@@ -82,7 +72,7 @@ public class Storage extends SQLiteOpenHelper{
 		values.put(KEY_STOP_TIME, String.valueOf(SystemClock.elapsedRealtime()));
 		Log.i("saveToDB","time: " + seconds + " onOff: " + onOff + " stopTime: " + String.valueOf(SystemClock.elapsedRealtime()));
 		db.update(SECONDS_WORKED_TABLE_NAME, values, KEY_ID + "= ?", new String[]{SINGLETON_PK});
-		db.close();
+//		db.close();
 	}
 	
 	public ChronoTime getSecondsWorked(){
@@ -108,9 +98,6 @@ public class Storage extends SQLiteOpenHelper{
 			try{
 				stopped = Long.valueOf(cursor.getString(2));
 			}catch(Exception e){/* http://www.youtube.com/watch?feature=player_detailpage&v=JWdZEumNRmI#t=50*/}
-            if(cursor != null) {
-                cursor.close();
-            }
 		}
 		Log.i("dbLoad","secWorkd: "+secWorkd+" cState: "+cState+" stopped: "+stopped);
 
