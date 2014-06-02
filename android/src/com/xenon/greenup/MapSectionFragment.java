@@ -1,7 +1,5 @@
 package com.xenon.greenup;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -40,6 +38,8 @@ import com.xenon.greenup.api.HeatmapPoint;
 import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
 import com.xenon.greenup.heatmap.HeatmapOverlayProvider;
+
+import java.util.ArrayList;
 
 public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener,OnItemSelectedListener, OnMapClickListener {
 	
@@ -98,22 +98,24 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         mMapView = (MapView)inflatedView.findViewById(R.id.map);
         mMapView.onCreate(bundle);
         map = mMapView.getMap();
-        map.setOnMapLongClickListener(this);
-        map.setOnMapClickListener(this); //for the heatmap testing
-        mLocationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        
-        //center the camera, use the default coordinates and zoom for now
-        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(DEFAULT_LAT,DEFAULT_LON));
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(DEFAULT_ZOOM);
-        map.moveCamera(center);
-        map.moveCamera(zoom);
-        
-        //add the heatmap overlay
-        HeatmapOverlayProvider provider = new HeatmapOverlayProvider(mMapView,map);
-        heatmapOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
-        testData = new Heatmap();
-        
-        markers = new ArrayList<Marker>();
+        if(map != null) {
+            map.setOnMapLongClickListener(this);
+            map.setOnMapClickListener(this); //for the heatmap testing
+            mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+            //center the camera, use the default coordinates and zoom for now
+            CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(DEFAULT_LAT, DEFAULT_LON));
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(DEFAULT_ZOOM);
+            map.moveCamera(center);
+            map.moveCamera(zoom);
+
+            //add the heatmap overlay
+            HeatmapOverlayProvider provider = new HeatmapOverlayProvider(mMapView, map);
+            heatmapOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+            testData = new Heatmap();
+
+            markers = new ArrayList<Marker>();
+        }
         
         return inflatedView;
     }

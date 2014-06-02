@@ -11,22 +11,23 @@ import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
-import com.xenon.greenup.util.CommentDAO;
+import com.xenon.greenup.persistence.CleanSession;
+import com.xenon.greenup.persistence.HeatmapDAO;
 
 public class HomeSectionFragment extends Fragment {
-	private boolean active = false;
-	private CommentDAO database;
+    private HeatmapDAO heatmapDAO;
 	
 	@Override
 	public void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-    	database = new CommentDAO( this.getActivity() );
+    	this.heatmapDAO = new HeatmapDAO( this.getActivity() );
 	}
 	
 	@Override
 	public void onPause(){
 		super.onPause();
-    	database = new CommentDAO( this.getActivity() );
+        heatmapDAO.flushSessionToDisk(CleanSession.getInstance());
+//    	database = new CommentDAO( this.getActivity() );
     	//database.setSecondsWorked( , chronoState);
 	}
 	
@@ -42,44 +43,40 @@ public class HomeSectionFragment extends Fragment {
     	 * have one specific format for all timers. Which we do. So here's the default:
     	 */
 
-//		ChronoTime ct = database.getSecondsWorked();
-//
-//		/* Set Chronometer from database stuff */
-//		chrono.setActivated(ct.state);
-//		active = ct.state;
-//
-//		long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;
-//		long pausedTime = ct.state ? (SystemClock.elapsedRealtime() - ct.stoppedTime) : 0;
-//		chrono.setBase(SystemClock.elapsedRealtime() - pausedTime - stopped);
-//
-//		if(ct.state){
-//			/* If the chronometer is on */
-//			startStopButton.setBackgroundResource(R.drawable.stop);
-//			chrono.start();
-//		}else{
-//			startStopButton.setBackgroundResource(R.drawable.start);
-//			chrono.stop();
-//		}
-//		chrono.setText(getChronoString(ct.secondsWorked));
+		/* Set Chronometer from database stuff */
+		chrono.setActivated(CleanSession.active);
+
+		long stopped = getChronoTime(getChronoString(CleanSession.getTotalSecondsWorked() ))*1000;
+		long pausedTime = CleanSession.active ? (SystemClock.elapsedRealtime() - CleanSession.getTotalSecondsWorked()) : 0;
+		chrono.setBase(SystemClock.elapsedRealtime() - pausedTime - stopped);
+
+		if(CleanSession.active){
+			/* If the chronometer is on */
+			startStopButton.setBackgroundResource(R.drawable.stop);
+			chrono.start();
+		}else{
+			startStopButton.setBackgroundResource(R.drawable.start);
+			chrono.stop();
+		}
+		chrono.setText(getChronoString(CleanSession.getTotalSecondsWorked()));
 		
     	startStopButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				active = isChecked;
-				ChronoTime ct = database.getSecondsWorked();
+				CleanSession.active = isChecked;
 				
-				long stopped = getChronoTime(getChronoString(ct.secondsWorked ))*1000;
+				long stopped = getChronoTime(getChronoString(CleanSession.getTotalSecondsWorked() ))*1000;
 				chrono.setBase(SystemClock.elapsedRealtime() - stopped);
 				
 				if(isChecked) {
-					chrono.setText( getChronoString(ct.secondsWorked));
+					chrono.setText( getChronoString(CleanSession.getTotalSecondsWorked()));
 					chrono.start();
 					startStopButton.setBackgroundResource(R.drawable.stop);
 				} else {  
 					startStopButton.setBackgroundResource(R.drawable.start);
 					//Set the state to false in db land
 					long gct = getChronoTime(chrono.getText().toString());
-					database.setSecondsWorked(gct, false);
+					heatmapDAO.flushSessionToDisk(CleanSession.getInstance());
 					chrono.stop();
 					chrono.setText( getChronoString(gct) );
 				}		
@@ -95,7 +92,7 @@ public class HomeSectionFragment extends Fragment {
     		 */ 
 	        public void onChronometerTick(Chronometer chronometer) {
 	        	
-	        	if(active){        	
+	        	if(CleanSession.active){
 	        		CharSequence text = chronometer.getText();
 	        		if (text.length() == 4) {
 	        			chronometer.setText("00:0"+text);
@@ -106,7 +103,7 @@ public class HomeSectionFragment extends Fragment {
 	        		}
 	        		long ssw = getChronoTime(chrono.getText().toString());
 	
-	        		database.setSecondsWorked(ssw, active);
+//	        		CleanSession.setSecondsWorked(ssw);
 	        	}
 	        }
 	        

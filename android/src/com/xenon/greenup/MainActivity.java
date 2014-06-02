@@ -16,10 +16,6 @@
 
 package com.xenon.greenup;
 
-import java.util.ArrayList;
-
-import com.xenon.greenup.util.Storage;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
@@ -34,12 +30,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity {
 
