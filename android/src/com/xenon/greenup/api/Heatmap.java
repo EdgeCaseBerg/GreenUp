@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Heatmap {
 	
 	//TODO: Maybe just have this extend ArrayList?
@@ -41,6 +43,14 @@ public class Heatmap {
 	public void add(HeatmapPoint point) {
 		pointList.add(point);
 	}
+
+    public ArrayList<LatLng> getAllLatLng() {
+        ArrayList<LatLng> list = new ArrayList<LatLng>();
+        for (int i = 0; i < this.pointList.size(); i++) {
+            list.add(pointList.get(i).getLatLng());
+        }
+        return list;
+    }
 	
 	public HeatmapPoint get(int i) {
 		return pointList.get(i);
