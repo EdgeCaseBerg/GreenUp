@@ -10,14 +10,12 @@ import org.json.JSONObject;
 public class HeatmapPoint {
     private final double latDegrees;
     private final double lonDegrees;
-    private final LatLon latLon;
     private final LatLng point;
     private int secondsWorked;
 
     public HeatmapPoint(double latDegrees, double lonDegrees){
         this.latDegrees = latDegrees;
         this.lonDegrees = lonDegrees;
-        this.latLon = new LatLon(latDegrees, lonDegrees);
         this.point = new LatLng(latDegrees,lonDegrees);
     }
 
@@ -26,7 +24,6 @@ public class HeatmapPoint {
         object = new JSONObject(jsonString);
         this.latDegrees = object.getDouble("latDegrees");
         this.lonDegrees = object.getDouble("lonDegrees");
-        this.latLon = new LatLon(latDegrees,lonDegrees);
         this.point = new LatLng(latDegrees,lonDegrees);
         this.secondsWorked = object.getInt("secondsWorked");
     }
@@ -34,7 +31,6 @@ public class HeatmapPoint {
     public HeatmapPoint(double latDegrees, double lonDegrees, int secondsWorked) {
         this.latDegrees = latDegrees;
         this.lonDegrees = lonDegrees;
-        this.latLon = new LatLon(lonDegrees,latDegrees);
         this.point = new LatLng(latDegrees,lonDegrees);
         this.secondsWorked = secondsWorked;
     }
@@ -77,10 +73,6 @@ public class HeatmapPoint {
             e.printStackTrace();
             return json;
         }
-    }
-
-    public LatLon getLatLon() {
-        return latLon;
     }
 
     public LatLng getLatLng() {return point;}
