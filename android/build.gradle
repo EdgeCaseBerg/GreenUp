@@ -15,7 +15,6 @@ repositories {
 }
 
 dependencies {
-    //compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.google.android.gms:play-services:4.1.32'
     compile 'com.xenonapps.greenup:apiconnector:0.0.1'
     //    compile('com.google.code.gson:gson:2.2.4')
