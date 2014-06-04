@@ -113,14 +113,9 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 
 
             //add the heatmap overlay, for now load in data from the resource
-            String jsonString = getStringFromResource(R.raw.heatmap);
-            testData = new Heatmap(jsonString);
+            //String jsonString = getStringFromResource(R.raw.heatmap);
+            //testData = new Heatmap(jsonString);
 
-            //need a list of just the LatLng objects for the TileProvider
-            ArrayList<LatLng> points = testData.getAllLatLng();
-
-            tileProvider = new HeatmapTileProvider.Builder().data(points).build();
-            heatmapOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
 
             markers = new ArrayList<Marker>();
         }
@@ -133,6 +128,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
     	super.onResume();
     	mMapView.onResume();
     	new AsyncPinLoadTask(this).execute();
+        new AsyncHeatmapLoadTask(this).execute();
     }
     
     @Override
@@ -180,6 +176,26 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 		}
     }
 
+    private class AsyncHeatmapLoadTask extends AsyncTask<Void,Void,Void> {
+        private final MapSectionFragment fragment;
+
+        public AsyncHeatmapLoadTask(MapSectionFragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected Void doInBackground(Void...voids) {
+            this.fragment.serverData = APIServerInterface.getHeatmap(null,null,null,null,null,null);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            //draw the heatmap on the map
+            drawHeatmap();
+        }
+    }
+
 	@Override
 	public void onMapLongClick(LatLng coords) {
 		if (!submitPinMode) {
@@ -225,6 +241,11 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
+    private void drawHeatmap() {
+        ArrayList<LatLng> points = this.serverData.getAllLatLng();
+        tileProvider = new HeatmapTileProvider.Builder().data(points).build();
+        heatmapOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+    }
 	
     private void drawPins() {
     	ArrayList<Pin> pins = this.pins.getPinList();
