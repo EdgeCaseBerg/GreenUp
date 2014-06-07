@@ -27,8 +27,6 @@ public class HomeSectionFragment extends Fragment {
 	public void onPause(){
 		super.onPause();
         heatmapDAO.flushSessionToDisk(CleanSession.getInstance());
-//    	database = new CommentDAO( this.getActivity() );
-    	//database.setSecondsWorked( , chronoState);
 	}
 	
     @Override
@@ -37,6 +35,9 @@ public class HomeSectionFragment extends Fragment {
     	View rootview = inflater.inflate(R.layout.start_page, container, false);
     	final  ToggleButton startStopButton = (ToggleButton)rootview.findViewById(R.id.start_stop_button );
     	final Chronometer chrono = (Chronometer)rootview.findViewById(R.id.chronometer1);
+        // our CleanSession singleton will listen to the chronometer
+        // and update on each tick;
+        chrono.setOnChronometerTickListener(CleanSession.getInstance());
     	
     	/* The chronometer starts off with a minimal 0:00 timer. Which is great, unless 
     	 * you're going for a uniform look between all applications and really want to 
