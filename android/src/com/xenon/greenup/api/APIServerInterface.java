@@ -64,14 +64,14 @@ public final class APIServerInterface {
 	}
 	
 	//Get a list of heatmap points for the specified coordinates, all parameters are optional (??)
-	public static Heatmap getHeatmap(float latDegrees, float latOffset, float lonDegrees, float lonOffset, int precision, boolean raw){
+	public static Heatmap getHeatmap(Double latDegrees, Double latOffset, Double lonDegrees, Double lonOffset, Integer precision, Boolean raw){
 		StringBuilder sb = new StringBuilder(BASE_URL + "/heatmap?");
 		
 		//Wrapper class casting is neccesary to compare to null (damn java)
-		if((Float)latDegrees != null) { sb.append("latDegrees=" + latDegrees); }
-		if((Float)latOffset != null)  { sb.append("&latOffset=" + latOffset); }
-		if((Float)lonDegrees != null) { sb.append("&lonDegrees=" + lonDegrees); }
-		if((Float)lonOffset != null)  { sb.append("&lonOffset=" + lonOffset); }
+		if((Double)latDegrees != null) { sb.append("latDegrees=" + latDegrees); }
+		if((Double)latOffset != null)  { sb.append("&latOffset=" + latOffset); }
+		if((Double)lonDegrees != null) { sb.append("&lonDegrees=" + lonDegrees); }
+		if((Double)lonOffset != null)  { sb.append("&lonOffset=" + lonOffset); }
 		if((Integer)precision != null)  { sb.append("&precision=" + precision); }
 		if((Boolean)raw != null) {sb.append("&raw="+ raw);}
 		//If my oneline if's offend you feel free to change them. If Java was a good language and supported

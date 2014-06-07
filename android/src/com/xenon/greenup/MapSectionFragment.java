@@ -17,8 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,13 +30,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.xenon.greenup.api.APIServerInterface;
 import com.xenon.greenup.api.Heatmap;
 import com.xenon.greenup.api.HeatmapPoint;
 import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
-import com.xenon.greenup.heatmap.HeatmapOverlayProvider;
 
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener,OnItemSelectedListener, OnMapClickListener {
@@ -50,6 +51,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 	private Spinner typeSelect;
 	private GoogleMap map;
 	private TileOverlay heatmapOverlay;
+    private HeatmapTileProvider tileProvider;
 	private Bundle bundle;
 	private LocationManager mLocationManager;
 	private Heatmap serverData,testData;
@@ -70,7 +72,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
         View inflatedView = inflater.inflate(R.layout.map_page, container, false);
         try {
             MapsInitializer.initialize(getActivity());
-        } catch (GooglePlayServicesNotAvailableException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         
@@ -109,10 +111,11 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
             map.moveCamera(center);
             map.moveCamera(zoom);
 
-            //add the heatmap overlay
-            HeatmapOverlayProvider provider = new HeatmapOverlayProvider(mMapView, map);
-            heatmapOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
-            testData = new Heatmap();
+
+            //add the heatmap overlay, for now load in data from the resource
+            //String jsonString = getStringFromResource(R.raw.heatmap);
+            //testData = new Heatmap(jsonString);
+
 
             markers = new ArrayList<Marker>();
         }
@@ -125,6 +128,7 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
     	super.onResume();
     	mMapView.onResume();
     	new AsyncPinLoadTask(this).execute();
+        new AsyncHeatmapLoadTask(this).execute();
     }
     
     @Override
@@ -172,6 +176,26 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 		}
     }
 
+    private class AsyncHeatmapLoadTask extends AsyncTask<Void,Void,Void> {
+        private final MapSectionFragment fragment;
+
+        public AsyncHeatmapLoadTask(MapSectionFragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected Void doInBackground(Void...voids) {
+            this.fragment.serverData = APIServerInterface.getHeatmap(null,null,null,null,null,null);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            //draw the heatmap on the map
+            drawHeatmap();
+        }
+    }
+
 	@Override
 	public void onMapLongClick(LatLng coords) {
 		if (!submitPinMode) {
@@ -217,6 +241,11 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
+    private void drawHeatmap() {
+        ArrayList<LatLng> points = this.serverData.getAllLatLng();
+        tileProvider = new HeatmapTileProvider.Builder().data(points).build();
+        heatmapOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+    }
 	
     private void drawPins() {
     	ArrayList<Pin> pins = this.pins.getPinList();
@@ -263,4 +292,22 @@ public class MapSectionFragment extends Fragment implements OnMapLongClickListen
 		testData.add(new HeatmapPoint(pos.latitude,pos.longitude,60));
 		Log.i("testPoint","Added new test point"+pos.toString());
 	}
+
+    private String getStringFromResource(int id) {
+        String res;
+        StringBuilder sb = new StringBuilder();
+        int readByte;
+        InputStream in = getResources().openRawResource(id);
+        try {
+            while ((readByte = in.read()) != -1) {
+                sb.append((char)readByte);
+            }
+            res = sb.toString();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            res = "";
+        }
+        return res;
+    }
 }
