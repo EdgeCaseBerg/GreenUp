@@ -15,11 +15,12 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services:4.1.32'
+    compile 'com.google.android.gms:play-services:+'
+    compile 'com.google.maps.android:android-maps-utils:0.3+'
     compile 'com.xenonapps.greenup:apiconnector:0.0.1'
     //    compile('com.google.code.gson:gson:2.2.4')
     //    compile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'
-    compile 'com.google.maps.android:android-maps-utils:0.3+'
+
 }
 
 android {
@@ -52,5 +53,16 @@ android {
     productFlavors {
     }
     buildTypes {
+    }
+
+    applicationVariants.all{ variant ->
+        variant.processManifest.doFirst {
+            File manifestFile = file("${buildDir}/exploded-aar/com.google.maps.android/android-maps-utils/0.3/AndroidManifest.xml")
+            if (manifestFile.exists()) {
+                String content = manifestFile.getText('UTF-8')
+                content = content.replaceAll(/minSdkVersion="8"/, 'minSdkVersion=\"9\"')
+                manifestFile.write(content, 'UTF-8')
+            }
+        }
     }
 }

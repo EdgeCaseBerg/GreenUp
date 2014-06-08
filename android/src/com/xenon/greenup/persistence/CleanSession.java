@@ -1,11 +1,7 @@
 package com.xenon.greenup.persistence;
 
-<<<<<<< HEAD
 import android.widget.Chronometer;
-
-=======
 import com.google.android.gms.maps.model.LatLng;
->>>>>>> 93a380a176c2ec4e93ea8a25e39bb024968d6e10
 import com.xenon.greenup.api.HeatmapPoint;
 
 import java.util.Collection;
@@ -16,7 +12,7 @@ import java.util.Map;
  * Created by josh on 6/1/14.
  */
 public class CleanSession implements Chronometer.OnChronometerTickListener {
-    private static Map<LatLon, HeatmapPoint> sessionPoints = new HashMap<LatLon, HeatmapPoint>();
+    private static Map<LatLng, HeatmapPoint> sessionPoints = new HashMap<LatLng, HeatmapPoint>();
     private static long totalSecondsWorked = 0l;
     private static CleanSession instance = null;
     public static boolean active = false;
@@ -68,7 +64,9 @@ public class CleanSession implements Chronometer.OnChronometerTickListener {
             return "00:00:00";
         }
 
-        hours = (totalSecondsWorked - ())
+//        hours = (totalSecondsWorked - ())
+
+        return "11:11:11";
     }
 
     @Override

@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,10 +38,11 @@ import com.xenon.greenup.api.HeatmapPoint;
 import com.xenon.greenup.api.Pin;
 import com.xenon.greenup.api.PinList;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+//import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 public class MapSectionFragment extends Fragment implements OnMapLongClickListener,OnClickListener,OnItemSelectedListener, OnMapClickListener {
 	
